@@ -1,6 +1,12 @@
 import be.kuleuven.cs.som.annotate.*;
 
-
+/**
+ * A class that implements the player character with the ability to jump, duck and
+ * run to the left and to the right. This class is a part of the project JumpingAlien.
+ * @author	Jakob Festraets, Vincent Kemps
+ * @version	1.0
+ *
+ */
 public class Mazub {
 	
 	/**
