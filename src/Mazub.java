@@ -81,7 +81,7 @@ public class Mazub {
 	 * @param 	x
 	 * 			x-coordinate to check
 	 * @return 	True if and only if x is not negative and smaller than 1024.
-	 * 			| result == (x >= 0) && (x < 1024)
+	 * 			| result == ((x >= 0) && (x < 1024))
 	 */
 	@Basic
 	public static boolean isValidXPosition(int x){
