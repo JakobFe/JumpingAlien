@@ -602,9 +602,11 @@ public class Mazub {
 	}
 	
 	public void startJump(){
-		setVertVelocity(getInitVertVelocity());
-		setVertAcceleration(getMaxVertAcceleration());
-		setVertDirection(1);
+		if (getVertDirection() == 0){
+			setVertVelocity(getInitVertVelocity());
+			setVertAcceleration(getMaxVertAcceleration());
+			setVertDirection(1);
+		}
 	}
 	
 	public void endJump(){
