@@ -9,7 +9,7 @@ public class Facade implements IFacade {
 	@Override
 	public Mazub createMazub(int pixelLeftX, int pixelBottomY, Sprite[] sprites) {
 		// TODO Auto-generated method stub
-		return new Mazub(pixelLeftX,pixelBottomY,6,11,1,3);
+		return new Mazub(pixelLeftX,pixelBottomY,1,1,1,3,sprites);
 	}
 
 	@Override
@@ -51,7 +51,7 @@ public class Facade implements IFacade {
 	@Override
 	public Sprite getCurrentSprite(Mazub alien) {
 		// TODO Auto-generated method stub
-		return null;
+		return alien.sprites[0];
 	}
 
 	@Override

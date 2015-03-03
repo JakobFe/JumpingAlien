@@ -1,5 +1,6 @@
 package jumpingalien.model;
 
+import jumpingalien.util.Sprite;
 import be.kuleuven.cs.som.annotate.*;
 
 /**
@@ -59,7 +60,7 @@ public class Mazub {
 	 * 			| !isValidHeight(height)
 	 */
 	@Raw
-	public Mazub(int x, int y, int width, int height, double initHorVelocity, double maxHorVelocity) throws IllegalXPositionException,
+	public Mazub(int x, int y, int width, int height, double initHorVelocity, double maxHorVelocity, Sprite[] sprites) throws IllegalXPositionException,
 	IllegalYPositionException,IllegalWidthException,IllegalHeightException {
 		setEffectiveXPos(x);
 		setEffectiveYPos(y);
@@ -69,6 +70,7 @@ public class Mazub {
 		this.maxHorVelocity = maxHorVelocity;
 		this.horVelocity = 0;
 		this.horAcceleration = 0;
+		this.sprites = sprites;
 	}
 	
 	/**
@@ -681,5 +683,5 @@ public class Mazub {
 	private double vertVelocity;
 	private double vertAcceleration;
 	private static final double maxVertAcceleration = -10;
-	
+	public Sprite[] sprites;
 }
