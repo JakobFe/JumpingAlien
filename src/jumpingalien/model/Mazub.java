@@ -578,9 +578,11 @@ public class Mazub {
 	 * Method to end the movement of the Mazub when moving to the left.
 	 */
 	public void endMoveLeft(){
+	if (getHorDirection()==-1){
 		setHorVelocity(0);
 		setHorDirection(0);
 		setHorAcceleration(0);
+		}
 	}
 	
 	/**
@@ -596,9 +598,11 @@ public class Mazub {
 	 * Method to end the movement of the Mazub when moving to the right.
 	 */
 	public void endMoveRight(){
+	if (getHorDirection() == 1){	
 		setHorVelocity(0);
 		setHorDirection(0);
 		setHorAcceleration(0);
+		}
 	}
 	
 	public void startJump(){
