@@ -1,7 +1,7 @@
 package jumpingalien.part1.facade;
 
 
-import jumpingalien.model.Mazub;
+import jumpingalien.model.*;
 import jumpingalien.util.Sprite;
 
 public class Facade implements IFacade {
@@ -108,5 +108,4 @@ public class Facade implements IFacade {
 		alien.advanceTime(dt);
 	}
 	
-
 }
