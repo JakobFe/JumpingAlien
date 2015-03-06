@@ -245,13 +245,18 @@ public class MazubTest {
 	}
 	
 	@Test
-	public void isValidMaxHorVelocity_TrueCase() {
-		assertTrue(Mazub_POS_0_0.isValidMaxHorVelocity(10.2456));
+	public void isValidInitHorVelocity_FalseCase() {
+		assertFalse(Mazub.isValidInitHorVelocity(0.999));
 	}
 	
 	@Test
-	public void isValidHorVelocity_TrueCase() {
-		assertTrue(Mazub_POS_0_0.isValidHorVelocity(2.4568));
+	public void canHaveAsMaxHorVelocity_TrueCase() {
+		assertTrue(Mazub_POS_0_0.canHaveAsMaxHorVelocity(10.2456));
+	}
+	
+	@Test
+	public void canHaveAsHorVelocity_TrueCase() {
+		assertTrue(Mazub_POS_0_0.canHaveAsHorVelocity(2.4568));
 	}
 	
 	@Test

@@ -93,13 +93,13 @@ public class Facade implements IFacade {
 	@Override
 	public void startDuck(Mazub alien) {
 		// TODO Auto-generated method stub
-		
+		alien.startDuck();
 	}
 
 	@Override
 	public void endDuck(Mazub alien) {
 		// TODO Auto-generated method stub
-		
+		alien.endDuck();
 	}
 
 	@Override

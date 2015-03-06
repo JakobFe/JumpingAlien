@@ -7,15 +7,30 @@ import be.kuleuven.cs.som.annotate.*;
  * A class that implements the player character with the ability to jump, duck and
  * run to the left and to the right. This class is a part of the project JumpingAlien.
  * 
- * @invar 	The initial horizontal velocity of the Mazub must be valid.
+ * @invar	The x position of this Mazub must be valid.
+ * 			| isValidXPosition(getXPosition())
+ * @invar	The y position of this Mazub must be valid.
+ * 			| isValidYPosition(getYPosition())
+ * @invar	The width of this Mazub must be valid.
+ * 			| isValidWidth(getWidth())
+ * @invar	The height of this Mazub must be valid.
+ * 			| isValidHeight(getHeight())
+ * @invar	The horizontal direction of this Mazub must be valid.
+ * 			| isValidHorDirection(getHorDirection())
+ * @invar	The vertical direction of this Mazub must be valid.
+ * 			| isValidVertDirection(getVertDirection())
+ * @invar 	The initial horizontal velocity of this Mazub must be valid.
  * 			| isValidInitHorVelocity(getInitHorVelocity())
  * @invar 	The maximum horizontal velocity of the Mazub must be valid.
- * 			| isValidMaxHorVelocity(getMaxHorVelocity())
- * @invar 	The actual velocity of the Mazub must be valid.
- * 			| isValidVelocity(getVelocity()) 
+ * 			| canHaveAsMaxHorVelocity(getMaxHorVelocity())
+ * @invar 	The actual horizontal velocity of the Mazub must be valid.
+ * 			| canHaveAsHorVelocity(getVelocity()) 
+ * 
+ * 
  * @note	2 methods are doing exactly the same: isValidVertDirection() and
  * 			isValidHorDirection(). Maybe we should generalize it to a method isValidDirection().
  * 			There is still redundancy in the documentation of methods concerning positions.
+ * 			Maybe we should work with the dimensions of the game world instead of 1024x768
  * 
  * @author	Jakob Festraets, Vincent Kemps
  * @version	1.0
@@ -70,7 +85,8 @@ public class Mazub {
 		setWidth(width);
 		setHeight(height);
 		this.initHorVelocity = initHorVelocity;
-		this.maxHorVelocity = maxHorVelocity;
+		this.maxHorVelocityRunning = maxHorVelocity;
+		setMaxHorVelocity(maxHorVelocity);
 		this.horVelocity = 0;
 		this.horAcceleration = 0;
 		this.sprites = sprites;
@@ -264,7 +280,7 @@ public class Mazub {
 	private double effectiveYPos;
 	
 	/**
-	 * Return the width of this Mazub.
+	 * Return the width of the current sprite of this Mazub.
 	 */
 	@Basic
 	public int getWidth(){
@@ -340,7 +356,7 @@ public class Mazub {
 	}
 	
 	/**
-	 * Variable storing the height of this Mazub.
+	 * Variable storing the height of the current sprite of this Mazub.
 	 */
 	private int height;
 	
@@ -440,27 +456,56 @@ public class Mazub {
 	 * 			| result == (initHorVelocity >= 1)
 	 */
 	public static boolean isValidInitHorVelocity(double initHorVelocity){
-		return (initHorVelocity > 1);
+		return (initHorVelocity >= 1);
 	}
 	
 	/**
-	 * Return the maximum horizontal velocity of this Mazub.
+	 * Return the maximum horizontal velocity while running for this Mazub.
  	 */
 	@Basic @Immutable
+	public double getMaxHorVelocityRunning(){
+		return this.maxHorVelocityRunning;
+	}
+
+	/**
+	 * Return the maximum horizontal velocity while ducking for this Mazub.
+ 	 */
+	@Basic @Immutable
+	public double getMaxHorVelocityDucking(){
+		return MAX_HOR_VELOCITY_DUCKING;
+	}
+	
+	@Basic
+	/**
+	 * Return the current maximum horizontal velocity.
+	 */
 	public double getMaxHorVelocity(){
 		return this.maxHorVelocity;
 	}
-	
 	/**
 	 * Checks whether the given maximum horizontal velocity is valid.
 	 * @param	maxHorVelocity
 	 * 			The maximum horizontal velocity to check.
 	 * @return	True if the given maximum horizontal velocity is above 
-	 * 			the initial horizontal velocity of the Mazub.
+	 * 			the initial horizontal velocity of this Mazub.
 	 * 			| result == (maxHorVelocity > getInitHorVelocity())
 	 */
-	public boolean isValidMaxHorVelocity(double maxHorVelocity){
-		return (maxHorVelocity > this.getInitHorVelocity());
+	public boolean canHaveAsMaxHorVelocity(double maxHorVelocity){
+		return (maxHorVelocity >= this.getInitHorVelocity());
+	}
+	
+	/**
+	 * Sets the maximum horizontal velocity to the given value.
+	 * @param 	maxHorVelocity
+	 * 			The maximum horizontal velocity to set.
+	 * @pre		The given value must be a valid maximum horizontal velocity.
+	 * 			| canHaveAsMaxHorVelocity(maxHorVelocity)
+	 * @post	The maximum horizontal velocity is set to the given value.
+	 * 			| new.getMaxHorVelocity() == maxHorVelocity
+	 */
+	public void setMaxHorVelocity(double maxHorVelocity){
+		assert canHaveAsMaxHorVelocity(maxHorVelocity);
+		this.maxHorVelocity = maxHorVelocity;
 	}
 	
 	/**
@@ -483,10 +528,10 @@ public class Mazub {
 	 * 			|			((horVelocity >= getInitHorVelocity()) &&
 	 * 			|			(horVelocity <= getMaxHorVelocity())) 
 	 */
-	public boolean isValidHorVelocity(double horVelocity){
+	public boolean canHaveAsHorVelocity(double horVelocity){
 		return ((horVelocity == 0) ||
 				((horVelocity >= this.getInitHorVelocity()) &&
-				(horVelocity <= getMaxHorVelocity())));
+				(horVelocity <= getMaxHorVelocityRunning())));
 	}
 	
 	/**
@@ -500,7 +545,7 @@ public class Mazub {
 	 * 			| new.getHorVelocity() == horVelocity
 	 */
 	public void setHorVelocity(double horVelocity) {
-		assert isValidHorVelocity(horVelocity);
+		assert canHaveAsHorVelocity(horVelocity);
 		this.horVelocity = horVelocity;
 	}
 	
@@ -517,6 +562,7 @@ public class Mazub {
 	public static double getMaxHorAcceleration(){
 		return maxHorAcceleration;
 	}
+	
 
 	/**
 	 * Sets the horizontal acceleration to the given value if the given value is valid.
@@ -553,7 +599,7 @@ public class Mazub {
 	 * @return the initVertVelocity
 	 */
 	public double getInitVertVelocity() {
-		return initVertVelocity;
+		return INIT_VERT_VELOCITY;
 	}
 
 	/**
@@ -598,7 +644,7 @@ public class Mazub {
 	 * @return the maxvertacceleration
 	 */
 	public static double getMaxVertAcceleration() {
-		return maxVertAcceleration;
+		return MAX_VERT_ACCELERATION;
 	}
 
 	/**
@@ -652,6 +698,64 @@ public class Mazub {
 	public void endJump(){
 		if (getVertDirection() == 1)
 			setVertVelocity(0);
+	}
+	
+	public void startDuck(){
+		setMaxHorVelocity(getMaxHorVelocityDucking());
+	}
+	
+	public void endDuck(){
+		setMaxHorVelocity(getMaxHorVelocityRunning());
+	}
+	
+	public Sprite getCurrentSprite(){
+		if (isDucking()){
+			if (isMoving()){
+				if (isMovingRight() || wasMovingRight()){
+					return sprites[6];
+				}
+				else{
+					if (isMovingLeft() || wasMovingLeft()){
+						return sprites[7];
+					}
+				}
+			}
+			else{
+				//enige overblijvende mogenlijkheid
+				return sprites[1];
+			}
+		}
+		else{
+			if (wasMovingRight()){
+				return sprites[2];
+			}
+			if (wasMovingLeft()){
+				return sprites[3];
+			}
+			else{
+				if (isMoving()){
+					if (isJumping()){
+						if (isMovingRight()){
+							return sprites[4];
+						}
+						else{
+							return sprites[5];
+						}
+					}
+					else{
+						if (isMovingRight()){
+							//8..8+m
+						}
+						else{
+							//9+m..9+2m
+						}
+					}
+				}
+				else{
+					return sprites[0];
+				}
+			}
+		}
 	}
 	
 	/**
@@ -709,13 +813,15 @@ public class Mazub {
 	
 	
 	private final double initHorVelocity;
-	private final double maxHorVelocity;
+	private final double maxHorVelocityRunning;
+	private final double MAX_HOR_VELOCITY_DUCKING = 1;
+	private double maxHorVelocity;
 	private static final double maxHorAcceleration = 0.9;
 	private double horVelocity;
 	private double horAcceleration;
-	private static final double initVertVelocity = 8;
+	private static final double INIT_VERT_VELOCITY = 8;
 	private double vertVelocity;
 	private double vertAcceleration;
-	private static final double maxVertAcceleration = -10;
+	private static final double MAX_VERT_ACCELERATION = -10;
 	public Sprite[] sprites;
 }
