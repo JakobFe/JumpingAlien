@@ -707,6 +707,10 @@ public class Mazub {
 	
 	public void endDuck(){
 		setMaxHorVelocity(getMaxHorVelocityRunning());
+		if (isMovingRight())
+			startMoveRight();
+		else if (isMovingLeft())
+			startMoveLeft();
 	}
 	
 	/**
