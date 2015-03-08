@@ -735,21 +735,51 @@ public class Mazub {
 	public boolean isDucking(){
 		return (getMaxHorVelocity() == 1);
 	}
+	
 	public boolean isMoving(){
 		return (getHorDirection() != 0);
 	}
+	
 	public boolean isMovingRight(){
 		return (getHorDirection() == 1);
 	}
+	
 	public boolean isMovingLeft(){
 		return (getHorDirection() == -1);
 	}
+	
 	public boolean wasMovingLeft(){
-		return false;
+		if (this.lastDirection == -1){
+			if (timeSum < 1){
+				return true;
+			}
+			else{
+				setLastDirection(0);
+				timeSum = 0;
+				return false;
+			}
+		}
+		else{
+			return false;
+		}
 	}
+	
 	public boolean wasMovingRight(){
-		return false;
+		if (this.lastDirection == 1){
+			if (timeSum < 1){
+				return true;
+			}
+			else{
+				setLastDirection(0);
+				timeSum = 0;
+				return false;
+			}
+		}
+		else{
+			return false;
+		}
 	}
+	
 	public boolean isJumping(){
 		return (getVertDirection() != 0);
 	}
@@ -810,12 +840,16 @@ public class Mazub {
 		updateHorVelocity(timeDuration);
 		updateVertPosition(timeDuration);
 		updateVertVelocity(timeDuration);
+		counter(timeDuration);
+		updateLastDirection();
 	}
 	
 	public void updateHorVelocity(double timeDuration){
 		double newVel = getHorVelocity() + getHorAcceleration() * timeDuration;
-		if (newVel > getMaxHorVelocity())
+		if (newVel > getMaxHorVelocity()){
 			setHorVelocity(getMaxHorVelocity());
+			setHorAcceleration(0);
+		}
 		else
 			setHorVelocity(newVel);
 	}
@@ -851,8 +885,31 @@ public class Mazub {
 			setEffectiveYPos(newYPos);
 	}
 	
+	public void counter(double timeDuration){
+		if (getHorDirection() == 0){
+			this.timeSum += timeDuration;
+		}
+	}
 	
-	
+	/**
+	 * @return the lastDirection
+	 */
+	public int getLastDirection() {
+		return lastDirection;
+	}
+
+	/**
+	 * @param lastDirection the lastDirection to set
+	 */
+	public void setLastDirection(int lastDirection) {
+		this.lastDirection = lastDirection;
+	}
+
+	public void updateLastDirection() {
+		if (getHorDirection() != 0)
+			this.lastDirection = getHorDirection();
+	}
+
 	private final double initHorVelocity;
 	private final double maxHorVelocityRunning;
 	private final double MAX_HOR_VELOCITY_DUCKING = 1;
@@ -868,4 +925,5 @@ public class Mazub {
 	public int index;
 	public int m;
 	public double timeSum;
+	public int lastDirection;
 }
