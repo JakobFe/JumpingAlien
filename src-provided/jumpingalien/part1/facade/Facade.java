@@ -1,15 +1,19 @@
 package jumpingalien.part1.facade;
 
 
-import jumpingalien.model.Mazub;
-import jumpingalien.util.Sprite;
+import jumpingalien.model.*;
+import jumpingalien.util.*;
 
 public class Facade implements IFacade {
 
 	@Override
 	public Mazub createMazub(int pixelLeftX, int pixelBottomY, Sprite[] sprites) {
 		// TODO Auto-generated method stub
-		return new Mazub(pixelLeftX,pixelBottomY,1,1,1,3,sprites);
+		try{return new Mazub(pixelLeftX,pixelBottomY,1,1,1,3,sprites);}
+		catch (IllegalXPositionException exc){
+			throw new ModelException("Illegal X Position!");}
+		catch (IllegalYPositionException exc){
+			throw new ModelException("Illegal Y Position!");}
 	}
 
 	@Override
@@ -105,8 +109,12 @@ public class Facade implements IFacade {
 	@Override
 	public void advanceTime(Mazub alien, double dt) {
 		// TODO Auto-generated method stub
-		alien.advanceTime(dt);
+		try{
+		alien.advanceTime(dt);}
+		catch (IllegalXPositionException exc){
+			throw new ModelException("Illegal X Position!");}
+		catch (IllegalYPositionException exc){
+			throw new ModelException("Illegal Y Position!");}
 	}
 	
-
 }

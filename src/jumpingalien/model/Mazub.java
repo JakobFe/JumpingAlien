@@ -707,6 +707,10 @@ public class Mazub {
 	
 	public void endDuck(){
 		setMaxHorVelocity(getMaxHorVelocityRunning());
+		if (isMovingRight())
+			startMoveRight();
+		else if (isMovingLeft())
+			startMoveLeft();
 	}
 	
 	/**
@@ -749,84 +753,53 @@ public class Mazub {
 	public boolean isJumping(){
 		return (getVertDirection() != 0);
 	}
-
+	
 	public Sprite getCurrentSprite(){
 		if (isDucking()){
 			if (isMoving()){
-				if (isMovingRight() || wasMovingRight()){
+				if (isMovingRight())
 					setIndex(6);
-					return sprites[6];
+				else
+					// isMovingLeft() == true
+					setIndex(7);
 				}
-				else{
-					if (isMovingLeft() || wasMovingLeft()){
-						setIndex(7);
-						return sprites[7];
-					}
-				}
-			}
-			else{
-				//enige overblijvende mogenlijkheid
+			else
+				// only possibility left
 				setIndex(1);
-				return sprites[1];
-			}
 		}
-		else{
-			if (wasMovingRight()){
-				setIndex(2);
-				return sprites[2];
-			}
-			if (wasMovingLeft()){
-				setIndex(3);
-				return sprites[3];
-			}
-			else{
-				if (isMoving()){
-					if (isJumping()){
-						if (isMovingRight()){
-							setIndex(4);
-							return sprites[4];
-						}
-						else{
-							setIndex(5);
-							return sprites[5];
-						}
-					}
-					else{
-						if (isMovingRight()){
-							//8..8+m
-							if ((index < 8) || (index >= (8+m))){
-								setIndex(8);
-								return sprites[8];
-							}
-							else{
-								int newIndex = getIndex() + 1;
-								setIndex(newIndex);
-								return sprites[newIndex];
-							}
-						}
-						else{
-							//9+m..9+2m
-							if ((index < (9+m)) || (index >= (9+2*m))){
-								setIndex(9+m);
-								return sprites[9+m];
-							}
-							else{
-								int newIndex = getIndex() + 1;
-								setIndex(newIndex);
-								return sprites[newIndex];
-							}
-						}
-					}
+		else if (isMoving()){
+				if (isJumping()){
+					if (isMovingRight())
+						setIndex(4);
+					else
+						// isMovingLeft() == true
+						setIndex(5);
+				}
+				else if (isMovingRight()){
+						//8..8+m
+						if ((index < 8) || (index >= (8+m)))
+							setIndex(8);
+						else
+							setIndex(getIndex()+1);
 				}
 				else{
-					setIndex(0);
-					return sprites[0];
-				}
-			}
+					//isMovingLeft() == true
+					//9+m..9+2m
+					if ((index < (9+m)) || (index >= (9+2*m)))
+						setIndex(9+m);
+					else
+						setIndex(getIndex()+1);
+						}
 		}
-		setIndex(0);
-		return sprites[0];
-	}
+		else if (wasMovingRight())
+				setIndex(2);
+		else if (wasMovingLeft())
+				setIndex(3);
+		else
+			// Mazub is standing still longer than 1 second
+			setIndex(0);
+		return sprites[getIndex()];
+	}	
 	
 	/**
 	 * Method to update the position and velocity of the Mazub based on the current position,
