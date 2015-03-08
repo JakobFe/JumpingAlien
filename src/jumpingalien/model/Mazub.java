@@ -750,7 +750,7 @@ public class Mazub {
 	
 	public boolean wasMovingLeft(){
 		if (this.lastDirection == -1){
-			if (timeSum < 1){
+			if (timeSum < 1.0){
 				return true;
 			}
 			else{
@@ -766,7 +766,7 @@ public class Mazub {
 	
 	public boolean wasMovingRight(){
 		if (this.lastDirection == 1){
-			if (timeSum < 1){
+			if (timeSum < 1.0){
 				return true;
 			}
 			else{
