@@ -841,10 +841,8 @@ public class Mazub {
 	
 	public void updateHorVelocity(double timeDuration){
 		double newVel = getHorVelocity() + getHorAcceleration() * timeDuration;
-		if (newVel > getMaxHorVelocity()){
+		if (newVel > getMaxHorVelocity())
 			setHorVelocity(getMaxHorVelocity());
-			setHorAcceleration(0);
-		}
 		else
 			setHorVelocity(newVel);
 	}
@@ -896,4 +894,5 @@ public class Mazub {
 	public Sprite[] sprites;
 	public int index;
 	public int m;
+	public double timeSum;
 }
