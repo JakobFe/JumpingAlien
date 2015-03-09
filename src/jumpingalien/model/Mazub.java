@@ -889,6 +889,8 @@ public class Mazub {
 		if (getHorDirection() == 0){
 			this.timeSum += timeDuration;
 		}
+		else
+			this.timeSum = 0;
 	}
 	
 	/**
