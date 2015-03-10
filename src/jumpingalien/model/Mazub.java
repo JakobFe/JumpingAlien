@@ -27,11 +27,6 @@ import be.kuleuven.cs.som.annotate.*;
  * 			| canHaveAsHorVelocity(getVelocity()) 
  * 
  * 
- * @note	2 methods are doing exactly the same: isValidVertDirection() and
- * 			isValidHorDirection(). Maybe we should generalize it to a method isValidDirection().
- * 			There is still redundancy in the documentation of methods concerning positions.
- * 			Maybe we should work with the dimensions of the game world instead of 1024x768
- * 
  * @author	Jakob Festraets, Vincent Kemps
  * @version	1.0
  *
@@ -60,30 +55,18 @@ public class Mazub {
 	 * 			| new.xPosition = setEffectiveXPos(x)
 	 * @effect	This Mazub is initialized with the given y as its effective y-coordinate.
 	 * 			| new.yPosition = setEffectiveYPos(y)
-	 * @effect	This Mazub is initialized with the given width as its width.
-	 * 			| new.width = setWidth(width)
-	 * @effect	This Mazub is initialized with the given height as its height.
-	 * 			| new.height = setHeight(height)
 	 * @throws	IllegalXPositionException(x,this)
 	 * 			The given x-coordinate is not a valid x-coordinate.
 	 * 			| !isValidXPosition(x)
 	 * @throws	IllegalYPositionException(y,this)
 	 * 			The given y-coordinate is not a valid y-coordinate.
 	 * 			| !isValidYPosition(y)
-	 * @throws	IllegalWidthException(width,this)
-	 * 			The given width is not a valid width.
-	 * 			| !isValidWidth(width)
-	 * @throws	IllegalHeightException(height,this)
-	 * 			The given height is not a valid height.
-	 * 			| !isValidHeight(height)
 	 */
 	@Raw
-	public Mazub(int x, int y, int width, int height, double initHorVelocity, double maxHorVelocity, Sprite[] sprites) throws IllegalXPositionException,
+	public Mazub(int x, int y, double initHorVelocity, double maxHorVelocity, Sprite[] sprites) throws IllegalXPositionException,
 	IllegalYPositionException,IllegalWidthException,IllegalHeightException {
 		setEffectiveXPos(x);
 		setEffectiveYPos(y);
-		setWidth(width);
-		setHeight(height);
 		this.initHorVelocity = initHorVelocity;
 		this.maxHorVelocityRunning = maxHorVelocity;
 		setMaxHorVelocity(maxHorVelocity);
@@ -285,81 +268,16 @@ public class Mazub {
 	 */
 	@Basic
 	public int getWidth(){
-		return this.width;
+		return this.getCurrentSprite().getWidth();
 	}
-	
-	/**
-	 * Check whether the given width is a valid width.
-	 * @param 	width
-	 * 			width to check
-	 * @return 	True if and only if width is strictly positive.
-	 * 			| result == (width > 0)
-	 */
-	public static boolean isValidWidth(int width){
-		return (width > 0);
-	}
-	
-	/**
-	 * Set the width to the given width.
-	 * @param	width
-	 * 			The new width.
-	 * @post	The new width of this Mazub is equal to the given width.
-	 * 			| new.getWidth() == width
-	 * @throws	IllegalWidthException(width,this)
-	 * 			The given width is not a valid width.
-	 * 			| !isValidWidth(width)
-	 */
-	public void setWidth(int width) throws IllegalWidthException{
-		if (!isValidWidth(width))
-			throw new IllegalWidthException(width,this);
-		this.width = width;
-	}
-	
-	/**
-	 * Variable storing the width of this Mazub.
-	 */
-	private int width;
 	
 	/**
 	 * Return the height of this Mazub.
 	 */
 	@Basic
 	public int getHeight(){
-		return this.height;
+		return this.getCurrentSprite().getHeight();
 	}
-	
-	/**
-	 * Check whether the given height is a valid height.
-	 * @param 	height
-	 * 			height to check
-	 * @return 	True if and only if height is strictly positive 
-	 * 			and if height is smaller than 768.
-	 * 			| result == ((height > 0) && (height < 768))
-	 */
-	public static boolean isValidHeight(int height){
-		return (height > 0);
-	}
-	
-	/**
-	 * Set the height to the given height.
-	 * @param	height
-	 * 			The new height.
-	 * @post	The new height of this Mazub is equal to the given height.
-	 * 			| new.getHeight() == height
-	 * @throws	IllegalHeightException(height,this)
-	 * 			The given height is not a valid height.
-	 * 			| !isValidHeight(height)
-	 */
-	public void setHeight(int height) throws IllegalHeightException{
-		if (!isValidHeight(height))
-			throw new IllegalHeightException(height,this);
-		this.height = height;
-	}
-	
-	/**
-	 * Variable storing the height of the current sprite of this Mazub.
-	 */
-	private int height;
 	
 	/**
 	 * Returns the current horizontal direction of this Mazub.

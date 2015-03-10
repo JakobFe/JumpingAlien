@@ -41,7 +41,7 @@ public class MazubTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		Mazub_POS_0_0 = new Mazub(0,0,6,11,1,3,null);
+		Mazub_POS_0_0 = new Mazub(0,0,1,3,null);
 	}
 
 	/**
@@ -157,50 +157,6 @@ public class MazubTest {
 	@Test(expected = IllegalYPositionException.class)
 	public void setEffectiveYPos_IllegalCase() {
 		Mazub_POS_0_0.setEffectiveYPos(-20.458);
-	}
-	
-	//////////////////////////////////////////////////////////////////////////////////
-	
-	@Test
-	public void isValidWidth_TrueCase() {
-		assertTrue(Mazub.isValidWidth(10));
-	}
-	
-	@Test
-	public void isValidWidth_WidthNegative() {
-		assertFalse(Mazub.isValidWidth(-10));
-	}
-	
-	@Test
-	public void setWidth_EffectiveCase() {
-		Mazub_POS_0_0.setWidth(20);
-		assertEquals(20,Mazub_POS_0_0.getWidth());		
-	}
-	
-	@Test(expected = IllegalWidthException.class)
-	public void setWidth_IllegalCase() {
-		Mazub_POS_0_0.setWidth(-20);
-	}
-	
-	@Test
-	public void isValidHeight_TrueCase() {
-		assertTrue(Mazub.isValidHeight(10));
-	}
-	
-	@Test
-	public void isValidHeight_HeightNegative() {
-		assertFalse(Mazub.isValidHeight(-10));
-	}
-	
-	@Test
-	public void setHeight_EffectiveCase() {
-		Mazub_POS_0_0.setHeight(20);
-		assertEquals(20,Mazub_POS_0_0.getHeight());		
-	}
-	
-	@Test(expected = IllegalHeightException.class)
-	public void setHeight_IllegalCase() {
-		Mazub_POS_0_0.setHeight(-20);
 	}
 	
 	/////////////////////////////////////////////////////////////////////////////////

@@ -9,7 +9,7 @@ public class Facade implements IFacade {
 	@Override
 	public Mazub createMazub(int pixelLeftX, int pixelBottomY, Sprite[] sprites) {
 		// TODO Auto-generated method stub
-		try{return new Mazub(pixelLeftX,pixelBottomY,1,1,1,3,sprites);}
+		try{return new Mazub(pixelLeftX,pixelBottomY,1,3,sprites);}
 		catch (IllegalXPositionException exc){
 			throw new ModelException("Illegal X Position!");}
 		catch (IllegalYPositionException exc){
