@@ -162,29 +162,19 @@ public class MazubTest {
 	/////////////////////////////////////////////////////////////////////////////////
 	
 	@Test
-	public void isValidHorDirection_TrueCase() {
-		assertTrue(Mazub.isValidHorDirection(-1));
+	public void isValidDirection_TrueCase() {
+		assertTrue(Mazub.isValidDirection(-1));
 	}
 	
 	@Test
-	public void isValidHorDirection_FalseCase() {
-		assertFalse(Mazub.isValidHorDirection(2));
+	public void isValidDirection_FalseCase() {
+		assertFalse(Mazub.isValidDirection(2));
 	}
 	
 	@Test
 	public void setHorDirection_SingleCase() {
 		Mazub_POS_0_0.setHorDirection(1);
 		assertEquals(1,Mazub_POS_0_0.getHorDirection());		
-	}
-	
-	@Test
-	public void isValidVertDirection_TrueCase() {
-		assertTrue(Mazub.isValidVertDirection(0));
-	}
-	
-	@Test
-	public void isValidVertDirection_FalseCase() {
-		assertFalse(Mazub.isValidVertDirection(2));
 	}
 	
 	@Test

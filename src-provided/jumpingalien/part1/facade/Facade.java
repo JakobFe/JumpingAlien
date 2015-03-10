@@ -116,7 +116,7 @@ public class Facade implements IFacade {
 		try{
 		alien.advanceTime(dt);}
 		catch (IllegalXPositionException exc){
-			throw new ModelException("Illegal X Position!");}
+			System.out.println("Illegal X Position");}
 		catch (IllegalYPositionException exc){
 			throw new ModelException("Illegal Y Position!");}
 	}

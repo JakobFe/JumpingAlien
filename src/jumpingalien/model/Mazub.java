@@ -11,10 +11,6 @@ import be.kuleuven.cs.som.annotate.*;
  * 			| isValidXPosition(getXPosition())
  * @invar	The y position of this Mazub must be valid.
  * 			| isValidYPosition(getYPosition())
- * @invar	The width of this Mazub must be valid.
- * 			| isValidWidth(getWidth())
- * @invar	The height of this Mazub must be valid.
- * 			| isValidHeight(getHeight())
  * @invar	The horizontal direction of this Mazub must be valid.
  * 			| isValidHorDirection(getHorDirection())
  * @invar	The vertical direction of this Mazub must be valid.
@@ -26,6 +22,7 @@ import be.kuleuven.cs.som.annotate.*;
  * @invar 	The actual horizontal velocity of the Mazub must be valid.
  * 			| canHaveAsHorVelocity(getVelocity()) 
  * 
+ * @note	TODO: Formal documentation of constructor. Annotations.
  * 
  * @author	Jakob Festraets, Vincent Kemps
  * @version	1.0
@@ -34,37 +31,37 @@ import be.kuleuven.cs.som.annotate.*;
 public class Mazub {
 	
 	/**
-	 * Initialize this new Mazub with given x-coordinate, given y-coordinate, given width,
-	 * given heigth, given initial horizontal velocity and given maximum horizontal velocity.
-	 * At the moment of initialization the velocity is zero.
+	 * Initialize this new Mazub with given x position, given y position, 
+	 * given initial horizontal velocity, given maximum horizontal velocity and 
+	 * given sprites.
+	 * At the moment of initialization the velocity and acceleration are zero
+	 * in all directions.
 	 * @param 	x
-	 * 		  	initial x-coordinate for this Mazub.
+	 * 		  	Initial x position for this Mazub.
 	 * @param 	y
-	 * 			initial y-coordinate for this Mazub.
-	 * @param 	width
-	 * 			initial width for this Mazub.
-	 * @param 	height
-	 * 			initial height for this Mazub.
+	 * 			Initial y position for this Mazub.
 	 * @param 	initHorVelocity
-	 * 			initial horizontal velocity.
+	 * 			Initial horizontal velocity for this Mazub.
 	 * @param 	maxHorVelocity
-	 * 			maximum horizontal velocity.
+	 * 			Maximum horizontal velocity while running for this Mazub.
 	 * @pre		The initial horizontal velocity must be valid.
 	 * 			| isValidInitHorVelocity(getInitHorVelocity())
-	 * @effect	This Mazub is initialized with the given x as its effective x-coordinate.
-	 * 			| new.xPosition = setEffectiveXPos(x)
-	 * @effect	This Mazub is initialized with the given y as its effective y-coordinate.
-	 * 			| new.yPosition = setEffectiveYPos(y)
+	 * @effect	This Mazub is initialized with the given x as its effective x position.
+	 * 			| new.getEffectiveXPosition = setEffectiveXPos(x)
+	 * @effect	This Mazub is initialized with the given y as its effective y position.
+	 * 			| new.getEffectiveYPosition = setEffectiveYPos(y)
+	 * @post	The new Mazub has the given sprites as its sprites.
+	 * 			| ...
 	 * @throws	IllegalXPositionException(x,this)
-	 * 			The given x-coordinate is not a valid x-coordinate.
+	 * 			The given x-coordinate is not a valid x position.
 	 * 			| !isValidXPosition(x)
 	 * @throws	IllegalYPositionException(y,this)
-	 * 			The given y-coordinate is not a valid y-coordinate.
+	 * 			The given y-coordinate is not a valid y position.
 	 * 			| !isValidYPosition(y)
 	 */
 	@Raw
-	public Mazub(int x, int y, double initHorVelocity, double maxHorVelocity, Sprite[] sprites) throws IllegalXPositionException,
-	IllegalYPositionException,IllegalWidthException,IllegalHeightException {
+	public Mazub(int x, int y, double initHorVelocity, double maxHorVelocity, Sprite[] sprites) 
+			throws IllegalXPositionException,IllegalYPositionException{
 		setEffectiveXPos(x);
 		setEffectiveYPos(y);
 		this.initHorVelocity = initHorVelocity;
@@ -77,7 +74,7 @@ public class Mazub {
 	}
 	
 	/**
-	 * Return the displayed x-position of this Mazub.
+	 * Return the displayed x position of this Mazub.
 	 */
 	@Basic
 	public int getXPosition(){
@@ -288,27 +285,27 @@ public class Mazub {
 	}
 	
 	/**
-	 * Checks whether the given horizontal direction is valid.
-	 * @param	horDirection
-	 * 			The horizontal direction to check.
+	 * Checks whether the given direction is valid.
+	 * @param	direction
+	 * 			The direction to check.
 	 * @return	True if and only if the given direction equals 1,-1 or 0.
-	 * 			| result == (horDirection==1 || horDirection == -1 || horDirection == 0)
+	 * 			| result == (direction==1 || direction == -1 || direction == 0)
 	 */
-	public static boolean isValidHorDirection(int horDirection){
-		return (horDirection==1 || horDirection == -1 || horDirection == 0);
+	public static boolean isValidDirection(int direction){
+		return (direction==1 || direction == -1 || direction == 0);
 	}
 	
 	/**
 	 * Set the horizontal direction of this Mazub to the given horizontal direction.
 	 * @param	horDirection
 	 * 			Horizontal direction to set.
-	 * @pre		The given direction must be a valid horizontal direction.
-	 * 			| isValidHorDirection(horDirection)
+	 * @pre		The given direction must be a valid direction.
+	 * 			| isValidDirection(horDirection)
 	 * @post	The new horizontal direction of this Mazub is set to the given direction.
 	 * 			| new.getHorDirection() == horDirection
 	 */
 	public void setHorDirection(int horDirection) {
-		assert isValidHorDirection(horDirection);
+		assert isValidDirection(horDirection);
 		this.horDirection = horDirection;
 	}
 	
@@ -328,27 +325,16 @@ public class Mazub {
 	}
 	
 	/**
-	 * Checks whether the given vertical direction is valid.
-	 * @param	vertDirection
-	 * 			The vertical direction to check.
-	 * @return	True if and only if the given direction equals 1,-1 or 0.
-	 * 			| result == (vertDirection==1 || vertDirection == -1 || vertDirection == 0)
-	 */
-	public static boolean isValidVertDirection(int vertDirection){
-		return (vertDirection==1 || vertDirection == -1 || vertDirection == 0);
-	}
-	
-	/**
 	 * Set the vertical direction of this Mazub to the given direction.
 	 * @param	vertDirection
 	 * 			Vertical direction to set.
-	 * @pre		The given direction must be a valid vertical direction.
-	 * 			| isValidVertDirection(vertDirection)
+	 * @pre		The given direction must be a valid direction.
+	 * 			| isValidDirection(vertDirection)
 	 * @post	The new vertical direction of this Mazub is set to the given direction.
 	 * 			| new.getVertDirection() == vertDirection
 	 */
 	public void setVertDirection(int vertDirection) {
-		assert isValidVertDirection(vertDirection);
+		assert isValidDirection(vertDirection);
 		this.vertDirection = vertDirection;
 	}
 	
@@ -370,6 +356,7 @@ public class Mazub {
 	/**
 	 * Checks whether the given initial horizontal velocity is valid.
 	 * @param	initHorVelocity
+	 * 			The initial horizontal velocity to check.
 	 * @return	True if the given initial horizontal velocity is greater than
 	 * 			or equal to 1.
 	 * 			| result == (initHorVelocity >= 1)
@@ -406,6 +393,7 @@ public class Mazub {
 	
 	/**
 	 * A variable storing the maximum horizontal velocity while ducking.
+	 * This variable will always have 1 m/s as its value.
 	 */
 	private final double MAX_HOR_VELOCITY_DUCKING = 1;
 	
@@ -417,24 +405,27 @@ public class Mazub {
 		return this.maxHorVelocity;
 	}
 	/**
-	 * Checks whether the given maximum horizontal velocity is valid.
+	 * Checks whether this Mazub can have the given maximum 
+	 * horizontal velocity as its maximum horizontal velocity.
 	 * @param	maxHorVelocity
 	 * 			The maximum horizontal velocity to check.
 	 * @return	True if the given maximum horizontal velocity is above 
-	 * 			the initial horizontal velocity of this Mazub.
-	 * 			| result == (maxHorVelocity > getInitHorVelocity())
+	 * 			the initial horizontal velocity of this Mazub, or equal
+	 * 			to the maximum horizontal velocity while ducking.
+	 * 			| result == (maxHorVelocity > getInitHorVelocity()) ||
+	 * 			|			maxHorVelocity == getMaxHorVelocityDucking()
 	 */
 	public boolean canHaveAsMaxHorVelocity(double maxHorVelocity){
-		return (maxHorVelocity >= this.getInitHorVelocity());
+		return (maxHorVelocity > this.getInitHorVelocity()) ||
+				maxHorVelocity == getMaxHorVelocityDucking();
 	}
 	
 	/**
 	 * Sets the maximum horizontal velocity to the given value.
 	 * @param 	maxHorVelocity
 	 * 			The maximum horizontal velocity to set.
-	 * @pre		The given value must be a valid maximum horizontal velocity.
-	 * 			| canHaveAsMaxHorVelocity(maxHorVelocity)
-	 * @post	The maximum horizontal velocity is set to the given value.
+	 * @post	If the given maximum horizontal velocity is valid,
+	 * 			the maximum horizontal velocity is set to the given value.
 	 * 			| new.getMaxHorVelocity() == maxHorVelocity
 	 */
 	public void setMaxHorVelocity(double maxHorVelocity){
@@ -443,7 +434,12 @@ public class Mazub {
 	}
 	
 	/**
-	 * Return the horizontal velocity of this Mazub.
+	 * A variable storing the current maximal velocity of this Mazub.
+	 */
+	private double maxHorVelocity;
+	
+	/**
+	 * Return the current horizontal velocity of this Mazub.
 	 */
 	@Basic
 	public double getHorVelocity() {
@@ -451,7 +447,8 @@ public class Mazub {
 	}
 	
 	/**
-	 * Checks whether the given horizontal velocity is valid.
+	 * Checks whether this Mazub can have the given horizontal velocity as
+	 * its horizontal velocity.
 	 * @param	horVelocity
 	 * 			The horizontal velocity to check.
 	 * @return	True if the given horizontal velocity is above or equal to
@@ -472,11 +469,11 @@ public class Mazub {
 	 * Set the horizontal velocity to a given value.
 	 * @param 	horVelocity
 	 * 			The new horizontal velocity for this Mazub.
-	 * @pre		The new velocity must be a valid horizontal velocity.
-	 * 			|isValidHorVelocity(horVelocity)
-	 * @post	The new horizontal velocity of this Mazub is equal to 
+	 * @post	If the given horizontal velocity is possible,
+	 * 			the new horizontal velocity of this Mazub is equal to 
 	 * 			the given horizontal velocity.
-	 * 			| new.getHorVelocity() == horVelocity
+	 * 			| if (canHaveAsHorVelocity())
+	 * 			| 	then new.getHorVelocity() == horVelocity
 	 */
 	public void setHorVelocity(double horVelocity) {
 		assert canHaveAsHorVelocity(horVelocity);
@@ -484,42 +481,36 @@ public class Mazub {
 	}
 	
 	/**
-	 * Return the horizontal acceleration of the Mazub.
+	 * A variable storing the current horizontal velocity of this Mazub.
+	 * This value will always be a positive number of type double.
+	 */
+	private double horVelocity;
+	
+	
+	/**
+	 * Return the maximum horizontal acceleration of the Mazub.
+	 */
+	@Basic @Immutable
+	public static double getMaxHorAcceleration(){
+		return maxHorAcceleration;
+	}
+	
+	/**
+	 * A variable storing the maximum horizontal acceleration for this Mazub.
+	 */
+	private static final double maxHorAcceleration = 0.9;
+	
+	/**
+	 * Return the current horizontal acceleration of this Mazub.
 	 */
 	public double getHorAcceleration() {
 		return horAcceleration;
 	}
 	
 	/**
-	 * Return the maximum horizontal acceleration of the Mazub.
-	 */
-	public static double getMaxHorAcceleration(){
-		return maxHorAcceleration;
-	}
-	
-
-	/**
-	 * Sets the horizontal acceleration to the given value if the given value is valid.
-	 * If it isn't the horizontal acceleration will be left unchanged.
-	 * @param 	horAcceleration 
-	 * 			the horAcceleration to set
-	 * @post	If the given value is valid, the horizontal acceleration is set to the given
-	 * 			value.
-	 * 			| if (isValidHorAcceleration(horAcceleration))
-	 * 			|	then new.getHorAcceleration() = horAcceleration
-	 * @post	If the given value is not valid, the horizontal acceleration is left unchanged.
-	 * 			| if (!isValidHorAcceleration(horAcceleration))
-	 * 			|	then new.getHorAcceleration() = this.getHorAcceleration()
-	 */
-	public void setHorAcceleration(double horAcceleration) {
-		if (isValidHorAcceleration(horAcceleration))
-			this.horAcceleration = horAcceleration;			
-	}
-	
-	/**
 	 * Checks whether the given horizontal acceleration is valid.
 	 * @param 	horAcceleration
-	 * 			horizontal acceleration to check.
+	 * 			Horizontal acceleration to check.
 	 * @return	True if and only if the given value is equal to zero
 	 * 			or the maximum horizontal acceleration.
 	 * 			| result == 
@@ -528,13 +519,38 @@ public class Mazub {
 	public static boolean isValidHorAcceleration(double horAcceleration){
 		return ((horAcceleration == 0) || (horAcceleration == getMaxHorAcceleration()));
 	}
+
+	/**
+	 * Sets the horizontal acceleration to the given value.
+	 * @param 	horAcceleration 
+	 * 			The horAcceleration to set.
+	 * @post	If the given value is valid, the horizontal acceleration is set to the given
+	 * 			value.
+	 * 			| if (isValidHorAcceleration(horAcceleration))
+	 * 			|	then new.getHorAcceleration() = horAcceleration
+	 */
+	public void setHorAcceleration(double horAcceleration) {
+		if (isValidHorAcceleration(horAcceleration))
+			this.horAcceleration = horAcceleration;			
+	}
+
+	/**
+	 * A variable storing the current horizontal acceleration.
+	 */
+	private double horAcceleration;
 	
 	/**
 	 * Return the initial vertical velocity of this Mazub.
 	 */
-	public double getInitVertVelocity() {
+	public static double getInitVertVelocity() {
 		return INIT_VERT_VELOCITY;
 	}
+	
+	/**
+	 * A variable storing the initial vertical velocity. 
+	 * This variable will always have 8 m/s as its value.
+	 */
+	private static final double INIT_VERT_VELOCITY = 8;
 
 	/**
 	 * Return the current vertical velocity of this Mazub.
@@ -543,48 +559,109 @@ public class Mazub {
 		return vertVelocity;
 	}
 	
+	/**
+	 * A method to check whether the given vertical velocity is valid.
+	 * @param 	vertVelocity
+	 * 			The vertical velocity to check.
+	 * @return	Returns true if and only if the given value is positive or zero.
+	 * 			| result == vertVelocity >= 0
+	 */
 	public static boolean isValidVertVelocity(double vertVelocity){
 		return (vertVelocity >= 0); 
 	}
 
 	/**
 	 * @param 	vertVelocity 
-	 * 			the vertVelocity to set
+	 * 			The vertVelocity to set
+	 * @post	If the given vertical is valid, the vertical velocity
+	 * 			is set to the given value.
+	 * 			| if (isValidVertVelocity(vertVelocity))
+				| 	then new.vertVelocity = vertVelocity
 	 */
 	public void setVertVelocity(double vertVelocity) {
 		if (isValidVertVelocity(vertVelocity))
 			this.vertVelocity = vertVelocity;
 	}
-
+	
 	/**
-	 * @return the vertAcceleration
+	 * A variable storing the current vertical velocity.
+	 *  This value will always be a positive number of type double.
+	 */
+	private double vertVelocity;
+	
+	/**
+	 * Return the current vertical acceleration of this Mazub.
 	 */
 	public double getVertAcceleration() {
 		return vertAcceleration;
 	}
-
+	
+	/**
+	 * A method to check whether the given value is a 
+	 * valid vertical acceleration.
+	 * @param 	vertAcceleration
+	 * 			Vertical acceleration to check.
+	 * @return	True if and only is the given value equals zero
+	 * 			or the maximum vertical acceleration.
+	 * 			| result = (vertAcceleration == 0 || 
+	 * 			|			vertAcceleration == getMaxVertAcceleration());
+	 */
 	public static boolean isValidVertAcceleration(double vertAcceleration){
-		return (vertAcceleration == 0 || vertAcceleration == -10);
+		return (vertAcceleration == 0 || vertAcceleration == getMaxVertAcceleration());
 	}
 	
 	/**
-	 * @param vertAcceleration the vertAcceleration to set
+	 * Sets the vertical acceleration to the given value.
+	 * @param 	vertAcceleration 
+	 * 			The vertical acceleration to set.
+	 * @post	If the given value is a valid vertical acceleration,
+	 * 			the vertical acceleration is set to the given value.
+	 * 			| if (isValidVertAcceleration(vertAcceleration))
+				| 	then new.vertAcceleration = vertAcceleration
 	 */
 	public void setVertAcceleration(double vertAcceleration) {
-		this.vertAcceleration = vertAcceleration;
+		if (isValidVertAcceleration(vertAcceleration))
+			this.vertAcceleration = vertAcceleration;
 	}
-
+	
 	/**
-	 * @return the maxvertacceleration
+	 * A variable storing the current vertical acceleration.
+	 * This variable will always be a negative number of type double.
+	 */
+	private double vertAcceleration;
+	
+	/**
+	 * Return the maximum vertical acceleration.
 	 */
 	public static double getMaxVertAcceleration() {
 		return MAX_VERT_ACCELERATION;
 	}
+	
+	/**
+	 * A variable storing the maximum vertical acceleration,
+	 * the gravitational constant. This variable will always have
+	 *  (-10 m/s^2) as its value.
+	 */
+	private static final double MAX_VERT_ACCELERATION = -10;
 
 	/**
 	 * Method to start the movement of the Mazub to the left.
+	 * 
+	 * @pre		This Mazub must have a valid initial horizontal velocity.
+	 * 			| ...
+	 * @pre		This mazub must have a valid maximum horizontal acceleration.
+	 * 			| ...
+	 * @effect	The horizontal velocity of this Mazub is set to the initial
+	 * 			horizontal velocity.
+	 * 			| setHorVelocity(getInitHorVelocity())
+	 * @effect	The horizontal direction is set to -1.
+	 * 			| setHorDirection(-1)
+	 * @effect	The horizontal acceleration is set to the maximum 
+	 * 			horizontal acceleration.
+	 * 			| setHorAcceleration(getMaxHorAcceleration());
 	 */
 	public void startMoveLeft(){
+		// asserts
 		setHorVelocity(getInitHorVelocity());
 		setHorDirection(-1);
 		setHorAcceleration(getMaxHorAcceleration());
@@ -592,6 +669,13 @@ public class Mazub {
 	
 	/**
 	 * Method to end the movement of the Mazub when moving to the left.
+	 * 
+	 * @effect	If the current horizontal direction equals -1,
+	 * 			the horizontal velocity, the horizontal direction and
+	 * 			the horizontal acceleration are set to zero.
+	 * 			| if (getHorDirection()==-1){
+	 * 			| 	then setHorVelocity(0),setHorDirection(0),
+	 * 			|	setHorAcceleration(0)
 	 */
 	public void endMoveLeft(){
 	if (getHorDirection()==-1){
@@ -603,6 +687,19 @@ public class Mazub {
 	
 	/**
 	 * Method to start the movement of the Mazub to the right.
+	 * 
+	 * @pre		This Mazub must have a valid initial horizontal velocity.
+	 * 			| ...
+	 * @pre		This mazub must have a valid maximum horizontal acceleration.
+	 * 			| ...
+	 * @effect	The horizontal velocity of this Mazub is set to the initial
+	 * 			horizontal velocity.
+	 * 			| setHorVelocity(getInitHorVelocity())
+	 * @effect	The horizontal direction is set to 1.
+	 * 			| setHorDirection(1)
+	 * @effect	The horizontal acceleration is set to the maximum 
+	 * 			horizontal acceleration.
+	 * 			| setHorAcceleration(getMaxHorAcceleration());
 	 */
 	public void startMoveRight(){
 		setHorVelocity(getInitHorVelocity());
@@ -611,7 +708,14 @@ public class Mazub {
 	}
 	
 	/**
-	 * Method to end the movement of the Mazub when moving to the right.
+	 * Method to end the movement of the Mazub when moving to the left.
+	 * 
+	 * @effect	If the current horizontal direction equals 1,
+	 * 			the horizontal velocity, the horizontal direction and
+	 * 			the horizontal acceleration are set to zero.
+	 * 			| if (getHorDirection()==-1){
+	 * 			| 	then setHorVelocity(0),setHorDirection(0),
+	 * 			|	setHorAcceleration(0)
 	 */
 	public void endMoveRight(){
 	if (getHorDirection() == 1){	
@@ -665,6 +769,8 @@ public class Mazub {
 		assert isValidIndex(index);
 		this.index = index;
 	}
+	
+	
 	
 	public boolean isDucking(){
 		return (getMaxHorVelocity() == 1);
@@ -766,6 +872,11 @@ public class Mazub {
 	}	
 	
 	/**
+	 * A variable storing all possible sprites for this character.
+	 */
+	public Sprite[] sprites;
+	
+	/**
 	 * Method to update the position and velocity of the Mazub based on the current position,
 	 * velocity and a given time duration in seconds.
 	 */
@@ -825,6 +936,8 @@ public class Mazub {
 			setEffectiveYPos(newYPos);
 	}
 	
+	
+	
 	public void counter(double timeDuration){
 		if (getHorDirection() == 0){
 			this.timeSum += timeDuration;
@@ -852,15 +965,6 @@ public class Mazub {
 			this.lastDirection = getHorDirection();
 	}
 
-	private double maxHorVelocity;
-	private static final double maxHorAcceleration = 0.9;
-	private double horVelocity;
-	private double horAcceleration;
-	private static final double INIT_VERT_VELOCITY = 8;
-	private double vertVelocity;
-	private double vertAcceleration;
-	private static final double MAX_VERT_ACCELERATION = -10;
-	public Sprite[] sprites;
 	public int index;
 	public int m;
 	public double timeSum;
