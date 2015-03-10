@@ -61,7 +61,11 @@ public class Facade implements IFacade {
 	@Override
 	public void startJump(Mazub alien) {
 		// TODO Auto-generated method stub
-		alien.startJump();
+		try{
+			alien.startJump();}
+		catch (IllegalJumpInvokeException exc){
+			throw new ModelException("Illegal Jumping Invoke!");
+		}
 	}
 
 	@Override

@@ -461,6 +461,11 @@ public class Mazub {
 	}
 	
 	/**
+	 * A variable storing the initial horizontal velocity of this Mazub.
+	 */
+	private final double initHorVelocity;
+	
+	/**
 	 * Return the maximum horizontal velocity while running for this Mazub.
  	 */
 	@Basic @Immutable
@@ -469,12 +474,22 @@ public class Mazub {
 	}
 
 	/**
+	 * A variable storing the maximum horizontal velocity while running.
+	 */
+	private final double maxHorVelocityRunning;
+	
+	/**
 	 * Return the maximum horizontal velocity while ducking for this Mazub.
  	 */
 	@Basic @Immutable
 	public double getMaxHorVelocityDucking(){
 		return MAX_HOR_VELOCITY_DUCKING;
 	}
+	
+	/**
+	 * A variable storing the maximum horizontal velocity while ducking.
+	 */
+	private final double MAX_HOR_VELOCITY_DUCKING = 1;
 	
 	@Basic
 	/**
@@ -597,14 +612,14 @@ public class Mazub {
 	}
 	
 	/**
-	 * @return the initVertVelocity
+	 * Return the initial vertical velocity of this Mazub.
 	 */
 	public double getInitVertVelocity() {
 		return INIT_VERT_VELOCITY;
 	}
 
 	/**
-	 * @return the vertVelocity
+	 * Return the current vertical velocity of this Mazub.
 	 */
 	public double getVertVelocity() {
 		return vertVelocity;
@@ -688,12 +703,13 @@ public class Mazub {
 		}
 	}
 	
-	public void startJump(){
-		if (getVertDirection() == 0){
-			setVertVelocity(getInitVertVelocity());
-			setVertAcceleration(getMaxVertAcceleration());
-			setVertDirection(1);
+	public void startJump() throws IllegalJumpInvokeException{
+		if (getVertDirection() != 0) {
+			throw new IllegalJumpInvokeException(this);
 		}
+		setVertVelocity(getInitVertVelocity());
+		setVertAcceleration(getMaxVertAcceleration());
+		setVertDirection(1);
 	}
 	
 	public void endJump(){
@@ -838,7 +854,12 @@ public class Mazub {
 	public void advanceTime(double timeDuration){
 		updateHorPosition(timeDuration);
 		updateHorVelocity(timeDuration);
-		updateVertPosition(timeDuration);
+		try{
+			updateVertPosition(timeDuration);
+		}
+		catch(IllegalYPositionException exc){
+			setEffectiveYPos(0);
+		}
 		updateVertVelocity(timeDuration);
 		counter(timeDuration);
 		updateLastDirection();
@@ -875,12 +896,13 @@ public class Mazub {
 		setVertVelocity(newVel);
 	}
 	
-	public void updateVertPosition(double timeDuration){
+	public void updateVertPosition(double timeDuration)
+			throws IllegalYPositionException{
 		double newYPos = getEffectiveYPos() + 
 				((getVertDirection()*getVertVelocity()*timeDuration)+ 
 				0.5*getHorAcceleration()*Math.pow(timeDuration, 2))*100;
 		if (newYPos<0)
-			setEffectiveYPos(0);
+			throw new IllegalYPositionException(newYPos, this);
 		else
 			setEffectiveYPos(newYPos);
 	}
@@ -912,9 +934,6 @@ public class Mazub {
 			this.lastDirection = getHorDirection();
 	}
 
-	private final double initHorVelocity;
-	private final double maxHorVelocityRunning;
-	private final double MAX_HOR_VELOCITY_DUCKING = 1;
 	private double maxHorVelocity;
 	private static final double maxHorAcceleration = 0.9;
 	private double horVelocity;

@@ -17,7 +17,7 @@ public class IllegalYPositionException extends RuntimeException {
      *          to the given value.
      *          | new.getValue() == value
      */
-	public IllegalYPositionException(int yPosition, Mazub character){
+	public IllegalYPositionException(double yPosition, Mazub character){
 		this.yPosition = yPosition;
 		this.character = character;
 	}
@@ -26,7 +26,7 @@ public class IllegalYPositionException extends RuntimeException {
 	 * Return the y-coordinate for this illegal y position exception.
 	 */
 	@Basic@Immutable
-	public int getyPosition(){
+	public double getyPosition(){
 		return this.yPosition;
 	}
 	
@@ -34,7 +34,7 @@ public class IllegalYPositionException extends RuntimeException {
 	 * A variable registering the y position involved in this 
 	 * illegal y position exception.
 	 */
-	private final int yPosition;
+	private final double yPosition;
 	
 	/**
 	 * Return the Mazub character for this illegal y position exception.
