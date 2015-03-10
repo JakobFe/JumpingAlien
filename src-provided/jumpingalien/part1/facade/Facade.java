@@ -38,7 +38,7 @@ public class Facade implements IFacade {
 	public double[] getAcceleration(Mazub alien) {
 		// TODO Auto-generated method stub
 		double[] result = new double[2];
-		result[0] = alien.getHorAcceleration();
+		result[0] = alien.getHorDirection()*alien.getHorAcceleration();
 		result[1] = alien.getVertAcceleration();
 		return result;
 	}
