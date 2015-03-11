@@ -735,6 +735,7 @@ public class Mazub {
 		setHorVelocity(getInitHorVelocity());
 		setHorDirection(-1);
 		setHorAcceleration(getMaxHorAcceleration());
+		timeSum = 0;
 	}
 	
 	/**
@@ -752,6 +753,7 @@ public class Mazub {
 		setHorVelocity(0);
 		setHorDirection(0);
 		setHorAcceleration(0);
+		timeSum = 0;
 		}
 	}
 	
@@ -775,6 +777,7 @@ public class Mazub {
 		setHorVelocity(getInitHorVelocity());
 		setHorDirection(1);
 		setHorAcceleration(getMaxHorAcceleration());
+		timeSum = 0;
 	}
 	
 	/**
@@ -792,6 +795,7 @@ public class Mazub {
 		setHorVelocity(0);
 		setHorDirection(0);
 		setHorAcceleration(0);
+		timeSum = 0;
 		}
 	}
 	
@@ -921,19 +925,29 @@ public class Mazub {
 				}
 				else if (isMovingRight()){
 						//8..8+m
-						if ((index < 8) || (index >= (8+m)))
+						if ((index <8 || index > (8+m)))
 							setIndex(8);
-						else
-							setIndex(getIndex()+1);
+						if (this.timeSum>0.075){
+							int newIndex = getIndex() + (int) (Math.floor(timeSum/0.075));
+							if (newIndex > (8+m))
+								setIndex((newIndex-8)%m + 8);
+							else
+								setIndex(newIndex);
+							this.timeSum = timeSum%0.075;}
 				}
 				else{
 					//isMovingLeft() == true
 					//9+m..9+2m
-					if ((index < (9+m)) || (index >= (9+2*m)))
+					if ((index < (9+m)))
 						setIndex(9+m);
-					else
-						setIndex(getIndex()+1);
-						}
+					if (this.timeSum>0.075){
+						int newIndex = getIndex() + (int) (Math.floor(timeSum/0.075));
+						if (newIndex > (9+2*m))
+							setIndex((newIndex-(9+m))%m + 9+m);
+						else
+							setIndex(newIndex);
+						this.timeSum = timeSum%0.075;}
+				}
 		}
 		else if (wasMovingRight())
 				setIndex(2);
@@ -1017,7 +1031,7 @@ public class Mazub {
 			this.timeSum += timeDuration;
 		}
 		else
-			this.timeSum = 0;
+			this.timeSum += timeDuration;;
 	}
 	
 	/**
