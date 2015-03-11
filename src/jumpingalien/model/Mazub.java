@@ -735,7 +735,7 @@ public class Mazub {
 		setHorVelocity(getInitHorVelocity());
 		setHorDirection(-1);
 		setHorAcceleration(getMaxHorAcceleration());
-		timeSum = 0;
+		setTimeSum(0);
 	}
 	
 	/**
@@ -753,7 +753,7 @@ public class Mazub {
 		setHorVelocity(0);
 		setHorDirection(0);
 		setHorAcceleration(0);
-		timeSum = 0;
+		setTimeSum(0);
 		}
 	}
 	
@@ -777,7 +777,7 @@ public class Mazub {
 		setHorVelocity(getInitHorVelocity());
 		setHorDirection(1);
 		setHorAcceleration(getMaxHorAcceleration());
-		timeSum = 0;
+		setTimeSum(0);
 	}
 	
 	/**
@@ -795,7 +795,7 @@ public class Mazub {
 		setHorVelocity(0);
 		setHorDirection(0);
 		setHorAcceleration(0);
-		timeSum = 0;
+		setTimeSum(0);
 		}
 	}
 	
@@ -867,13 +867,13 @@ public class Mazub {
 	}
 	
 	public boolean wasMovingLeft(){
-		if (this.lastDirection == -1){
+		if (getLastDirection() == -1){
 			if (timeSum < 1.0){
 				return true;
 			}
 			else{
 				setLastDirection(0);
-				timeSum = 0;
+				setTimeSum(0);
 				return false;
 			}
 		}
@@ -883,13 +883,13 @@ public class Mazub {
 	}
 	
 	public boolean wasMovingRight(){
-		if (this.lastDirection == 1){
+		if (getLastDirection() == 1){
 			if (timeSum < 1.0){
 				return true;
 			}
 			else{
 				setLastDirection(0);
-				timeSum = 0;
+				setTimeSum(0);
 				return false;
 			}
 		}
@@ -925,28 +925,12 @@ public class Mazub {
 				}
 				else if (isMovingRight()){
 						//8..8+m
-						if ((index <8 || index > (8+m)))
-							setIndex(8);
-						if (this.timeSum>0.075){
-							int newIndex = getIndex() + (int) (Math.floor(timeSum/0.075));
-							if (newIndex > (8+m))
-								setIndex((newIndex-8)%m + 8);
-							else
-								setIndex(newIndex);
-							this.timeSum = timeSum%0.075;}
+						getNextWalkingAnimationRight();
 				}
 				else{
 					//isMovingLeft() == true
 					//9+m..9+2m
-					if ((index < (9+m)))
-						setIndex(9+m);
-					if (this.timeSum>0.075){
-						int newIndex = getIndex() + (int) (Math.floor(timeSum/0.075));
-						if (newIndex > (9+2*m))
-							setIndex((newIndex-(9+m))%m + 9+m);
-						else
-							setIndex(newIndex);
-						this.timeSum = timeSum%0.075;}
+					getNextWalkingAnimationLeft();
 				}
 		}
 		else if (wasMovingRight())
@@ -957,7 +941,31 @@ public class Mazub {
 			// Mazub is standing still longer than 1 second
 			setIndex(0);
 		return sprites[getIndex()];
-	}	
+	}
+
+	private void getNextWalkingAnimationRight() {
+		if ((index <8 || index > (8+m)))
+			setIndex(8);
+		if (getTimeSum()>0.075){
+			int newIndex = getIndex() + (int) (Math.floor(getTimeSum()/0.075));
+			if (newIndex > (8+m))
+				setIndex((newIndex-8)%m + 8);
+			else
+				setIndex(newIndex);
+			setTimeSum(getTimeSum()%0.075);}
+	}
+	
+	private void getNextWalkingAnimationLeft() {
+		if ((index < (9+m)))
+			setIndex(9+m);
+		if (getTimeSum()>0.075){
+			int newIndex = getIndex() + (int) (Math.floor(getTimeSum()/0.075));
+			if (newIndex > (9+2*m))
+				setIndex((newIndex-(9+m))%m + 9+m);
+			else
+				setIndex(newIndex);
+			setTimeSum(getTimeSum()%0.075);}
+	}
 	
 	/**
 	 * A variable storing all possible sprites for this character.
@@ -1026,12 +1034,8 @@ public class Mazub {
 	
 	
 	
-	public void counter(double timeDuration){
-		if (getHorDirection() == 0){
-			this.timeSum += timeDuration;
-		}
-		else
-			this.timeSum += timeDuration;;
+	private void counter(double timeDuration){
+		setTimeSum(getTimeSum()+timeDuration);
 	}
 	
 	/**
@@ -1053,8 +1057,16 @@ public class Mazub {
 			this.lastDirection = getHorDirection();
 	}
 
+	public double getTimeSum() {
+		return timeSum;
+	}
+
+	public void setTimeSum(double timeSum) {
+		this.timeSum = timeSum;
+	}
+
+	public int lastDirection;
 	public int index;
 	public int m;
 	public double timeSum;
-	public int lastDirection;
 }
