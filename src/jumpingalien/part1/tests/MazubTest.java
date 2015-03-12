@@ -1,14 +1,22 @@
 package jumpingalien.part1.tests;
-import static org.junit.Assert.*;
-import jumpingalien.model.IllegalXPositionException;
-import jumpingalien.model.IllegalYPositionException;
+
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+//import static org.junit.Assert.assertEquals;
+import jumpingalien.part1.facade.Facade;
+import jumpingalien.part1.facade.IFacade;
 import jumpingalien.model.Mazub;
+import jumpingalien.util.*;
+
+import org.junit.Test;
+
+import static jumpingalien.tests.util.TestUtils.*;
 
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Test;
+//import org.junit.Test;
 
 
 /**
@@ -37,16 +45,21 @@ public class MazubTest {
 	 * A variable referencing a Mazub at position(0,0), with 
 	 * default settings for all other attributes.
 	 */
-	private Mazub Mazub_POS_0_0;
 	
 	/**
 	 * @throws java.lang.Exception
 	 */
 	@Before
 	public void setUp() throws Exception {
-		Mazub_POS_0_0 = new Mazub(0,0,1,3,null);
+		MazubPos_0_0 = new Mazub(0,0,1,3,spriteArrayForSize(2, 2, 30));
+		MazubPos_50_0 = new Mazub(50,0,1,3,spriteArrayForSize(2, 2, 30));
+		MazubPos_800_0 = new Mazub(800,0,1,3,spriteArrayForSize(2, 2, 30));
 	}
 
+	private Mazub MazubPos_0_0;
+	private Mazub MazubPos_50_0;
+	private Mazub MazubPos_800_0;
+	
 	/**
 	 * @throws java.lang.Exception
 	 */
@@ -57,185 +70,564 @@ public class MazubTest {
 	////////////////////////////////////////////////////////////////////////////
 	
 	@Test
-	public void isValidXPosition_TrueCase() {
-		assertTrue(Mazub.isValidXPosition(500));
+	public void createMazubCorrect(){
+		IFacade facade = new Facade();
+		Mazub alien = facade.createMazub(20,0,spriteArrayForSize(2, 2));
+		assertArrayEquals(intArray(20,0),facade.getLocation(alien));
 	}
+	
+	@Test(expected=ModelException.class)
+	public void createMazubIllegalXPos(){
+		IFacade facade = new Facade();
+		facade.createMazub(-4,50,spriteArrayForSize(2, 2));
+	}
+	
+	@Test(expected=ModelException.class)
+	public void createMazubIllegalYPos(){
+		IFacade facade = new Facade();
+		facade.createMazub(40,999999,spriteArrayForSize(2, 2));
+	}
+	
+	////////////////////////////////////////////////////////////////////////////
 	
 	@Test
-	public void isValidXPosition_PositionNegative() {
-		assertFalse(Mazub.isValidXPosition(-1));
-	}
-	
-	@Test
-	public void isValidXPosition_PositionTooLarge() {
-		assertFalse(Mazub.isValidXPosition(2000));
-	}
-	
-	@Test
-	public void setXPosition_EffectiveCase() {
-		Mazub_POS_0_0.setXPosition(20);
-		assertEquals(20,Mazub_POS_0_0.getXPosition());
-	}
-	
-	@Test(expected = IllegalXPositionException.class)
-	public void setXPosition_IllegalCase() {
-		Mazub_POS_0_0.setXPosition(-20);
-	}
-	
-	@Test
-	public void isValidEffectiveXPos_TrueCase() {
-		assertTrue(Mazub.isValidEffectiveXPos(129.457896));
-	}
-	
-	@Test
-	public void isValidEffectiveXPos_PositionNegative() {
-		assertFalse(Mazub.isValidEffectiveXPos(-5.1235459));
-	}
-	
-	@Test
-	public void isValidEffectiveXPos_PositionTooLarge() {
-		assertFalse(Mazub.isValidEffectiveXPos(1500.4846541));
-	}
-	
-	@Test
-	public void setEffectiveXPos_EffectiveCase() {
-		Mazub_POS_0_0.setEffectiveXPos(20.458);
-		assertEquals(20.458,Mazub_POS_0_0.getEffectiveXPos(),0.0001);		
-	}
-	
-	@Test(expected = IllegalXPositionException.class)
-	public void setEffectiveXPos_IllegalCase() {
-		Mazub_POS_0_0.setEffectiveXPos(-20.458);
-	}
-	
-	/////////////////////////////////////////////////////////////////////////////////////////////
-	
-	@Test
-	public void isValidYPosition_TrueCase() {
-		assertTrue(Mazub.isValidYPosition(500));
-	}
-	
-	@Test
-	public void isValidYPosition_PositionNegative() {
-		assertFalse(Mazub.isValidYPosition(-1));
-	}
-	
-	@Test
-	public void isValidYPosition_PositionTooLarge() {
-		assertFalse(Mazub.isValidYPosition(2000));
-	}
-	
-	@Test
-	public void setYPosition_EffectiveCase() {
-		Mazub_POS_0_0.setYPosition(20);
-		assertEquals(20,Mazub_POS_0_0.getYPosition());
-	}
-	
-	@Test(expected = IllegalYPositionException.class)
-	public void setYPosition_IllegalCase() {
-		Mazub_POS_0_0.setYPosition(-20);
-	}
-	
-	@Test
-	public void isValidEffectiveYPos_TrueCase() {
-		assertTrue(Mazub.isValidEffectiveYPos(129.457896));
-	}
-	
-	@Test
-	public void isValidEffectiveYPos_PositionNegative() {
-		assertFalse(Mazub.isValidEffectiveYPos(-5.1235459));
-	}
-	
-	@Test
-	public void isValidEffectiveYPos_PositionTooLarge() {
-		assertFalse(Mazub.isValidEffectiveYPos(1500.4846541));
-	}
-	
-	@Test
-	public void setEffectiveYPos_EffectiveCase() {
-		Mazub_POS_0_0.setEffectiveYPos(20.458);
-		assertEquals(20.458,Mazub_POS_0_0.getEffectiveYPos(),0.0001);		
-	}
-	
-	@Test(expected = IllegalYPositionException.class)
-	public void setEffectiveYPos_IllegalCase() {
-		Mazub_POS_0_0.setEffectiveYPos(-20.458);
-	}
-	
-	/////////////////////////////////////////////////////////////////////////////////
-	
-	@Test
-	public void isValidDirection_TrueCase() {
-		assertTrue(Mazub.isValidDirection(-1));
-	}
-	
-	@Test
-	public void isValidDirection_FalseCase() {
-		assertFalse(Mazub.isValidDirection(2));
-	}
-	
-	@Test
-	public void setHorDirection_SingleCase() {
-		Mazub_POS_0_0.setHorDirection(1);
-		assertEquals(1,Mazub_POS_0_0.getHorDirection());		
-	}
-	
-	@Test
-	public void setVertDirection_SingleCase() {
-		Mazub_POS_0_0.setVertDirection(1);
-		assertEquals(1,Mazub_POS_0_0.getVertDirection());		
-	}
-	
-	///////////////////////////////////////////////////////////////////////////////////////////
-	
-	@Test
-	public void isValidInitHorVelocity_TrueCase() {
-		assertTrue(Mazub.isValidInitHorVelocity(1.2456));
-	}
-	
-	@Test
-	public void isValidInitHorVelocity_FalseCase() {
-		assertFalse(Mazub.isValidInitHorVelocity(0.999));
-	}
-	
-	@Test
-	public void canHaveAsMaxHorVelocity_TrueCase() {
-		assertTrue(Mazub_POS_0_0.canHaveAsMaxHorVelocity(10.2456));
-	}
-	
-	@Test
-	public void canHaveAsHorVelocity_TrueCase() {
-		assertTrue(Mazub_POS_0_0.canHaveAsHorVelocity(2.4568));
-	}
-	
-	@Test
-	public void setHorVelocity_EffectiveCase() {
-		Mazub_POS_0_0.setHorVelocity(1.9546);
-		assertEquals(1.9546,Mazub_POS_0_0.getHorVelocity(),0.00001);		
-	}
-	
-	@Test
-	public void setHorAcceleration_EffectiveCase() {
-		Mazub_POS_0_0.setHorAcceleration(Mazub.getMaxHorAcceleration());
-		assertEquals(Mazub.getMaxHorAcceleration(),Mazub_POS_0_0.getHorAcceleration(),0.01);		
-	}
-	
-	@Test
-	public void setHorAcceleration_NonEffectiveCase() {
-		Mazub_POS_0_0.setHorAcceleration(Mazub.getMaxHorAcceleration()+5);
-		assertEquals(0,Mazub_POS_0_0.getHorAcceleration(),0.001);		
-	}
-	
-	@Test
-	public void isValidHorAcceleration_TrueCase() {
-		assertTrue(Mazub.isValidHorAcceleration(0.9));
-	}
-	
-	@Test
-	public void isValidHorAcceleration_FalseCase() {
-		assertFalse(Mazub.isValidHorAcceleration(-123));
-	}
-	
-	/////////////////////////////////////////////////////////////////////////////////////////////
+	public void startMoveLeftCorrectLocation(){
+		IFacade facade = new Facade();
+		facade.startMoveLeft(MazubPos_50_0);
+		facade.advanceTime(MazubPos_50_0,0.1);
+		// x_new [m] = 0.50 [m] - 1 [m/s] * 0.1 [s] - 1/2 0.9 [m/s^2] * (0.1 [s])^2 =
+		// 0.3955 [m] = 39.55 [cm], which falls into pixel (39, 0)
 		
+		assertArrayEquals(intArray(39,0),facade.getLocation(MazubPos_50_0));
+	}
+	
+	// Given test.
+	@Test
+	public void startMoveRightCorrect() {
+		IFacade facade = new Facade();
+
+		Mazub alien = facade.createMazub(0, 0, spriteArrayForSize(2, 2));
+		facade.startMoveRight(alien);
+		facade.advanceTime(alien, 0.1);
+
+		// x_new [m] = 0 + 1 [m/s] * 0.1 [s] + 1/2 0.9 [m/s^2] * (0.1 [s])^2 =
+		// 0.1045 [m] = 10.45 [cm], which falls into pixel (10, 0)
+		
+		assertArrayEquals(intArray(10, 0), facade.getLocation(alien));
+	}
+	
+	@Test
+	public void startJumpCorrectLocation(){
+		IFacade facade = new Facade();
+		facade.startJump(MazubPos_50_0);
+		facade.advanceTime(MazubPos_50_0,0.1);
+		// y_new [m] = 0 + 8 [m/s] * 0.1 [s] - 1/2 10 [m/s^2] * (0.1 [s])^2 =
+		// 0.75 [m] = 75 [cm], which falls into pixel (50,75)
+		assertArrayEquals(intArray(50,75),facade.getLocation(MazubPos_50_0));
+	}
+	
+	@Test
+	public void combinedMovementCorrectLocation(){
+		IFacade facade = new Facade();
+		facade.startMoveLeft(MazubPos_50_0);
+		facade.startJump(MazubPos_50_0);
+		facade.advanceTime(MazubPos_50_0,0.1);
+		assertArrayEquals(intArray(39,75),facade.getLocation(MazubPos_50_0));
+	}
+	
+	////////////////////////////////////////////////////////////////////////////
+	
+	@Test
+	public void startMoveRightCorrectStartVelocity(){
+		IFacade facade = new Facade();
+		facade.startMoveRight(MazubPos_0_0);
+		assertArrayEquals(doubleArray(1,0),facade.getVelocity(MazubPos_0_0),
+				Util.DEFAULT_EPSILON);
+	}
+	
+	@Test
+	public void startMoveRightCorrectUpdateVelocity(){
+		IFacade facade = new Facade();
+		facade.startMoveRight(MazubPos_0_0);
+		facade.advanceTime(MazubPos_0_0,0.1);
+		// vx_new [m] = 1 [m/s] + 0.9 [m/s^2] * (0.1 [s]) = 1.09
+		assertArrayEquals(doubleArray(1.09,0),facade.getVelocity(MazubPos_0_0),
+				Util.DEFAULT_EPSILON);
+	}
+	
+	@Test
+	public void startMoveLeftCorrectUpdateVelocity(){
+		IFacade facade = new Facade();
+		facade.startMoveLeft(MazubPos_50_0);
+		facade.advanceTime(MazubPos_50_0,0.15);
+		// vx_new [m] = -1 [m/s] - 0.9 [m/s^2] * (0.15 [s]) = -1.135
+		assertArrayEquals(doubleArray(-1.135,0),facade.getVelocity(MazubPos_50_0),
+				Util.DEFAULT_EPSILON);
+	}
+	
+	// Given test.
+	@Test
+	public void startMoveRightMaxSpeedAtRightTime() {
+		IFacade facade = new Facade();
+
+		Mazub alien = facade.createMazub(0, 0, spriteArrayForSize(2, 2));
+		facade.startMoveRight(alien);
+		// maximum speed reached after 20/9 seconds
+		for (int i = 0; i < 100; i++) {
+			facade.advanceTime(alien, 0.2 / 9);
+		}
+
+		assertArrayEquals(doubleArray(3, 0), facade.getVelocity(alien),
+				Util.DEFAULT_EPSILON);
+	}
+	
+	@Test
+	public void startMoveLeftSpeedAfterMaxSpeedReached() {
+		IFacade facade = new Facade();
+		facade.startMoveLeft(MazubPos_800_0);
+		// maximum speed reached after 20/9 seconds
+		for (int i = 0; i < 110; i++) {
+			facade.advanceTime(MazubPos_800_0, 0.2 / 9);
+		}
+
+		assertArrayEquals(doubleArray(-3, 0), facade.getVelocity(MazubPos_800_0),
+				Util.DEFAULT_EPSILON);
+	}
+	
+	@Test
+	public void endMoveRightCorrectVelocity(){
+		IFacade facade = new Facade();
+		facade.startMoveRight(MazubPos_0_0);
+		for (int i = 0; i < 110; i++) {
+			facade.advanceTime(MazubPos_0_0, 0.2 / 9);
+		}
+		facade.endMoveRight(MazubPos_0_0);
+		assertArrayEquals(doubleArray(0,0),facade.getVelocity(MazubPos_0_0),
+				Util.DEFAULT_EPSILON);
+	}
+	
+	@Test
+	public void startMoveRightThenStartDuckCorrectMaxVelocity(){
+		IFacade facade = new Facade();
+		facade.startMoveRight(MazubPos_0_0);
+		for (int i = 0; i < 20; i++) {
+			facade.advanceTime(MazubPos_0_0, 0.2 / 9);
+		}
+		facade.startDuck(MazubPos_0_0);
+		facade.advanceTime(MazubPos_0_0, 0.15);
+		// When ducking, max velocity is 1.
+		assertArrayEquals(doubleArray(1,0),facade.getVelocity(MazubPos_0_0),
+				Util.DEFAULT_EPSILON);
+	}
+	
+	@Test
+	public void startDuckThenStartMoveLeftCorrectMaxVelocity(){
+		IFacade facade = new Facade();
+		facade.startDuck(MazubPos_50_0);
+		facade.startMoveLeft(MazubPos_50_0);
+		facade.advanceTime(MazubPos_50_0, 0.15);
+		// When ducking, max velocity is 1.
+		assertArrayEquals(doubleArray(-1,0),facade.getVelocity(MazubPos_50_0),
+				Util.DEFAULT_EPSILON);
+	}
+	
+	@Test
+	public void startJumpCorrectVelocity(){
+		IFacade facade = new Facade();
+		facade.startJump(MazubPos_50_0);
+		facade.advanceTime(MazubPos_50_0,0.1);
+		// v_new [m] = 8 [m/s]  -  10 [m/s^2] * (0.1 [s]) = 7 [m/s] 
+		assertArrayEquals(doubleArray(0,7),facade.getVelocity(MazubPos_50_0),
+				Util.DEFAULT_EPSILON);
+	}
+	
+	@Test
+	public void endJumpCorrectVelocity(){
+		IFacade facade = new Facade();
+		facade.startJump(MazubPos_50_0);
+		facade.advanceTime(MazubPos_50_0,0.1);
+		facade.endJump(MazubPos_50_0); 
+		assertArrayEquals(doubleArray(0,0),facade.getVelocity(MazubPos_50_0),
+				Util.DEFAULT_EPSILON);
+	}
+	
+	
+	////////////////////////////////////////////////////////////////////////////
+	
+	// Gegeven test.
+	@Test
+	public void testAccellerationZeroWhenNotMoving() {
+		IFacade facade = new Facade();
+
+		Mazub alien = facade.createMazub(0, 0, spriteArrayForSize(2, 2));
+		assertArrayEquals(doubleArray(0.0, 0.0), facade.getAcceleration(alien),
+				Util.DEFAULT_EPSILON);
+	}
+	
+	@Test
+	public void startMoveRightCorrectStartAcceleration(){
+		IFacade facade = new Facade();
+		facade.startMoveRight(MazubPos_0_0);
+		assertArrayEquals(doubleArray(0.9,0),facade.getAcceleration(MazubPos_0_0),
+				Util.DEFAULT_EPSILON);
+	}
+	
+	@Test
+	public void startMoveLeftAcceleartionZeroAfterMaxSpeedReached() {
+		IFacade facade = new Facade();
+		facade.startMoveLeft(MazubPos_800_0);
+		// maximum speed reached after 20/9 seconds
+		for (int i = 0; i < 110; i++) {
+			facade.advanceTime(MazubPos_800_0, 0.2 / 9);
+		}
+
+		assertArrayEquals(doubleArray(0, 0), facade.getAcceleration(MazubPos_800_0),
+				Util.DEFAULT_EPSILON);
+	}
+	
+	@Test
+	public void startJumpCorrectAcceleration(){
+		IFacade facade = new Facade();
+		facade.startJump(MazubPos_50_0);
+		assertArrayEquals(doubleArray(0, -10), facade.getAcceleration(MazubPos_50_0),
+				Util.DEFAULT_EPSILON);
+		}
+	
+	////////////////////////////////////////////////////////////////////////////
+	
+	@Test
+	public void startJumpDenied(){
+		IFacade facade = new Facade();
+		facade.startJump(MazubPos_50_0);
+		facade.advanceTime(MazubPos_50_0,0.1);
+		// v_new [m] = 8 [m/s]  -  10 [m/s^2] * (0.1 [s]) = 7 [m/s]
+		facade.startJump(MazubPos_50_0);
+		// You can't double jump.
+		assertArrayEquals(doubleArray(0,7),facade.getVelocity(MazubPos_50_0),
+				Util.DEFAULT_EPSILON);
+	}
+	
+	@Test
+	public void startJumpFallingCorrect(){
+		IFacade facade = new Facade();
+		facade.startJump(MazubPos_50_0);
+		for (int i=0 ; i<9; i++){
+			facade.advanceTime(MazubPos_50_0,0.1);
+		}
+		// v_new [m] = 8 [m/s]  - 8 * ( 10 [m/s^2] * (0.1 [s])) = -1 [m/s]
+		facade.startJump(MazubPos_50_0);
+		
+		assertArrayEquals(doubleArray(0,-1),facade.getVelocity(MazubPos_50_0),
+				Util.DEFAULT_EPSILON);
+	}
+	
+	@Test
+	public void endJumpNoEffect(){
+		IFacade facade = new Facade();
+		facade.startJump(MazubPos_50_0);
+		for (int i=0 ; i<9; i++){
+			facade.advanceTime(MazubPos_50_0,0.1);
+		}
+		// v_new [m] = 8 [m/s]  - 8 * ( 10 [m/s^2] * (0.1 [s])) = -1 [m/s]
+		facade.endJump(MazubPos_50_0);
+		// Has no effect since this mazub is moving down0
+		assertArrayEquals(doubleArray(0,-1),facade.getVelocity(MazubPos_50_0),
+				Util.DEFAULT_EPSILON);
+	}
+	
+	
+	////////////////////////////////////////////////////////////////////////////
+	
+	// Given test
+	@Test
+	public void testWalkAnimationLastFrameRight() {
+		IFacade facade = new Facade();
+
+		int m = 10;
+		Sprite[] sprites = spriteArrayForSize(2, 2, 10 + 2 * m);
+		Mazub alien = facade.createMazub(0, 0, sprites);
+
+		facade.startMoveRight(alien);
+
+		facade.advanceTime(alien, 0.005);
+		for (int i = 0; i < m; i++) {
+			facade.advanceTime(alien, 0.075);
+		}
+
+		assertEquals(sprites[8+m], facade.getCurrentSprite(alien));
+	}
+	
+	@Test
+	public void testWalkAnimationLastFrameLeft() {
+		IFacade facade = new Facade();
+
+		int m = 10;
+		Sprite[] sprites = spriteArrayForSize(2, 2, 10 + 2 * m);
+		Mazub alien = facade.createMazub(1000, 0, sprites);
+
+		facade.startMoveLeft(alien);
+
+		facade.advanceTime(alien, 0.005);
+		for (int i = 0; i < m; i++) {
+			facade.advanceTime(alien, 0.075);
+		}
+
+		assertEquals(sprites[9+2*m], facade.getCurrentSprite(alien));
+	}
+	
+	@Test
+	public void getCurrentSprite1Correct(){
+		IFacade facade = new Facade();
+		
+		int m = 10;
+		Sprite[] sprites = spriteArrayForSize(2, 2, 10 + 2 * m);
+		Mazub alien = facade.createMazub(0, 0, sprites);
+		
+		facade.startDuck(alien);
+		facade.advanceTime(alien, 0.15);
+		
+		assertEquals(sprites[1], facade.getCurrentSprite(alien));
+	}
+	
+	@Test
+	public void getCurrentSprite1CorrectWasMovingLongAGo(){
+		IFacade facade = new Facade();
+		
+		int m = 10;
+		Sprite[] sprites = spriteArrayForSize(2, 2, 10 + 2 * m);
+		Mazub alien = facade.createMazub(500, 0, sprites);
+		
+		facade.startMoveRight(alien);
+		facade.advanceTime(alien, 0.15);
+		facade.startDuck(alien);
+		facade.advanceTime(alien, 0.15);
+		facade.endMoveRight(alien);
+		
+		for (int i = 0; i < 6; i++) {
+			facade.advanceTime(alien, 0.19);
+		}
+		
+		assertEquals(sprites[1], facade.getCurrentSprite(alien));
+	}
+	
+	
+	@Test
+	public void getCurrentSprite2Correct(){
+		IFacade facade = new Facade();
+		
+		int m = 10;
+		Sprite[] sprites = spriteArrayForSize(2, 2, 10 + 2 * m);
+		Mazub alien = facade.createMazub(0, 0, sprites);
+		
+		facade.startMoveRight(alien);
+		facade.advanceTime(alien, 0.15);
+		facade.endMoveRight(alien);
+		facade.advanceTime(alien, 0.15);
+		
+		assertEquals(sprites[2], facade.getCurrentSprite(alien));
+	}
+	
+	@Test
+	public void getCurrentSprite3Correct(){
+		IFacade facade = new Facade();
+		
+		int m = 10;
+		Sprite[] sprites = spriteArrayForSize(2, 2, 10 + 2 * m);
+		Mazub alien = facade.createMazub(500, 0, sprites);
+		
+		facade.startMoveLeft(alien);
+		facade.advanceTime(alien, 0.15);
+		facade.endMoveLeft(alien);
+		facade.advanceTime(alien, 0.15);
+		
+		assertEquals(sprites[3], facade.getCurrentSprite(alien));
+	}
+	
+	@Test
+	public void getCurrentSprite4Correct(){
+		IFacade facade = new Facade();
+		
+		int m = 10;
+		Sprite[] sprites = spriteArrayForSize(2, 2, 10 + 2 * m);
+		Mazub alien = facade.createMazub(500, 0, sprites);
+		
+		facade.startMoveRight(alien);
+		facade.advanceTime(alien, 0.15);
+		facade.startJump(alien);
+		facade.advanceTime(alien, 0.15);
+		
+		assertEquals(sprites[4], facade.getCurrentSprite(alien));
+	}
+	
+	@Test
+	public void getCurrentSprite5Correct(){
+		IFacade facade = new Facade();
+		
+		int m = 10;
+		Sprite[] sprites = spriteArrayForSize(2, 2, 10 + 2 * m);
+		Mazub alien = facade.createMazub(500, 0, sprites);
+		
+		facade.startMoveLeft(alien);
+		facade.advanceTime(alien, 0.15);
+		facade.startJump(alien);
+		facade.advanceTime(alien, 0.15);
+		
+		assertEquals(sprites[5], facade.getCurrentSprite(alien));
+	}
+	
+	@Test
+	public void getCurrentSprite6Correct(){
+		IFacade facade = new Facade();
+		
+		int m = 10;
+		Sprite[] sprites = spriteArrayForSize(2, 2, 10 + 2 * m);
+		Mazub alien = facade.createMazub(500, 0, sprites);
+		
+		facade.startMoveRight(alien);
+		facade.advanceTime(alien, 0.15);
+		facade.startDuck(alien);
+		facade.advanceTime(alien, 0.15);
+		
+		assertEquals(sprites[6], facade.getCurrentSprite(alien));
+	}
+	
+	@Test
+	public void getCurrentSprite6CorrectWasMoving(){
+		IFacade facade = new Facade();
+		
+		int m = 10;
+		Sprite[] sprites = spriteArrayForSize(2, 2, 10 + 2 * m);
+		Mazub alien = facade.createMazub(500, 0, sprites);
+		
+		facade.startMoveRight(alien);
+		facade.advanceTime(alien, 0.15);
+		facade.startDuck(alien);
+		facade.advanceTime(alien, 0.15);
+		facade.endMoveRight(alien);
+		
+		for (int i = 0; i < 5; i++) {
+			facade.advanceTime(alien, 0.19);
+		}
+		
+		assertEquals(sprites[6], facade.getCurrentSprite(alien));
+	}
+	
+	@Test
+	public void getCurrentSprite7Correct(){
+		IFacade facade = new Facade();
+		
+		int m = 10;
+		Sprite[] sprites = spriteArrayForSize(2, 2, 10 + 2 * m);
+		Mazub alien = facade.createMazub(500, 0, sprites);
+		
+		facade.startMoveLeft(alien);
+		facade.advanceTime(alien, 0.15);
+		facade.startDuck(alien);
+		facade.advanceTime(alien, 0.15);
+		
+		assertEquals(sprites[7], facade.getCurrentSprite(alien));
+	}
+	
+	@Test
+	public void getCurrentSprite7CorrectWasMoving(){
+		IFacade facade = new Facade();
+		
+		int m = 10;
+		Sprite[] sprites = spriteArrayForSize(2, 2, 10 + 2 * m);
+		Mazub alien = facade.createMazub(500, 0, sprites);
+		
+		facade.startMoveLeft(alien);
+		facade.advanceTime(alien, 0.15);
+		facade.startDuck(alien);
+		facade.advanceTime(alien, 0.15);
+		facade.endMoveLeft(alien);
+		
+		for (int i = 0; i < 5; i++) {
+			facade.advanceTime(alien, 0.19);
+		}
+		
+		assertEquals(sprites[7], facade.getCurrentSprite(alien));
+	}
+	
+	@Test
+	public void testWalkAnimationFirstFrameRight() {
+		IFacade facade = new Facade();
+
+		int m = 10;
+		Sprite[] sprites = spriteArrayForSize(2, 2, 10 + 2 * m);
+		Mazub alien = facade.createMazub(0, 0, sprites);
+
+		facade.startMoveRight(alien);
+
+		facade.advanceTime(alien, 0.005);
+
+		assertEquals(sprites[8], facade.getCurrentSprite(alien));
+	}
+	
+	@Test
+	public void testWalkAnimationSecondFrameRight() {
+		IFacade facade = new Facade();
+
+		int m = 10;
+		Sprite[] sprites = spriteArrayForSize(2, 2, 10 + 2 * m);
+		Mazub alien = facade.createMazub(0, 0, sprites);
+
+		facade.startMoveRight(alien);
+
+		facade.advanceTime(alien, 0.080);
+
+		assertEquals(sprites[9], facade.getCurrentSprite(alien));
+	}
+	
+	@Test
+	public void testWalkAnimationFirstFrameLeft() {
+		IFacade facade = new Facade();
+
+		int m = 10;
+		Sprite[] sprites = spriteArrayForSize(2, 2, 10 + 2 * m);
+		Mazub alien = facade.createMazub(200, 0, sprites);
+
+		facade.startMoveLeft(alien);
+
+		facade.advanceTime(alien, 0.005);
+
+		assertEquals(sprites[9+m], facade.getCurrentSprite(alien));
+	}
+	
+	@Test
+	public void testWalkAnimationSecondFrameLeft() {
+		IFacade facade = new Facade();
+
+		int m = 10;
+		Sprite[] sprites = spriteArrayForSize(2, 2, 10 + 2 * m);
+		Mazub alien = facade.createMazub(200, 0, sprites);
+
+		facade.startMoveLeft(alien);
+
+		facade.advanceTime(alien, 0.080);
+
+		assertEquals(sprites[9+m+1], facade.getCurrentSprite(alien));
+	}
+	
+	@Test
+	public void getCurrentSprite0CorrectWasMovingLongTimeAgo(){
+		IFacade facade = new Facade();
+		
+		int m = 10;
+		Sprite[] sprites = spriteArrayForSize(2, 2, 10 + 2 * m);
+		Mazub alien = facade.createMazub(0, 0, sprites);
+		
+		facade.startMoveRight(alien);
+		facade.advanceTime(alien, 0.15);
+		facade.endMoveRight(alien);
+		
+		for (int i = 0; i < 6; i++) {
+			facade.advanceTime(alien, 0.19);
+		}
+		
+		assertEquals(sprites[0], facade.getCurrentSprite(alien));
+	}
+	
 }
+	
+	
