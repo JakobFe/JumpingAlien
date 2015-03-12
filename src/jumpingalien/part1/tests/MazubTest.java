@@ -1,5 +1,8 @@
-package jumpingalien.model;
+package jumpingalien.part1.tests;
 import static org.junit.Assert.*;
+import jumpingalien.model.IllegalXPositionException;
+import jumpingalien.model.IllegalYPositionException;
+import jumpingalien.model.Mazub;
 
 import org.junit.After;
 import org.junit.AfterClass;

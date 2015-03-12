@@ -64,7 +64,8 @@ public class Facade implements IFacade {
 		try{
 			alien.startJump();}
 		catch (IllegalJumpInvokeException exc){
-			throw new ModelException("Illegal Jumping Invoke!");
+			new ModelException("Illegal Jumping Invoke!");
+			System.out.println("Illegal Jumping Invoke!");
 		}
 	}
 
@@ -116,9 +117,13 @@ public class Facade implements IFacade {
 		try{
 		alien.advanceTime(dt);}
 		catch (IllegalXPositionException exc){
-			System.out.println("Illegal X Position");}
+			new ModelException("Illegal X Position!");
+			System.out.println("Illegal X Position!");
+			}
 		catch (IllegalYPositionException exc){
-			throw new ModelException("Illegal Y Position!");}
+			new ModelException("Illegal Y Position!");
+			System.out.println("Illegal Y Position!");
+			}
 	}
 	
 }
