@@ -21,9 +21,11 @@ import be.kuleuven.cs.som.annotate.*;
  * 			| canHaveAsMaxHorVelocity(getMaxHorVelocity())
  * @invar 	The actual horizontal velocity of the Mazub must be valid.
  * 			| canHaveAsHorVelocity(getVelocity()) 
- * @invar	...
+ * @invar	The x position must be equal to the effective x position, 
+ * 			rounded down to an integer number.
  * 			| getXPosition() == (int) Math.floor(getEffectiveXPos())
- * @invar	...
+ * @invar	The y position must be equal to the effective y position, 
+ * 			rounded down to an integer number.
  * 			| getYPosition() == (int) Math.floor(getEffectiveYPos())
  * 
  * @note	TODO: Formal documentation of constructor. Annotations (Raw!).
@@ -58,11 +60,11 @@ public class Mazub {
 	 * @pre		The maximum horizontal velocity must be valid.
 	 * 			| canHaveAsMaxHorVelocity(maxHorVelocity)
 	 * @effect	This Mazub is initialized with the given x as its effective x position.
-	 * 			| new.getEffectiveXPosition = setEffectiveXPos(x)
+	 * 			| setEffectiveXPos(x)
 	 * @effect	This Mazub is initialized with the given y as its effective y position.
-	 * 			| new.getEffectiveYPosition = setEffectiveYPos(y)
+	 * 			| setEffectiveYPos(y)
 	 * @post	The new Mazub has the given sprites as its sprites.
-	 * 			| ...
+	 * 			| new.getAllSprites() == sprites
 	 * @throws	IllegalXPositionException(x,this)
 	 * 			The given x position is not a valid x position.
 	 * 			| !isValidXPosition(x)
@@ -79,8 +81,6 @@ public class Mazub {
 		this.initHorVelocity = initHorVelocity;
 		this.maxHorVelocityRunning = maxHorVelocity;
 		setMaxHorVelocity(maxHorVelocity);
-		this.horVelocity = 0;
-		this.horAcceleration = 0;
 		this.sprites = sprites;
 		this.numberOfWalkingSprites = (this.sprites.length - 10)/2;
 	}
@@ -233,7 +233,7 @@ public class Mazub {
 	 * of this Mazub in the game world. For all other intentions,
 	 * the effective y position is used. 
 	 */
-	private int yPosition;	
+	private int yPosition = 0;	
 	
 	/**
 	 * Return the effective y-position of this Mazub.
@@ -283,7 +283,7 @@ public class Mazub {
 	 * The effective y position refers to the y-coordinate in Cartesian coordinates.   
 	 * This variable is used in methods concerning game physics.
 	 */
-	private double effectiveYPos;
+	private double effectiveYPos = 0;
 	
 	/**
 	 * Returns the screen width of the game world.
@@ -316,7 +316,6 @@ public class Mazub {
 	 */
 	public int getWidth(){
 		return this.getCurrentSprite().getWidth();
-		//return 1;
 	}
 	
 	/**
@@ -324,7 +323,6 @@ public class Mazub {
 	 */
 	public int getHeight(){
 		return this.getCurrentSprite().getHeight();
-		//return 1;
 	}
 	
 	/**
@@ -366,7 +364,7 @@ public class Mazub {
 	 * 1 indicates moving right, -1 indicates moving left,
 	 * 0 indicates not moving in horizontal direction.
 	 */
-	private int horDirection;
+	private int horDirection = 0;
 	
 	/**
 	 * Returns the current vertical direction of this Mazub.
@@ -396,7 +394,7 @@ public class Mazub {
 	 * 1 indicates moving up, -1 indicates moving down,
 	 * 0 indicates not moving in vertical direction.
 	 */
-	private int vertDirection;
+	private int vertDirection = 0;
 	
 	/**
 	 * Return the initial horizontal velocity of this Mazub.
@@ -546,7 +544,7 @@ public class Mazub {
 	 * A variable storing the current horizontal velocity of this Mazub.
 	 * This value will always be a positive number of type double, or zero.
 	 */
-	private double horVelocity;
+	private double horVelocity = 0;
 	
 	
 	/**
@@ -605,7 +603,7 @@ public class Mazub {
 	 * This variable will always store a positive number of type double, 
 	 * or it will store zero.
 	 */
-	private double horAcceleration;
+	private double horAcceleration = 0;
 	
 	/**
 	 * Return the initial vertical velocity of this Mazub.
@@ -660,7 +658,7 @@ public class Mazub {
 	 * A variable storing the current vertical velocity.
 	 *  This value will always be a positive number of type double.
 	 */
-	private double vertVelocity;
+	private double vertVelocity = 0;
 	
 	/**
 	 * Return the current vertical acceleration of this Mazub.
@@ -704,7 +702,7 @@ public class Mazub {
 	 * A variable storing the current vertical acceleration.
 	 * This variable will always be a negative number of type double, or zero.
 	 */
-	private double vertAcceleration;
+	private double vertAcceleration = 0;
 	
 	/**
 	 * Return the maximum vertical acceleration.
@@ -725,7 +723,9 @@ public class Mazub {
 	 * Method to start the movement of the Mazub to the left.
 	 * 
 	 * @pre		This Mazub must have a valid initial horizontal velocity.
-	 * 			| ...
+	 * 			| isValidInitHorVelocity(getInitHorVelocity())
+	 * @pre		This mazub must have a valid maximum horizontal acceleration.
+	 * 			| isValidHorAcceleration(getMaxHorAcceleration())
 	 * @effect	The horizontal velocity of this Mazub is set to the initial
 	 * 			horizontal velocity.
 	 * 			| setHorVelocity(getInitHorVelocity())
@@ -734,6 +734,8 @@ public class Mazub {
 	 * @effect	The horizontal acceleration is set to the maximum 
 	 * 			horizontal acceleration.
 	 * 			| setHorAcceleration(getMaxHorAcceleration());
+	 * @effect	The timer 'Timesum' is reset to zero.
+	 * 			| setTimeSum(0)
 	 */
 	public void startMoveLeft(){
 		assert isValidInitHorVelocity(getInitHorVelocity());
@@ -746,19 +748,21 @@ public class Mazub {
 	/**
 	 * Method to end the movement of the Mazub when moving to the left.
 	 * 
-	 * @effect	If the current horizontal direction equals -1,
+	 * @effect	If this Mazub is moving left,
 	 * 			the horizontal velocity, the horizontal direction and
 	 * 			the horizontal acceleration are set to zero.
-	 * 			| if (getHorDirection()==-1)
+	 * 			| if (isMovingLeft())
 	 * 			| 	then setHorVelocity(0),setHorDirection(0),
 	 * 			|	setHorAcceleration(0)
+	 * @effect	The timer 'Timesum' is reset to zero.
+	 * 			| setTimeSum(0)
 	 */
 	public void endMoveLeft(){
-	if (getHorDirection()==-1){
-		setHorVelocity(0);
-		setHorDirection(0);
-		setHorAcceleration(0);
-		setTimeSum(0);
+		if (isMovingLeft()){
+			setHorVelocity(0);
+			setHorDirection(0);
+			setHorAcceleration(0);
+			setTimeSum(0);
 		}
 	}
 	
@@ -766,9 +770,9 @@ public class Mazub {
 	 * Method to start the movement of the Mazub to the right.
 	 * 
 	 * @pre		This Mazub must have a valid initial horizontal velocity.
-	 * 			| ...
+	 * 			| isValidInitHorVelocity(getInitHorVelocity())
 	 * @pre		This mazub must have a valid maximum horizontal acceleration.
-	 * 			| ...
+	 * 			| isValidHorAcceleration(getMaxHorAcceleration())
 	 * @effect	The horizontal velocity of this Mazub is set to the initial
 	 * 			horizontal velocity.
 	 * 			| setHorVelocity(getInitHorVelocity())
@@ -777,6 +781,8 @@ public class Mazub {
 	 * @effect	The horizontal acceleration is set to the maximum 
 	 * 			horizontal acceleration.
 	 * 			| setHorAcceleration(getMaxHorAcceleration());
+	 * @effect	The timer 'Timesum' is reset to zero.
+	 * 			| setTimeSum(0)
 	 */
 	public void startMoveRight(){
 		setHorVelocity(getInitHorVelocity());
@@ -788,15 +794,17 @@ public class Mazub {
 	/**
 	 * Method to end the movement of the Mazub when moving to the right.
 	 * 
-	 * @effect	If the current horizontal direction equals 1,
+	 * @effect	If this Mazub is moving right,
 	 * 			the horizontal velocity, the horizontal direction and
 	 * 			the horizontal acceleration are set to zero.
-	 * 			| if (getHorDirection()==1){
+	 * 			| if (isMovingRight()){
 	 * 			| 	then setHorVelocity(0),setHorDirection(0),
 	 * 			|	setHorAcceleration(0)
+	 * @effect	The timer 'Timesum' is reset to zero.
+	 * 			| setTimeSum(0)
 	 */
 	public void endMoveRight(){
-	if (getHorDirection() == 1){	
+	if (isMovingRight()){	
 		setHorVelocity(0);
 		setHorDirection(0);
 		setHorAcceleration(0);
@@ -815,10 +823,10 @@ public class Mazub {
 	 * 			| setVertDirection(1)
 	 * @throws 	IllegalJumpInvokeException(this)
 	 * 			startJump can not be invoked when Mazub is still in the air.
-	 * 			| (getVertDirection() != 0)
+	 * 			| (isJumping())
 	 */
 	public void startJump() throws IllegalJumpInvokeException{
-		if (getVertDirection() != 0) {
+		if (isJumping()) {
 			throw new IllegalJumpInvokeException(this);
 		}
 		setVertVelocity(getInitVertVelocity());
@@ -841,16 +849,21 @@ public class Mazub {
 	/**
 	 * Method to start the ducking movement of the Mazub.
 	 * 
+	 * @effect	The ducking state is set to true.
+	 * 			| setIsDucked(true)
 	 * @effect	The maximum horizontal velocity is set to the maximum horizontal velocity while ducking.
 	 * 			| setMaxHorVelocity(getMaxHorVelocityDucking())
 	 */
 	public void startDuck(){
 		setMaxHorVelocity(getMaxHorVelocityDucking());
+		setIsDucked(true);
 	}
 	
 	/**
 	 * Method to end the ducking movement of the Mazub.
 	 * 
+	 * @effect	The ducking state is set to false.
+	 * 			| setIsDucked(false)
 	 * @effect	The maximum horizontal velocity is set to the maximum horizontal velocity while running.
 	 * 			| setMaxHorVelocity(getMaxHorVelocityRunning())
 	 * @effect	If the ducking movement stops when moving to the right, the Mazub starts running to the right.
@@ -859,8 +872,13 @@ public class Mazub {
 	 * @effect	If the ducking movement stops when moving to the left, the Mazub starts running to the left.
 	 * 			| if (isMovingLeft())
 	 *			|	startMoveLeft()
+	 * @throws	IllegalDuckInvokeException(this)
+	 * 			| !(isDucking())
 	 */
 	public void endDuck(){
+		if (!getIsDucked())
+			throw new IllegalDuckInvokeException(this);
+		setIsDucked(false);
 		setMaxHorVelocity(getMaxHorVelocityRunning());
 		if (isMovingRight())
 			startMoveRight();
@@ -869,7 +887,37 @@ public class Mazub {
 	}
 	
 	/**
-	 * Return the index of the current sprite.
+	 * Checks whether the Mazub is ducking.
+	 * 
+	 * Returns the current ducking state of this Mazub.
+	 */
+	@Basic
+	private boolean getIsDucked(){
+		return this.isDucked;
+	}
+	
+	/**
+	 * A method to set the ducking state of this Mazub to true.
+	 * 
+	 * @param	isDucking
+	 * 			A boolean value indicating the new ducking state
+	 * 			of this Mazub.
+	 * @post	The new ducking state of this Mazub is set to the 
+	 * 			given flag.
+	 * 			| new.isDucked == isDucking
+	 */
+	private void setIsDucked(boolean isDucking){
+		this.isDucked = isDucking;
+	}
+	
+	/**
+	 * A variable storing whether this Mazub is ducking or not.
+	 */
+	private boolean isDucked;
+	
+	/**
+	 * Return the index of the current sprite in the array of sprites,
+	 * belonging to this Mazub.
 	 */
 	@Basic
 	private int getIndex() {
@@ -877,12 +925,12 @@ public class Mazub {
 	}
 	
 	/**
-	 * Checks wether the given index is a valid index.
+	 * Checks whether the given index is a valid index.
 	 * 
 	 * @param 	index
-	 * 			the index to check.
+	 * 			The index to check.
 	 * @return	True if and only if the index is between zero and the length of sprites.
-	 * 			| result == (index >= 0 || index < m*2+10)
+	 * 			| result == (index >= 0 && index < getNumberOfWalkingSprites()*2+10)
 	 */
 	private boolean isValidIndex(int index){
 		return (index >= 0 || index < getNumberOfWalkingSprites()*2+10);
@@ -892,27 +940,23 @@ public class Mazub {
 	 * Sets the index of the current sprite to the given index.
 	 * 
 	 * @param	index
-	 * 			the index to set.
-	 * @post	If the given index is valid, the new index is equal to the given index.
-	 * 			| if (isValidIndex(index))
-	 * 			| 	then new.getIndex() == index
+	 * 			The index to set.
+	 * @pre		The given index must be a valid index for this Mazub.
+	 * 			| isValidIndex(index)
+	 * @post	The new index is equal to the given index.
+	 * 			| new.getIndex() == index
 	 */
 	private void setIndex(int index) {
 		assert isValidIndex(index);
 		this.index = index;
 	}
 	
-	private int index;
-		
 	/**
-	 * Checks whether the Mazub is ducking.
-	 * 
-	 * @return	True if and only if the maximum horizontal velocity is 1.
-	 * 			| result == (getMaxHorVelocity() == 1)
+	 * A variable storing the index of the current sprite.
+	 * The index is an integer number and refers to the position
+	 * of the current sprite in the array of sprites, belonging to this Mazub.
 	 */
-	private boolean isDucking(){
-		return (getMaxHorVelocity() == getMaxHorVelocityDucking());
-	}
+	private int index;
 	
 	/**
 	 * Checks whether the Mazub is moving.
@@ -945,56 +989,84 @@ public class Mazub {
 		return (getHorDirection() == -1);
 	}
 	
+	/**
+	 * A method to check whether the Mazub has moved left or right 
+	 * within the last second of in-game-time.
+	 * 
+	 * @return	True if and only if the last registered horizontal direction
+	 * 			of this Mazub is not zero and timeSum has not reached 1 second yet.
+	 * 			| result == ((getLastDirection() != 0) && (timeSum < 1))
+	 * 
+	 */
 	private boolean wasMoving(){
-		return wasMovingLeft() || wasMovingRight();
+		if (getLastDirection() != 0){
+			if (getTimeSum() < 1.0)
+				return true;
+			else{
+				setLastDirection(0);
+				setTimeSum(0);
+			}
+		}
+		return false;
 	}
 	
 	/**
-	 * Checks whether the Mazub has moved left horizontally within the last second of in-game-time.
+	 * Checks whether the Mazub has moved left within the last second of in-game-time.
 	 * 
-	 * @return	True if and only if the last registred horizontal direction of the Mazub is -1
-	 * 			and timeSum has not reached 1 second yet.
-	 * 			| result == ((getLastDirection() == -1) && (timeSum < 1))
-	 * @effect	
+	 * @return	True if and only if this Mazub was moving within the last second
+	 * 			of in-game-time and its last direction was -1 (left).
+	 * 			| result == (wasMoving() && (getLastDirection() == -1))
 	 */
 	private boolean wasMovingLeft(){
-		if (getLastDirection() == -1){
-			if (timeSum < 1.0){
-				return true;
-			}
-			else{
-				setLastDirection(0);
-				setTimeSum(0);
-				return false;
-			}
-		}
-		else{
-			return false;
-		}
+		return (wasMoving() && (getLastDirection() == -1));
 	}
 	
+	/**
+	 * Checks whether the Mazub has moved left within the last second of in-game-time.
+	 * 
+	 * @return	True if and only if this Mazub was moving within the last second
+	 * 			of in-game-time and its last direction was 1 (right).
+	 * 			| result == (wasMoving() && (getLastDirection() == 1))
+	 */
 	private boolean wasMovingRight(){
-		if (getLastDirection() == 1){
-			if (timeSum < 1.0){
-				return true;
-			}
-			else{
-				setLastDirection(0);
-				setTimeSum(0);
-				return false;
-			}
-		}
-		else{
-			return false;
-		}
+		return (wasMoving() && (getLastDirection() == 1));
 	}
 	
+	/**
+	 * A method to check whether this Mazub is jumping. 
+	 * 
+	 * @return	True if and only if the current vertical direction
+	 * 			differs from zero.
+	 * 			| result == (getVertDirection() != 0)
+	 */
 	private boolean isJumping(){
 		return (getVertDirection() != 0);
 	}
 	
-	public Sprite getCurrentSprite(){
-		if (isDucking()){
+	
+	/**
+	 * A method to update the index in the array of sprites.
+	 * 
+	 * @post	If this Mazub is not moving horizontally, has not moved
+	 * 			horizontally within the last second of in-game-time and
+	 * 			is not ducking, the index is set to 0.
+	 * @post	If this Mazub is not moving horizontally, has not moved
+	 * 			horizontally within the last second of in-game-time and
+	 * 			is ducking, the index is set to 1.
+	 * @post	If this Mazub is not moving horizontally, has moved
+	 * 			right within the last second of in-game-time and
+	 * 			is not ducking, the index is set to 2.
+	 * @post	If this Mazub is not moving horizontally, has moved
+	 * 			left within the last second of in-game-time and
+	 * 			is not ducking, the index is set to 3.
+	 * @post	If this Mazub is moving to the right and is jumping
+	 * 			and is not ducking, the index is set to 4.
+	 * ...
+	 * 
+	 * 
+	 */
+	public void updateSpriteIndex(){
+		if (getIsDucked()){
 			if (isMoving() || wasMoving()){
 				if (isMovingRight() || wasMovingRight())
 					setIndex(6);
@@ -1031,9 +1103,8 @@ public class Mazub {
 		else
 			// Mazub is standing still longer than 1 second
 			setIndex(0);
-		return sprites[getIndex()];
 	}
-
+	
 	private void getNextWalkingAnimationRight() {
 		if ((getIndex() < 8 || getIndex() > (8+getNumberOfWalkingSprites())))
 			setIndex(8);
@@ -1052,35 +1123,107 @@ public class Mazub {
 		if (getTimeSum()>0.075){
 			int newIndex = getIndex() + (int) (Math.floor(getTimeSum()/0.075));
 			if (newIndex > (9+2*getNumberOfWalkingSprites()))
-				setIndex((newIndex-(9+getNumberOfWalkingSprites()))%getNumberOfWalkingSprites() + 9+getNumberOfWalkingSprites());
+				setIndex((newIndex-(9+getNumberOfWalkingSprites()))%getNumberOfWalkingSprites()
+						+ 9+getNumberOfWalkingSprites());
 			else
 				setIndex(newIndex);
 			setTimeSum(getTimeSum()%0.075);}
 	}
 	
 	/**
+	 * A method to retrieve the sprite belonging to the current state
+	 * of this Mazub.
+	 * 
+	 * @return	The sprite located at the current index in the array
+	 * 			of sprites of this Mazub.
+	 * 			| result == getAllSprites[getIndex()]
+	 */
+	public Sprite getCurrentSprite(){
+		return getAllSprites()[getIndex()];
+	}
+	
+	/**
+	 * Return the array of sprites representing the different states of this Mazub.	
+	 */
+	private Sprite[] getAllSprites(){
+		return this.sprites;
+	}
+	
+	/**
 	 * A variable storing all possible sprites for this character.
+	 * The sprites are images. Each sprite represents 
+	 * a different state of this Mazub.
 	 */
 	private final Sprite[] sprites;
 	
 	/**
 	 * Method to update the position and velocity of the Mazub based on the current position,
 	 * velocity and a given time duration in seconds.
+	 * 
+	 * @param	timeDuration
+	 * 			A variable indicating the length of the time interval
+	 * 			to simulate the movement of this Mazub. 
+	 * @effect	The horizontal position is updated with the given timeduration.
+	 * 			| updateHorPosition(timeduration)
+	 * @effect	The horizontal velocity is updated with the given timeduration.
+	 * 			| updateHorVelocity(timeduration)
+	 * @effect	The vertical position is updated with the given timeduration.
+	 * 			| updateVertPosition(timeduration)
+	 * @effect	The vertical velocity is updated with the given timeduration.
+	 * 			| updateVertVelocity(timeduration)
+	 * @throws	IllegalTimeIntervalException(this)
+	 * 			The given timeduration is not a valid time interval.
+	 * 			| !(isValidTimeInterval(timeDuration))
+	 * 
 	 */
-	public void advanceTime(double timeDuration){
+	public void advanceTime(double timeDuration) throws IllegalXPositionException,
+				IllegalYPositionException,IllegalTimeIntervalException{
+		if (!isValidTimeInterval(timeDuration))
+			throw new IllegalTimeIntervalException(this);
 		updateHorPosition(timeDuration);
 		updateHorVelocity(timeDuration);
-		try{
-			updateVertPosition(timeDuration);
-		}
-		catch(IllegalYPositionException exc){
-			setEffectiveYPos(0);
-		}
+		updateVertPosition(timeDuration);
 		updateVertVelocity(timeDuration);
 		counter(timeDuration);
 		updateLastDirection();
 	}
 	
+	/**
+	 * A method to check whether the given time interval is a valid
+	 * time interval to simulate the movement of a Mazub.
+	 * 
+	 * @param 	timeDuration
+	 * 			The time interval to check.
+	 * @return	True if and only if the given time interval is not negative
+	 * 			and it is not greater than 0.2.
+	 * 			| result == (timeDuration >= 0 && timeDuration <= 0.2)
+	 */
+	private static boolean isValidTimeInterval(double timeDuration){
+		return (timeDuration >= 0 && timeDuration <= 0.2);
+	}
+	
+	/**
+	 * A method to update the horizontal position over a given time interval.
+	 * 
+	 * @param 	timeDuration
+	 * 			The time interval to calculate the new horizontal position.
+	 * @effect	The new effective x position is set to a new value based on the 
+	 * 			time interval and the current attributes of this Mazub.
+	 */
+	private void updateHorPosition(double timeDuration){
+		double newXPos = getEffectiveXPos() + getHorDirection()*
+				(getHorVelocity()*timeDuration+ 0.5*getHorAcceleration()*Math.pow(timeDuration, 2))*100;
+		setEffectiveXPos(newXPos);
+	}
+	
+	/**
+	 * A method to update the horizontal velocity over a given time interval.
+	 * 
+	 * @param 	timeDuration
+	 * 			The time interval to calculate the new horizontal velocity.
+	 * @effect	The new horizontal velocity is set to a new value based on the 
+	 * 			time interval and the current attributes of this Mazub.
+	 */
 	private void updateHorVelocity(double timeDuration){
 		double newVel = getHorVelocity() + getHorAcceleration() * timeDuration;
 		if (newVel > getMaxHorVelocity()){
@@ -1091,12 +1234,33 @@ public class Mazub {
 			setHorVelocity(newVel);
 	}
 	
-	private void updateHorPosition(double timeDuration){
-		double newXPos = getEffectiveXPos() + getHorDirection()*
-				(getHorVelocity()*timeDuration+ 0.5*getHorAcceleration()*Math.pow(timeDuration, 2))*100;
-		setEffectiveXPos(newXPos);
+	/**
+	 * A method to update the vertical position over a given time interval.
+	 * 
+	 * @param 	timeDuration
+	 * 			The time interval to calculate the new vertical position.
+	 * @effect	The new effective y position is set to a new value based on the 
+	 * 			time interval and the current attributes of this Mazub.
+	 */
+	private void updateVertPosition(double timeDuration)
+			throws IllegalYPositionException{
+		double newYPos = getEffectiveYPos() + 
+				((getVertDirection()*getVertVelocity()*timeDuration)+ 
+				0.5*getVertAcceleration()*Math.pow(timeDuration, 2))*100;
+		if (newYPos<0)
+			setEffectiveYPos(0);
+		else
+			setEffectiveYPos(newYPos);
 	}
 	
+	/**
+	 * A method to update the vertical velocity over a given time interval.
+	 * 
+	 * @param 	timeDuration
+	 * 			The time interval to calculate the new vertical velocity.
+	 * @effect	The new vertical velocity is set to a new value based on the 
+	 * 			time interval and the current attributes of this Mazub.
+	 */
 	private void updateVertVelocity(double timeDuration){
 		double newVel = getVertDirection()*getVertVelocity() + getVertAcceleration() * timeDuration;
 		if (newVel<0){
@@ -1111,30 +1275,21 @@ public class Mazub {
 		}
 		setVertVelocity(newVel);
 	}
-	
-	private void updateVertPosition(double timeDuration)
-			throws IllegalYPositionException{
-		double newYPos = getEffectiveYPos() + 
-				((getVertDirection()*getVertVelocity()*timeDuration)+ 
-				0.5*getVertAcceleration()*Math.pow(timeDuration, 2))*100;
-		if (newYPos<0)
-			throw new IllegalYPositionException(newYPos, this);
-		else
-			setEffectiveYPos(newYPos);
-	}
 
 	/**
-	 * A method to increment the timesum with the given timeduration.
+	 * A method to increment the time sum with the given timeduration.
 	 * 
 	 * @param 	timeDuration
-	 * 			the timeduration to add to timesum.
+	 * 			the timeduration to add to time sum.
+	 * @post	The new time sum is incremented with the given timeDuration.
+	 * 			| new.getTimeSum() == this.getTimeSum() + timeDuration
 	 */
 	private void counter(double timeDuration){
 		setTimeSum(getTimeSum()+timeDuration);
 	}
 	
 	/**
-	 * Return the last registred horizontal direction of the Mazub.
+	 * Return the last registered horizontal direction of the Mazub.
 	 */
 	@Basic
 	private int getLastDirection() {
@@ -1142,19 +1297,22 @@ public class Mazub {
 	}
 
 	/**
-	 * Sets the last registred horizontal direction to the given last direction.
+	 * Sets the last registered horizontal direction to the given last direction.
 	 * 
 	 * @param 	lastDirection
 	 * 			the lastDirection to set.
+	 * @post	The new last direction equals the given lastDirection.
+	 * 			| new.getLastDirection == lastDirection
 	 */
 	private void setLastDirection(int lastDirection) {
 		this.lastDirection = lastDirection;
 	}
 
 	/**
-	 * A method to update the last registred horizontal direction of the Mazub.
+	 * A method to update the last registered horizontal direction of the Mazub.
 	 * 
-	 * @post	If Mazub is moving to the left or the right, the last registred direction should be updated.
+	 * @post	If Mazub is moving to the left or the right, the last registered direction 
+	 * 			should be updated.
 	 * 			| if (getHorDirection() != 0)
 	 *			|	new.getHorDirection() = getHorDirection()
 	 */
@@ -1164,13 +1322,13 @@ public class Mazub {
 	}
 	
 	/**
-	 * A variable storing the last horizontal direction of movement of the Mazub while moving
-	 * or when the Mazub has moved left horizontally within the last second of in-game-time.
+	 * A variable storing the last horizontal direction of movement of this Mazub
+	 * within the last second of in-game-time.
 	 */
 	private int lastDirection;
 	
 	/**
-	 * Return the stored period of elapsed time.
+	 * Return the stored period of elapsed time .
 	 */
 	@Basic
 	private double getTimeSum() {
@@ -1178,29 +1336,33 @@ public class Mazub {
 	}
 
 	/**
-	 * Sets the sum to a given sum.
+	 * Sets the time sum to a given sum.
 	 * 
 	 * @param 	timeSum
-	 * 			the timeSum to set.
+	 * 			The timeSum to set.
+	 * @post	The new time sum is equal to the given timeSum.
+	 * 			| new.getTimeSum() = timeSum 
 	 */
 	private void setTimeSum(double timeSum) {
 		this.timeSum = timeSum;
 	}
 	
 	/**
-	 * A variable storing a period of elapsed time.
+	 * A variable storing a period of elapsed time. This variable 
+	 * functions as a timer that increments subsequent time intervals
+	 * in the method advanceTime.
 	 */
-	public double timeSum;
+	private double timeSum;
 	
 	/**
-	 * Return the number of sprites used for the walking of the Mazub.
+	 * Return the number of sprites used for the animation of walking of this Mazub.
 	 */
 	private int getNumberOfWalkingSprites() {
 		return numberOfWalkingSprites;
 	}
 	
 	/**
-	 * A variable storing the number of sprites used for the walking of the Mazub.
+	 * A variable storing the number of sprites used for animation of walking of the Mazub.
 	 */
 	private final int numberOfWalkingSprites;
 }
