@@ -13,7 +13,7 @@ public class IllegalJumpInvokeException extends RuntimeException {
 	}
 
 	/**
-	 * Return the Mazub character for this illegal x position exception.
+	 * Return the Mazub character for this illegal jumping invoke exception.
 	 */
 	@Basic@Immutable
 	public Mazub getCharacter(){
@@ -22,7 +22,7 @@ public class IllegalJumpInvokeException extends RuntimeException {
 	
 	/**
 	 * A variable registering the Mazub character involved in this 
-	 * illegal x position exception.
+	 * illegal jumping invoke exception.
 	 */
 	private final Mazub character;
 
