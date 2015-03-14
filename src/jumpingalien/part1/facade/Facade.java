@@ -4,12 +4,15 @@ package jumpingalien.part1.facade;
 import jumpingalien.model.*;
 import jumpingalien.util.*;
 
+
+import static jumpingalien.tests.util.TestUtils.*;
+
 public class Facade implements IFacade {
 
 	@Override
 	public Mazub createMazub(int pixelLeftX, int pixelBottomY, Sprite[] sprites) {
 		// TODO Auto-generated method stub
-		try{return new Mazub(pixelLeftX,pixelBottomY,1,3,sprites);}
+		try{return new Mazub(pixelLeftX,pixelBottomY,sprites);}
 		catch (IllegalXPositionException exc){
 			throw new ModelException("Illegal X Position!");}
 		catch (IllegalYPositionException exc){
@@ -19,42 +22,33 @@ public class Facade implements IFacade {
 	@Override
 	public int[] getLocation(Mazub alien) {
 		// TODO Auto-generated method stub
-		int[] result = new int[2];
-		result[0] = alien.getXPosition();
-		result[1] = alien.getYPosition();
-		return result;
+		return intArray(alien.getXPosition(),alien.getYPosition());
 	}
 
 	@Override
 	public double[] getVelocity(Mazub alien) {
 		// TODO Auto-generated method stub
-		double[] result = new double[2];
-		result[0] = alien.getHorDirection()*alien.getHorVelocity();
-		result[1] = alien.getVertDirection()*alien.getVertVelocity();
-		return result;
+		return doubleArray(alien.getHorDirection()*alien.getHorVelocity(),
+			   alien.getVertDirection()*alien.getVertVelocity());
 	}
 
 	@Override
 	public double[] getAcceleration(Mazub alien) {
 		// TODO Auto-generated method stub
-		double[] result = new double[2];
-		result[0] = alien.getHorDirection()*alien.getHorAcceleration();
-		result[1] = alien.getVertAcceleration();
-		return result;
+		return doubleArray(alien.getHorDirection()*alien.getHorAcceleration(),
+						   alien.getVertAcceleration());
 	}
 
 	@Override
 	public int[] getSize(Mazub alien) {
 		// TODO Auto-generated method stub
-		int[] result = new int[2];
-		result[0] = alien.getWidth();
-		result[1] = alien.getHeight();
-		return result;
+		return intArray(alien.getWidth(),alien.getHeight());
 	}
 
 	@Override
 	public Sprite getCurrentSprite(Mazub alien) {
 		// TODO Auto-generated method stub
+		alien.updateSpriteIndex();
 		return alien.getCurrentSprite();
 	}
 
@@ -124,6 +118,9 @@ public class Facade implements IFacade {
 			new ModelException("Illegal Y Position!");
 			System.out.println("Illegal Y Position!");
 			}
+		catch (IllegalTimeIntervalException exc){
+			throw new ModelException("Computing time to long!");
+		}
 	}
 	
 }
