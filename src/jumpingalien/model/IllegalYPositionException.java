@@ -17,7 +17,7 @@ public class IllegalYPositionException extends RuntimeException {
      *          to the given value.
      *          | new.getValue() == value
      */
-	public IllegalYPositionException(double yPosition, Mazub character){
+	public IllegalYPositionException(int yPosition, Mazub character){
 		this.yPosition = yPosition;
 		this.character = character;
 	}
