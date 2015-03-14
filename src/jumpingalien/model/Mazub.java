@@ -872,12 +872,8 @@ public class Mazub {
 	 * @effect	If the ducking movement stops when moving to the left, the Mazub starts running to the left.
 	 * 			| if (isMovingLeft())
 	 *			|	startMoveLeft()
-	 * @throws	IllegalDuckInvokeException(this)
-	 * 			| !(isDucking())
 	 */
 	public void endDuck(){
-		if (!getIsDucked())
-			throw new IllegalDuckInvokeException(this);
 		setIsDucked(false);
 		setMaxHorVelocity(getMaxHorVelocityRunning());
 		if (isMovingRight())
@@ -1061,9 +1057,16 @@ public class Mazub {
 	 * 			is not ducking, the index is set to 3.
 	 * @post	If this Mazub is moving to the right and is jumping
 	 * 			and is not ducking, the index is set to 4.
-	 * ...
-	 * 
-	 * 
+	 * @post	If this Mazub is moving to the left and is jumping
+	 * 			and is not ducking, the index is set to 5.
+	 * @post	If this Mazub is ducking and moving to the right or was moving
+	 * 			to the right within the last second of in-game-time, the index is set to 6.
+	 * @post	If this Mazub is ducking and moving to the left or was moving
+	 * 			to the left within the last second of in-game-time, the index is set to 7.
+	 * @effect	If this Mazub is neither ducking nor jumping and moving to the right,
+	 * 			the index is set to the next walking animation to the right. 
+	 * @effect	If this Mazub is neither ducking nor jumping and moving to the left,
+	 * 			the index is set to the next walking animation to the left.
 	 */
 	public void updateSpriteIndex(){
 		if (getIsDucked()){
@@ -1105,6 +1108,17 @@ public class Mazub {
 			setIndex(0);
 	}
 	
+	/**
+	 * A method to increment the index of the sprite while running to the right.
+	 * 
+	 * @effect	If the current index is lower than 8 or higher then 8 plus the number of walking sprites (m),
+	 * 			the index is set to 8.
+	 * @effect	If the time sum has reached 0.075 and if the incremented index is higher than (8+m),
+	 * 			the index is set to 8 plus the deficit of the incremented index and 8, modulo m.
+	 * @effect	If the time sum has reached 0.075 and if the incremented index in not higher than (8+m),
+	 * 			the index is set to the incremented index. 
+	 * @effect	If the time sum has reached 0.075, the time sum is set to the current time sum modulo 0.075.
+	 */
 	private void getNextWalkingAnimationRight() {
 		if ((getIndex() < 8 || getIndex() > (8+getNumberOfWalkingSprites())))
 			setIndex(8);
@@ -1116,7 +1130,17 @@ public class Mazub {
 				setIndex(newIndex);
 			setTimeSum(getTimeSum()%0.075);}
 	}
-	
+
+	/**
+	 * A method to increment the index of the sprite while running to the left.
+	 * 
+	 * @effect	If the current index is lower than (9+m), the index is set to (9+m).
+	 * @effect	If the time sum has reached 0.075 and if the incremented index is higher than (9+2*m),
+	 * 			the index is set to (9+m) plus the deficit of the incremented index and (9+m), modulo m.
+	 * @effect	If the time sum has reached 0.075 and if the incremented index in not higher than (9+2*m),
+	 * 			the index is set to the incremented index. 
+	 * @effect	If the time sum has reached 0.075, the time sum is set to the current time sum modulo 0.075.
+	 */
 	private void getNextWalkingAnimationLeft() {
 		if ((getIndex() < (9+getNumberOfWalkingSprites())))
 			setIndex(9+getNumberOfWalkingSprites());
