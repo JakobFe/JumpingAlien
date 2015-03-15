@@ -2,21 +2,16 @@ package jumpingalien.part1.tests;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
-//import static org.junit.Assert.assertEquals;
 import jumpingalien.part1.facade.Facade;
 import jumpingalien.part1.facade.IFacade;
-import jumpingalien.model.Mazub;
+import jumpingalien.model.*;
 import jumpingalien.util.*;
 
 import org.junit.Test;
 
 import static jumpingalien.tests.util.TestUtils.*;
 
-import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
-//import org.junit.Test;
 
 
 /**
@@ -27,50 +22,48 @@ import org.junit.BeforeClass;
 
 public class MazubTest {
 
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-	}
-	
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-	}
-	
-	/**
-	 * A variable referencing a Mazub at position(0,0), with 
-	 * default settings for all other attributes.
-	 */
-	
-	/**
-	 * @throws java.lang.Exception
-	 */
 	@Before
 	public void setUp() throws Exception {
 		MazubPos_0_0 = new Mazub(0,0,1,3,spriteArrayForSize(2, 2, 30));
 		MazubPos_50_0 = new Mazub(50,0,1,3,spriteArrayForSize(2, 2, 30));
 		MazubPos_800_0 = new Mazub(800,0,1,3,spriteArrayForSize(2, 2, 30));
 	}
-
+	
 	private Mazub MazubPos_0_0;
 	private Mazub MazubPos_50_0;
 	private Mazub MazubPos_800_0;
-	
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@After
-	public void tearDown() throws Exception {
-	}
 
 	////////////////////////////////////////////////////////////////////////////
 	// Tests for some public methods in the class Mazub.
 	
+	@Test
+	public void getDirectionsCorrect(){
+		MazubPos_0_0.startMoveRight();
+		MazubPos_0_0.startJump();
+		for (int i = 0; i < 5; i++) {
+			MazubPos_0_0.advanceTime(0.15);
+		}
+		assertEquals(1,MazubPos_0_0.getHorDirection());
+		assertEquals(1,MazubPos_0_0.getVertDirection());
+	}
 	
+	@Test
+	public void getDirectionsCorrect2(){
+		MazubPos_0_0.startMoveRight();
+		MazubPos_0_0.startJump();
+		for (int i = 0; i < 10; i++) {
+			MazubPos_0_0.advanceTime(0.15);
+		}
+		MazubPos_0_0.endMoveRight();
+		assertEquals(0,MazubPos_0_0.getHorDirection());
+		assertEquals(-1,MazubPos_0_0.getVertDirection());
+	}
+	
+	@Test(expected=IllegalTimeIntervalException.class)
+	public void advanceTimeIllegalArgument(){
+		MazubPos_0_0.startMoveRight();
+		MazubPos_0_0.advanceTime(0.45);
+	}
 	////////////////////////////////////////////////////////////////////////////
 	// Tests for the class Facade.
 	
