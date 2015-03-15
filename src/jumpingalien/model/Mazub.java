@@ -1130,7 +1130,6 @@ public class Mazub {
 	@Model
 	private void counter(double timeDuration){
 		setTimeSum(getTimeSum()+timeDuration);
-		System.out.println(getTimeSum());
 	}
 	
 	/**
