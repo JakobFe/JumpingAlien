@@ -1130,6 +1130,7 @@ public class Mazub {
 	@Model
 	private void counter(double timeDuration){
 		setTimeSum(getTimeSum()+timeDuration);
+		System.out.println(getTimeSum());
 	}
 	
 	/**
@@ -1270,9 +1271,6 @@ public class Mazub {
 		if (getLastDirection() != 0){
 			if (getTimeSum() < 1.0)
 				return true;
-			else{
-				resetTimeAndDirection();
-			}
 		}
 		return false;
 	}
