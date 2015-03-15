@@ -1271,11 +1271,23 @@ public class Mazub {
 			if (getTimeSum() < 1.0)
 				return true;
 			else{
-				setLastDirection(0);
-				setTimeSum(0);
+				resetTimeAndDirection();
 			}
 		}
 		return false;
+	}
+	
+	/**
+	 * A method to reset the last registred direction and time sum to zero.
+	 * 
+	 * @effect	The last registred direction is set to zero.
+	 * 			| setLastDirection(0)
+	 * @effect	The time sum is set to zero.
+	 * 			| setTimeSum(0)
+	 */
+	private void resetTimeAndDirection(){
+		setLastDirection(0);
+		setTimeSum(0);
 	}
 	
 	/**
