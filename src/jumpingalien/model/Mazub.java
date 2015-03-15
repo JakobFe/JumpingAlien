@@ -1275,19 +1275,6 @@ public class Mazub {
 	}
 	
 	/**
-	 * A method to reset the last registred direction and time sum to zero.
-	 * 
-	 * @effect	The last registred direction is set to zero.
-	 * 			| setLastDirection(0)
-	 * @effect	The time sum is set to zero.
-	 * 			| setTimeSum(0)
-	 */
-	private void resetTimeAndDirection(){
-		setLastDirection(0);
-		setTimeSum(0);
-	}
-	
-	/**
 	 * Checks whether the Mazub has moved left within the last second of in-game-time.
 	 * 
 	 * @return	True if and only if this Mazub was moving within the last second
