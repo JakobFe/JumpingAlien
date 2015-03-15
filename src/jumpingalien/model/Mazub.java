@@ -29,6 +29,8 @@ import be.kuleuven.cs.som.annotate.*;
  * 			| getYPosition() == (int) Math.floor(getEffectiveYPos())
  * 			
  * @author	Jakob Festraets, Vincent Kemps
+ * 			Course of studies: 2nd Bachelor of engineering
+ * 			Code repository: https://github.com/JakobFe/JumpingAlien
  * @version	1.0
  *
  */
