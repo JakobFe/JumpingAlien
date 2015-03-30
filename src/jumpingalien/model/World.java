@@ -8,12 +8,22 @@ public class World {
 			int visibleWindowWidth, int visibleWindowHeight, int targetTileX,
 			int targetTileY){
 		this.tileSize = tileSize;
+		this.worldWidth = tileSize * nbTilesX;
+		this.worldHeight = tileSize * nbTilesY;
+		if (isValidVisibleWindowWidth(visibleWindowWidth))
+			this.visibleWindowWidth = visibleWindowWidth;
+		else
+			this.visibleWindowWidth = getWorldWidth();
+		if (isValidVisibleWindowHeight(visibleWindowHeight))
+			this.visibleWindowHeight = visibleWindowHeight;
+		else
+			this.visibleWindowHeight = getWorldHeight();
 	}
 	
 	/**
 	 * Return the size of the tiles.
 	 */
-	@Basic
+	@Basic@Immutable
 	public int getTileSize() {
 		return tileSize;
 	}
@@ -22,6 +32,38 @@ public class World {
 	 * A variable storing the size of the square tiles.
 	 */
 	private final int tileSize;
+	
+	public int getWorldWidth() {
+		return worldWidth;
+	}
+
+	private final int worldWidth;
+	
+	public int getWorldHeight() {
+		return worldHeight;
+	}
+
+	private final int worldHeight;
+	
+	public int getVisibleWindowWidth() {
+		return visibleWindowWidth;
+	}
+	
+	private boolean isValidVisibleWindowWidth(int width){
+		return (width <= getWorldWidth());
+	}
+
+	private final int visibleWindowWidth;
+	
+	public int getVisibleWindowHeight() {
+		return visibleWindowHeight;
+	}
+
+	private boolean isValidVisibleWindowHeight(int height){
+		return (height <= getWorldHeight());
+	}
+	
+	private final int visibleWindowHeight;
 	
 	
 }
