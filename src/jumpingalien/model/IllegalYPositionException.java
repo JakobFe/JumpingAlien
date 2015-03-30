@@ -22,6 +22,10 @@ public class IllegalYPositionException extends RuntimeException {
 		this.character = character;
 	}
 	
+	public IllegalYPositionException(int yPosition){
+		this.yPosition = yPosition;
+	}
+	
 	/**
 	 * Return the y-coordinate for this illegal y position exception.
 	 */
@@ -48,7 +52,7 @@ public class IllegalYPositionException extends RuntimeException {
 	 * A variable registering the Mazub character involved in this 
 	 * illegal y position exception.
 	 */
-	private final Mazub character;
+	private Mazub character = null;
 
 	/**
 	 * A variable to explicitly define a version number for this class

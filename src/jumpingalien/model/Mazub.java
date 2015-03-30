@@ -2,6 +2,8 @@ package jumpingalien.model;
 
 import jumpingalien.util.Sprite;
 import be.kuleuven.cs.som.annotate.*;
+import jumpingalien.model.Direction;
+import jumpingalien.model.Position;
 
 /**
  * A class that implements the player character with the ability to jump, duck and
@@ -31,7 +33,7 @@ import be.kuleuven.cs.som.annotate.*;
  * @author	Jakob Festraets, Vincent Kemps
  * 			| Course of studies: 2nd Bachelor of engineering
  * 			| Code repository: https://github.com/JakobFe/JumpingAlien
- * @version	1.0
+ * @version	2.0
  *
  */
 public class Mazub {
@@ -76,8 +78,7 @@ public class Mazub {
 	@Raw
 	public Mazub(int x, int y, double initHorVelocity, double maxHorVelocity, Sprite[] sprites) 
 			throws IllegalXPositionException,IllegalYPositionException{
-		setEffectiveXPos(x);
-		setEffectiveYPos(y);
+		setPosition(new Position(x,y));
 		assert isValidInitHorVelocity(initHorVelocity);
 		this.initHorVelocity = initHorVelocity;
 		assert canHaveAsMaxHorVelocity(maxHorVelocity);
@@ -118,245 +119,15 @@ public class Mazub {
 		this(x,y,1,3,sprites);
 	}
 	
-	/**
-	 * Return the displayed x position of this Mazub.
-	 */
-	public int getXPosition(){
-		return this.xPosition;
+	public Position getPosition(){
+		return this.position;
 	}
 	
-	/**
-	 * Check whether the given x is a valid x position.
-	 * 
-	 * @param 	x
-	 * 			x position to check
-	 * @return 	True if and only if the given x is not negative and smaller than 
-	 * 			the screen width.
-	 * 			| result == (x >= 0) && (x < getScreenWidth())
-	 */
-	@Model
-	private static boolean isValidXPosition(int x){
-		return ((x >= 0) && (x < getScreenWidth()));
+	private void setPosition(Position position){
+		this.position = position;
 	}
 	
-	/**
-	 * Set the x-position to display to the given position.
-	 * 
-	 * @param	x
-	 * 			The new x position to be displayed.
-	 * @post	The new x position of this Mazub is equal to the given x position.
-	 * 			| new.getXPosition() == x
-	 * @throws	IllegalXPositionException(x,this)
-	 * 			The given x position is not a valid x position.
-	 * 			| !isValidXPosition(x)
-	 */
-	@Raw @Model
-	private void setXPosition(int x) throws IllegalXPositionException{
-		if (!isValidXPosition(x))
-			throw new IllegalXPositionException(x,this);
-		this.xPosition = x;
-	}
-	
-	/**
-	 * Variable storing the x position to be displayed.
-	 * 
-	 * The x position is an integer number and refers to the 
-	 * x-coordinate of the left bottom pixel of this Mazub 
-	 * in Cartesian coordinates. This variable does not store 
-	 * the effective x-coordinate of this Mazub, but the 
-	 * effective x-coordinate rounded down to an integer number.
-	 * This variable is only used in methods concerning the display
-	 * of this Mazub in the game world. For all other intentions,
-	 * the effective x position is used. 
-	 */
-	private int xPosition;
-	
-	/**
-	 * Return the effective x-position of this Mazub.
-	 */
-	@Basic @Model
-	private double getEffectiveXPos(){
-		return this.effectiveXPos;
-	}
-	
-	/**
-	 * Check whether the given x is a valid effective x position.
-	 * 
-	 * @param 	x
-	 * 			Effective x position to check
-	 * @return 	True if and only if the given x, rounded down to an integer number,
-	 * 			is a valid x-position.
-	 * 			| result == isValidXPosition( (int) Math.floor(x))
-	 */
-	@Model
-	private static boolean isValidEffectiveXPos(double x){
-		return isValidXPosition((int) Math.floor(x));
-	}
-	
-	/**
-	 * Set the effective x-position to the given position.
-	 * 
-	 * @param	x
-	 * 			The new effective x position.
-	 * @post	The new effective x position of this Mazub is equal to the given x.
-	 * 			| new.getEffectiveXPos() == x
-	 * @effect	The displayed x position is set to the effective x-coordinate,
-	 * 			rounded down to an integer number.
-	 * 			| setXPosition((int) Math.floor(x))
-	 * @throws	IllegalXPositionException((int) Math.floor(x),this)
-	 * 			The given x position is not a valid effective x position.
-	 * 			| !isValidEffectiveXPos(x)
-	 */
-	@Model
-	private void setEffectiveXPos(double x) throws IllegalXPositionException{
-		if (!isValidEffectiveXPos(x))
-			throw new IllegalXPositionException((int) Math.floor(x),this);
-		this.effectiveXPos = x;
-		setXPosition((int) Math.floor(x));
-	}
-	
-	/**
-	 * Variable storing the effective x position.
-	 * 
-	 * The effective x position is a number of type double and
-	 * refers to the x-coordinate of the left bottom pixel of this Mazub
-	 * in Cartesian coordinates. This variable is used in 
-	 * methods concerning game physics.
-	 */
-	private double effectiveXPos;
-	
-	/**
-	 * Return the y-position of this Mazub.
-	 */
-	public int getYPosition(){
-		return this.yPosition;
-	}
-	
-	/**
-	 * Check whether the given y is a valid y position.
-	 * 
-	 * @param 	y
-	 * 			y position to check
-	 * @return 	True if and only if y is not negative and smaller than
-	 * 			the screen height.
-	 * 			| result == (y >= 0) && (y < getScreenHeight())
-	 */
-	@Model
-	private static boolean isValidYPosition(int y){
-		return ((y >= 0) && (y < getScreenHeight()));
-	}
-	
-	/**
-	 * Set the y-position to the given position.
-	 * 
-	 * @param	y
-	 * 			The new y position.
-	 * @post	The new y position of this Mazub is equal to the given y position.
-	 * 			| new.getYPosition() == y
-	 * @throws	IllegalYPositionException(y,this)
-	 * 			The given y position is not a valid y position.
-	 * 			| !isValidYPosition(y)
-	 */
-	@Raw @Model
-	private void setYPosition(int y) throws IllegalYPositionException{
-		if (!isValidYPosition(y))
-			throw new IllegalYPositionException(y,this);
-		this.yPosition = y;
-	}
-	
-	/**
-	 * Variable storing the y position to be displayed.
-	 * 
-	 * The y position is an integer number and refers to the 
-	 * y-coordinate of the left bottom pixel of this Mazub 
-	 * in Cartesian coordinates. This variable does not store 
-	 * the effective y-coordinate of this Mazub, but the 
-	 * effective y-coordinate rounded down to an integer number.
-	 * This variable is only used in methods concerning the display
-	 * of this Mazub in the game world. For all other intentions,
-	 * the effective y position is used. 
-	 */
-	private int yPosition = 0;	
-	
-	/**
-	 * Return the effective y-position of this Mazub.
-	 */
-	@Basic @Model
-	private double getEffectiveYPos(){
-		return this.effectiveYPos;
-	}
-	
-	/**
-	 * Check whether the given y is a valid effective y position.
-	 * 
-	 * @param 	y
-	 * 			effective y position to check.
-	 * @return 	True if and only if the given y, rounded down
-	 * 			to an integer number, is a valid y-position.
-	 * 			| result == isValidYPosition((int) Math.floor(y))
-	 */
-	@Model
-	private static boolean isValidEffectiveYPos(double y){
-		return isValidYPosition((int) Math.floor(y));
-	}
-	
-	/**
-	 * Set the effective y position to the given position.
-	 * 
-	 * @param	y
-	 * 			The new effective y position.
-	 * @post	The new effective y position of this Mazub is equal to the given y.
-	 * 			| new.getEffectiveYPos() == y
-	 * @effect	The displayed y position is set to the effective y position,
-	 * 			rounded down to an integer number.
-	 * 			| setYPosition((int) Math.floor(y))
-	 * @throws	IllegalYPositionException((int) Math.floor(y),this)
-	 * 			The given y is not a valid effective y position.
-	 * 			| !isValidEffectiveYPosition(y)
-	 */
-	@Model
-	private void setEffectiveYPos(double y) throws IllegalYPositionException{
-		if (!isValidEffectiveYPos(y))
-			throw new IllegalYPositionException((int) Math.floor(y),this);
-		this.effectiveYPos = y;
-		setYPosition((int) Math.floor(y));
-	}
-	
-	/**
-	 * Variable storing the effective y position.
-	 * 
-	 * The effective y position is a number of type double and
-	 * refers to the y-coordinate of the left bottom pixel of this Mazub
-	 * in Cartesian coordinates. This variable is used in 
-	 * methods concerning game physics.
-	 */
-	private double effectiveYPos = 0;
-	
-	/**
-	 * Returns the screen width of the game world.
-	 */
-	@Basic @Immutable @Model
-	private static int getScreenWidth(){
-		return SCREEN_WIDTH;
-	}
-	
-	/**
-	 * A variable storing the screen width of the game world.
-	 */
-	private static final int SCREEN_WIDTH = 1024;
-	
-	/**
-	 * Returns the screen height of the game world.
-	 */
-	@Basic @Immutable @Model
-	private static int getScreenHeight(){
-		return SCREEN_HEIGHT;
-	}
-	
-	/**
-	 * A variable storing the screen height of the game world.
-	 */
-	private static final int SCREEN_HEIGHT = 768;
+	private Position position;
 	
 	/**
 	 * Return the width of the current sprite of this Mazub.
@@ -376,20 +147,8 @@ public class Mazub {
 	 * Returns the current horizontal direction of this Mazub.
 	 */
 	@Basic
-	public int getHorDirection() {
+	public Direction getHorDirection() {
 		return horDirection;
-	}
-	
-	/**
-	 * Checks whether the given direction is valid.
-	 * @param	direction
-	 * 			The direction to check.
-	 * @return	True if and only if the given direction equals 1,-1 or 0.
-	 * 			| result == (direction==1 || direction == -1 || direction == 0)
-	 */
-	@Model
-	private static boolean isValidDirection(int direction){
-		return (direction==1 || direction == -1 || direction == 0);
 	}
 	
 	/**
@@ -403,23 +162,20 @@ public class Mazub {
 	 * 			| new.getHorDirection() == horDirection
 	 */
 	@Model
-	private void setHorDirection(int horDirection) {
-		assert isValidDirection(horDirection);
+	private void setHorDirection(Direction horDirection) {
 		this.horDirection = horDirection;
 	}
 	
 	/**
-	 * An integer value storing the horizontal direction.
-	 * 1 indicates moving right, -1 indicates moving left,
-	 * 0 indicates not moving in horizontal direction.
+	 * A variable storing the horizontal direction.
 	 */
-	private int horDirection = 0;
+	private Direction horDirection = Direction.NULL;
 	
 	/**
 	 * Returns the current vertical direction of this Mazub.
 	 */
 	@Basic
-	public int getVertDirection() {
+	public Direction getVertDirection() {
 		return vertDirection;
 	}
 	
@@ -434,17 +190,14 @@ public class Mazub {
 	 * 			| new.getVertDirection() == vertDirection
 	 */
 	@Model
-	private void setVertDirection(int vertDirection) {
-		assert isValidDirection(vertDirection);
+	private void setVertDirection(Direction vertDirection) {
 		this.vertDirection = vertDirection;
 	}
 	
 	/**
-	 * An integer value storing the vertical direction.
-	 * 1 indicates moving up, -1 indicates moving down,
-	 * 0 indicates not moving in vertical direction.
+	 * An variable storing the vertical direction.
 	 */
-	private int vertDirection = 0;
+	private Direction vertDirection = Direction.NULL;
 	
 	/**
 	 * Return the initial horizontal velocity of this Mazub.
@@ -780,28 +533,25 @@ public class Mazub {
 	private static final double MAX_VERT_ACCELERATION = -10;
 
 	/**
-	 * Method to start the movement of the Mazub to the left.
+	 * Method to start the movement of the Mazub to the given direction.
 	 * 
-	 * @pre		This Mazub must have a valid initial horizontal velocity.
-	 * 			| isValidInitHorVelocity(getInitHorVelocity())
-	 * @pre		This mazub must have a valid maximum horizontal acceleration.
-	 * 			| isValidHorAcceleration(getMaxHorAcceleration())
+	 * @pre		The given direction must be left or right.
+	 * 			| (direction == Direction.LEFT) || (direction == Direction.RIGHT)
 	 * @effect	The horizontal velocity of this Mazub is set to the initial
 	 * 			horizontal velocity.
 	 * 			| setHorVelocity(getInitHorVelocity())
-	 * @effect	The horizontal direction is set to -1.
-	 * 			| setHorDirection(-1)
+	 * @effect	The horizontal direction is set to the given horizontal direction.
+	 * 			| setHorDirection(direction)
 	 * @effect	The horizontal acceleration is set to the maximum 
 	 * 			horizontal acceleration.
 	 * 			| setHorAcceleration(getMaxHorAcceleration());
 	 * @effect	The timer 'Timesum' is reset to zero.
 	 * 			| setTimeSum(0)
 	 */
-	public void startMoveLeft(){
-		assert isValidInitHorVelocity(getInitHorVelocity());
-		assert isValidHorAcceleration(getMaxHorAcceleration());
+	public void startMove(Direction direction){
+		assert ((direction == Direction.LEFT) || (direction == Direction.RIGHT));
 		setHorVelocity(getInitHorVelocity());
-		setHorDirection(-1);
+		setHorDirection(direction);
 		setHorAcceleration(getMaxHorAcceleration());
 		setTimeSum(0);
 	}
@@ -809,6 +559,10 @@ public class Mazub {
 	/**
 	 * Method to end the movement of the Mazub when moving to the left.
 	 * 
+	 * @pre		The given direction must be left or right.
+	 * 			| (direction == Direction.LEFT) || (direction == Direction.RIGHT)
+	 * @pre		This Mazub must be moving to the given direction.
+	 * 			| isMoving(direction)
 	 * @effect	If this Mazub is moving left,
 	 * 			the horizontal velocity, the horizontal direction and
 	 * 			the horizontal acceleration are set to zero.
@@ -818,59 +572,13 @@ public class Mazub {
 	 * @effect	The timer 'Timesum' is reset to zero.
 	 * 			| setTimeSum(0)
 	 */
-	public void endMoveLeft(){
-		if (isMovingLeft()){
-			setHorVelocity(0);
-			setHorDirection(0);
-			setHorAcceleration(0);
-			setTimeSum(0);
-		}
-	}
-	
-	/**
-	 * Method to start the movement of the Mazub to the right.
-	 * 
-	 * @pre		This Mazub must have a valid initial horizontal velocity.
-	 * 			| isValidInitHorVelocity(getInitHorVelocity())
-	 * @pre		This mazub must have a valid maximum horizontal acceleration.
-	 * 			| isValidHorAcceleration(getMaxHorAcceleration())
-	 * @effect	The horizontal velocity of this Mazub is set to the initial
-	 * 			horizontal velocity.
-	 * 			| setHorVelocity(getInitHorVelocity())
-	 * @effect	The horizontal direction is set to 1.
-	 * 			| setHorDirection(1)
-	 * @effect	The horizontal acceleration is set to the maximum 
-	 * 			horizontal acceleration.
-	 * 			| setHorAcceleration(getMaxHorAcceleration());
-	 * @effect	The timer 'Timesum' is reset to zero.
-	 * 			| setTimeSum(0)
-	 */
-	public void startMoveRight(){
-		setHorVelocity(getInitHorVelocity());
-		setHorDirection(1);
-		setHorAcceleration(getMaxHorAcceleration());
-		setTimeSum(0);
-	}
-	
-	/**
-	 * Method to end the movement of the Mazub when moving to the right.
-	 * 
-	 * @effect	If this Mazub is moving right,
-	 * 			the horizontal velocity, the horizontal direction and
-	 * 			the horizontal acceleration are set to zero.
-	 * 			| if (isMovingRight()){
-	 * 			| 	then setHorVelocity(0),setHorDirection(0),
-	 * 			|	setHorAcceleration(0)
-	 * @effect	The timer 'Timesum' is reset to zero.
-	 * 			| setTimeSum(0)
-	 */
-	public void endMoveRight(){
-	if (isMovingRight()){	
+	public void endMove(Direction direction){
+		assert ((direction == Direction.LEFT) || (direction == Direction.RIGHT));
+		assert (isMoving(direction));
 		setHorVelocity(0);
-		setHorDirection(0);
+		setHorDirection(Direction.NULL);
 		setHorAcceleration(0);
 		setTimeSum(0);
-		}
 	}
 	
 	/**
@@ -892,7 +600,7 @@ public class Mazub {
 		}
 		setVertVelocity(getInitVertVelocity());
 		setVertAcceleration(getMaxVertAcceleration());
-		setVertDirection(1);
+		setVertDirection(Direction.UP);
 	}
 	
 	/**
@@ -903,7 +611,7 @@ public class Mazub {
 	 *			|	setVertVelocity(0)
 	 */
 	public void endJump(){
-		if (getVertDirection() == 1)
+		if (getVertDirection() == Direction.UP)
 			setVertVelocity(0);
 	}
 	
@@ -966,10 +674,10 @@ public class Mazub {
 	public void endDuck(){
 		setIsDucked(false);
 		setMaxHorVelocity(getMaxHorVelocityRunning());
-		if (isMovingRight())
-			startMoveRight();
-		else if (isMovingLeft())
-			startMoveLeft();
+		if (isMoving(Direction.RIGHT))
+			startMove(Direction.RIGHT);
+		else if (isMoving(Direction.LEFT))
+			startMove(Direction.LEFT);
 	}
 	
 	/**
@@ -1033,9 +741,10 @@ public class Mazub {
 	 */
 	@Model
 	private void updateHorPosition(double timeDuration){
-		double newXPos = getEffectiveXPos() + getHorDirection()*
+		double newXPos = getPosition().getXPosition() + getHorDirection().getFactor()*
 				(getHorVelocity()*timeDuration+ 0.5*getHorAcceleration()*Math.pow(timeDuration, 2))*100;
-		setEffectiveXPos(newXPos);
+		setPosition(new Position(newXPos,getPosition().getYPosition()));
+		
 	}
 	
 	/**
@@ -1068,13 +777,13 @@ public class Mazub {
 	@Model
 	private void updateVertPosition(double timeDuration)
 			throws IllegalYPositionException{
-		double newYPos = getEffectiveYPos() + 
-				((getVertDirection()*getVertVelocity()*timeDuration)+ 
+		double newYPos = getPosition().getYPosition() + 
+				((getVertDirection().getFactor()*getVertVelocity()*timeDuration)+ 
 				0.5*getVertAcceleration()*Math.pow(timeDuration, 2))*100;
 		if (newYPos<0)
-			setEffectiveYPos(0);
+			getPosition().setYPosition(0);
 		else
-			setEffectiveYPos(newYPos);
+			getPosition().setYPosition(newYPos);
 	}
 	
 	/**
@@ -1086,15 +795,15 @@ public class Mazub {
 	 * 			time interval and the current attributes of this Mazub.
 	 */
 	private void updateVertVelocity(double timeDuration){
-		double newVel = getVertDirection()*getVertVelocity() + getVertAcceleration() * timeDuration;
+		double newVel = getVertDirection().getFactor()*getVertVelocity() + getVertAcceleration() * timeDuration;
 		if (newVel<0){
 			newVel = -newVel;
-			setVertDirection(-1);
+			setVertDirection(Direction.DOWN);
 		}
-		if (getYPosition() <= 0){
-			setEffectiveYPos(0);
+		if (getPosition().getYPosition() <= 0){
+			getPosition().setYPosition(0);
 			setVertVelocity(0);
-			setVertDirection(0);
+			setVertDirection(Direction.NULL);
 			setVertAcceleration(0);
 		}
 		setVertVelocity(newVel);
@@ -1145,7 +854,7 @@ public class Mazub {
 	 * Return the last registered horizontal direction of the Mazub.
 	 */
 	@Basic @Model
-	private int getLastDirection() {
+	private Direction getLastDirection() {
 		return lastDirection;
 	}
 
@@ -1158,7 +867,7 @@ public class Mazub {
 	 * 			| new.getLastDirection == lastDirection
 	 */
 	@Model
-	private void setLastDirection(int lastDirection) {
+	private void setLastDirection(Direction lastDirection) {
 		this.lastDirection = lastDirection;
 	}
 
@@ -1172,7 +881,7 @@ public class Mazub {
 	 */
 	@Model
 	private void updateLastDirection() {
-		if (getHorDirection() != 0)
+		if (getHorDirection().getFactor() != 0)
 			setLastDirection(getHorDirection());
 	}
 	
@@ -1180,7 +889,7 @@ public class Mazub {
 	 * A variable storing the last horizontal direction of movement of this Mazub
 	 * within the last second of in-game-time.
 	 */
-	private int lastDirection;
+	private Direction lastDirection;
 
 	
 	/**
@@ -1234,29 +943,17 @@ public class Mazub {
 	 * 			| result == (getHorDirection() != 0)
 	 */
 	private boolean isMoving(){
-		return (getHorDirection() != 0);
+		return (getHorDirection() != Direction.NULL);
 	}
 
 	/**
 	 * Checks whether the Mazub is moving to the right.
 	 * 
-	 * @return	True if and only if the horizontal direction of the Mazub is 1.
-	 * 			| result == (getHorDirection() == 1)
+	 * @return	True if and only if the horizontal direction of the Mazub is equal to the given direction.
+	 * 			| result == (getHorDirection() == direction)
 	 */
-	@Model
-	private boolean isMovingRight(){
-		return (getHorDirection() == 1);
-	}
-
-	/**
-	 * Checks whether the Mazub is moving to the left.
-	 * 
-	 * @return	True if and only if the horizontal direction of the Mazub is -1.
-	 * 			| result == (getHorDirection() == -1)
-	 */
-	@Model
-	private boolean isMovingLeft(){
-		return (getHorDirection() == -1);
+	public boolean isMoving(Direction direction){
+		return (getHorDirection() == direction);
 	}
 	
 	/**
@@ -1269,7 +966,7 @@ public class Mazub {
 	 * 
 	 */
 	private boolean wasMoving(){
-		if (getLastDirection() != 0){
+		if (getLastDirection() != Direction.NULL){
 			if (getTimeSum() < 1.0)
 				return true;
 		}
@@ -1277,25 +974,14 @@ public class Mazub {
 	}
 	
 	/**
-	 * Checks whether the Mazub has moved left within the last second of in-game-time.
+	 * Checks whether the Mazub has moved to the given direction within the last second of in-game-time.
 	 * 
 	 * @return	True if and only if this Mazub was moving within the last second
-	 * 			of in-game-time and its last direction was -1 (left).
+	 * 			of in-game-time and its last direction was equal to the given direction.
 	 * 			| result == (wasMoving() && (getLastDirection() == -1))
 	 */
-	private boolean wasMovingLeft(){
-		return (wasMoving() && (getLastDirection() == -1));
-	}
-	
-	/**
-	 * Checks whether the Mazub has moved left within the last second of in-game-time.
-	 * 
-	 * @return	True if and only if this Mazub was moving within the last second
-	 * 			of in-game-time and its last direction was 1 (right).
-	 * 			| result == (wasMoving() && (getLastDirection() == 1))
-	 */
-	private boolean wasMovingRight(){
-		return (wasMoving() && (getLastDirection() == 1));
+	private boolean wasMoving(Direction direction){
+		return (wasMoving() && getLastDirection() == direction);
 	}
 	
 	/**
@@ -1306,7 +992,7 @@ public class Mazub {
 	 * 			| result == (getVertDirection() != 0)
 	 */
 	private boolean isJumping(){
-		return (getVertDirection() != 0);
+		return (getVertDirection() != Direction.NULL);
 	}
 	
 	/**
@@ -1340,7 +1026,7 @@ public class Mazub {
 	public void updateSpriteIndex(){
 		if (getIsDucked()){
 			if (isMoving() || wasMoving()){
-				if (isMovingRight() || wasMovingRight())
+				if (isMoving(Direction.RIGHT) || wasMoving(Direction.RIGHT))
 					setIndex(6);
 				else
 					// isMovingLeft() == true
@@ -1352,13 +1038,13 @@ public class Mazub {
 		}
 		else if (isMoving()){
 				if (isJumping()){
-					if (isMovingRight())
+					if (isMoving(Direction.RIGHT))
 						setIndex(4);
 					else
 						// isMovingLeft() == true
 						setIndex(5);
 				}
-				else if (isMovingRight()){
+				else if (isMoving(Direction.RIGHT)){
 						//8..8+m
 						updateWalkingAnimationRight();
 				}
@@ -1368,9 +1054,9 @@ public class Mazub {
 					updateWalkingAnimationLeft();
 				}
 		}
-		else if (wasMovingRight())
+		else if (wasMoving(Direction.RIGHT))
 				setIndex(2);
-		else if (wasMovingLeft())
+		else if (wasMoving(Direction.LEFT))
 				setIndex(3);
 		else
 			// Mazub is standing still longer than 1 second

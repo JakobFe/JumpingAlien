@@ -22,20 +22,21 @@ public class Facade implements IFacade {
 	@Override
 	public int[] getLocation(Mazub alien) {
 		// TODO Auto-generated method stub
-		return intArray(alien.getXPosition(),alien.getYPosition());
+		return intArray(alien.getPosition().getDisplayedXPosition(),
+				alien.getPosition().getDisplayedYPosition());
 	}
 
 	@Override
 	public double[] getVelocity(Mazub alien) {
 		// TODO Auto-generated method stub
-		return doubleArray(alien.getHorDirection()*alien.getHorVelocity(),
-			   alien.getVertDirection()*alien.getVertVelocity());
+		return doubleArray(alien.getHorDirection().getFactor()*alien.getHorVelocity(),
+			   alien.getVertDirection().getFactor()*alien.getVertVelocity());
 	}
 
 	@Override
 	public double[] getAcceleration(Mazub alien) {
 		// TODO Auto-generated method stub
-		return doubleArray(alien.getHorDirection()*alien.getHorAcceleration(),
+		return doubleArray(alien.getHorDirection().getFactor()*alien.getHorAcceleration(),
 						   alien.getVertAcceleration());
 	}
 
@@ -72,25 +73,27 @@ public class Facade implements IFacade {
 	@Override
 	public void startMoveLeft(Mazub alien) {
 		// TODO Auto-generated method stub
-		alien.startMoveLeft();
+		alien.startMove(Direction.LEFT);
 	}
 
 	@Override
 	public void endMoveLeft(Mazub alien) {
 		// TODO Auto-generated method stub
-		alien.endMoveLeft();
+		if (alien.isMoving(Direction.LEFT))
+			alien.endMove(Direction.LEFT);
 	}
 
 	@Override
 	public void startMoveRight(Mazub alien) {
 		// TODO Auto-generated method stub
-		alien.startMoveRight();
+		alien.startMove(Direction.RIGHT);
 	}
 
 	@Override
 	public void endMoveRight(Mazub alien) {
 		// TODO Auto-generated method stub
-		alien.endMoveRight();
+		if (alien.isMoving(Direction.RIGHT))
+			alien.endMove(Direction.RIGHT);
 	}
 
 	@Override

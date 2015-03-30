@@ -27,7 +27,7 @@ public class JumpingAlienGUIPart1 extends
 
 	@Override
 	protected Dimension getDefaultSize() {
-		return new Dimension(1100, 600);
+		return new Dimension(1000, 650);
 	}
 
 	@SuppressWarnings("serial")
