@@ -1,6 +1,7 @@
 package jumpingalien.model;
 
 import be.kuleuven.cs.som.annotate.*;
+import static jumpingalien.tests.util.TestUtils.intArray;
 
 public class World {
 	
@@ -44,6 +45,31 @@ public class World {
 	 */
 	private final int tileSize;
 	
+	public int getBelongingTileXPosition(int xPosition){
+		return xPosition/getTileSize();
+	}
+
+	public int getBelongingTileYPosition(int yPosition){
+		return yPosition/getTileSize();
+	}
+	
+	public int[][] getTilePositionsIn(int pixelLeft, int pixelBottom,
+			int pixelRight, int pixelTop){
+		int firstTileXPos = getBelongingTileXPosition(pixelLeft);
+		int firstTileYPos = getBelongingTileYPosition(pixelBottom);
+		int lastTileXPos = getBelongingTileXPosition(pixelRight);
+		int lastTileYPos = getBelongingTileYPosition(pixelTop);
+		int numberHorTiles = (lastTileXPos-firstTileXPos+1);
+		int numberVerTiles = (lastTileYPos-firstTileYPos+1);
+		int[][] result = new int[numberHorTiles * numberVerTiles][2];
+		for (int index = 0; index < (numberHorTiles * numberVerTiles); index++){
+			result[index] = intArray(index%numberHorTiles+firstTileXPos
+					,index/numberHorTiles + firstTileYPos);
+		}
+		return result;
+	}
+
+	
 	public int getWorldWidth() {
 		return worldWidth;
 	}
@@ -81,8 +107,12 @@ public class World {
 		return worldTiles;
 	}
 	
-	public Tile getTileAt(int tileXPos, int tileYPos){
+	public Tile getTileAtTilePos(int tileXPos, int tileYPos){
 		return getWorldTiles()[tileXPos][tileYPos];
+	}
+	
+	public Tile getTileAtPos(int xPos, int yPos){
+		return getTileAtTilePos(xPos/getTileSize(),yPos/getTileSize());
 	}
 	
 	private final Tile[][] worldTiles;
@@ -114,4 +144,18 @@ public class World {
 	}
 
 	private int windowYPos;
+	
+	public Mazub getMazub() {
+		return mazub;
+	}
+	
+	public void setMazub(Mazub alien){
+		this.mazub = alien;
+	}
+	
+	private Mazub mazub;
+	
+	public void advanceTime(double timeDuration){
+		getMazub().advanceTime(timeDuration);
+	}
 }

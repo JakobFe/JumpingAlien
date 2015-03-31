@@ -143,6 +143,22 @@ public class Mazub {
 		return this.getCurrentSprite().getHeight();
 	}
 	
+	@Basic
+	public int getHitPoints() {
+		return hitPoints;
+	}
+	
+	private static boolean isValidHitPoints(int hitPoints){
+		return (hitPoints>=0 && hitPoints <= 500); 
+	}
+
+	public void setHitPoints(int hitPoints) {
+		if (isValidHitPoints(hitPoints))
+			this.hitPoints = hitPoints;
+	}
+
+	private int hitPoints=100;
+	
 	/**
 	 * Returns the current horizontal direction of this Mazub.
 	 */

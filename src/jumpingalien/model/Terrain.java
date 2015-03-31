@@ -1,11 +1,12 @@
 package jumpingalien.model;
 
 public enum Terrain {
-	AIR(0,0), GROUND(1,0), WATER(2,2), MAGMA(3,50);
+	AIR(0,0,true), GROUND(1,0,false), WATER(2,2,true), MAGMA(3,50,true);
 	
-	private Terrain(int value, int hpLoss){
+	private Terrain(int value, int hpLoss, boolean isPassable){
 		this.value = value;
 		this.hpLoss = hpLoss;
+		this.isPassable = isPassable;
 	}
 	
 	public int getValue() {
@@ -17,6 +18,12 @@ public enum Terrain {
 	public int getHpLoss() {
 		return hpLoss;
 	}
+	
+	public boolean isPassable(){
+		return isPassable;
+	}
+	
+	public final boolean isPassable;
 
 	private final int hpLoss;
 }

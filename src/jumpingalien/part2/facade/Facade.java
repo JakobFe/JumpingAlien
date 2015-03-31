@@ -141,7 +141,7 @@ public class Facade implements IFacadePart2 {
 	@Override
 	public int getNbHitPoints(Mazub alien) {
 		// TODO Auto-generated method stub
-		return 0;
+		return alien.getHitPoints();
 	}
 
 	@Override
@@ -156,13 +156,13 @@ public class Facade implements IFacadePart2 {
 	@Override
 	public int[] getWorldSizeInPixels(World world) {
 		// TODO Auto-generated method stub
-		return null;
+		return intArray(world.getWorldWidth(),world.getWorldHeight());
 	}
 
 	@Override
 	public int getTileLength(World world) {
 		// TODO Auto-generated method stub
-		return 0;
+		return world.getTileSize();
 	}
 
 	@Override
@@ -186,18 +186,23 @@ public class Facade implements IFacadePart2 {
 	@Override
 	public void advanceTime(World world, double dt) {
 		// TODO Auto-generated method stub
-		
+		world.advanceTime(dt);
 	}
 
 	@Override
 	public int[] getVisibleWindow(World world) {
 		// TODO Auto-generated method stub
-		return null;
+		return intArray(world.getWindowXPos(),world.getWindowYPos(),
+						world.getWindowXPos()+world.getVisibleWindowWidth(),
+						world.getWindowYPos()+world.getVisibleWindowHeight());
 	}
 
 	@Override
 	public int[] getBottomLeftPixelOfTile(World world, int tileX, int tileY) {
 		// TODO Auto-generated method stub
+		/*return intArray(world.getTileAtTilePos(tileX, tileY).getXPosition(),
+						world.getTileAtTilePos(tileX, tileY).getTileYPos());
+		*/
 		return null;
 	}
 
@@ -205,27 +210,26 @@ public class Facade implements IFacadePart2 {
 	public int[][] getTilePositionsIn(World world, int pixelLeft,
 			int pixelBottom, int pixelRight, int pixelTop) {
 		// TODO Auto-generated method stub
-		return null;
+		return world.getTilePositionsIn(pixelLeft,pixelBottom,pixelRight,pixelTop);
 	}
 
 	@Override
 	public int getGeologicalFeature(World world, int pixelX, int pixelY)
 			throws ModelException {
 		// TODO Auto-generated method stub
-		return 0;
+		return world.getTileAtPos(pixelX,pixelY).getGeoFeature().getValue();
 	}
 
 	@Override
 	public void setGeologicalFeature(World world, int tileX, int tileY,
 			int tileType) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void setMazub(World world, Mazub alien) {
 		// TODO Auto-generated method stub
-		
+		world.setMazub(alien);
 	}
 
 	@Override

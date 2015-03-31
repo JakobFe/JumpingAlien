@@ -152,7 +152,8 @@ public interface IFacadePart2 extends jumpingalien.part1.facade.IFacade {
 	 * will be changed via
 	 * {@link IFacadePart2#setGeologicalFeature(World, int, int, int)}.
 	 * 
-	 * @param The world for which to start the game.
+	 * @param The
+	 *            world for which to start the game.
 	 */
 	void startGame(World world);
 
