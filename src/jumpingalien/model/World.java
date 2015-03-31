@@ -155,7 +155,8 @@ public class World {
 	
 	private Mazub mazub;
 	
-	public void advanceTime(double timeDuration){
+	public void advanceTime(double timeDuration) throws
+	IllegalXPositionException,IllegalYPositionException{
 		getMazub().advanceTime(timeDuration);
 	}
 }
