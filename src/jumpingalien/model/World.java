@@ -5,8 +5,8 @@ import be.kuleuven.cs.som.annotate.*;
 public class World {
 	
 	public World(int tileSize, int nbTilesX, int nbTilesY,
-			int visibleWindowWidth, int visibleWindowHeight, int targetTileX,
-			int targetTileY){
+			int visibleWindowWidth, int visibleWindowHeight,
+			int targetTileX,int targetTileY){
 		this.tileSize = tileSize;
 		this.worldWidth = tileSize * nbTilesX;
 		this.worldHeight = tileSize * nbTilesY;
@@ -18,6 +18,17 @@ public class World {
 			this.visibleWindowHeight = visibleWindowHeight;
 		else
 			this.visibleWindowHeight = getWorldHeight();
+		this.targetTile = new Tile(this,targetTileX*tileSize,targetTileY*tileSize,true);
+		this.worldTiles = new Tile[nbTilesY][nbTilesX];
+		for (int row = 0; row < nbTilesY; row++){
+			for (int col = 0; col < nbTilesX; col++){
+				if (row == targetTileY && col == targetTileX )
+					worldTiles[row][col] = getTargetTile();
+				else
+					worldTiles[row][col] = new Tile(this, row*tileSize, col*tileSize,false);
+			}
+		}
+		
 	}
 	
 	/**
@@ -65,5 +76,42 @@ public class World {
 	
 	private final int visibleWindowHeight;
 	
+	@Basic
+	public Tile[][] getWorldTiles() {
+		return worldTiles;
+	}
 	
+	public Tile getTileAt(int tileXPos, int tileYPos){
+		return getWorldTiles()[tileXPos][tileYPos];
+	}
+	
+	private final Tile[][] worldTiles;
+	
+	
+	
+	public Tile getTargetTile() {
+		return targetTile;
+	}
+
+	private final Tile targetTile;
+	
+	public int getWindowXPos() {
+		return windowXPos;
+	}
+
+	public void setWindowXPos(int windowXPos) {
+		this.windowXPos = windowXPos;
+	}
+
+	private int windowXPos;
+	
+	public int getWindowYPos() {
+		return windowYPos;
+	}
+
+	public void setWindowYPos(int windowYPos) {
+		this.windowYPos = windowYPos;
+	}
+
+	private int windowYPos;
 }

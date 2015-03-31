@@ -3,14 +3,20 @@ package jumpingalien.model;
 import be.kuleuven.cs.som.annotate.*;
 
 public class Tile {
-	public Tile(World world, int xPosition, int yPosition, Terrain geologicalFeature){
+	public Tile(World world, int xPosition, int yPosition, Terrain geologicalFeature,
+			boolean isTargetTile){
 		this.world = world;
 		assert isValidXPosition(xPosition);
 		assert isValidYPosition(yPosition);
 		this.xPosition = xPosition;
-		this.yPosition = yPosition;		
+		this.yPosition = yPosition;
+		setGeoFeature(geologicalFeature);
+		this.isTargetTile = isTargetTile;
 	}
 	
+	public Tile(World world, int xPosition, int yPosition, boolean isTargetTile){
+		this(world,xPosition,yPosition,Terrain.AIR,isTargetTile);
+	}
 	
 	public World getWorld() {
 		return world;
@@ -22,8 +28,12 @@ public class Tile {
 	 * Return the x position of this tile.
 	 */
 	@Basic@Immutable
-	public double getXPosition(){
+	public int getXPosition(){
 		return this.xPosition;
+	}
+	
+	public int getTileXPos(){
+		return getXPosition()/getWorld().getTileSize();
 	}
 	
 	private boolean isValidXPosition(int xpos){
@@ -34,8 +44,12 @@ public class Tile {
 	private final int xPosition;
 	
 	@Basic@Immutable
-	public double getYPosition(){
+	public int getYPosition(){
 		return this.yPosition;
+	}
+	
+	public int getTileYPos(){
+		return getYPosition()/getWorld().getTileSize();
 	}
 	
 	private boolean isValidYPosition(int ypos){
@@ -44,4 +58,21 @@ public class Tile {
 	}
 	
 	private final int yPosition;
+	
+	public Terrain getGeoFeature() {
+		return geoFeature;
+	}
+
+
+	public void setGeoFeature(Terrain geoFeature) {
+		this.geoFeature = geoFeature;
+	}
+
+	private Terrain geoFeature;
+	
+	public boolean isTargetTile(){
+		return this.isTargetTile;
+	}
+	
+	private final boolean isTargetTile;
 }
