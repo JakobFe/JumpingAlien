@@ -200,10 +200,8 @@ public class Facade implements IFacadePart2 {
 	@Override
 	public int[] getBottomLeftPixelOfTile(World world, int tileX, int tileY) {
 		// TODO Auto-generated method stub
-		/*return intArray(world.getTileAtTilePos(tileX, tileY).getXPosition(),
+		return intArray(world.getTileAtTilePos(tileX, tileY).getXPosition(),
 						world.getTileAtTilePos(tileX, tileY).getTileYPos());
-		*/
-		return null;
 	}
 
 	@Override

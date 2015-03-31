@@ -1,5 +1,4 @@
 package jumpingalien.model;
-import jumpingalien.model.*;
 
 public class Experiment {
 	public static void main(String[] args){
@@ -10,7 +9,7 @@ public class Experiment {
 			System.out.println(col);
 			System.out.println(testWorld.getTileAt(row,col).isTargetTile());
 			}
-		}*/
+		}
 		World testWorld2 = new World(20,8,6,1000,1000,7,5);
 		int[][] tilePositions = testWorld2.getTilePositionsIn(35,22,62,53);
 		for (int index = 0; index < 6; index++){
@@ -28,6 +27,15 @@ public class Experiment {
 				System.out.println("next tile");
 			}catch (IndexOutOfBoundsException e) {
 			    System.err.println("IndexOutOfBoundsException: " + e.getMessage());
+			}
+		}*/
+		for (int x = 0; x < 10; x++){
+			for (int y = 0; y < 10; y++){
+				try{
+					System.out.println(testWorld.getTileAtTilePos(x, y).getXPosition());
+					System.out.println(testWorld.getTileAtTilePos(x, y).getYPosition());
+					System.out.println("next tile");
+				}catch (IndexOutOfBoundsException e){}
 			}
 		}
 	}

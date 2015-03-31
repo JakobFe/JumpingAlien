@@ -26,7 +26,7 @@ public class World {
 				if (row == targetTileY && col == targetTileX )
 					worldTiles[row][col] = getTargetTile();
 				else
-					worldTiles[row][col] = new Tile(this, row*tileSize, col*tileSize,false);
+					worldTiles[row][col] = new Tile(this, col*tileSize, row*tileSize,false);
 			}
 		}
 		
@@ -108,16 +108,14 @@ public class World {
 	}
 	
 	public Tile getTileAtTilePos(int tileXPos, int tileYPos){
-		return getWorldTiles()[tileXPos][tileYPos];
+		return getWorldTiles()[tileYPos][tileXPos];
 	}
 	
 	public Tile getTileAtPos(int xPos, int yPos){
-		return getTileAtTilePos(xPos/getTileSize(),yPos/getTileSize());
+		return getTileAtTilePos(yPos/getTileSize(),xPos/getTileSize());
 	}
 	
 	private final Tile[][] worldTiles;
-	
-	
 	
 	public Tile getTargetTile() {
 		return targetTile;
