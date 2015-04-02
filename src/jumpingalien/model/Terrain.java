@@ -23,6 +23,16 @@ public enum Terrain {
 		return isPassable;
 	}
 	
+	
+	
+	public static Terrain mapValueToTerrain(int value){
+		for(Terrain ter: Terrain.values()){
+			if (ter.getValue() == value)
+				return ter;
+		}
+		return null;
+	}
+	
 	public final boolean isPassable;
 
 	private final int hpLoss;

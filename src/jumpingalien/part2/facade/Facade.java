@@ -11,6 +11,7 @@ import jumpingalien.model.IllegalTimeIntervalException;
 import jumpingalien.model.IllegalXPositionException;
 import jumpingalien.model.IllegalYPositionException;
 import jumpingalien.model.Mazub;
+import jumpingalien.model.Terrain;
 import jumpingalien.model.World;
 import jumpingalien.model.Plant;
 import jumpingalien.model.Slime;
@@ -120,23 +121,7 @@ public class Facade implements IFacadePart2 {
 		alien.endDuck();
 	}
 
-	@Override
-	public void advanceTime(Mazub alien, double dt) {
-		// TODO Auto-generated method stub
-		try{
-		alien.advanceTime(dt);}
-		catch (IllegalXPositionException exc){
-			new ModelException("Illegal X Position!");
-			System.out.println("Illegal X Position!");
-			}
-		catch (IllegalYPositionException exc){
-			new ModelException("Illegal Y Position!");
-			System.out.println("Illegal Y Position!");
-			}
-		catch (IllegalTimeIntervalException exc){
-			throw new ModelException("Computing time to long!");
-		}
-	}
+
 	
 	@Override
 	public int getNbHitPoints(Mazub alien) {
@@ -234,6 +219,8 @@ public class Facade implements IFacadePart2 {
 	public void setGeologicalFeature(World world, int tileX, int tileY,
 			int tileType) {
 		// TODO Auto-generated method stub
+		Terrain terrain = Terrain.mapValueToTerrain(tileType);
+		world.getTileAtTilePos(tileX, tileY).setGeoFeature(terrain);
 	}
 
 	@Override

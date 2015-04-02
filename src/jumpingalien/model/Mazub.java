@@ -143,6 +143,8 @@ public class Mazub {
 		return this.getCurrentSprite().getHeight();
 	}
 	
+	
+	
 	@Basic
 	public int getHitPoints() {
 		return hitPoints;
@@ -643,6 +645,15 @@ public class Mazub {
 			setVertVelocity(0);
 	}
 	
+	public void endAllMovements(){
+		if (isMoving(Direction.RIGHT))
+			endMove(Direction.RIGHT);
+		if (isMoving(Direction.LEFT))
+			endMove(Direction.LEFT);
+		setVertVelocity(0);
+		setVertAcceleration(0);
+	}
+	
 	/**
 	 * Returns the current ducking state of this Mazub.
 	 */
@@ -736,7 +747,12 @@ public class Mazub {
 				IllegalYPositionException,IllegalTimeIntervalException{
 		if (!isValidTimeInterval(timeDuration))
 			throw new IllegalTimeIntervalException(this);
-		updatePosition(timeDuration);
+		try {
+			updatePosition(timeDuration);
+		} catch (CollisionException e) {
+			System.out.println("Collision!");
+			endAllMovements();
+		}
 		updateHorVelocity(timeDuration);
 		updateVertVelocity(timeDuration);
 		counter(timeDuration);
@@ -769,7 +785,7 @@ public class Mazub {
 	 * 			time interval and the current attributes of this Mazub.
 	 */
 	@Model
-	private void updatePosition(double timeDuration){
+	private void updatePosition(double timeDuration) throws CollisionException{
 		double newXPos = getPosition().getXPosition() + getHorDirection().getFactor()*
 				(getHorVelocity()*timeDuration+ 0.5*getHorAcceleration()*Math.pow(timeDuration, 2))*100;
 		double newYPos = getPosition().getYPosition() + 
@@ -777,7 +793,56 @@ public class Mazub {
 				0.5*getVertAcceleration()*Math.pow(timeDuration, 2))*100;
 		if (newYPos<0)
 			newYPos = 0;
-		setPosition(new Position(newXPos,newYPos,getWorld()));
+		int displayedNewXPos = (int) Math.floor(newXPos);
+		int displayedNewYPos = (int) Math.floor(newYPos);
+		int[][] affectedTilePositions = getWorld().getTilePositionsIn(displayedNewXPos+1, displayedNewYPos+1,
+				displayedNewXPos+getWidth()-2, displayedNewYPos+getHeight()-2);
+		for (int[] pos: affectedTilePositions){
+			Tile tile = getWorld().getTileAtTilePos(pos[0], pos[1]);
+			boolean isColliding = tile.getGeoFeature().isPassable();
+			if (isColliding){
+				if(getPosition().getDisplayedXPosition()< displayedNewXPos
+					&& isMoving(Direction.RIGHT) &&
+					tile.getXPosition()>getPosition().getDisplayedXPosition()){
+					System.out.println("if1");
+					// hij collide naar rechts
+					endMove(Direction.RIGHT);
+				}
+				else if(getPosition().getDisplayedXPosition()> displayedNewXPos
+						&& isMoving(Direction.LEFT) &&
+						tile.getXPosition()==getPosition().getDisplayedXPosition()){
+					// hij collide naar links
+					System.out.println("if2");
+					endMove(Direction.LEFT);
+				}
+				else if(getPosition().getDisplayedYPosition()< displayedNewYPos &&
+						isMoving(Direction.UP)&&
+						tile.getYPosition()>getPosition().getDisplayedYPosition()){
+					// hij collide naar boven
+					System.out.println("if3");
+					endJump();
+				}
+				else if(getPosition().getDisplayedYPosition()> displayedNewYPos &&
+						isMoving(Direction.DOWN) &&
+						tile.getYPosition()==getPosition().getDisplayedYPosition()){
+					// hij collide naar onder
+					System.out.println("if4");
+					setVertVelocity(0);
+					setVertAcceleration(0);
+					setVertDirection(Direction.NULL);
+				}
+				else
+					// hij is niet aan het colliden in de richting waar hij naartoe
+					// wil gaan
+					setPosition(new Position(newXPos,newYPos,getWorld()));
+			}
+			else
+				setPosition(new Position(newXPos,newYPos,getWorld()));
+			}
+	}
+	
+	public boolean isOverlapping(Direction direction){
+		return false;
 	}
 	
 	/**
@@ -798,26 +863,7 @@ public class Mazub {
 		else
 			setHorVelocity(newVel);
 	}
-	
-	/**
-	 * A method to update the vertical position over a given time interval.
-	 * 
-	 * @param 	timeDuration
-	 * 			The time interval needed to calculate the new vertical position.
-	 * 
-	 */
-	@Model
-	private void updateVertPosition(double timeDuration)
-			throws IllegalYPositionException{
-		double newYPos = getPosition().getYPosition() + 
-				((getVertDirection().getFactor()*getVertVelocity()*timeDuration)+ 
-				0.5*getVertAcceleration()*Math.pow(timeDuration, 2))*100;
-		if (newYPos<0)
-			getPosition().setYPosition(0);
-		else
-			getPosition().setYPosition(newYPos);
-	}
-	
+		
 	/**
 	 * A method to update the vertical velocity over a given time interval.
 	 * 
@@ -985,7 +1031,8 @@ public class Mazub {
 	 * 			| result == (getHorDirection() == direction)
 	 */
 	public boolean isMoving(Direction direction){
-		return (getHorDirection() == direction);
+		return ((getHorDirection() == direction) ||
+				getVertDirection() == direction);
 	}
 	
 	/**

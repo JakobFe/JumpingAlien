@@ -185,7 +185,14 @@ public class World {
 	
 	public void advanceTime(double timeDuration) throws
 	IllegalXPositionException,IllegalYPositionException{
-		getMazub().advanceTime(timeDuration);
+		double tdHor = 0.01/(Math.abs(getMazub().getHorVelocity())
+				+Math.abs(getMazub().getHorAcceleration())*timeDuration);
+		double tdVert = 0.01/(Math.abs(getMazub().getVertVelocity())
+				+Math.abs(getMazub().getVertAcceleration())*timeDuration);
+		double td = Math.min(tdHor, tdVert);
+		for (int index = 0; index < timeDuration/td; index++){
+			getMazub().advanceTime(td);			
+		}
 		updateWindowPos();
 	}
 	

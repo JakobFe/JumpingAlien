@@ -38,5 +38,6 @@ public class Experiment {
 				}catch (IndexOutOfBoundsException e){}
 			}
 		}
+		System.out.println(Terrain.mapValueToTerrain(3));
 	}
 }
