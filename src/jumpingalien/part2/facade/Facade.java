@@ -186,7 +186,19 @@ public class Facade implements IFacadePart2 {
 	@Override
 	public void advanceTime(World world, double dt) {
 		// TODO Auto-generated method stub
-		world.advanceTime(dt);
+		try{
+			world.advanceTime(dt);}
+			catch (IllegalXPositionException exc){
+				new ModelException("Illegal X Position!");
+				System.out.println("Illegal X Position!");
+				}
+			catch (IllegalYPositionException exc){
+				new ModelException("Illegal Y Position!");
+				System.out.println("Illegal Y Position!");
+				}
+			catch (IllegalTimeIntervalException exc){
+				throw new ModelException("Computing time to long!");
+			}
 	}
 
 	@Override
