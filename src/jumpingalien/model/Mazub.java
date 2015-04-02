@@ -159,6 +159,18 @@ public class Mazub {
 
 	private int hitPoints=100;
 	
+	
+	public World getWorld() {
+		return world;
+	}
+	
+	public void setWorld(World world) {
+		assert world.getMazub() == this;
+		this.world = world;
+	}
+
+	private World world = null;
+	
 	/**
 	 * Returns the current horizontal direction of this Mazub.
 	 */
@@ -724,9 +736,8 @@ public class Mazub {
 				IllegalYPositionException,IllegalTimeIntervalException{
 		if (!isValidTimeInterval(timeDuration))
 			throw new IllegalTimeIntervalException(this);
-		updateHorPosition(timeDuration);
+		updatePosition(timeDuration);
 		updateHorVelocity(timeDuration);
-		updateVertPosition(timeDuration);
 		updateVertVelocity(timeDuration);
 		counter(timeDuration);
 		updateLastDirection();
@@ -754,13 +765,19 @@ public class Mazub {
 	 * 			The time interval needed to calculate the new horizontal position.
 	 * @effect	The new effective x position is set to a new value based on the 
 	 * 			time interval and the current attributes of this Mazub.
+	 * @effect	The new effective y position is set to a new value based on the 
+	 * 			time interval and the current attributes of this Mazub.
 	 */
 	@Model
-	private void updateHorPosition(double timeDuration){
+	private void updatePosition(double timeDuration){
 		double newXPos = getPosition().getXPosition() + getHorDirection().getFactor()*
 				(getHorVelocity()*timeDuration+ 0.5*getHorAcceleration()*Math.pow(timeDuration, 2))*100;
-		setPosition(new Position(newXPos,getPosition().getYPosition()));
-		
+		double newYPos = getPosition().getYPosition() + 
+				((getVertDirection().getFactor()*getVertVelocity()*timeDuration)+ 
+				0.5*getVertAcceleration()*Math.pow(timeDuration, 2))*100;
+		if (newYPos<0)
+			newYPos = 0;
+		setPosition(new Position(newXPos,newYPos,getWorld()));
 	}
 	
 	/**
@@ -787,8 +804,7 @@ public class Mazub {
 	 * 
 	 * @param 	timeDuration
 	 * 			The time interval needed to calculate the new vertical position.
-	 * @effect	The new effective y position is set to a new value based on the 
-	 * 			time interval and the current attributes of this Mazub.
+	 * 
 	 */
 	@Model
 	private void updateVertPosition(double timeDuration)
