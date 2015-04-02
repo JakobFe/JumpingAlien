@@ -795,25 +795,32 @@ public class Mazub {
 			newYPos = 0;
 		int displayedNewXPos = (int) Math.floor(newXPos);
 		int displayedNewYPos = (int) Math.floor(newYPos);
-		int[][] affectedTilePositions = getWorld().getTilePositionsIn(displayedNewXPos+1, displayedNewYPos+1,
-				displayedNewXPos+getWidth()-2, displayedNewYPos+getHeight()-2);
+		int[][] affectedTilePositions = getWorld().getTilePositionsIn(displayedNewXPos, displayedNewYPos+1,
+				displayedNewXPos+getWidth()-1, displayedNewYPos+getHeight()-2);
+		boolean enable = true;
+		boolean noTilesCollide = true;
 		for (int[] pos: affectedTilePositions){
 			Tile tile = getWorld().getTileAtTilePos(pos[0], pos[1]);
-			boolean isColliding = tile.getGeoFeature().isPassable();
+			boolean isColliding = !tile.getGeoFeature().isPassable();
 			if (isColliding){
+				noTilesCollide = false;
 				if(getPosition().getDisplayedXPosition()< displayedNewXPos
 					&& isMoving(Direction.RIGHT) &&
-					tile.getXPosition()>getPosition().getDisplayedXPosition()){
+					tile.getXPosition()>=getPosition().getDisplayedXPosition()&&
+					tile.getYPosition()!=getPosition().getYPosition()){
 					System.out.println("if1");
 					// hij collide naar rechts
 					endMove(Direction.RIGHT);
+					enable = false;
 				}
 				else if(getPosition().getDisplayedXPosition()> displayedNewXPos
 						&& isMoving(Direction.LEFT) &&
-						tile.getXPosition()==getPosition().getDisplayedXPosition()){
+						tile.getXPosition()<=getPosition().getDisplayedXPosition()&&
+								tile.getYPosition()!=getPosition().getYPosition()){
 					// hij collide naar links
 					System.out.println("if2");
 					endMove(Direction.LEFT);
+					enable = false;
 				}
 				else if(getPosition().getDisplayedYPosition()< displayedNewYPos &&
 						isMoving(Direction.UP)&&
@@ -821,24 +828,28 @@ public class Mazub {
 					// hij collide naar boven
 					System.out.println("if3");
 					endJump();
+					enable = false;
 				}
 				else if(getPosition().getDisplayedYPosition()> displayedNewYPos &&
 						isMoving(Direction.DOWN) &&
-						tile.getYPosition()==getPosition().getDisplayedYPosition()){
+						tile.getYPosition()<=getPosition().getDisplayedYPosition()+1){
 					// hij collide naar onder
 					System.out.println("if4");
 					setVertVelocity(0);
 					setVertAcceleration(0);
 					setVertDirection(Direction.NULL);
-				}
-				else
-					// hij is niet aan het colliden in de richting waar hij naartoe
-					// wil gaan
-					setPosition(new Position(newXPos,newYPos,getWorld()));
+					enable = false;
+				}	
 			}
-			else
-				setPosition(new Position(newXPos,newYPos,getWorld()));
-			}
+		}
+		// hij is niet aan het colliden in de richting waar hij naartoe
+		// wil gaan
+		if(enable)
+			setPosition(new Position(newXPos,newYPos,getWorld()));
+		/*if(noTilesCollide)
+			setVertDirection(Direction.DOWN);
+			setVertAcceleration(MAX_VERT_ACCELERATION);*/
+		
 	}
 	
 	public boolean isOverlapping(Direction direction){
