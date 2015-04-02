@@ -5,11 +5,19 @@ import be.kuleuven.cs.som.annotate.*;
 @Value
 public class Position {
 	
-	public Position(double x, double y) throws 
+	public Position(double x, double y,World world) throws 
 	IllegalXPositionException,IllegalYPositionException{
+		this.world = world;
 		setXPosition(x);
 		setYPosition(y);
 	}
+	
+	
+	public Position(double x, double y) throws
+	IllegalXPositionException,IllegalYPositionException{
+		this(x,y,null);
+	}
+	
 	
 	/**
 	 * Return the effective x-position of this Mazub.
@@ -36,8 +44,12 @@ public class Position {
 	 * 			| result == isValidXPosition( (int) Math.floor(x))
 	 */
 	@Model
-	private static boolean isValidXPosition(double x){
-		return ((x >= 0) && ((int) Math.floor(x) < getScreenWidth()));
+	private boolean isValidXPosition(double x){
+		if (getWorld() == null)
+			return ((x >= 0) && ((int) Math.floor(x) < getScreenWidth()));
+		else
+			return ((x >= 0) && ((int) Math.floor(x) < 
+					(getWorld().getWorldWidth())-getWorld().getMazub().getWidth()));
 	}
 	
 	/**
@@ -88,8 +100,11 @@ public class Position {
 	 * 			| result == (y >= 0) && (y < getScreenHeight())
 	 */
 	@Model
-	private static boolean isValidYPosition(double y){
-		return (((y >= 0) && ((int) Math.floor(y) < getScreenHeight())));
+	private boolean isValidYPosition(double y){
+		if (getWorld() == null)
+			return (((y >= 0) && ((int) Math.floor(y) < getScreenHeight())));
+		else
+			return (((y >= 0) && ((int) Math.floor(y) < getWorld().getWorldHeight())));
 	}
 	
 	/**
@@ -150,4 +165,10 @@ public class Position {
 	 * A variable storing the screen height of the game world.
 	 */
 	private static final int SCREEN_HEIGHT = 768;
+	
+	private World getWorld(){
+		return this.world;
+	}
+	
+	private final World world;
 }
