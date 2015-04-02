@@ -799,34 +799,29 @@ public class Mazub {
 				displayedNewXPos+getWidth()-2, displayedNewYPos+getHeight()-2);
 		for (int[] pos: affectedTilePositions){
 			Tile tile = getWorld().getTileAtTilePos(pos[0], pos[1]);
-			boolean isColliding = tile.getGeoFeature().isPassable();
-			if (isColliding){
-				if(getPosition().getDisplayedXPosition()< displayedNewXPos
+			if (!tile.getGeoFeature().isPassable()){
+				if(getPosition().getDisplayedXPosition()<= displayedNewXPos
 					&& isMoving(Direction.RIGHT) &&
 					tile.getXPosition()>getPosition().getDisplayedXPosition()){
-					System.out.println("if1");
 					// hij collide naar rechts
 					endMove(Direction.RIGHT);
 				}
 				else if(getPosition().getDisplayedXPosition()> displayedNewXPos
 						&& isMoving(Direction.LEFT) &&
-						tile.getXPosition()==getPosition().getDisplayedXPosition()){
+						tile.getTileXPos()==getWorld().getBelongingTileXPosition(getPosition().getDisplayedXPosition())){
 					// hij collide naar links
-					System.out.println("if2");
 					endMove(Direction.LEFT);
 				}
 				else if(getPosition().getDisplayedYPosition()< displayedNewYPos &&
 						isMoving(Direction.UP)&&
 						tile.getYPosition()>getPosition().getDisplayedYPosition()){
 					// hij collide naar boven
-					System.out.println("if3");
 					endJump();
 				}
 				else if(getPosition().getDisplayedYPosition()> displayedNewYPos &&
 						isMoving(Direction.DOWN) &&
-						tile.getYPosition()==getPosition().getDisplayedYPosition()){
+						tile.getTileYPos()==getWorld().getBelongingTileYPosition(getPosition().getDisplayedYPosition())){
 					// hij collide naar onder
-					System.out.println("if4");
 					setVertVelocity(0);
 					setVertAcceleration(0);
 					setVertDirection(Direction.NULL);
