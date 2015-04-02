@@ -19,6 +19,8 @@ public class World {
 			this.visibleWindowHeight = visibleWindowHeight;
 		else
 			this.visibleWindowHeight = getWorldHeight();
+		MAX_WINDOW_X_POS = getWorldWidth()-getVisibleWindowWidth()-1; 
+		MAX_WINDOW_Y_POS = getWorldHeight()-getVisibleWindowHeight()-1;
 		this.targetTile = new Tile(this,targetTileX*tileSize,targetTileY*tileSize,true);
 		this.worldTiles = new Tile[nbTilesY][nbTilesX];
 		for (int row = 0; row < nbTilesY; row++){
@@ -87,7 +89,8 @@ public class World {
 	}
 	
 	private boolean isValidVisibleWindowWidth(int width){
-		return (width <= getWorldWidth());
+		return (width <= getWorldWidth() && width>
+				2*MIN_BORDER_DISTANCE);
 	}
 
 	private final int visibleWindowWidth;
@@ -97,10 +100,13 @@ public class World {
 	}
 
 	private boolean isValidVisibleWindowHeight(int height){
-		return (height <= getWorldHeight());
+		return (height <= getWorldHeight() && height> 
+			   (2*MIN_BORDER_DISTANCE));
 	}
 	
 	private final int visibleWindowHeight;
+	
+	private final int MIN_BORDER_DISTANCE = 200;
 	
 	@Basic
 	public Tile[][] getWorldTiles() {
@@ -128,7 +134,12 @@ public class World {
 	}
 
 	public void setWindowXPos(int windowXPos) {
-		this.windowXPos = windowXPos;
+		if (windowXPos < 0)
+			this.windowXPos = 0;
+		else if (windowXPos > getMaxWindowXPos())
+			this.windowXPos = getMaxWindowXPos();
+		else
+			this.windowXPos = windowXPos;
 	}
 
 	private int windowXPos;
@@ -138,10 +149,28 @@ public class World {
 	}
 
 	public void setWindowYPos(int windowYPos) {
-		this.windowYPos = windowYPos;
+		if (windowYPos < 0)
+			this.windowYPos = 0;
+		else if (windowYPos > getMaxWindowYPos())
+			this.windowYPos = getMaxWindowYPos();
+		else
+			this.windowYPos = windowYPos;
 	}
 
 	private int windowYPos;
+	
+	
+	public int getMaxWindowXPos() {
+		return MAX_WINDOW_X_POS;
+	}
+
+	private final int MAX_WINDOW_X_POS;
+	
+	public int getMaxWindowYPos() {
+		return MAX_WINDOW_Y_POS;
+	}
+
+	private final int MAX_WINDOW_Y_POS;
 	
 	public Mazub getMazub() {
 		return mazub;
@@ -149,6 +178,7 @@ public class World {
 	
 	public void setMazub(Mazub alien){
 		this.mazub = alien;
+		getMazub().setWorld(this);
 	}
 	
 	private Mazub mazub;
@@ -156,5 +186,13 @@ public class World {
 	public void advanceTime(double timeDuration) throws
 	IllegalXPositionException,IllegalYPositionException{
 		getMazub().advanceTime(timeDuration);
+		updateWindowPos();
+	}
+	
+	private void updateWindowPos(){
+		setWindowXPos(getMazub().getPosition().getDisplayedXPosition()-
+					  (getVisibleWindowWidth()-getMazub().getWidth())/2);
+		setWindowYPos(getMazub().getPosition().getDisplayedYPosition()-
+					  (getVisibleWindowHeight()-getMazub().getHeight())/2);
 	}
 }
