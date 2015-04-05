@@ -833,7 +833,7 @@ public class Mazub {
 					setVertAcceleration(0);
 					setVertDirection(Direction.NULL);
 					enable = false;
-				}	
+				}
 			}
 		}
 		// hij is niet aan het colliden in de richting waar hij naartoe
