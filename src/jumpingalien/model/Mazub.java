@@ -860,7 +860,7 @@ public class Mazub {
 					// hij collide naar rechts
 					endMove(Direction.RIGHT);
 					enable = false;
-					System.out.println("if1");
+					//System.out.println("if1");
 				}
 				else if(getPosition().getDisplayedXPosition()> displayedNewXPos
 						&& isMoving(Direction.LEFT) &&
@@ -869,7 +869,7 @@ public class Mazub {
 					// hij collide naar links
 					endMove(Direction.LEFT);
 					enable = false;
-					System.out.println("if2");
+					//System.out.println("if2");
 				}
 				else if(getPosition().getDisplayedYPosition()< displayedNewYPos &&
 						isMoving(Direction.UP)&&
@@ -877,7 +877,7 @@ public class Mazub {
 					// hij collide naar boven
 					endJump();
 					enable = false;
-					System.out.println("if3");
+					//System.out.println("if3");
 				}
 				else if(getPosition().getDisplayedYPosition()> displayedNewYPos &&
 						isMoving(Direction.DOWN) &&
@@ -887,10 +887,10 @@ public class Mazub {
 					setVertVelocity(0);
 					setVertAcceleration(0);
 					setVertDirection(Direction.NULL);
-					System.out.println(getVertDirection());
+					//System.out.println(getVertDirection());
 					enable = false;
 					dropDown = false;
-					System.out.println("if4");
+					//System.out.println("if4");
 					setPosition(new Position(newXPos,newYPos,getWorld()));
 				}
 			}
@@ -898,7 +898,7 @@ public class Mazub {
 					tile.getYPosition()<=this.getPosition().getDisplayedYPosition() &&
 					counter < 3){
 				dropDown=true;
-				System.out.println("dropDown");
+				//System.out.println("dropDown");
 			}
 		}
 		// hij is niet aan het colliden in de richting waar hij naartoe
@@ -906,8 +906,8 @@ public class Mazub {
 		if(enable)
 			setPosition(new Position(newXPos,newYPos,getWorld()));
 		if(dropDown){
-			setVertAcceleration(MAX_VERT_ACCELERATION);
-			setVertDirection(Direction.DOWN);
+			//setVertAcceleration(MAX_VERT_ACCELERATION);
+			//setVertDirection(Direction.DOWN);
 		}
 	}
 	
