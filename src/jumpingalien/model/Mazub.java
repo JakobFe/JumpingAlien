@@ -143,7 +143,49 @@ public class Mazub {
 		return this.getCurrentSprite().getHeight();
 	}
 	
+	public int[][] getLeftPerimeter(){
+		int xPos = this.getPosition().getDisplayedXPosition();
+		int yPos = this.getPosition().getDisplayedYPosition();
+		int [][] result = new int[getHeight()][2];
+		for(int index=0;index<getHeight();index++){
+			result[index][0] = xPos;
+			result[index][1] = yPos + index;
+		}
+		return result;
+	}
 	
+	public int[][] getRightPerimeter(){
+		int xPos = this.getPosition().getDisplayedXPosition() + this.getWidth()-1;
+		int yPos = this.getPosition().getDisplayedYPosition();
+		int [][] result = new int[getHeight()][2];
+		for(int index=0;index<getHeight();index++){
+			result[index][0] = xPos;
+			result[index][1] = yPos + index;
+		}
+		return result;
+	}
+	
+	public int[][] getLowerPerimeter(){
+		int xPos = this.getPosition().getDisplayedXPosition();
+		int yPos = this.getPosition().getDisplayedYPosition();
+		int [][] result = new int[getWidth()][2];
+		for(int index=0;index<getHeight();index++){
+			result[index][0] = xPos + index;
+			result[index][1] = yPos;
+		}
+		return result;
+	}
+	
+	public int[][] getUpperPerimeter(){
+		int xPos = this.getPosition().getDisplayedXPosition();
+		int yPos = this.getPosition().getDisplayedYPosition() + getHeight()-1;
+		int [][] result = new int[getWidth()][2];
+		for(int index=0;index<getHeight();index++){
+			result[index][0] = xPos + index;
+			result[index][1] = yPos;
+		}
+		return result;
+	}
 	
 	@Basic
 	public int getHitPoints() {
@@ -795,28 +837,39 @@ public class Mazub {
 			newYPos = 0;
 		int displayedNewXPos = (int) Math.floor(newXPos);
 		int displayedNewYPos = (int) Math.floor(newYPos);
-		int[][] affectedTilePositions = getWorld().getTilePositionsIn(displayedNewXPos, displayedNewYPos+1,
-				displayedNewXPos+getWidth()-1, displayedNewYPos+getHeight()-2);
+		/*
+		 * mogen we niet zo doen want dan weten we niet of hij op een aarde tegel staat
+		 * of op een air tegel!
+		 */
+		//int[][] affectedTilePositions = getWorld().getTilePositionsIn(displayedNewXPos, displayedNewYPos+1,
+		//		displayedNewXPos+getWidth()-1, displayedNewYPos+getHeight()-2);
+		int[][] affectedTilePositions = getWorld().getTilePositionsIn(displayedNewXPos, displayedNewYPos,
+		displayedNewXPos+getWidth()-1, displayedNewYPos+getHeight()-1);
 		boolean enable = true;
+		boolean dropDown = false;
+		int counter = 0;
 		for (int[] pos: affectedTilePositions){
+			counter += 1;
 			Tile tile = getWorld().getTileAtTilePos(pos[0], pos[1]);
 			boolean isColliding = !tile.getGeoFeature().isPassable();
 			if (isColliding){
 				if(getPosition().getDisplayedXPosition()< displayedNewXPos
 					&& isMoving(Direction.RIGHT) &&
 					tile.getXPosition()>=getPosition().getDisplayedXPosition()&&
-					tile.getYPosition()!=getPosition().getYPosition()){
+					tile.getYPosition()>=getPosition().getYPosition()){
 					// hij collide naar rechts
 					endMove(Direction.RIGHT);
 					enable = false;
+					System.out.println("if1");
 				}
 				else if(getPosition().getDisplayedXPosition()> displayedNewXPos
 						&& isMoving(Direction.LEFT) &&
 						tile.getXPosition()<=getPosition().getDisplayedXPosition()&&
-								tile.getYPosition()!=getPosition().getYPosition()){
+								tile.getYPosition()>=getPosition().getYPosition()){
 					// hij collide naar links
 					endMove(Direction.LEFT);
 					enable = false;
+					System.out.println("if2");
 				}
 				else if(getPosition().getDisplayedYPosition()< displayedNewYPos &&
 						isMoving(Direction.UP)&&
@@ -824,22 +877,38 @@ public class Mazub {
 					// hij collide naar boven
 					endJump();
 					enable = false;
+					System.out.println("if3");
 				}
 				else if(getPosition().getDisplayedYPosition()> displayedNewYPos &&
 						isMoving(Direction.DOWN) &&
-						tile.getYPosition()<=getPosition().getDisplayedYPosition()+1){
+						tile.getYPosition()<=getPosition().getDisplayedYPosition()){
 					// hij collide naar onder
+					
 					setVertVelocity(0);
 					setVertAcceleration(0);
 					setVertDirection(Direction.NULL);
+					System.out.println(getVertDirection());
 					enable = false;
+					dropDown = false;
+					System.out.println("if4");
+					setPosition(new Position(newXPos,newYPos,getWorld()));
 				}
+			}
+			else if((getVertDirection()==Direction.NULL) &&
+					tile.getYPosition()<=this.getPosition().getDisplayedYPosition() &&
+					counter < 3){
+				dropDown=true;
+				System.out.println("dropDown");
 			}
 		}
 		// hij is niet aan het colliden in de richting waar hij naartoe
 		// wil gaan
 		if(enable)
 			setPosition(new Position(newXPos,newYPos,getWorld()));
+		if(dropDown){
+			setVertAcceleration(MAX_VERT_ACCELERATION);
+			setVertDirection(Direction.DOWN);
+		}
 	}
 	
 	public boolean isOverlapping(Direction direction){
@@ -1239,4 +1308,10 @@ public class Mazub {
 	 * A variable storing the number of sprites used for animation of walking of the Mazub.
 	 */
 	private final int numberOfWalkingSprites;
+	
+	@Override
+	public String toString(){
+		return "Mazub at position " + (getPosition().getDisplayedXPosition()) + ","
+				+ getPosition().getDisplayedYPosition();
+	}
 }

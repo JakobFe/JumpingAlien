@@ -68,7 +68,7 @@ public class Tile {
 		this.geoFeature = geoFeature;
 	}
 
-	private Terrain geoFeature;
+	private Terrain geoFeature = Terrain.AIR;
 	
 	public boolean isTargetTile(){
 		return this.isTargetTile;

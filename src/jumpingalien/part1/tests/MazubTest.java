@@ -38,7 +38,7 @@ public class MazubTest {
 	
 	@Test
 	public void getDirectionsCorrect(){
-		MazubPos_0_0.startMoveRight();
+		MazubPos_0_0.startMove(Direction.RIGHT);
 		MazubPos_0_0.startJump();
 		for (int i = 0; i < 5; i++) {
 			MazubPos_0_0.advanceTime(0.15);
@@ -49,19 +49,19 @@ public class MazubTest {
 	
 	@Test
 	public void getDirectionsCorrect2(){
-		MazubPos_0_0.startMoveRight();
+		MazubPos_0_0.startMove(Direction.RIGHT);
 		MazubPos_0_0.startJump();
 		for (int i = 0; i < 10; i++) {
 			MazubPos_0_0.advanceTime(0.15);
 		}
-		MazubPos_0_0.endMoveRight();
+		MazubPos_0_0.endMove(Direction.RIGHT);
 		assertEquals(0,MazubPos_0_0.getHorDirection());
 		assertEquals(-1,MazubPos_0_0.getVertDirection());
 	}
 	
 	@Test(expected=IllegalTimeIntervalException.class)
 	public void advanceTimeIllegalArgument(){
-		MazubPos_0_0.startMoveRight();
+		MazubPos_0_0.startMove(Direction.RIGHT);
 		MazubPos_0_0.advanceTime(0.45);
 	}
 	////////////////////////////////////////////////////////////////////////////
