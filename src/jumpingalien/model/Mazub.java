@@ -843,72 +843,76 @@ public class Mazub {
 		 */
 		//int[][] affectedTilePositions = getWorld().getTilePositionsIn(displayedNewXPos, displayedNewYPos+1,
 		//		displayedNewXPos+getWidth()-1, displayedNewYPos+getHeight()-2);
-		int[][] affectedTilePositions = getWorld().getTilePositionsIn(displayedNewXPos, displayedNewYPos,
-		displayedNewXPos+getWidth()-1, displayedNewYPos+getHeight()-1);
-		boolean enable = true;
-		boolean dropDown = false;
-		int counter = 0;
-		for (int[] pos: affectedTilePositions){
-			counter += 1;
-			Tile tile = getWorld().getTileAtTilePos(pos[0], pos[1]);
-			boolean isColliding = !tile.getGeoFeature().isPassable();
-			if (isColliding){
-				if(getPosition().getDisplayedXPosition()< displayedNewXPos
-					&& isMoving(Direction.RIGHT) &&
-					tile.getXPosition()>=getPosition().getDisplayedXPosition()&&
-					tile.getYPosition()>=getPosition().getYPosition()){
-					// hij collide naar rechts
-					endMove(Direction.RIGHT);
-					enable = false;
-					//System.out.println("if1");
+		if(!(getWorld() == null)){
+			int[][] affectedTilePositions = getWorld().getTilePositionsIn(displayedNewXPos, displayedNewYPos,
+			displayedNewXPos+getWidth()-1, displayedNewYPos+getHeight()-1);
+			boolean enable = true;
+			boolean dropDown = false;
+			int counter = 0;
+			for (int[] pos: affectedTilePositions){
+				counter += 1;
+				Tile tile = getWorld().getTileAtTilePos(pos[0], pos[1]);
+				boolean isColliding = !tile.getGeoFeature().isPassable();
+				if (isColliding){
+					if(getPosition().getDisplayedXPosition()< displayedNewXPos
+						&& isMoving(Direction.RIGHT) &&
+						tile.getXPosition()>=getPosition().getDisplayedXPosition()&&
+						tile.getYPosition()>=getPosition().getYPosition()){
+						// hij collide naar rechts
+						endMove(Direction.RIGHT);
+						enable = false;
+						//System.out.println("if1");
+					}
+					else if(getPosition().getDisplayedXPosition()> displayedNewXPos
+							&& isMoving(Direction.LEFT) &&
+							tile.getXPosition()<=getPosition().getDisplayedXPosition()&&
+									tile.getYPosition()>=getPosition().getYPosition()){
+						// hij collide naar links
+						endMove(Direction.LEFT);
+						enable = false;
+						//System.out.println("if2");
+					}
+					else if(getPosition().getDisplayedYPosition()< displayedNewYPos &&
+							isMoving(Direction.UP)&&
+							tile.getYPosition()>getPosition().getDisplayedYPosition()){
+						// hij collide naar boven
+						endJump();
+						enable = false;
+						//System.out.println("if3");
+					}
+					else if(getPosition().getDisplayedYPosition()> displayedNewYPos &&
+							isMoving(Direction.DOWN) &&
+							tile.getYPosition()<=getPosition().getDisplayedYPosition()){
+						// hij collide naar onder
+						
+						setVertVelocity(0);
+						setVertAcceleration(0);
+						setVertDirection(Direction.NULL);
+						//System.out.println(getVertDirection());
+						enable = false;
+						dropDown = false;
+						//System.out.println("if4");
+						setPosition(new Position(newXPos,newYPos,getWorld()));
+					}
 				}
-				else if(getPosition().getDisplayedXPosition()> displayedNewXPos
-						&& isMoving(Direction.LEFT) &&
-						tile.getXPosition()<=getPosition().getDisplayedXPosition()&&
-								tile.getYPosition()>=getPosition().getYPosition()){
-					// hij collide naar links
-					endMove(Direction.LEFT);
-					enable = false;
-					//System.out.println("if2");
-				}
-				else if(getPosition().getDisplayedYPosition()< displayedNewYPos &&
-						isMoving(Direction.UP)&&
-						tile.getYPosition()>getPosition().getDisplayedYPosition()){
-					// hij collide naar boven
-					endJump();
-					enable = false;
-					//System.out.println("if3");
-				}
-				else if(getPosition().getDisplayedYPosition()> displayedNewYPos &&
-						isMoving(Direction.DOWN) &&
-						tile.getYPosition()<=getPosition().getDisplayedYPosition()){
-					// hij collide naar onder
-					
-					setVertVelocity(0);
-					setVertAcceleration(0);
-					setVertDirection(Direction.NULL);
-					//System.out.println(getVertDirection());
-					enable = false;
-					dropDown = false;
-					//System.out.println("if4");
-					setPosition(new Position(newXPos,newYPos,getWorld()));
+				else if((getVertDirection()==Direction.NULL) &&
+						tile.getYPosition()<=this.getPosition().getDisplayedYPosition() &&
+						counter < 3){
+					dropDown=true;
+					//System.out.println("dropDown");
 				}
 			}
-			else if((getVertDirection()==Direction.NULL) &&
-					tile.getYPosition()<=this.getPosition().getDisplayedYPosition() &&
-					counter < 3){
-				dropDown=true;
-				//System.out.println("dropDown");
+			// hij is niet aan het colliden in de richting waar hij naartoe
+			// wil gaan
+			if(enable)
+				setPosition(new Position(newXPos,newYPos,getWorld()));
+			if(dropDown){
+				//setVertAcceleration(MAX_VERT_ACCELERATION);
+				//setVertDirection(Direction.DOWN);
 			}
 		}
-		// hij is niet aan het colliden in de richting waar hij naartoe
-		// wil gaan
-		if(enable)
-			setPosition(new Position(newXPos,newYPos,getWorld()));
-		if(dropDown){
-			//setVertAcceleration(MAX_VERT_ACCELERATION);
-			//setVertDirection(Direction.DOWN);
-		}
+		else
+			setPosition(new Position(newXPos,newYPos));
 	}
 	
 	public boolean isOverlapping(Direction direction){
