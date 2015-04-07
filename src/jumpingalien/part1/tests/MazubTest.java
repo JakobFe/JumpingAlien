@@ -594,18 +594,17 @@ public class MazubTest {
 	public void getCurrentSprite0CorrectWasMovingLongTimeAgo(){
 		int m = 10;
 		Sprite[] sprites = spriteArrayForSize(2, 2, 10 + 2 * m);
-		Mazub alien = MazubPos_0_0;
 		
-		alien.startMove(Direction.RIGHT);
-		alien.advanceTime(0.15);
-		alien.endMove(Direction.RIGHT);
+		MazubPos_0_0.startMove(Direction.RIGHT);
+		MazubPos_0_0.advanceTime(0.15);
+		MazubPos_0_0.endMove(Direction.RIGHT);
 		
 		for (int i = 0; i < 6; i++) {
-			alien.advanceTime(0.19);
+			MazubPos_0_0.advanceTime(0.19);
 		}
 		
-		alien.updateSpriteIndex();
-		assertEquals(sprites[0], alien.getCurrentSprite());
+		MazubPos_0_0.updateSpriteIndex();
+		assertEquals(sprites[0], MazubPos_0_0.getCurrentSprite());
 	}
 	
 }

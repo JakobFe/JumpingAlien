@@ -797,8 +797,8 @@ public class Mazub {
 		}
 		updateHorVelocity(timeDuration);
 		updateVertVelocity(timeDuration);
-		counter(timeDuration);
 		updateLastDirection();
+		counter(timeDuration);
 	}
 	
 	/**
@@ -1119,10 +1119,9 @@ public class Mazub {
 	 * 
 	 */
 	private boolean wasMoving(){
-		if (getLastDirection() != Direction.NULL){
-			if (getTimeSum() < 1.0)
+		if (getLastDirection() != Direction.NULL &&
+			getTimeSum() < 1.0)
 				return true;
-		}
 		return false;
 	}
 	
