@@ -1,5 +1,7 @@
 package jumpingalien.model;
 
+import java.util.HashSet;
+
 import be.kuleuven.cs.som.annotate.*;
 import static jumpingalien.tests.util.TestUtils.intArray;
 
@@ -70,6 +72,16 @@ public class World {
 		}
 		return result;
 	}
+	
+	public HashSet<Tile> getTilesIn(int pixelLeft, int pixelBottom,
+			int pixelRight, int pixelTop){
+		int[][] tilePositions = getTilePositionsIn(pixelLeft, pixelBottom, pixelRight, pixelTop);
+		HashSet<Tile> result = new HashSet<Tile>();
+		for(int index=0;index<tilePositions.length;index++){
+			result.add(getTileAtTilePos(tilePositions[index][0], tilePositions[index][1]));
+		}
+		return result;
+	}
 
 	
 	public int getWorldWidth() {
@@ -122,6 +134,25 @@ public class World {
 	}
 	
 	private final Tile[][] worldTiles;
+	
+	public HashSet<Tile> getImpassableTiles() {
+		return impassableTiles;
+	}
+	
+	private static boolean isValidImpassableTile(Tile tile){
+		return (!tile.getGeoFeature().isPassable());
+	}
+	
+	public void addAsImpassableTile(Tile tile){
+		assert(isValidImpassableTile(tile));
+		this.impassableTiles.add(tile);
+	}
+	
+	public boolean hasAsImpassableTile(Tile tile){
+		return getImpassableTiles().contains(tile);
+	}
+
+	private final HashSet<Tile> impassableTiles = new HashSet<Tile>();
 	
 	public Tile getTargetTile() {
 		return targetTile;
@@ -183,6 +214,36 @@ public class World {
 	
 	private Mazub mazub;
 	
+	public boolean didPlayerWin(){
+		if (getMazub() == null)
+			return false;
+		HashSet<Tile> affectedTiles = getTilesIn(getMazub().getPosition().getDisplayedXPosition(),
+				getMazub().getPosition().getDisplayedYPosition(),getMazub().getPosition().getDisplayedXPosition()
+				+getMazub().getWidth()-1, getMazub().getPosition().getDisplayedYPosition()+getMazub().getHeight()-1);
+		for(Tile tile: affectedTiles){
+			if (tile == getTargetTile())
+				return true;
+		}
+		return false;
+	}
+	
+	public boolean isGameOver(){
+		if (getMazub() == null)
+			return false;
+		else
+			return (getMazub().isTerminated() || didPlayerWin());
+	}
+
+	public boolean isGameStarted() {
+		return gameStarted;
+	}
+
+	public void setGameStarted(boolean gameStarted) {
+		this.gameStarted = gameStarted;
+	}
+
+	private boolean gameStarted = true;
+	
 	public void advanceTime(double timeDuration) throws
 	IllegalXPositionException,IllegalYPositionException{
 		double tdHor = 0.01/(Math.abs(getMazub().getHorVelocity())
@@ -190,9 +251,13 @@ public class World {
 		double tdVert = 0.01/(Math.abs(getMazub().getVertVelocity())
 				+Math.abs(getMazub().getVertAcceleration())*timeDuration);
 		double td = Math.min(tdHor, tdVert);
+		if (td > timeDuration)
+			td = timeDuration;
+		//System.out.println(td);
 		for (int index = 0; index < timeDuration/td; index++){
 			getMazub().advanceTime(td);			
 		}
+		//getMazub().advanceTime(timeDuration);
 		updateWindowPos();
 	}
 	
@@ -201,5 +266,10 @@ public class World {
 					  (getVisibleWindowWidth()-getMazub().getWidth())/2);
 		setWindowYPos(getMazub().getPosition().getDisplayedYPosition()-
 					  (getVisibleWindowHeight()-getMazub().getHeight())/2);
+	}
+	
+	@Override
+	public String toString(){
+		return "world with dimensions " + getWorldWidth() + "," + getWorldHeight() + ".";
 	}
 }
