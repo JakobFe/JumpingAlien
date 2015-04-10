@@ -1,5 +1,8 @@
 package jumpingalien.model;
 
+
+import java.util.HashSet;
+
 import jumpingalien.util.Sprite;
 import be.kuleuven.cs.som.annotate.*;
 import jumpingalien.model.Direction;
@@ -143,6 +146,7 @@ public class Mazub {
 		return this.getCurrentSprite().getHeight();
 	}
 	
+	//Deze methodes zijn getest en werken.
 	public int[][] getLeftPerimeter(){
 		int xPos = this.getPosition().getDisplayedXPosition();
 		int yPos = this.getPosition().getDisplayedYPosition();
@@ -169,7 +173,7 @@ public class Mazub {
 		int xPos = this.getPosition().getDisplayedXPosition();
 		int yPos = this.getPosition().getDisplayedYPosition();
 		int [][] result = new int[getWidth()][2];
-		for(int index=0;index<getHeight();index++){
+		for(int index=0;index<getWidth();index++){
 			result[index][0] = xPos + index;
 			result[index][1] = yPos;
 		}
@@ -180,7 +184,7 @@ public class Mazub {
 		int xPos = this.getPosition().getDisplayedXPosition();
 		int yPos = this.getPosition().getDisplayedYPosition() + getHeight()-1;
 		int [][] result = new int[getWidth()][2];
-		for(int index=0;index<getHeight();index++){
+		for(int index=0;index<getWidth();index++){
 			result[index][0] = xPos + index;
 			result[index][1] = yPos;
 		}
@@ -687,13 +691,31 @@ public class Mazub {
 			setVertVelocity(0);
 	}
 	
-	public void endAllMovements(){
-		if (isMoving(Direction.RIGHT))
-			endMove(Direction.RIGHT);
-		if (isMoving(Direction.LEFT))
-			endMove(Direction.LEFT);
-		setVertVelocity(0);
-		setVertAcceleration(0);
+	public void startFall(){
+		setVertDirection(Direction.DOWN);
+		setVertAcceleration(getMaxVertAcceleration());
+	}
+	
+	public void endMovement(Direction direction){
+		assert (direction != Direction.NULL);
+		if (isMoving(direction)){
+			if (direction == Direction.LEFT || direction == Direction.RIGHT){
+				// zelfde als in endMove
+				setHorVelocity(0);
+				setHorDirection(Direction.NULL);
+				setHorAcceleration(0);
+				setTimeSum(0);
+			} 
+			else if (direction == Direction.DOWN){
+				setVertVelocity(0);
+				setVertAcceleration(0);
+				setVertDirection(Direction.NULL);
+			}
+			else if (direction == Direction.UP){
+				setVertVelocity(0);
+				setVertDirection(Direction.DOWN);
+			}
+		}
 	}
 	
 	/**
@@ -753,13 +775,39 @@ public class Mazub {
 	 *			|	startMoveLeft()
 	 */
 	public void endDuck(){
-		setIsDucked(false);
-		setMaxHorVelocity(getMaxHorVelocityRunning());
-		if (isMoving(Direction.RIGHT))
-			startMove(Direction.RIGHT);
-		else if (isMoving(Direction.LEFT))
-			startMove(Direction.LEFT);
+		try {
+			setIsDucked(false);
+			updateSpriteIndex();
+			HashSet<Tile> affectedTiles = getWorld().getTilesIn(getPosition().getDisplayedXPosition(),
+					getPosition().getDisplayedYPosition(),getPosition().getDisplayedXPosition()
+					+getWidth()-1, getPosition().getDisplayedYPosition()+getHeight()-1);
+			for(Tile tile: affectedTiles){
+				if(!(tile.getGeoFeature().isPassable) &&
+				   isColliding(Direction.UP, tile))
+					throw new CollisionException();
+			}
+			setEnableStandUp(false);
+			setMaxHorVelocity(getMaxHorVelocityRunning());
+			if (isMoving(Direction.RIGHT))
+				startMove(Direction.RIGHT);
+			else if (isMoving(Direction.LEFT))
+				startMove(Direction.LEFT);
+		} catch (CollisionException e) {
+			setIsDucked(true);
+			updateSpriteIndex();
+			setEnableStandUp(true);
+		}
 	}
+	
+	public boolean isEnableStandUp() {
+		return enableStandUp;
+	}
+
+	public void setEnableStandUp(boolean enableStandUp) {
+		this.enableStandUp = enableStandUp;
+	}
+
+	private boolean enableStandUp = false;
 	
 	/**
 	 * Method to update the position and velocity of the Mazub based on the current position,
@@ -789,12 +837,9 @@ public class Mazub {
 				IllegalYPositionException,IllegalTimeIntervalException{
 		if (!isValidTimeInterval(timeDuration))
 			throw new IllegalTimeIntervalException(this);
-		try {
-			updatePosition(timeDuration);
-		} catch (CollisionException e) {
-			System.out.println("Collision!");
-			endAllMovements();
-		}
+		if (isEnableStandUp())
+			endDuck();
+		updatePosition2(timeDuration);
 		updateHorVelocity(timeDuration);
 		updateVertVelocity(timeDuration);
 		updateLastDirection();
@@ -915,7 +960,81 @@ public class Mazub {
 			setPosition(new Position(newXPos,newYPos));
 	}
 	
-	public boolean isOverlapping(Direction direction){
+	
+	private void updatePosition2(double timeDuration){
+		double newXPos = getPosition().getXPosition() + getHorDirection().getFactor()*
+				(getHorVelocity()*timeDuration+ 0.5*getHorAcceleration()*Math.pow(timeDuration, 2))*100;
+		double newYPos = getPosition().getYPosition() + 
+				((getVertDirection().getFactor()*getVertVelocity()*timeDuration)+ 
+				0.5*getVertAcceleration()*Math.pow(timeDuration, 2))*100;
+		//assert ((Math.abs(newXPos - getPosition().getXPosition()) <= 1) &&
+		//		(Math.abs(newYPos - getPosition().getYPosition()) <= 1));
+		if(newXPos != getPosition().getXPosition())
+			//System.out.println((Math.abs(newXPos - getPosition().getXPosition())));
+		if (newYPos<0)
+			newYPos = 0;
+		boolean enableFall = true;
+		for (Tile impassableTile: getWorld().getImpassableTiles()){
+			if (this.isOverlapping(impassableTile)){
+				if (isColliding(Direction.DOWN, impassableTile)){
+					//System.out.println("Colliding down");
+					if (isMoving(Direction.DOWN))
+						newYPos = impassableTile.getYPosition()+getWorld().getTileSize()-1;
+					endMovement(Direction.DOWN);
+					enableFall = false;
+				}
+				else if(isColliding(Direction.UP, impassableTile)){
+					if (isMoving(Direction.UP))
+						newYPos = impassableTile.getYPosition()-getHeight()+1;
+					endMovement(Direction.UP);
+					//System.out.println("Colliding up");
+				}
+				if(isColliding(Direction.LEFT, impassableTile)){
+					if (isMoving(Direction.LEFT))
+						newXPos = impassableTile.getXPosition()+getWorld().getTileSize()-1;
+					endMovement(Direction.LEFT);
+					//System.out.println("Colliding left");
+				}
+				else if(isColliding(Direction.RIGHT, impassableTile)){
+					if (isMoving(Direction.RIGHT))
+						newXPos = impassableTile.getXPosition()-getWidth()+1;
+					endMovement(Direction.RIGHT);
+					//System.out.println("Colliding right");
+				}
+			}
+		}
+		if (enableFall && !isMoving(Direction.UP)){
+			startFall();
+		}
+		getPosition().terminate();
+		setPosition(new Position(newXPos,newYPos,getWorld()));
+	}
+	
+	public boolean isOverlapping(Tile tile){
+		return !(((getPosition().getDisplayedXPosition()+getWidth()-1) < tile.getXPosition()) ||
+				((tile.getXPosition()+getWorld().getTileSize()-1) < getPosition().getDisplayedXPosition())
+				|| ((getPosition().getDisplayedYPosition() + getHeight() -1) < tile.getYPosition())
+				|| ((tile.getYPosition()+getWorld().getTileSize()-1) < getPosition().getDisplayedYPosition()));
+	}
+	
+	public boolean isColliding(Direction direction, Tile tile){
+		assert (direction != Direction.NULL);
+		int[][] positionsToCheck;
+		if(direction == Direction.DOWN)
+			positionsToCheck = getLowerPerimeter();
+		else if(direction == Direction.UP)
+			positionsToCheck = getUpperPerimeter();
+		else if(direction == Direction.RIGHT)
+			positionsToCheck = getRightPerimeter();
+		else if(direction == Direction.LEFT)
+			positionsToCheck = getLeftPerimeter();
+		else
+			positionsToCheck = new int[0][0];
+		for(int index=1;index<positionsToCheck.length-1;index++){
+			if((getWorld().getBelongingTileXPosition(positionsToCheck[index][0]) == tile.getTileXPos()) 
+				&& getWorld().getBelongingTileYPosition(positionsToCheck[index][1]) == tile.getTileYPos())
+				return true;
+		}
 		return false;
 	}
 	
@@ -1311,6 +1430,17 @@ public class Mazub {
 	 * A variable storing the number of sprites used for animation of walking of the Mazub.
 	 */
 	private final int numberOfWalkingSprites;
+	
+	public boolean isTerminated(){
+		return isTerminated;
+	}
+	
+	public void terminate(){
+		assert (getHitPoints()==0);
+		this.isTerminated = true;
+	}
+	
+	private boolean isTerminated;
 	
 	@Override
 	public String toString(){
