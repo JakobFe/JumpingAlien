@@ -214,6 +214,22 @@ public class World {
 	
 	private Mazub mazub;
 	
+	
+	public HashSet<Plant> getAllPlants() {
+		return allPlants;
+	}
+	
+	public boolean hasAsPlant(Plant plant){
+		return getAllPlants().contains(plant);
+	}
+	
+	public void addAsPlant(Plant plant){
+		getAllPlants().add(plant);
+		plant.setWorld(this);
+	}
+
+	private final HashSet<Plant> allPlants = new HashSet<Plant>();
+	
 	public boolean didPlayerWin(){
 		if (getMazub() == null)
 			return false;
@@ -253,10 +269,11 @@ public class World {
 		double td = Math.min(tdHor, tdVert);
 		if (td > timeDuration)
 			td = timeDuration;
-		//System.out.println(td);
 		for (int index = 0; index < timeDuration/td; index++){
 			getMazub().advanceTime(td);			
 		}
+		for(Plant plant: getAllPlants())
+			plant.advanceTime(timeDuration);
 		//getMazub().advanceTime(timeDuration);
 		updateWindowPos();
 	}

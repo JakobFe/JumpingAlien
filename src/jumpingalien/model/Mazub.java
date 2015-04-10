@@ -39,7 +39,7 @@ import jumpingalien.model.Position;
  * @version	2.0
  *
  */
-public class Mazub {
+public class Mazub extends GameObject{
 	
 	/**
 	 * Initialize this new Mazub with given x position, given y position, 
@@ -79,17 +79,19 @@ public class Mazub {
 	 * 			| !isValidYPosition(y)
 	 */
 	@Raw
+	public Mazub(int x, int y, double initHorVelocity, double maxHorVelocity, Sprite[] sprites,
+			int hitPoints) 
+			throws IllegalXPositionException,IllegalYPositionException{
+		super(x,y,initHorVelocity,maxHorVelocity,sprites,hitPoints);
+		setPosition(new Position(x,y));
+		assert isValidArrayOfSprites(sprites);
+		this.numberOfWalkingSprites = (this.getAllSprites().length - 10)/2;
+	}
+	
+	@Raw
 	public Mazub(int x, int y, double initHorVelocity, double maxHorVelocity, Sprite[] sprites) 
 			throws IllegalXPositionException,IllegalYPositionException{
-		setPosition(new Position(x,y));
-		assert isValidInitHorVelocity(initHorVelocity);
-		this.initHorVelocity = initHorVelocity;
-		assert canHaveAsMaxHorVelocity(maxHorVelocity);
-		this.maxHorVelocityRunning = maxHorVelocity;
-		setMaxHorVelocity(maxHorVelocity);
-		assert isValidArrayOfSprites(sprites);
-		this.sprites = sprites;
-		this.numberOfWalkingSprites = (this.sprites.length - 10)/2;
+		this(x,y,initHorVelocity,maxHorVelocity,sprites,100);
 	}
 	
 	/**
@@ -119,133 +121,17 @@ public class Mazub {
 	@Raw
 	public Mazub(int x,int y, Sprite[] sprites) 
 			throws IllegalXPositionException, IllegalYPositionException{
-		this(x,y,1,3,sprites);
+		this(x,y,1,3,sprites,100);
 	}
 	
-	public Position getPosition(){
-		return this.position;
+	protected static boolean isValidHitPoints(int hitPoints){
+		return (hitPoints>=0 && hitPoints<=500); 
 	}
 	
-	private void setPosition(Position position){
-		this.position = position;
+	
+	public boolean isValidWorld(World world){
+		return world.getMazub() == this;
 	}
-	
-	private Position position;
-	
-	/**
-	 * Return the width of the current sprite of this Mazub.
-	 */
-	public int getWidth(){
-		return this.getCurrentSprite().getWidth();
-	}
-	
-	/**
-	 * Return the height of the current sprite of this Mazub.
-	 */
-	public int getHeight(){
-		return this.getCurrentSprite().getHeight();
-	}
-	
-	//Deze methodes zijn getest en werken.
-	public int[][] getLeftPerimeter(){
-		int xPos = this.getPosition().getDisplayedXPosition();
-		int yPos = this.getPosition().getDisplayedYPosition();
-		int [][] result = new int[getHeight()][2];
-		for(int index=0;index<getHeight();index++){
-			result[index][0] = xPos;
-			result[index][1] = yPos + index;
-		}
-		return result;
-	}
-	
-	public int[][] getRightPerimeter(){
-		int xPos = this.getPosition().getDisplayedXPosition() + this.getWidth()-1;
-		int yPos = this.getPosition().getDisplayedYPosition();
-		int [][] result = new int[getHeight()][2];
-		for(int index=0;index<getHeight();index++){
-			result[index][0] = xPos;
-			result[index][1] = yPos + index;
-		}
-		return result;
-	}
-	
-	public int[][] getLowerPerimeter(){
-		int xPos = this.getPosition().getDisplayedXPosition();
-		int yPos = this.getPosition().getDisplayedYPosition();
-		int [][] result = new int[getWidth()][2];
-		for(int index=0;index<getWidth();index++){
-			result[index][0] = xPos + index;
-			result[index][1] = yPos;
-		}
-		return result;
-	}
-	
-	public int[][] getUpperPerimeter(){
-		int xPos = this.getPosition().getDisplayedXPosition();
-		int yPos = this.getPosition().getDisplayedYPosition() + getHeight()-1;
-		int [][] result = new int[getWidth()][2];
-		for(int index=0;index<getWidth();index++){
-			result[index][0] = xPos + index;
-			result[index][1] = yPos;
-		}
-		return result;
-	}
-	
-	@Basic
-	public int getHitPoints() {
-		return hitPoints;
-	}
-	
-	private static boolean isValidHitPoints(int hitPoints){
-		return (hitPoints>=0 && hitPoints <= 500); 
-	}
-
-	public void setHitPoints(int hitPoints) {
-		if (isValidHitPoints(hitPoints))
-			this.hitPoints = hitPoints;
-	}
-
-	private int hitPoints=100;
-	
-	
-	public World getWorld() {
-		return world;
-	}
-	
-	public void setWorld(World world) {
-		assert world.getMazub() == this;
-		this.world = world;
-	}
-
-	private World world = null;
-	
-	/**
-	 * Returns the current horizontal direction of this Mazub.
-	 */
-	@Basic
-	public Direction getHorDirection() {
-		return horDirection;
-	}
-	
-	/**
-	 * Set the horizontal direction of this Mazub to the given horizontal direction.
-	 * 
-	 * @param	horDirection
-	 * 			Horizontal direction to set.
-	 * @pre		The given direction must be a valid direction.
-	 * 			| isValidDirection(horDirection)
-	 * @post	The new horizontal direction of this Mazub is set to the given direction.
-	 * 			| new.getHorDirection() == horDirection
-	 */
-	@Model
-	private void setHorDirection(Direction horDirection) {
-		this.horDirection = horDirection;
-	}
-	
-	/**
-	 * A variable storing the horizontal direction.
-	 */
-	private Direction horDirection = Direction.NULL;
 	
 	/**
 	 * Returns the current vertical direction of this Mazub.
@@ -276,14 +162,6 @@ public class Mazub {
 	private Direction vertDirection = Direction.NULL;
 	
 	/**
-	 * Return the initial horizontal velocity of this Mazub.
-	 */
-	@Basic @Immutable @Model
-	private double getInitHorVelocity(){
-		return this.initHorVelocity;
-	}
-	
-	/**
 	 * Checks whether the given initial horizontal velocity is valid.
 	 * 
 	 * @param	initHorVelocity
@@ -292,28 +170,10 @@ public class Mazub {
 	 * 			or equal to 1.
 	 * 			| result == (initHorVelocity >= 1)
 	 */
-	@Model
-	private static boolean isValidInitHorVelocity(double initHorVelocity){
+	@Model@Override
+	protected boolean isValidInitHorVelocity(double initHorVelocity){
 		return (initHorVelocity >= 1);
 	}
-	
-	/**
-	 * A variable storing the initial horizontal velocity of this Mazub.
-	 */
-	private final double initHorVelocity;
-	
-	/**
-	 * Return the maximum horizontal velocity while running for this Mazub.
- 	 */
-	@Basic @Immutable
-	private double getMaxHorVelocityRunning(){
-		return this.maxHorVelocityRunning;
-	}
-
-	/**
-	 * A variable storing the maximum horizontal velocity while running.
-	 */
-	private final double maxHorVelocityRunning;
 	
 	/**
 	 * Return the maximum horizontal velocity while ducking for this Mazub.
@@ -329,13 +189,6 @@ public class Mazub {
 	 */
 	private static final double MAX_HOR_VELOCITY_DUCKING = 1;
 	
-	/**
-	 * Return the current maximum horizontal velocity.
-	 */
-	@Basic @Model
-	private double getMaxHorVelocity(){
-		return this.maxHorVelocity;
-	}
 	
 	/**
 	 * Checks whether this Mazub can have the given maximum 
@@ -350,40 +203,12 @@ public class Mazub {
 	 * 			| result == (maxHorVelocity >= getInitHorVelocity()) ||
 	 * 			|			maxHorVelocity == getMaxHorVelocityDucking()
 	 */
-	@Model
-	private boolean canHaveAsMaxHorVelocity(double maxHorVelocity){
+	@Model@Override
+	protected boolean canHaveAsMaxHorVelocity(double maxHorVelocity){
 		return (maxHorVelocity >= getInitHorVelocity()) ||
 				maxHorVelocity == getMaxHorVelocityDucking();
 	}
 	
-	/**
-	 * Sets the maximum horizontal velocity to the given value.
-	 * 
-	 * @param 	maxHorVelocity
-	 * 			The maximum horizontal velocity to set.
-	 * @post	If the given maximum horizontal velocity is valid,
-	 * 			the maximum horizontal velocity is set to the given value.
-	 * 			| if (canHaveAsMaxHorVelocity(maxHorVelocity))
-	 * 			| 	then new.getMaxHorVelocity() == maxHorVelocity
-	 */
-	@Model
-	private void setMaxHorVelocity(double maxHorVelocity){
-		if (canHaveAsMaxHorVelocity(maxHorVelocity))
-			this.maxHorVelocity = maxHorVelocity;
-	}
-	
-	/**
-	 * A variable storing the current maximal velocity of this Mazub.
-	 */
-	private double maxHorVelocity;
-	
-	/**
-	 * Return the current horizontal velocity of this Mazub.
-	 */
-	@Basic
-	public double getHorVelocity() {
-		return horVelocity;
-	}
 	
 	/**
 	 * Checks whether this Mazub can have the given horizontal velocity as
@@ -400,34 +225,12 @@ public class Mazub {
 	 * 			|			(horVelocity <= getMaxHorVelocity())) 
 	 */
 	@Model
-	private boolean canHaveAsHorVelocity(double horVelocity){
+	protected boolean canHaveAsHorVelocity(double horVelocity){
 		return  (horVelocity == 0) ||
 				((horVelocity >= this.getInitHorVelocity()) &&
 				(horVelocity <= getMaxHorVelocityRunning()));
 	}
 	
-	/**
-	 * Set the horizontal velocity to a given value.
-	 * 
-	 * @param 	horVelocity
-	 * 			The new horizontal velocity for this Mazub.
-	 * @post	If the given horizontal velocity is possible,
-	 * 			the new horizontal velocity of this Mazub is equal to 
-	 * 			the given horizontal velocity.
-	 * 			| if (canHaveAsHorVelocity())
-	 * 			| 	then new.getHorVelocity() == horVelocity
-	 */
-	@Model
-	private void setHorVelocity(double horVelocity) {
-		if (canHaveAsHorVelocity(horVelocity))
-			this.horVelocity = horVelocity;
-	}
-	
-	/**
-	 * A variable storing the current horizontal velocity of this Mazub.
-	 * This value will always be a positive number of type double, or zero.
-	 */
-	private double horVelocity = 0;
 	
 	
 	/**
@@ -696,6 +499,7 @@ public class Mazub {
 		setVertAcceleration(getMaxVertAcceleration());
 	}
 	
+	@Override
 	public void endMovement(Direction direction){
 		assert (direction != Direction.NULL);
 		if (isMoving(direction)){
@@ -833,135 +637,24 @@ public class Mazub {
 	 * 			| !(isValidTimeInterval(timeDuration))
 	 * 
 	 */
+	@Override
 	public void advanceTime(double timeDuration) throws IllegalXPositionException,
 				IllegalYPositionException,IllegalTimeIntervalException{
 		if (!isValidTimeInterval(timeDuration))
 			throw new IllegalTimeIntervalException(this);
 		if (isEnableStandUp())
 			endDuck();
-		updatePosition2(timeDuration);
+		updatePosition(timeDuration);
 		updateHorVelocity(timeDuration);
 		updateVertVelocity(timeDuration);
 		updateLastDirection();
 		counter(timeDuration);
 	}
 	
-	/**
-	 * A method to check whether the given time interval is a valid
-	 * time interval to simulate the movement of a Mazub.
-	 * 
-	 * @param 	timeDuration
-	 * 			The time interval to check.
-	 * @return	True if and only if the given time interval is not negative
-	 * 			and it is not greater than 0.2.
-	 * 			| result == (timeDuration >= 0 && timeDuration <= 0.2)
-	 */
-	@Model
-	private static boolean isValidTimeInterval(double timeDuration){
-		return (timeDuration >= 0 && timeDuration <= 0.2);
-	}
-	
-	/**
-	 * A method to update the horizontal position over a given time interval.
-	 * 
-	 * @param 	timeDuration
-	 * 			The time interval needed to calculate the new horizontal position.
-	 * @effect	The new effective x position is set to a new value based on the 
-	 * 			time interval and the current attributes of this Mazub.
-	 * @effect	The new effective y position is set to a new value based on the 
-	 * 			time interval and the current attributes of this Mazub.
-	 */
-	@Model
-	private void updatePosition(double timeDuration) throws CollisionException{
-		double newXPos = getPosition().getXPosition() + getHorDirection().getFactor()*
-				(getHorVelocity()*timeDuration+ 0.5*getHorAcceleration()*Math.pow(timeDuration, 2))*100;
-		double newYPos = getPosition().getYPosition() + 
-				((getVertDirection().getFactor()*getVertVelocity()*timeDuration)+ 
-				0.5*getVertAcceleration()*Math.pow(timeDuration, 2))*100;
-		if (newYPos<0)
-			newYPos = 0;
-		int displayedNewXPos = (int) Math.floor(newXPos);
-		int displayedNewYPos = (int) Math.floor(newYPos);
-		/*
-		 * mogen we niet zo doen want dan weten we niet of hij op een aarde tegel staat
-		 * of op een air tegel!
-		 */
-		//int[][] affectedTilePositions = getWorld().getTilePositionsIn(displayedNewXPos, displayedNewYPos+1,
-		//		displayedNewXPos+getWidth()-1, displayedNewYPos+getHeight()-2);
-		if(!(getWorld() == null)){
-			int[][] affectedTilePositions = getWorld().getTilePositionsIn(displayedNewXPos, displayedNewYPos,
-			displayedNewXPos+getWidth()-1, displayedNewYPos+getHeight()-1);
-			boolean enable = true;
-			boolean dropDown = false;
-			int counter = 0;
-			for (int[] pos: affectedTilePositions){
-				counter += 1;
-				Tile tile = getWorld().getTileAtTilePos(pos[0], pos[1]);
-				boolean isColliding = !tile.getGeoFeature().isPassable();
-				if (isColliding){
-					if(getPosition().getDisplayedXPosition()< displayedNewXPos
-						&& isMoving(Direction.RIGHT) &&
-						tile.getXPosition()>=getPosition().getDisplayedXPosition()&&
-						tile.getYPosition()>=getPosition().getYPosition()){
-						// hij collide naar rechts
-						endMove(Direction.RIGHT);
-						enable = false;
-						//System.out.println("if1");
-					}
-					else if(getPosition().getDisplayedXPosition()> displayedNewXPos
-							&& isMoving(Direction.LEFT) &&
-							tile.getXPosition()<=getPosition().getDisplayedXPosition()&&
-									tile.getYPosition()>=getPosition().getYPosition()){
-						// hij collide naar links
-						endMove(Direction.LEFT);
-						enable = false;
-						//System.out.println("if2");
-					}
-					else if(getPosition().getDisplayedYPosition()< displayedNewYPos &&
-							isMoving(Direction.UP)&&
-							tile.getYPosition()>getPosition().getDisplayedYPosition()){
-						// hij collide naar boven
-						endJump();
-						enable = false;
-						//System.out.println("if3");
-					}
-					else if(getPosition().getDisplayedYPosition()> displayedNewYPos &&
-							isMoving(Direction.DOWN) &&
-							tile.getYPosition()<=getPosition().getDisplayedYPosition()){
-						// hij collide naar onder
-						
-						setVertVelocity(0);
-						setVertAcceleration(0);
-						setVertDirection(Direction.NULL);
-						//System.out.println(getVertDirection());
-						enable = false;
-						dropDown = false;
-						//System.out.println("if4");
-						setPosition(new Position(newXPos,newYPos,getWorld()));
-					}
-				}
-				else if((getVertDirection()==Direction.NULL) &&
-						tile.getYPosition()<=this.getPosition().getDisplayedYPosition() &&
-						counter < 3){
-					dropDown=true;
-					//System.out.println("dropDown");
-				}
-			}
-			// hij is niet aan het colliden in de richting waar hij naartoe
-			// wil gaan
-			if(enable)
-				setPosition(new Position(newXPos,newYPos,getWorld()));
-			if(dropDown){
-				//setVertAcceleration(MAX_VERT_ACCELERATION);
-				//setVertDirection(Direction.DOWN);
-			}
-		}
-		else
-			setPosition(new Position(newXPos,newYPos));
-	}
 	
 	
-	private void updatePosition2(double timeDuration){
+	@Override
+	protected void updatePosition(double timeDuration){
 		double newXPos = getPosition().getXPosition() + getHorDirection().getFactor()*
 				(getHorVelocity()*timeDuration+ 0.5*getHorAcceleration()*Math.pow(timeDuration, 2))*100;
 		double newYPos = getPosition().getYPosition() + 
@@ -1010,34 +703,6 @@ public class Mazub {
 		setPosition(new Position(newXPos,newYPos,getWorld()));
 	}
 	
-	public boolean isOverlapping(Tile tile){
-		return !(((getPosition().getDisplayedXPosition()+getWidth()-1) < tile.getXPosition()) ||
-				((tile.getXPosition()+getWorld().getTileSize()-1) < getPosition().getDisplayedXPosition())
-				|| ((getPosition().getDisplayedYPosition() + getHeight() -1) < tile.getYPosition())
-				|| ((tile.getYPosition()+getWorld().getTileSize()-1) < getPosition().getDisplayedYPosition()));
-	}
-	
-	public boolean isColliding(Direction direction, Tile tile){
-		assert (direction != Direction.NULL);
-		int[][] positionsToCheck;
-		if(direction == Direction.DOWN)
-			positionsToCheck = getLowerPerimeter();
-		else if(direction == Direction.UP)
-			positionsToCheck = getUpperPerimeter();
-		else if(direction == Direction.RIGHT)
-			positionsToCheck = getRightPerimeter();
-		else if(direction == Direction.LEFT)
-			positionsToCheck = getLeftPerimeter();
-		else
-			positionsToCheck = new int[0][0];
-		for(int index=1;index<positionsToCheck.length-1;index++){
-			if((getWorld().getBelongingTileXPosition(positionsToCheck[index][0]) == tile.getTileXPos()) 
-				&& getWorld().getBelongingTileYPosition(positionsToCheck[index][1]) == tile.getTileYPos())
-				return true;
-		}
-		return false;
-	}
-	
 	/**
 	 * A method to update the horizontal velocity over a given time interval.
 	 * 
@@ -1046,8 +711,8 @@ public class Mazub {
 	 * @effect	The new horizontal velocity is set to a new value based on the 
 	 * 			time interval and the current attributes of this Mazub.
 	 */
-	@Model
-	private void updateHorVelocity(double timeDuration){
+	@Model @Override
+	protected void updateHorVelocity(double timeDuration){
 		double newVel = getHorVelocity() + getHorAcceleration() * timeDuration;
 		if (newVel > getMaxHorVelocity()){
 			setHorVelocity(getMaxHorVelocity());
@@ -1080,46 +745,6 @@ public class Mazub {
 		setVertVelocity(newVel);
 	}
 	
-	/**
-	 * Return the stored period of elapsed time .
-	 */
-	@Basic @Model
-	private double getTimeSum() {
-		return timeSum;
-	}
-
-	/**
-	 * Sets the time sum to a given sum.
-	 * 
-	 * @param 	timeSum
-	 * 			The timeSum to set.
-	 * @post	The new time sum is equal to the given timeSum.
-	 * 			| new.getTimeSum() = timeSum 
-	 */
-	@Model
-	private void setTimeSum(double timeSum) {
-		this.timeSum = timeSum;
-	}
-	
-	/**
-	 * A method to increment the time sum with the given timeduration.
-	 * 
-	 * @param 	timeDuration
-	 * 			the timeduration to add to time sum.
-	 * @post	The new time sum is incremented with the given timeDuration.
-	 * 			| new.getTimeSum() == this.getTimeSum() + timeDuration
-	 */
-	@Model
-	private void counter(double timeDuration){
-		setTimeSum(getTimeSum()+timeDuration);
-	}
-	
-	/**
-	 * A variable storing a period of elapsed time. This variable 
-	 * functions as a timer that increments subsequent time intervals
-	 * in the method advanceTime.
-	 */
-	private double timeSum;
 	
 	/**
 	 * Return the last registered horizontal direction of the Mazub.
@@ -1164,15 +789,6 @@ public class Mazub {
 
 	
 	/**
-	 * Return the index of the current sprite in the array of sprites,
-	 * belonging to this Mazub.
-	 */
-	@Basic @Model
-	private int getIndex() {
-		return this.index;
-	}
-	
-	/**
 	 * Checks whether the given index is a valid index.
 	 * 
 	 * @param 	index
@@ -1180,41 +796,9 @@ public class Mazub {
 	 * @return	True if and only if the index is between zero and the length of sprites.
 	 * 			| result == (index >= 0 && index < getNumberOfWalkingSprites()*2+10)
 	 */
-	private boolean isValidIndex(int index){
+	@Override
+	protected boolean isValidIndex(int index){
 		return (index >= 0 || index < getNumberOfWalkingSprites()*2+10);
-	}
-
-	/**
-	 * Sets the index of the current sprite to the given index.
-	 * 
-	 * @param	index
-	 * 			The index to set.
-	 * @pre		The given index must be a valid index for this Mazub.
-	 * 			| isValidIndex(index)
-	 * @post	The new index is equal to the given index.
-	 * 			| new.getIndex() == index
-	 */
-	private void setIndex(int index) {
-		assert isValidIndex(index);
-		this.index = index;
-	}
-	
-	/**
-	 * A variable storing the index of the current sprite.
-	 * The index is an integer number and refers to the position
-	 * of the current sprite in the array of sprites, belonging to this Mazub.
-	 */
-	private int index;
-	
-	/**
-	 * Checks whether the Mazub is moving.
-	 * 
-	 * @return	True if and only if the Mazub is moving to the left or to the right, which is
-	 * 			equivalent to if the horizontal direction is not zero (1 or -1).
-	 * 			| result == (getHorDirection() != 0)
-	 */
-	private boolean isMoving(){
-		return (getHorDirection() != Direction.NULL);
 	}
 
 	/**
@@ -1223,6 +807,7 @@ public class Mazub {
 	 * @return	True if and only if the horizontal direction of the Mazub is equal to the given direction.
 	 * 			| result == (getHorDirection() == direction)
 	 */
+	@Override
 	public boolean isMoving(Direction direction){
 		return ((getHorDirection() == direction) ||
 				getVertDirection() == direction);
@@ -1294,6 +879,7 @@ public class Mazub {
 	 * @effect	If this Mazub is neither ducking nor jumping and moving to the left,
 	 * 			the index is set to the next walking animation to the left.
 	 */
+	@Override
 	public void updateSpriteIndex(){
 		if (getIsDucked()){
 			if (isMoving() || wasMoving()){
@@ -1382,24 +968,6 @@ public class Mazub {
 			setTimeSum(getTimeSum()%0.075);}
 	}
 	
-	/**
-	 * A method to retrieve the sprite belonging to the current state
-	 * of this Mazub.
-	 * 
-	 * @return	The sprite located at the current index in the array
-	 * 			of sprites of this Mazub.
-	 * 			| result == getAllSprites[getIndex()]
-	 */
-	public Sprite getCurrentSprite(){
-		return getAllSprites()[getIndex()];
-	}
-	
-	/**
-	 * Return the array of sprites representing the different states of this Mazub.	
-	 */
-	private Sprite[] getAllSprites(){
-		return this.sprites;
-	}
 	
 	/**
 	 * A method to check whether the given array of sprites is valid. 
@@ -1412,12 +980,6 @@ public class Mazub {
 		return (sprites.length >= 10 && sprites.length%2 == 0);
 	}
 	
-	/**
-	 * A variable storing all possible sprites for this character.
-	 * The sprites are images. Each sprite represents 
-	 * a different state of this Mazub.
-	 */
-	private final Sprite[] sprites;
 			
 	/**
 	 * Return the number of sprites used for the animation of walking of this Mazub.
@@ -1431,17 +993,12 @@ public class Mazub {
 	 */
 	private final int numberOfWalkingSprites;
 	
-	public boolean isTerminated(){
-		return isTerminated;
-	}
-	
+	@Override
 	public void terminate(){
 		assert (getHitPoints()==0);
-		this.isTerminated = true;
+		super.terminate();
 	}
-	
-	private boolean isTerminated;
-	
+		
 	@Override
 	public String toString(){
 		return "Mazub at position " + (getPosition().getDisplayedXPosition()) + ","
