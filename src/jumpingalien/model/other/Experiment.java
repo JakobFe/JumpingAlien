@@ -1,6 +1,10 @@
-package jumpingalien.model;
+package jumpingalien.model.other;
 
 import static jumpingalien.tests.util.TestUtils.spriteArrayForSize;
+import jumpingalien.model.gameobjects.Mazub;
+import jumpingalien.model.worldfeatures.Terrain;
+import jumpingalien.model.worldfeatures.Tile;
+import jumpingalien.model.worldfeatures.World;
 
 public class Experiment {
 	public static void main(String[] args){

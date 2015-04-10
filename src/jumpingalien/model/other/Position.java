@@ -1,5 +1,8 @@
-package jumpingalien.model;
+package jumpingalien.model.other;
 
+import jumpingalien.model.exceptions.IllegalXPositionException;
+import jumpingalien.model.exceptions.IllegalYPositionException;
+import jumpingalien.model.worldfeatures.World;
 import be.kuleuven.cs.som.annotate.*;
 
 @Value

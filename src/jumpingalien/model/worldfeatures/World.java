@@ -1,7 +1,11 @@
-package jumpingalien.model;
+package jumpingalien.model.worldfeatures;
 
 import java.util.HashSet;
 
+import jumpingalien.model.exceptions.IllegalXPositionException;
+import jumpingalien.model.exceptions.IllegalYPositionException;
+import jumpingalien.model.gameobjects.Mazub;
+import jumpingalien.model.gameobjects.Plant;
 import be.kuleuven.cs.som.annotate.*;
 import static jumpingalien.tests.util.TestUtils.intArray;
 

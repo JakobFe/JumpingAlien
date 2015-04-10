@@ -5,18 +5,18 @@ import static jumpingalien.tests.util.TestUtils.intArray;
 
 import java.util.Collection;
 
-import jumpingalien.model.Direction;
-import jumpingalien.model.IllegalJumpInvokeException;
-import jumpingalien.model.IllegalTimeIntervalException;
-import jumpingalien.model.IllegalXPositionException;
-import jumpingalien.model.IllegalYPositionException;
-import jumpingalien.model.Mazub;
-import jumpingalien.model.Terrain;
-import jumpingalien.model.World;
-import jumpingalien.model.Plant;
-import jumpingalien.model.Slime;
-import jumpingalien.model.Shark;
-import jumpingalien.model.School;
+import jumpingalien.model.exceptions.IllegalJumpInvokeException;
+import jumpingalien.model.exceptions.IllegalTimeIntervalException;
+import jumpingalien.model.exceptions.IllegalXPositionException;
+import jumpingalien.model.exceptions.IllegalYPositionException;
+import jumpingalien.model.gameobjects.Mazub;
+import jumpingalien.model.gameobjects.Plant;
+import jumpingalien.model.gameobjects.School;
+import jumpingalien.model.gameobjects.Shark;
+import jumpingalien.model.gameobjects.Slime;
+import jumpingalien.model.other.Direction;
+import jumpingalien.model.worldfeatures.Terrain;
+import jumpingalien.model.worldfeatures.World;
 import jumpingalien.util.ModelException;
 import jumpingalien.util.Sprite;
 

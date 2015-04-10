@@ -1,4 +1,4 @@
-package jumpingalien.model;
+package jumpingalien.model.worldfeatures;
 
 public enum Terrain {
 	AIR(0,0,true), GROUND(1,0,false), WATER(2,2,true), MAGMA(3,50,true);

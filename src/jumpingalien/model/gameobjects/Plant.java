@@ -1,6 +1,14 @@
-package jumpingalien.model;
+package jumpingalien.model.gameobjects;
 
+import jumpingalien.model.exceptions.IllegalTimeIntervalException;
+import jumpingalien.model.exceptions.IllegalXPositionException;
+import jumpingalien.model.exceptions.IllegalYPositionException;
+import jumpingalien.model.other.Direction;
+import jumpingalien.model.other.Position;
+import jumpingalien.model.worldfeatures.Tile;
+import jumpingalien.model.worldfeatures.World;
 import jumpingalien.util.Sprite;
+
 import java.util.Random;
 
 public class Plant extends GameObject {

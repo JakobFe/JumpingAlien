@@ -1,4 +1,7 @@
-package jumpingalien.model;
+package jumpingalien.model.exceptions;
+
+import jumpingalien.model.other.Direction;
+
 
 /**
  * A class for signaling illegal x-coordinates for Mazub characters.

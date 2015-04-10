@@ -1,5 +1,8 @@
-package jumpingalien.model;
+package jumpingalien.model.gameobjects;
 
+import jumpingalien.model.exceptions.IllegalXPositionException;
+import jumpingalien.model.exceptions.IllegalYPositionException;
+import jumpingalien.model.other.Direction;
 import jumpingalien.util.Sprite;
 import be.kuleuven.cs.som.annotate.*;
 

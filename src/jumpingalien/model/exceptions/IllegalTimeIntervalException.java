@@ -1,4 +1,5 @@
-package jumpingalien.model;
+package jumpingalien.model.exceptions;
+import jumpingalien.model.gameobjects.GameObject;
 import be.kuleuven.cs.som.annotate.*;
 
 /**

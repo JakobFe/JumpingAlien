@@ -1,6 +1,9 @@
-package jumpingalien.model;
+package jumpingalien.model.gameobjects;
 
 import be.kuleuven.cs.som.annotate.*;
+import jumpingalien.model.exceptions.*;
+import jumpingalien.model.other.*;
+import jumpingalien.model.worldfeatures.*;
 import jumpingalien.util.Sprite;
 
 public abstract class GameObject {
@@ -114,7 +117,7 @@ public abstract class GameObject {
 	
 	protected abstract boolean isValidWorld(World world);
 	
-	protected void setWorld(World world) {
+	public void setWorld(World world) {
 		assert isValidWorld(world);
 		this.world = world;
 	}

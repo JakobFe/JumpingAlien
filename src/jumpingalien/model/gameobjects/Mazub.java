@@ -1,12 +1,19 @@
-package jumpingalien.model;
+package jumpingalien.model.gameobjects;
 
 
 import java.util.HashSet;
 
 import jumpingalien.util.Sprite;
 import be.kuleuven.cs.som.annotate.*;
-import jumpingalien.model.Direction;
-import jumpingalien.model.Position;
+import jumpingalien.model.exceptions.CollisionException;
+import jumpingalien.model.exceptions.IllegalJumpInvokeException;
+import jumpingalien.model.exceptions.IllegalTimeIntervalException;
+import jumpingalien.model.exceptions.IllegalXPositionException;
+import jumpingalien.model.exceptions.IllegalYPositionException;
+import jumpingalien.model.other.Direction;
+import jumpingalien.model.other.Position;
+import jumpingalien.model.worldfeatures.Tile;
+import jumpingalien.model.worldfeatures.World;
 
 /**
  * A class that implements the player character with the ability to jump, duck and
