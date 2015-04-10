@@ -257,10 +257,10 @@ public abstract class GameObject {
 	 */
 	@Model
 	protected boolean canHaveAsHorVelocity(double horVelocity){
-		return  (horVelocity == 0) ||
-				((horVelocity >= this.getInitHorVelocity()) &&
+		return  ((horVelocity >= this.getInitHorVelocity()) &&
 				(horVelocity <= getMaxHorVelocityRunning()));
 	}
+	
 	/**
 	 * Set the horizontal velocity to a given value.
 	 * 
