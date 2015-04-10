@@ -66,6 +66,8 @@ public class Tile {
 
 	public void setGeoFeature(Terrain geoFeature) {
 		this.geoFeature = geoFeature;
+		if (!geoFeature.isPassable())
+			getWorld().addAsImpassableTile(this);
 	}
 
 	private Terrain geoFeature = Terrain.AIR;
@@ -75,4 +77,10 @@ public class Tile {
 	}
 	
 	private final boolean isTargetTile;
+	
+	@Override
+	public String toString(){
+		return "Tile at tile position " + getTileXPos()+ "," + getTileYPos()+
+				" in " + getWorld().toString();
+	}
 }
