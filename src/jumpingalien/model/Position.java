@@ -7,7 +7,7 @@ public class Position {
 	
 	public Position(double x, double y,World world) throws 
 	IllegalXPositionException,IllegalYPositionException{
-		this.world = world;
+		setWorld(world);
 		setXPosition(x);
 		setYPosition(y);
 	}
@@ -170,5 +170,14 @@ public class Position {
 		return this.world;
 	}
 	
-	private final World world;
+	private void setWorld(World world){
+		// nog precondities opleggen
+		this.world = world;
+	}
+	
+	private World world;
+	
+	public void terminate(){
+		this.world = null;
+	}
 }
