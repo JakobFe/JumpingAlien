@@ -26,7 +26,7 @@ public class Plant extends GameObject {
 	}
 	
 	@Override
-	public double getHorVelocity(){
+	public final double getHorVelocity(){
 		return PLANT_VELOCITY;
 	}
 	
@@ -61,13 +61,13 @@ public class Plant extends GameObject {
 				if(isColliding(Direction.LEFT, impassableTile)){
 					if (isMoving(Direction.LEFT))
 						newXPos = impassableTile.getXPosition()+getWorld().getTileSize()-1;
-					endMovement(Direction.LEFT);
+					setHorDirection(Direction.RIGHT);
 					//System.out.println("Colliding left");
 				}
 				else if(isColliding(Direction.RIGHT, impassableTile)){
 					if (isMoving(Direction.RIGHT))
 						newXPos = impassableTile.getXPosition()-getWidth()+1;
-					endMovement(Direction.RIGHT);
+					setHorDirection(Direction.LEFT);
 					//System.out.println("Colliding right");
 				}
 			}
@@ -81,6 +81,8 @@ public class Plant extends GameObject {
 			setHorDirection(Direction.RIGHT);
 		else if(getHorDirection() == Direction.RIGHT)
 			setHorDirection(Direction.LEFT);
+		else
+			System.out.println("current dir null");
 	}
 
 	@Override
