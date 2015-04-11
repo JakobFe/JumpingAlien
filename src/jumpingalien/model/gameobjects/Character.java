@@ -7,6 +7,7 @@ import jumpingalien.util.Sprite;
 import be.kuleuven.cs.som.annotate.*;
 
 public abstract class Character extends GameObject{
+	
 	@Raw
 	protected Character(int x, int y, double initHorVelocity, double maxHorVelocity, Sprite[] sprites, int hitPoints) 
 			throws IllegalXPositionException,IllegalYPositionException{

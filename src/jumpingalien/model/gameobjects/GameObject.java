@@ -6,7 +6,61 @@ import jumpingalien.model.other.*;
 import jumpingalien.model.worldfeatures.*;
 import jumpingalien.util.Sprite;
 
+/**
+ * A class concerning game objects with a position, a horizontal velocity,
+ * sprites and hit points.
+ * 
+ * @invar	This game object must have a proper position.
+ * 			| hasProperPosition()
+ * @invar	The horizontal direction of this game object must be valid.
+ * 			| isValidHorDirection(getHorDirection())
+ * @invar 	The initial horizontal velocity of this game object must be valid.
+ * 			| isValidInitHorVelocity(getInitHorVelocity())
+ * @invar 	The maximum horizontal velocity of this game object must be valid.
+ * 			| canHaveAsMaxHorVelocity(getMaxHorVelocity())
+ * @invar	The hit points of this game object must be a valid number of hit points.
+ * 			| isValidHitPoints(hitPoints)
+ *  
+ * @author 	Jakob Festraets, Vincent Kemps
+ * @version	1.0
+ */
 public abstract class GameObject {
+	
+	/**
+	 * Initialize this new game object with given x position, given y position, 
+	 * given initial horizontal velocity, given maximum horizontal velocity,
+	 * given sprites and given number of hit points.
+	 * 
+	 * At the moment of initialization the velocity and acceleration are zero
+	 * in all directions.
+	 * 
+	 * @param 	x
+	 * 		  	Initial x position for this game object.
+	 * @param 	y
+	 * 			Initial y position for this game object.
+	 * @param 	initHorVelocity
+	 * 			Initial horizontal velocity for this game object.
+	 * @param 	maxHorVelocity
+	 * 			Maximum horizontal velocity while running for this game object.
+	 * @param	sprites
+	 * 			An array containing the different sprites for this game object.
+	 * @pre		The initial horizontal velocity must be valid.
+	 * 			| isValidInitHorVelocity(initHorVelocity)
+	 * @pre		The maximum horizontal velocity must be valid.
+	 * 			| canHaveAsMaxHorVelocity(maxHorVelocity)
+	 * @pre		The number of hit points must be a valid number of hit points.
+	 * 			| isValidHitPoints(hitPoints)
+	 * @effect	This game object is initialized with position (x,y).
+	 * 			| setPosition(new Position(x,y))
+	 * @post	This new game object has the given sprites as its sprites.
+	 * 			| new.getAllSprites() == sprites
+	 * @throws	IllegalXPositionException(x,this)
+	 * 			The given x position is not a valid x position.
+	 * 			| !Position.isValidXPosition(x)
+	 * @throws	IllegalYPositionException(y,this)
+	 * 			The given y position is not a valid y position.
+	 * 			| !Position.isValidYPosition(y)
+	 */
 	@Raw@Model
 	protected GameObject(int x, int y, double initHorVelocity, double maxHorVelocity, Sprite[] sprites,
 			int hitPoints) throws IllegalXPositionException,IllegalYPositionException{
@@ -20,36 +74,75 @@ public abstract class GameObject {
 		this.sprites = sprites;
 	}
 	
+	/**
+	 * Initialize this new game object with given x position, given y position, 
+	 * given initial horizontal velocity, given maximum horizontal velocity,
+	 * given sprites and 100 hit points.
+	 * 
+	 * @pre		The initial horizontal velocity must be valid.
+	 * 			| isValidInitHorVelocity(initHorVelocity)
+	 * @pre		The maximum horizontal velocity must be valid.
+	 * 			| canHaveAsMaxHorVelocity(maxHorVelocity)
+	 * @pre		The number of hit points must be a valid number of hit points.
+	 * 			| isValidHitPoints(hitPoints)
+	 * @effect	This game object is initialized with the given x position, given y position, 
+	 * 			given initial horizontal velocity, given maximum horizontal velocity,
+	 * 			given sprites and 100 hit points.
+	 * 			| this(x,y,initHorVelocity,initHorVelocity,sprites,hitPoints)
+	 */
 	@Raw@Model
 	protected GameObject(int x, int y, double initHorVelocity, Sprite[] sprites,
 			int hitPoints) throws IllegalXPositionException,IllegalYPositionException{
 		this(x,y,initHorVelocity,initHorVelocity,sprites,hitPoints);
 	}
 	
+	/*
+	 * Return the current position of this game object.
+	 */
 	public Position getPosition(){
 		return this.position;
 	}
 	
-	protected void setPosition(Position position){
+	/**
+	 * Set the position of this game object to the given position.
+	 * 
+	 * @param	position
+	 * 			The position to set.
+	 * @post	The game object refers to the given position.
+	 * 			| new.getPosition() == position
+	 */
+	protected void setPosition(Position position)
+			throws IllegalXPositionException,IllegalYPositionException{
 		this.position = position;
 	}
 	
+	/**
+	 * A variable storing the current position of this game object.
+	 */
 	private Position position;
 	
 	/**
-	 * Return the width of the current sprite of this Mazub.
+	 * Return the width of the current sprite of this game object.
 	 */
 	public int getWidth(){
 		return this.getCurrentSprite().getWidth();
 	}
 	
 	/**
-	 * Return the height of the current sprite of this Mazub.
+	 * Return the height of the current sprite of this game object.
 	 */
 	public int getHeight(){
 		return this.getCurrentSprite().getHeight();
 	}
-	//Deze methodes zijn getest en werken.
+	
+	/**
+	 * A method to return a matrix containing all positions of this 
+	 * game object that are located at the left side.
+	 * 
+	 * @return	A matrix containing all positions of this 
+	 * 			game object that are located at the left side.
+	 * 			| ...
+	 */
 	public int[][] getLeftPerimeter(){
 		int xPos = this.getPosition().getDisplayedXPosition();
 		int yPos = this.getPosition().getDisplayedYPosition();
@@ -61,6 +154,14 @@ public abstract class GameObject {
 		return result;
 	}
 	
+	/**
+	 * A method to return a matrix containing all positions of this 
+	 * game object that are located at the right side.
+	 * 
+	 * @return	A matrix containing all positions of this 
+	 * 			game object that are located at the right side.
+	 * 			| ...
+	 */
 	public int[][] getRightPerimeter(){
 		int xPos = this.getPosition().getDisplayedXPosition() + this.getWidth()-1;
 		int yPos = this.getPosition().getDisplayedYPosition();
@@ -71,7 +172,15 @@ public abstract class GameObject {
 		}
 		return result;
 	}
-	
+
+	/**
+	 * A method to return a matrix containing all positions of this 
+	 * game object that are located at the bottom.
+	 * 
+	 * @return	A matrix containing all positions of this 
+	 * 			game object that are located at the bottom.
+	 * 			| ...
+	 */
 	public int[][] getLowerPerimeter(){
 		int xPos = this.getPosition().getDisplayedXPosition();
 		int yPos = this.getPosition().getDisplayedYPosition();
@@ -83,6 +192,14 @@ public abstract class GameObject {
 		return result;
 	}
 	
+	/**
+	 * A method to return a matrix containing all positions of this 
+	 * game object that are located at the top.
+	 * 
+	 * @return	A matrix containing all positions of this 
+	 * 			game object that are located at the top.
+	 * 			| ...
+	 */
 	public int[][] getUpperPerimeter(){
 		int xPos = this.getPosition().getDisplayedXPosition();
 		int yPos = this.getPosition().getDisplayedYPosition() + getHeight()-1;
@@ -94,20 +211,45 @@ public abstract class GameObject {
 		return result;
 	}
 	
+	/**
+	 * Returns the current number of hit points.
+	 */
 	@Basic
 	public int getHitPoints() {
 		return hitPoints;
 	}
 	
-	protected static boolean isValidHitPoints(int hitPoints){
+	/**
+	 * Check if the given number of hit points is a valid number of hit points.
+	 * 
+	 * @return	True if the given number is greater than or equal to zero.
+	 * 
+	 */
+	protected boolean isValidHitPoints(int hitPoints){
 		return (hitPoints>=0); 
 	}
 
+	/**
+	 * Set the number of hit points to the given number of hit points.
+	 * 
+	 * @param	hitPoints
+	 * 			The amount of hit points to set.
+	 * @post	If the amount of hit points is a valid number of hit points,
+	 * 			the new amount of hit points is equal to the given amount 
+	 * 			of hit points.
+	 * 			| if(isValidHitPoints()
+	 * 			|	then new.getHitPoints() == hitPoints
+	 */
 	public void setHitPoints(int hitPoints) {
 		if (isValidHitPoints(hitPoints))
 			this.hitPoints = hitPoints;
 	}
 
+	/**
+	 * A variable storing the current amount of hit points.
+	 * 
+	 * If the amount of hit points is zero, a game object dies.
+	 */
 	private int hitPoints;
 	
 	

@@ -124,7 +124,7 @@ public class Mazub extends Character{
 		this(x,y,1,3,sprites);
 	}
 	
-	protected static boolean isValidHitPoints(int hitPoints){
+	protected boolean isValidHitPoints(int hitPoints){
 		return (hitPoints>=0 && hitPoints<=500); 
 	}
 	
