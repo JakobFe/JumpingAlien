@@ -18,27 +18,13 @@ import jumpingalien.model.worldfeatures.World;
 /**
  * A class that implements the player character with the ability to jump, duck and
  * run to the left and to the right. This class is a part of the project JumpingAlien.
- * 
- * @invar	The effective x position of this Mazub must be valid.
- * 			| isValidEffectiveXPos(getEffectiveXPos())
- * @invar	The effective y position of this Mazub must be valid.
- * 			| isValidEffectiveYPos(getEffectiveYPos())
- * @invar	The horizontal direction of this Mazub must be valid.
- * 			| isValidHorDirection(getHorDirection())
- * @invar	The vertical direction of this Mazub must be valid.
- * 			| isValidVertDirection(getVertDirection())
+ *
  * @invar 	The initial horizontal velocity of this Mazub must be valid.
  * 			| isValidInitHorVelocity(getInitHorVelocity())
  * @invar 	The maximum horizontal velocity of the Mazub must be valid.
  * 			| canHaveAsMaxHorVelocity(getMaxHorVelocity())
  * @invar 	The current horizontal velocity of this Mazub must be valid.
  * 			| canHaveAsHorVelocity(getVelocity()) 
- * @invar	The x position must be equal to the effective x position, 
- * 			rounded down to an integer number.
- * 			| getXPosition() == (int) Math.floor(getEffectiveXPos())
- * @invar	The y position must be equal to the effective y position, 
- * 			rounded down to an integer number.
- * 			| getYPosition() == (int) Math.floor(getEffectiveYPos())
  * 			
  * @author	Jakob Festraets, Vincent Kemps
  * 			| Course of studies: 2nd Bachelor of engineering
@@ -72,26 +58,16 @@ public class Mazub extends Character{
 	 * 			| canHaveAsMaxHorVelocity(maxHorVelocity)
 	 * @pre		The sprites must be an array with a valid number of sprites.
 	 * 			| isValidArrayOfSprites(sprites)
-	 * @effect	This Mazub is initialized with the given x as its effective x position.
-	 * 			| setEffectiveXPos(x)
-	 * @effect	This Mazub is initialized with the given y as its effective y position.
-	 * 			| setEffectiveYPos(y)
-	 * @post	The new Mazub has the given sprites as its sprites.
-	 * 			| new.getAllSprites() == sprites
-	 * @throws	IllegalXPositionException(x,this)
-	 * 			The given x position is not a valid x position.
-	 * 			| !isValidXPosition(x)
-	 * @throws	IllegalYPositionException(y,this)
-	 * 			The given y position is not a valid y position.
-	 * 			| !isValidYPosition(y)
+	 * @effect	This Mazub is initialized as a new character with given x position,
+	 * 			given y position, given initial horizontal velocity, given maximum
+	 * 			horizontal velocity, given sprites and 100 hit points.
 	 */
 	@Raw
 	public Mazub(int x, int y, double initHorVelocity, double maxHorVelocity, Sprite[] sprites) 
 			throws IllegalXPositionException,IllegalYPositionException{
 		super(x,y,initHorVelocity,maxHorVelocity,sprites);
-		setPosition(new Position(x,y));
-		this.maxHorVelocityRunning = maxHorVelocity;
 		assert isValidArrayOfSprites(sprites);
+		this.maxHorVelocityRunning = maxHorVelocity;
 		this.numberOfWalkingSprites = (this.getAllSprites().length - 10)/2;
 	}
 	
@@ -112,12 +88,6 @@ public class Mazub extends Character{
 	 * 			y position, given sprites, 1 as its initial horizontal 
 	 * 			velocity and 3 as its maximum horizontal velocity.
 	 * 			| this(x,y,1,3,sprites)
-	 * @throws	IllegalXPositionException(x,this)
-	 * 			The given x position is not a valid x position.
-	 * 			| !isValidXPosition(x)
-	 * @throws	IllegalYPositionException(y,this)
-	 * 			The given y position is not a valid y position.
-	 * 			| !isValidYPosition(y)
 	 */
 	@Raw
 	public Mazub(int x,int y, Sprite[] sprites) 
@@ -125,13 +95,25 @@ public class Mazub extends Character{
 		this(x,y,1,3,sprites);
 	}
 	
+	/**
+	 * Check if the given number of hit points is a valid number of hit points.
+	 * 
+	 * @return	True if the given number is greater than or equal to zero and 
+	 * 			smaller than or equal to 500.
+	 * 			| result == ((hitPoints >= 0) && (hitPoints <= 500))
+	 */
 	protected boolean isValidHitPoints(int hitPoints){
 		return (hitPoints>=0 && hitPoints<=500); 
 	}
 	
-	
+	/**
+	 * Check whether the given world is a valid world for this Mazub.
+	 * 
+	 * @return	True if the given world is effective and already references this Mazub.
+	 * 			| result == (world != null && world.getMazub() == this) 
+	 */
 	public boolean isValidWorld(World world){
-		return world.getMazub() == this;
+		return (world != null && world.getMazub() == this);
 	}
 		
 	/**
@@ -300,7 +282,7 @@ public class Mazub extends Character{
 	 * Method to end the jumping movement of the Mazub.
 	 * 
 	 * @effect	if the Mazub is still moving up, the vertical velocity is set to zero.
-	 * 			| if (getVertDirection() == 1)
+	 * 			| if (getVertDirection() == Direction.UP)
 	 *			|	setVertVelocity(0)
 	 */
 	public void endJump(){
@@ -308,28 +290,7 @@ public class Mazub extends Character{
 			setVertVelocity(0);
 	}
 	
-	@Override
-	public void endMovement(Direction direction){
-		assert (direction != Direction.NULL);
-		if (isMoving(direction)){
-			if (direction == Direction.LEFT || direction == Direction.RIGHT){
-				// zelfde als in endMove
-				setHorVelocity(0);
-				setHorDirection(Direction.NULL);
-				setHorAcceleration(0);
-				setTimeSum(0);
-			} 
-			else if (direction == Direction.DOWN){
-				setVertVelocity(0);
-				setVertAcceleration(0);
-				setVertDirection(Direction.NULL);
-			}
-			else if (direction == Direction.UP){
-				setVertVelocity(0);
-				setVertDirection(Direction.DOWN);
-			}
-		}
-	}
+	
 	
 	/**
 	 * Returns the current ducking state of this Mazub.

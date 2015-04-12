@@ -44,6 +44,8 @@ public abstract class GameObject {
 	 * 			Maximum horizontal velocity while running for this game object.
 	 * @param	sprites
 	 * 			An array containing the different sprites for this game object.
+	 * @param	hitPoints
+	 * 			The hit points for this new game object. 
 	 * @pre		The initial horizontal velocity must be valid.
 	 * 			| isValidInitHorVelocity(initHorVelocity)
 	 * @pre		The maximum horizontal velocity must be valid.
@@ -411,11 +413,15 @@ public abstract class GameObject {
 	 * 			The maximum horizontal velocity to check.
 	 * @return	True if the given maximum horizontal velocity is above or 
 	 * 			equal to the initial horizontal velocity.
-	 * 			| result == (maxHorVelocity >= getInitHorVelocity)
+	 * 			| if (maxHorVelocity >= getInitHorVelocity)
+	 * 			|	then result == true
 	 */
 	@Model
 	protected boolean canHaveAsMaxHorVelocity(double maxHorVelocity){
-		return (maxHorVelocity >= getInitHorVelocity());
+		if (maxHorVelocity >= getInitHorVelocity())
+			return true;
+		else
+			return false;
 	}
 	
 	/**

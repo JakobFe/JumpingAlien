@@ -1,19 +1,73 @@
 package jumpingalien.model.gameobjects;
 
-import jumpingalien.model.exceptions.IllegalXPositionException;
-import jumpingalien.model.exceptions.IllegalYPositionException;
-import jumpingalien.model.other.Direction;
+import jumpingalien.model.exceptions.*;
+import jumpingalien.model.other.*;
 import jumpingalien.util.Sprite;
 import be.kuleuven.cs.som.annotate.*;
 
+/**
+ * A class concerning characters as a subclass of game objects.
+ * Characters have additional features such as a vertical velocity and acceleration.
+ * 
+ * @invar	This character must have a valid vertical direction.
+ * 			| isValidDirection(getVertDirection())
+ * 
+ * @author 	Jakob Festraets, Vincent Kemps
+ * @version 1.0
+ *
+ */
 public abstract class Character extends GameObject{
 	
+	/**
+	 * Initialize this new character with given x position, given y position, 
+	 * given initial horizontal velocity, given maximum horizontal velocity,
+	 * given sprites and given number of hit points.
+	 * 
+	 * @param 	x
+	 * 		  	Initial x position for this game object.
+	 * @param 	y
+	 * 			Initial y position for this game object.
+	 * @param 	initHorVelocity
+	 * 			Initial horizontal velocity for this game object.
+	 * @param 	maxHorVelocity
+	 * 			Maximum horizontal velocity while running for this game object.
+	 * @param	sprites
+	 * 			An array containing the different sprites for this game object.
+	 * @param 	hitPoints
+	 * 			The hit points for this new character.
+	 * @effect	This character is created as a new game object with given x position,
+	 * 			given y position, given initial horizontal velocity,
+	 * 			given sprites and given hit points.
+	 * 			| super(x,y,initHorVelocity,maxHorVelocity,sprites,hitPoints)
+	 */
 	@Raw
 	protected Character(int x, int y, double initHorVelocity, double maxHorVelocity, Sprite[] sprites, int hitPoints) 
 			throws IllegalXPositionException,IllegalYPositionException{
 		super(x,y,initHorVelocity,maxHorVelocity,sprites,hitPoints);
 	}
 	
+	/**
+	 * Initialize this new character with given x position, given y position, 
+	 * given initial horizontal velocity, given maximum horizontal velocity,
+	 * given sprites and 100 hit points.
+	 * 
+	 * @param 	x
+	 * 		  	Initial x position for this game object.
+	 * @param 	y
+	 * 			Initial y position for this game object.
+	 * @param 	initHorVelocity
+	 * 			Initial horizontal velocity for this game object.
+	 * @param 	maxHorVelocity
+	 * 			Maximum horizontal velocity while running for this game object.
+	 * @param	sprites
+	 * 			An array containing the different sprites for this game object.
+	 * @param 	hitPoints
+	 * 			The hit points for this new character.
+	 * @effect	This character is created as a new game object with given x position,
+	 * 			given y position, given initial horizontal velocity,
+	 * 			given sprites and 100 hit points.
+	 * 			| this(x,y,initHorVelocity,maxHorVelocity,sprites,100)
+	 */
 	@Raw
 	protected Character(int x, int y, double initHorVelocity, double maxHorVelocity, Sprite[] sprites) 
 			throws IllegalXPositionException,IllegalYPositionException{
@@ -21,7 +75,7 @@ public abstract class Character extends GameObject{
 	}
 	
 	/**
-	 * Returns the current vertical direction of this Mazub.
+	 * Returns the current vertical direction of this character.
 	 */
 	@Basic
 	public Direction getVertDirection() {
@@ -29,13 +83,13 @@ public abstract class Character extends GameObject{
 	}
 	
 	/**
-	 * Set the vertical direction of this Mazub to the given direction.
+	 * Set the vertical direction of this character to the given direction.
 	 * 
 	 * @param	vertDirection
 	 * 			Vertical direction to set.
 	 * @pre		The given direction must be a valid direction.
 	 * 			| isValidDirection(vertDirection)
-	 * @post	The new vertical direction of this Mazub is set to the given direction.
+	 * @post	The new vertical direction of this character is set to the given direction.
 	 * 			| new.getVertDirection() == vertDirection
 	 */
 	@Model
@@ -44,19 +98,17 @@ public abstract class Character extends GameObject{
 	}
 	
 	/**
-	 * An variable storing the vertical direction.
+	 * A variable storing the vertical direction.
 	 */
 	private Direction vertDirection = Direction.NULL;
 
 	/**
-	 * Checks whether this Mazub can have the given horizontal velocity as
+	 * Checks whether this character can have the given horizontal velocity as
 	 * its horizontal velocity.
 	 * 
-	 * @param	horVelocity
-	 * 			The horizontal velocity to check.
 	 * @return	True if the given horizontal velocity is above or equal to
-	 * 			the initial horizontal velocity of this Mazub and below or 
-	 * 			equal to the maximum horizontal velocity of this Mazub, or
+	 * 			the initial horizontal velocity of this character and below or 
+	 * 			equal to the maximum horizontal velocity of this character, or
 	 * 			if the given horizontal velocity is 0.
 	 * 			| result == (horVelocity == 0) ||
 	 * 			|			((horVelocity >= getInitHorVelocity()) &&
@@ -70,7 +122,7 @@ public abstract class Character extends GameObject{
 	}
 
 	/**
-	 * Return the maximum horizontal acceleration of the Mazub.
+	 * Return the maximum horizontal acceleration of the character.
 	 */
 	@Basic @Model
 	protected double getMaxHorAcceleration(){
@@ -80,7 +132,7 @@ public abstract class Character extends GameObject{
 	private double maxHorAcceleration;
 	
 	/**
-	 * Return the current horizontal acceleration of this Mazub.
+	 * Return the current horizontal acceleration of this character.
 	 */
 	@Basic
 	public double getHorAcceleration() {
@@ -126,7 +178,7 @@ public abstract class Character extends GameObject{
 	private double horAcceleration = 0;
 
 	/**
-	 * Return the initial vertical velocity of this Mazub.
+	 * Return the initial vertical velocity of this character.
 	 */
 	@Basic @Model
 	protected double getInitVertVelocity() {
@@ -134,13 +186,12 @@ public abstract class Character extends GameObject{
 	}
 	
 	/**
-	 * A variable storing the initial vertical velocity. 
-	 * This variable will always have 8 m/s as its value.
+	 * A variable storing the initial vertical velocity of this character. 
 	 */
 	private double initVertVelocity;
 
 	/**
-	 * Return the current vertical velocity of this Mazub.
+	 * Return the current vertical velocity of this character.
 	 */
 	@Basic
 	public double getVertVelocity() {
@@ -178,12 +229,12 @@ public abstract class Character extends GameObject{
 	
 	/**
 	 * A variable storing the current vertical velocity.
-	 *  This value will always be a positive number of type double.
+	 * 	This value will always be a positive number of type double.
 	 */
 	private double vertVelocity = 0;
 	
 	/**
-	 * Return the current vertical acceleration of this Mazub.
+	 * Return the current vertical acceleration of this character.
 	 */
 	@Basic
 	public double getVertAcceleration() {
@@ -242,7 +293,15 @@ public abstract class Character extends GameObject{
 	 * (-10 m/s^2) as its value.
 	 */
 	private static final double MAX_VERT_ACCELERATION = -10;
-
+	
+	/**
+	 * A method to start falling, this means start moving down.
+	 * 
+	 * @effect	The vertical direction is set to down.
+	 * 			| setVertDirection(Direction.DOWN)
+	 * @effect	Set the vertical acceleration to the maximum vertical acceleration.
+	 * 			| setVertAcceleration(getMaxVertAcceleration())
+	 */
 	protected void startFall(){
 		setVertDirection(Direction.DOWN);
 		setVertAcceleration(getMaxVertAcceleration());
@@ -254,10 +313,17 @@ public abstract class Character extends GameObject{
 	 * @param 	timeDuration
 	 * 			The time interval needed to calculate the new vertical velocity.
 	 * @effect	The new vertical velocity is set to a new value based on the 
-	 * 			time interval and the current attributes of this Mazub.
+	 * 			time interval and the current attributes of this character.
+	 * @effect	If this character reaches the ground, the y position is set to zero,
+	 * 			the vertical velocity and the vertical acceleration are set to zero
+	 * 			and the vertical direction is set to null.
+	 * 			| if(getPosition().getYPosition() <= 0)
+	 * 			|	then setVertVelocity(0), setVertDirection(Direction.NULL),
+	 * 			|		 setVertAcceleration(0);
 	 */
 	protected void updateVertVelocity(double timeDuration){
-		double newVel = getVertDirection().getFactor()*getVertVelocity() + getVertAcceleration() * timeDuration;
+		double newVel = getVertDirection().getFactor()*getVertVelocity() + 
+				getVertAcceleration() * timeDuration;
 		if (newVel<0){
 			newVel = -newVel;
 			setVertDirection(Direction.DOWN);
@@ -270,5 +336,49 @@ public abstract class Character extends GameObject{
 		}
 		setVertVelocity(newVel);
 	}
-
+	
+	/**
+	 * A method to end the movement in the given direction.
+	 * 
+	 * @param 	direction
+	 * 			The direction in which the movement must be ended.
+	 * @pre		The given direction must be different from null.
+	 * 			| direction != Direction.NULL
+	 * @post	If the given direction is left or right, the new horizontal velocity and acceleration
+	 * 			are zero, the new horizontal direction is null and the time sum is reset to zero.
+	 * 			| if (direction == Direction.LEFT || direction == Direction.RIGHT)
+	 * 			|	then new.getHorVelocity() == 0 && new.getHorDirection() == Direction.NULL &&
+	 * 			|		 new.getTimeSum() == 0 && new.getHorAcceleration() == 0
+	 * @post	If the given direction is up, the new vertical velocity is zero and
+	 * 			the new vertical direction is down.
+	 * 			| if (direction == Direction.UP)
+	 * 			| 	then new.getVertVelocity() == 0 && new.getVertDirection() == Direction.DOWN
+	 * @post	If the given direction is down, the new vertical velocity and acceleration are zero 
+	 * 			and the new vertical direction is null.
+	 * 			| if (direction == Direction.DOWN)
+	 * 			| 	then new.getVertVelocity() == 0 && new.getVertDirection() == Direction.NULL &&
+	 * 			|		 new.getVertAcceleration() == 0
+	 * 
+	 */
+	@Override
+	public void endMovement(Direction direction){
+		assert (direction != Direction.NULL);
+		if (isMoving(direction)){
+			if (direction == Direction.LEFT || direction == Direction.RIGHT){
+				setHorVelocity(0);
+				setHorDirection(Direction.NULL);
+				setHorAcceleration(0);
+				setTimeSum(0);
+			} 
+			else if (direction == Direction.DOWN){
+				setVertVelocity(0);
+				setVertAcceleration(0);
+				setVertDirection(Direction.NULL);
+			}
+			else if (direction == Direction.UP){
+				setVertVelocity(0);
+				setVertDirection(Direction.DOWN);
+			}
+		}
+	}
 }
