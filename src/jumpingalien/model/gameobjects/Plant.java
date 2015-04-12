@@ -57,7 +57,7 @@ public class Plant extends GameObject {
 		double newXPos = getPosition().getXPosition() + getHorDirection().getFactor()*
 				(getHorVelocity()*timeDuration)*100;
 		for (Tile impassableTile: getWorld().getImpassableTiles()){
-			if (this.isOverlapping(impassableTile)){
+			if (this.isOverlappingWith(impassableTile)){
 				if(isColliding(Direction.LEFT, impassableTile)){
 					if (isMoving(Direction.LEFT))
 						newXPos = impassableTile.getXPosition()+getWorld().getTileSize()-1;

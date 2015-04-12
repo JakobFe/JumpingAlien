@@ -66,7 +66,7 @@ public abstract class Character extends GameObject{
 	protected boolean canHaveAsHorVelocity(double horVelocity){
 		return  (horVelocity == 0) ||
 				((horVelocity >= this.getInitHorVelocity()) &&
-				(horVelocity <= getMaxHorVelocityRunning()));
+				(horVelocity <= getMaxHorVelocity()));
 	}
 
 	/**

@@ -90,6 +90,7 @@ public class Mazub extends Character{
 			throws IllegalXPositionException,IllegalYPositionException{
 		super(x,y,initHorVelocity,maxHorVelocity,sprites);
 		setPosition(new Position(x,y));
+		this.maxHorVelocityRunning = maxHorVelocity;
 		assert isValidArrayOfSprites(sprites);
 		this.numberOfWalkingSprites = (this.getAllSprites().length - 10)/2;
 	}
@@ -146,6 +147,20 @@ public class Mazub extends Character{
 	protected boolean isValidInitHorVelocity(double initHorVelocity){
 		return (initHorVelocity >= 1);
 	}
+	
+	/**
+	 * Return the maximum horizontal velocity while running for this game object.
+ 	 */
+	@Basic @Immutable
+	protected double getMaxHorVelocityRunning(){
+		return this.maxHorVelocityRunning;
+	}
+
+	/**
+	 * A variable storing the maximum horizontal velocity while running.
+	 */
+	private final double maxHorVelocityRunning;
+	
 	
 	/**
 	 * Return the maximum horizontal velocity while ducking for this Mazub.
@@ -429,7 +444,6 @@ public class Mazub extends Character{
 	 * @throws	IllegalTimeIntervalException(this)
 	 * 			The given timeduration is not a valid time interval.
 	 * 			| !(isValidTimeInterval(timeDuration))
-	 * 
 	 */
 	@Override
 	public void advanceTime(double timeDuration) throws IllegalXPositionException,
@@ -462,7 +476,7 @@ public class Mazub extends Character{
 			newYPos = 0;
 		boolean enableFall = true;
 		for (Tile impassableTile: getWorld().getImpassableTiles()){
-			if (this.isOverlapping(impassableTile)){
+			if (this.isOverlappingWith(impassableTile)){
 				if (isColliding(Direction.DOWN, impassableTile)){
 					//System.out.println("Colliding down");
 					if (isMoving(Direction.DOWN))
