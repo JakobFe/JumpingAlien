@@ -47,7 +47,7 @@ public class Position {
 	 * 			| result == isValidXPosition( (int) Math.floor(x))
 	 */
 	@Model
-	private boolean isValidXPosition(double x){
+	public boolean isValidXPosition(double x){
 		if (getWorld() == null)
 			return true;
 		else
@@ -102,7 +102,7 @@ public class Position {
 	 * 			| result == (y >= 0) && (y < getScreenHeight())
 	 */
 	@Model
-	private boolean isValidYPosition(double y){
+	public boolean isValidYPosition(double y){
 		if (getWorld() == null)
 			return true;
 		else
@@ -181,5 +181,12 @@ public class Position {
 	
 	public void terminate(){
 		this.world = null;
+	}
+	
+	/**
+	 * Return a copy of this position.
+	 */
+	public Position copy(){
+		return new Position(getXPosition(),getYPosition(),getWorld());
 	}
 }
