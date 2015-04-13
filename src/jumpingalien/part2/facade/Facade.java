@@ -5,18 +5,18 @@ import static jumpingalien.tests.util.TestUtils.intArray;
 
 import java.util.Collection;
 
-import jumpingalien.model.Direction;
-import jumpingalien.model.IllegalJumpInvokeException;
-import jumpingalien.model.IllegalTimeIntervalException;
-import jumpingalien.model.IllegalXPositionException;
-import jumpingalien.model.IllegalYPositionException;
-import jumpingalien.model.Mazub;
-import jumpingalien.model.Terrain;
-import jumpingalien.model.World;
-import jumpingalien.model.Plant;
-import jumpingalien.model.Slime;
-import jumpingalien.model.Shark;
-import jumpingalien.model.School;
+import jumpingalien.model.exceptions.IllegalJumpInvokeException;
+import jumpingalien.model.exceptions.IllegalTimeIntervalException;
+import jumpingalien.model.exceptions.IllegalXPositionException;
+import jumpingalien.model.exceptions.IllegalYPositionException;
+import jumpingalien.model.gameobjects.Mazub;
+import jumpingalien.model.gameobjects.Plant;
+import jumpingalien.model.gameobjects.School;
+import jumpingalien.model.gameobjects.Shark;
+import jumpingalien.model.gameobjects.Slime;
+import jumpingalien.model.other.Direction;
+import jumpingalien.model.worldfeatures.Terrain;
+import jumpingalien.model.worldfeatures.World;
 import jumpingalien.util.ModelException;
 import jumpingalien.util.Sprite;
 
@@ -24,7 +24,6 @@ public class Facade implements IFacadePart2 {
 
 	@Override
 	public Mazub createMazub(int pixelLeftX, int pixelBottomY, Sprite[] sprites) {
-		// TODO Auto-generated method stub
 		try{return new Mazub(pixelLeftX,pixelBottomY,sprites);}
 		catch (IllegalXPositionException exc){
 			throw new ModelException("Illegal X Position!");}
@@ -34,41 +33,35 @@ public class Facade implements IFacadePart2 {
 
 	@Override
 	public int[] getLocation(Mazub alien) {
-		// TODO Auto-generated method stub
 		return intArray(alien.getPosition().getDisplayedXPosition(),
 				alien.getPosition().getDisplayedYPosition());
 	}
 
 	@Override
 	public double[] getVelocity(Mazub alien) {
-		// TODO Auto-generated method stub
 		return doubleArray(alien.getHorDirection().getFactor()*alien.getHorVelocity(),
 			   alien.getVertDirection().getFactor()*alien.getVertVelocity());
 	}
 
 	@Override
 	public double[] getAcceleration(Mazub alien) {
-		// TODO Auto-generated method stub
 		return doubleArray(alien.getHorDirection().getFactor()*alien.getHorAcceleration(),
 						   alien.getVertAcceleration());
 	}
 
 	@Override
 	public int[] getSize(Mazub alien) {
-		// TODO Auto-generated method stub
 		return intArray(alien.getWidth(),alien.getHeight());
 	}
 
 	@Override
 	public Sprite getCurrentSprite(Mazub alien) {
-		// TODO Auto-generated method stub
 		alien.updateSpriteIndex();
 		return alien.getCurrentSprite();
 	}
 
 	@Override
 	public void startJump(Mazub alien) {
-		// TODO Auto-generated method stub
 		try{
 			alien.startJump();}
 		catch (IllegalJumpInvokeException exc){
@@ -79,45 +72,38 @@ public class Facade implements IFacadePart2 {
 
 	@Override
 	public void endJump(Mazub alien) {
-		// TODO Auto-generated method stub
 		alien.endJump();
 	}
 
 	@Override
 	public void startMoveLeft(Mazub alien) {
-		// TODO Auto-generated method stub
 		alien.startMove(Direction.LEFT);
 	}
 
 	@Override
 	public void endMoveLeft(Mazub alien) {
-		// TODO Auto-generated method stub
 		if (alien.isMoving(Direction.LEFT))
 			alien.endMove(Direction.LEFT);
 	}
 
 	@Override
 	public void startMoveRight(Mazub alien) {
-		// TODO Auto-generated method stub
 		alien.startMove(Direction.RIGHT);
 	}
 
 	@Override
 	public void endMoveRight(Mazub alien) {
-		// TODO Auto-generated method stub
 		if (alien.isMoving(Direction.RIGHT))
 			alien.endMove(Direction.RIGHT);
 	}
 
 	@Override
 	public void startDuck(Mazub alien) {
-		// TODO Auto-generated method stub
 		alien.startDuck();
 	}
 
 	@Override
 	public void endDuck(Mazub alien) {
-		// TODO Auto-generated method stub
 		alien.endDuck();
 	}
 
@@ -125,7 +111,6 @@ public class Facade implements IFacadePart2 {
 	
 	@Override
 	public int getNbHitPoints(Mazub alien) {
-		// TODO Auto-generated method stub
 		return alien.getHitPoints();
 	}
 
@@ -133,44 +118,37 @@ public class Facade implements IFacadePart2 {
 	public World createWorld(int tileSize, int nbTilesX, int nbTilesY,
 			int visibleWindowWidth, int visibleWindowHeight, int targetTileX,
 			int targetTileY) {
-		// TODO Auto-generated method stub
 		return new World(tileSize,nbTilesX,nbTilesY,visibleWindowWidth,
 						 visibleWindowHeight,targetTileX,targetTileY);
 	}
 
 	@Override
 	public int[] getWorldSizeInPixels(World world) {
-		// TODO Auto-generated method stub
 		return intArray(world.getWorldWidth(),world.getWorldHeight());
 	}
 
 	@Override
 	public int getTileLength(World world) {
-		// TODO Auto-generated method stub
 		return world.getTileSize();
 	}
 
 	@Override
 	public void startGame(World world) {
-		// TODO Auto-generated method stub
-		
+		world.setGameStarted(false);
 	}
 
 	@Override
 	public boolean isGameOver(World world) {
-		// TODO Auto-generated method stub
-		return false;
+		return world.isGameOver();
 	}
 
 	@Override
 	public boolean didPlayerWin(World world) {
-		// TODO Auto-generated method stub
-		return false;
+		return world.didPlayerWin();
 	}
 
 	@Override
 	public void advanceTime(World world, double dt) {
-		// TODO Auto-generated method stub
 		try{
 			world.advanceTime(dt);}
 			catch (IllegalXPositionException exc){
@@ -188,7 +166,6 @@ public class Facade implements IFacadePart2 {
 
 	@Override
 	public int[] getVisibleWindow(World world) {
-		// TODO Auto-generated method stub
 		return intArray(world.getWindowXPos(),world.getWindowYPos(),
 						world.getWindowXPos()+world.getVisibleWindowWidth(),
 						world.getWindowYPos()+world.getVisibleWindowHeight());
@@ -196,7 +173,6 @@ public class Facade implements IFacadePart2 {
 
 	@Override
 	public int[] getBottomLeftPixelOfTile(World world, int tileX, int tileY) {
-		// TODO Auto-generated method stub
 		return intArray(world.getTileAtTilePos(tileX, tileY).getXPosition(),
 						world.getTileAtTilePos(tileX, tileY).getYPosition());
 	}
@@ -204,28 +180,24 @@ public class Facade implements IFacadePart2 {
 	@Override
 	public int[][] getTilePositionsIn(World world, int pixelLeft,
 			int pixelBottom, int pixelRight, int pixelTop) {
-		// TODO Auto-generated method stub
 		return world.getTilePositionsIn(pixelLeft,pixelBottom,pixelRight,pixelTop);
 	}
 
 	@Override
 	public int getGeologicalFeature(World world, int pixelX, int pixelY)
 			throws ModelException {
-		// TODO Auto-generated method stub
 		return world.getTileAtPos(pixelX,pixelY).getGeoFeature().getValue();
 	}
 
 	@Override
 	public void setGeologicalFeature(World world, int tileX, int tileY,
 			int tileType) {
-		// TODO Auto-generated method stub
 		Terrain terrain = Terrain.mapValueToTerrain(tileType);
 		world.getTileAtTilePos(tileX, tileY).setGeoFeature(terrain);
 	}
 
 	@Override
 	public void setMazub(World world, Mazub alien) {
-		// TODO Auto-generated method stub
 		world.setMazub(alien);
 	}
 
@@ -237,32 +209,28 @@ public class Facade implements IFacadePart2 {
 
 	@Override
 	public Plant createPlant(int x, int y, Sprite[] sprites) {
-		// TODO Auto-generated method stub
-		return null;
+		return new Plant(x,y,sprites);
 	}
 
 	@Override
 	public void addPlant(World world, Plant plant) {
-		// TODO Auto-generated method stub
-		
+		world.addAsPlant(plant);
 	}
 
 	@Override
 	public Collection<Plant> getPlants(World world) {
-		// TODO Auto-generated method stub
-		return null;
+		return world.getAllPlants();
 	}
 
 	@Override
 	public int[] getLocation(Plant plant) {
-		// TODO Auto-generated method stub
-		return null;
+		return intArray(plant.getPosition().getDisplayedXPosition(),
+				plant.getPosition().getDisplayedYPosition());
 	}
 
 	@Override
 	public Sprite getCurrentSprite(Plant plant) {
-		// TODO Auto-generated method stub
-		return null;
+		return plant.getCurrentSprite();
 	}
 
 	@Override

@@ -2,12 +2,12 @@ package jumpingalien.part2.facade;
 
 import java.util.Collection;
 
-import jumpingalien.model.Plant;
-import jumpingalien.model.Shark;
-import jumpingalien.model.Mazub;
-import jumpingalien.model.Slime;
-import jumpingalien.model.School;
-import jumpingalien.model.World;
+import jumpingalien.model.gameobjects.Mazub;
+import jumpingalien.model.gameobjects.Plant;
+import jumpingalien.model.gameobjects.School;
+import jumpingalien.model.gameobjects.Shark;
+import jumpingalien.model.gameobjects.Slime;
+import jumpingalien.model.worldfeatures.World;
 import jumpingalien.part1.facade.IFacade;
 import jumpingalien.util.ModelException;
 import jumpingalien.util.Sprite;

@@ -1,4 +1,5 @@
-package jumpingalien.model;
+package jumpingalien.model.exceptions;
+import jumpingalien.model.gameobjects.GameObject;
 import be.kuleuven.cs.som.annotate.*;
 
 /**
@@ -8,7 +9,7 @@ import be.kuleuven.cs.som.annotate.*;
  */
 public class IllegalTimeIntervalException extends RuntimeException {
 	
-	public IllegalTimeIntervalException(Mazub character){
+	public IllegalTimeIntervalException(GameObject character){
 		this.character = character;
 	}
 
@@ -16,7 +17,7 @@ public class IllegalTimeIntervalException extends RuntimeException {
 	 * Return the Mazub character for this illegal time interval exception.
 	 */
 	@Basic@Immutable
-	public Mazub getCharacter(){
+	public GameObject getCharacter(){
 		return this.character;
 	}
 	
@@ -24,7 +25,7 @@ public class IllegalTimeIntervalException extends RuntimeException {
 	 * A variable registering the Mazub character involved in this 
 	 * illegal time interval exception.
 	 */
-	private final Mazub character;
+	private final GameObject character;
 
 	/**
 	 * A variable to explicitly define a version number for this class

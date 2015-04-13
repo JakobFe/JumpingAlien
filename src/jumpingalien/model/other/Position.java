@@ -1,5 +1,8 @@
-package jumpingalien.model;
+package jumpingalien.model.other;
 
+import jumpingalien.model.exceptions.IllegalXPositionException;
+import jumpingalien.model.exceptions.IllegalYPositionException;
+import jumpingalien.model.worldfeatures.World;
 import be.kuleuven.cs.som.annotate.*;
 
 @Value
@@ -7,7 +10,7 @@ public class Position {
 	
 	public Position(double x, double y,World world) throws 
 	IllegalXPositionException,IllegalYPositionException{
-		this.world = world;
+		setWorld(world);
 		setXPosition(x);
 		setYPosition(y);
 	}
@@ -44,12 +47,11 @@ public class Position {
 	 * 			| result == isValidXPosition( (int) Math.floor(x))
 	 */
 	@Model
-	private boolean isValidXPosition(double x){
+	public boolean isValidXPosition(double x){
 		if (getWorld() == null)
-			return ((x >= 0) && ((int) Math.floor(x) < getScreenWidth()));
+			return true;
 		else
-			return ((x >= 0) && ((int) Math.floor(x) < 
-					(getWorld().getWorldWidth())-getWorld().getMazub().getWidth()));
+			return ((x >= 0) && ((int) Math.floor(x) < (getWorld().getWorldWidth())));
 	}
 	
 	/**
@@ -100,9 +102,9 @@ public class Position {
 	 * 			| result == (y >= 0) && (y < getScreenHeight())
 	 */
 	@Model
-	private boolean isValidYPosition(double y){
+	public boolean isValidYPosition(double y){
 		if (getWorld() == null)
-			return (((y >= 0) && ((int) Math.floor(y) < getScreenHeight())));
+			return true;
 		else
 			return (((y >= 0) && ((int) Math.floor(y) < getWorld().getWorldHeight())));
 	}
@@ -170,5 +172,21 @@ public class Position {
 		return this.world;
 	}
 	
-	private final World world;
+	private void setWorld(World world){
+		// nog precondities opleggen
+		this.world = world;
+	}
+	
+	private World world;
+	
+	public void terminate(){
+		this.world = null;
+	}
+	
+	/**
+	 * Return a copy of this position.
+	 */
+	public Position copy(){
+		return new Position(getXPosition(),getYPosition(),getWorld());
+	}
 }
