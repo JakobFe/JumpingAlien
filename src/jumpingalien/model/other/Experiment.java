@@ -93,7 +93,7 @@ public class Experiment {
 		//for(Tile tile: testWorld.getImpassableTiles())
 			//System.out.println(tile.toString());
 		for(Tile tile: testWorld.getImpassableTiles()){
-			if (alien2.isOverlapping(tile)){
+			if (alien2.isOverlappingWith(tile)){
 				System.out.print("Alien overlaps with ");
 				System.out.print(tile.toString());
 				System.out.println();
