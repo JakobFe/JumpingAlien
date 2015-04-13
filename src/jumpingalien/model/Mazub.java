@@ -911,8 +911,59 @@ public class Mazub {
 		}
 	}
 	
-	public boolean isOverlapping(Direction direction){
-		return false;
+	
+	@Model
+	private void updatePosition2(double timeDuration) throws CollisionException{
+		double newXPos = getPosition().getXPosition() + getHorDirection().getFactor()*
+				(getHorVelocity()*timeDuration+ 0.5*getHorAcceleration()*Math.pow(timeDuration, 2))*100;
+		double newYPos = getPosition().getYPosition() + 
+				((getVertDirection().getFactor()*getVertVelocity()*timeDuration)+ 
+				0.5*getVertAcceleration()*Math.pow(timeDuration, 2))*100;
+		int displayedNewXPos = (int) Math.floor(newXPos);
+		int displayedNewYPos = (int) Math.floor(newYPos);
+		int[][] affectedTilePositions = getWorld().getTilePositionsIn(displayedNewXPos, displayedNewYPos,
+		displayedNewXPos+getWidth(), displayedNewYPos+getHeight());
+		for (int[] pos: affectedTilePositions){
+			Tile tile = getWorld().getTileAtTilePos(pos[0], pos[1]);
+			boolean isColliding = !tile.getGeoFeature().isPassable();
+			if (isColliding){
+				if(getPosition().getDisplayedXPosition()< displayedNewXPos
+					&& isMoving(Direction.RIGHT) &&
+					tile.getXPosition()>=getPosition().getDisplayedXPosition()&&
+					tile.getYPosition()>=getPosition().getYPosition()){
+					endMove(Direction.RIGHT);
+				}
+				else if(getPosition().getDisplayedXPosition()> displayedNewXPos
+						&& isMoving(Direction.LEFT) &&
+						tile.getXPosition()<=getPosition().getDisplayedXPosition()&&
+								tile.getYPosition()>=getPosition().getYPosition()){
+					endMove(Direction.LEFT);
+				}
+				else if(getPosition().getDisplayedYPosition()< displayedNewYPos &&
+						isMoving(Direction.UP)&&
+						tile.getYPosition()>getPosition().getDisplayedYPosition()){
+					endJump();
+				}
+				else if(getPosition().getDisplayedYPosition()> displayedNewYPos &&
+						isMoving(Direction.DOWN) &&
+						tile.getYPosition()<=getPosition().getDisplayedYPosition()){
+					setVertVelocity(0);
+					setVertAcceleration(0);
+					setVertDirection(Direction.NULL);
+					setPosition(new Position(newXPos,newYPos,getWorld()));
+				}
+			}
+			else if((getVertDirection()==Direction.NULL) &&
+					tile.getYPosition()<=this.getPosition().getDisplayedYPosition()){
+			}
+		}
+	}
+	
+	public boolean isOverlapping(Tile tile){
+		return ((getPosition().getDisplayedXPosition()+getWidth()-1) < tile.getXPosition()) 
+						&& ((tile.getXPosition()+getWorld().getTileSize()-1) < getPosition().getDisplayedXPosition()
+						&& ((getPosition().getDisplayedYPosition()+getHeight()-1) < tile.getYPosition())
+						&& ((tile.getYPosition()+getWorld().getTileSize()-1) < getPosition().getDisplayedYPosition()));
 	}
 	
 	/**
