@@ -12,6 +12,7 @@ import jumpingalien.model.exceptions.IllegalXPositionException;
 import jumpingalien.model.exceptions.IllegalYPositionException;
 import jumpingalien.model.other.Direction;
 import jumpingalien.model.other.Position;
+import jumpingalien.model.worldfeatures.Terrain;
 import jumpingalien.model.worldfeatures.Tile;
 import jumpingalien.model.worldfeatures.World;
 
@@ -106,6 +107,34 @@ public class Mazub extends Character{
 		return (hitPoints>=0 && hitPoints<=500); 
 	}
 	
+	protected boolean canConsumePlant(){
+		return isValidHitPoints(getHitPoints()+50); 
+	}
+	
+	protected void consumePlant(){
+		if(canConsumePlant())
+			setHitPoints(getHitPoints()+50);
+	}
+	
+	@Override
+	protected void updateHitPoints(){
+		super.updateHitPoints();
+		if (isOverlappingWith(Terrain.WATER)){
+			if (getTimeSumHp() > 0.2){
+				setHitPoints(getHitPoints()-2);
+				setTimeSumHp(getTimeSumHp()-0.2);
+			}
+		}
+		if (isOverlappingWith(Terrain.MAGMA)){
+			if (getTimeSumHp() == 0)
+				setHitPoints(getHitPoints()-50);
+			else if (getTimeSumHp() > 0.2){
+				setHitPoints(getHitPoints()-50);
+				setTimeSumHp(getTimeSumHp()-0.2);
+			}
+		}
+	}
+
 	/**
 	 * Check whether the given world is a valid world for this Mazub.
 	 * 
@@ -113,7 +142,7 @@ public class Mazub extends Character{
 	 * 			| result == (world != null && world.getMazub() == this) 
 	 */
 	public boolean isValidWorld(World world){
-		return (world != null && world.getMazub() == this);
+		return (world == null || world.getMazub() == this);
 	}
 		
 	/**
@@ -413,11 +442,21 @@ public class Mazub extends Character{
 			throw new IllegalTimeIntervalException(this);
 		if (isEnableStandUp())
 			endDuck();
-		updatePosition(timeDuration);
+		try {
+			updatePosition(timeDuration);
+		} catch (IllegalXPositionException | IllegalYPositionException e) {
+			setHitPoints(0);
+			terminate();
+		}
 		updateHorVelocity(timeDuration);
 		updateVertVelocity(timeDuration);
 		updateLastDirection();
 		counter(timeDuration);
+		updateHitPoints();
+		if (isOverlappingWith(Terrain.WATER) || isOverlappingWith(Terrain.MAGMA))
+			counterHp(timeDuration);
+		else
+			setTimeSumHp(0);
 	}
 	
 	
@@ -743,6 +782,9 @@ public class Mazub extends Character{
 	public void terminate(){
 		assert (getHitPoints()==0);
 		super.terminate();
+		getWorld().setMazub(null);
+		setWorld(null);
+		//setPosition(null);
 	}
 		
 	@Override

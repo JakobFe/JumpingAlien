@@ -239,7 +239,8 @@ public class World {
 	
 	public void setMazub(Mazub alien){
 		this.mazub = alien;
-		getMazub().setWorld(this);
+		if (alien != null)
+			getMazub().setWorld(this);
 	}
 	
 	private Mazub mazub;
@@ -249,6 +250,15 @@ public class World {
 		return allPlants;
 	}
 	
+	public HashSet<Plant> getAllUnterminatedPlants(){
+		HashSet<Plant> result = new HashSet<Plant>();
+		for(Plant plant: getAllPlants()){
+			if(!plant.isTerminated())
+				result.add(plant);
+		}	
+		return result;	
+	}
+	
 	public boolean hasAsPlant(Plant plant){
 		return getAllPlants().contains(plant);
 	}
@@ -256,6 +266,11 @@ public class World {
 	public void addAsPlant(Plant plant){
 		getAllPlants().add(plant);
 		plant.setWorld(this);
+	}
+	
+	public void removeAsPlant(Plant plant){
+		assert hasAsPlant(plant);
+		allPlants.remove(plant);
 	}
 
 	private final HashSet<Plant> allPlants = new HashSet<Plant>();
@@ -274,10 +289,10 @@ public class World {
 	}
 	
 	public boolean isGameOver(){
-		if (getMazub() == null)
-			return false;
+		if (getMazub() == null || getMazub().isTerminated() || didPlayerWin())
+			return true;
 		else
-			return (getMazub().isTerminated() || didPlayerWin());
+			return false;
 	}
 
 	public boolean isGameStarted() {
@@ -292,20 +307,24 @@ public class World {
 	
 	public void advanceTime(double timeDuration) throws
 	IllegalXPositionException,IllegalYPositionException{
-		double tdHor = 0.01/(Math.abs(getMazub().getHorVelocity())
-				+Math.abs(getMazub().getHorAcceleration())*timeDuration);
-		double tdVert = 0.01/(Math.abs(getMazub().getVertVelocity())
-				+Math.abs(getMazub().getVertAcceleration())*timeDuration);
-		double td = Math.min(tdHor, tdVert);
-		if (td > timeDuration)
-			td = timeDuration;
-		for (int index = 0; index < timeDuration/td; index++){
-			getMazub().advanceTime(td);			
+		if (getMazub() != null){
+			double tdHor = 0.01/(Math.abs(getMazub().getHorVelocity())
+					+Math.abs(getMazub().getHorAcceleration())*timeDuration);
+			double tdVert = 0.01/(Math.abs(getMazub().getVertVelocity())
+					+Math.abs(getMazub().getVertAcceleration())*timeDuration);
+			double td = Math.min(tdHor, tdVert);
+			if (td > timeDuration)
+				td = timeDuration;
+			for (int index = 0; index < timeDuration/td; index++){
+				getMazub().advanceTime(td);	
+			}
+			if (getMazub() != null)
+				updateWindowPos();
 		}
-		for(Plant plant: getAllPlants())
-			plant.advanceTime(timeDuration);
-		//getMazub().advanceTime(timeDuration);
-		updateWindowPos();
+		for(Plant plant: getAllUnterminatedPlants()){
+			if(!plant.isTerminated())
+				plant.advanceTime(timeDuration);
+		}
 	}
 	
 	private void updateWindowPos(){

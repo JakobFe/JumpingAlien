@@ -33,8 +33,12 @@ public class Facade implements IFacadePart2 {
 
 	@Override
 	public int[] getLocation(Mazub alien) {
-		return intArray(alien.getPosition().getDisplayedXPosition(),
-				alien.getPosition().getDisplayedYPosition());
+		try {
+			return intArray(alien.getPosition().getDisplayedXPosition(),
+					alien.getPosition().getDisplayedYPosition());
+		} catch (NullPointerException e) {
+			throw new ModelException("This Mazub is terminated!");
+		}
 	}
 
 	@Override
@@ -219,7 +223,7 @@ public class Facade implements IFacadePart2 {
 
 	@Override
 	public Collection<Plant> getPlants(World world) {
-		return world.getAllPlants();
+		return world.getAllUnterminatedPlants();
 	}
 
 	@Override

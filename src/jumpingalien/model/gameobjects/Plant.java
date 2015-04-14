@@ -68,7 +68,7 @@ public class Plant extends GameObject {
 	 */
 	@Override
 	protected boolean isValidWorld(World world) {
-		return (world != null && world.hasAsPlant(this));
+		return (world == null || world.hasAsPlant(this));
 	}
 	
 	/**
@@ -91,12 +91,11 @@ public class Plant extends GameObject {
 			throw new IllegalTimeIntervalException(this);
 		if (getTimeSum()>0.5){
 			alternateDirection();
-			updateSpriteIndex();
 			setTimeSum((getTimeSum()-0.5));
 		}
 		updatePosition(timeDuration);
+		updateHitPoints();
 		counter(timeDuration);
-		
 	}
 	
 	/**
@@ -123,6 +122,11 @@ public class Plant extends GameObject {
 				}
 			}
 		}
+		if(isOverlappingWith(getWorld().getMazub()) &&
+		   getWorld().getMazub().canConsumePlant()){
+				setHitPoints(0);
+				getWorld().getMazub().consumePlant();
+		}
 		getPosition().terminate();
 		setPosition(new Position(newXPos,getPosition().getYPosition(),getWorld()));
 	}
@@ -144,15 +148,13 @@ public class Plant extends GameObject {
 			setHorDirection(Direction.LEFT);
 	}
 	
-	/**
-	 * A method to update the sprite index of this plant.
-	 */
-	// moet volgens mij NIET geimpl worden
-	// nee want in tegenstelling tot wat in de opgave staat, heeft een plant blijkbaar maar 1 sprite.
 	@Override
-	public void updateSpriteIndex() {
-		setIndex((getIndex()+1)%2);
-	}
+	public void updateSpriteIndex(){}
 	
-
+	@Override
+	public void terminate(){
+		super.terminate();
+		getWorld().removeAsPlant(this);
+		setWorld(null);
+	}
 }

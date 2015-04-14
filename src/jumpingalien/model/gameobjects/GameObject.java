@@ -1,5 +1,7 @@
 package jumpingalien.model.gameobjects;
 
+import java.util.HashSet;
+
 import be.kuleuven.cs.som.annotate.*;
 import jumpingalien.model.exceptions.*;
 import jumpingalien.model.other.*;
@@ -259,9 +261,9 @@ public abstract class GameObject {
 		int xpos = position.getDisplayedXPosition();
 		int ypos = position.getDisplayedYPosition();
 		return (xpos>=getPosition().getDisplayedXPosition() &&
-				xpos<=getPosition().getDisplayedXPosition() + getWidth() &&
+				xpos<=getPosition().getDisplayedXPosition() + getWidth() - 1 &&
 				ypos>=getPosition().getDisplayedYPosition() &&
-				ypos<=getPosition().getDisplayedYPosition() + getHeight());
+				ypos<=getPosition().getDisplayedYPosition() + getHeight() - 1);
 	}
 	
 	/**
@@ -296,8 +298,16 @@ public abstract class GameObject {
 	public void setHitPoints(int hitPoints) {
 		if (isValidHitPoints(hitPoints))
 			this.hitPoints = hitPoints;
+		else if(hitPoints < 0){
+			this.hitPoints = 0;
+		}
 	}
-
+	
+	protected void updateHitPoints(){
+		if(getHitPoints() == 0)
+			terminate();
+	}
+	
 	/**
 	 * A variable storing the current amount of hit points.
 	 * 
@@ -605,6 +615,8 @@ public abstract class GameObject {
 	 * 			| ...
 	 */
 	public boolean isOverlappingWith(Tile tile){
+		if (getWorld() == null)
+			return false;
 		return !(((getPosition().getDisplayedXPosition()+getWidth()-1) < tile.getXPosition()) ||
 				((tile.getXPosition()+getWorld().getTileSize()-1) < getPosition().getDisplayedXPosition())
 				|| ((getPosition().getDisplayedYPosition() + getHeight() -1) < tile.getYPosition())
@@ -620,6 +632,8 @@ public abstract class GameObject {
 	 * 			| ...
 	 */
 	public boolean isOverlappingWith(GameObject object){
+		if (getWorld() == null)
+			return false;
 		return !(((getPosition().getDisplayedXPosition()+getWidth()-1) < 
 				   object.getPosition().getDisplayedXPosition()) ||
 				((object.getPosition().getDisplayedXPosition()+ object.getWidth()-1) < 
@@ -628,6 +642,19 @@ public abstract class GameObject {
 				  object.getPosition().getDisplayedYPosition()) ||
 				((object.getPosition().getDisplayedYPosition()+object.getHeight()-1) 
 				  < getPosition().getDisplayedYPosition()));
+	}
+	
+	public boolean isOverlappingWith(Terrain terrain){
+		if (getWorld() == null)
+			return false;
+		HashSet<Tile> affectedTiles = getWorld().getTilesIn(getPosition().getDisplayedXPosition(),
+				getPosition().getDisplayedYPosition(), getPosition().getDisplayedXPosition()+getWidth(),
+				getPosition().getDisplayedYPosition()+getHeight());
+		for (Tile tile: affectedTiles){
+			if (tile.getGeoFeature() == terrain)
+				return true;
+		}
+		return false;
 	}
 	
 	/**
