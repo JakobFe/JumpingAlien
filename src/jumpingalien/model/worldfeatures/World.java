@@ -5,6 +5,7 @@ import java.util.HashSet;
 import jumpingalien.model.exceptions.*;
 import jumpingalien.model.gameobjects.Mazub;
 import jumpingalien.model.gameobjects.Plant;
+import jumpingalien.model.gameobjects.Slime;
 import be.kuleuven.cs.som.annotate.*;
 import static jumpingalien.tests.util.TestUtils.intArray;
 
@@ -273,6 +274,35 @@ public class World {
 	}
 
 	private final HashSet<Plant> allPlants = new HashSet<Plant>();
+
+	public HashSet<Slime> getAllSlimes() {
+		return allSlimes;
+	}
+	
+	public HashSet<Slime> getAllUnterminatedSlimes(){
+		HashSet<Slime> result = new HashSet<Slime>();
+		for(Slime slime: getAllSlimes()){
+			if(!slime.isTerminated())
+				result.add(slime);
+		}	
+		return result;	
+	}
+	
+	public boolean hasAsSlime(Slime slime){
+		return getAllSlimes().contains(slime);
+	}
+	
+	public void addAsSlime(Slime slime){
+		getAllSlimes().add(slime);
+		slime.setWorld(this);
+	}
+	
+	public void removeAsSlime(Slime slime){
+		assert hasAsSlime(slime);
+		allSlimes.remove(slime);
+	}
+
+	private final HashSet<Slime> allSlimes = new HashSet<Slime>();
 	
 	public boolean didPlayerWin(){
 		if (getMazub() == null)
