@@ -9,8 +9,34 @@ import jumpingalien.model.gameobjects.Plant;
 import be.kuleuven.cs.som.annotate.*;
 import static jumpingalien.tests.util.TestUtils.intArray;
 
+/**
+ * A class concerning the world in which the game is played.
+ * 
+ * @author Jakob Festraets, Vincent Kemps
+ * @version 1.0
+ */
 public class World {
 	
+	/**
+	 * Create a new world with the given tile size, number of tiles in horizontal and vertical
+	 * direction, window width and height, horizontal and vertical tile position of the target tile.
+	 * 
+	 * @param 	tileSize
+	 * 			The given tile size by which the game world should be initialized.
+	 * @param 	nbTilesX
+	 * 			The number of tiles in x-direction or horizontal direction.
+	 * @param 	nbTilesY
+	 * 			The number of tiles in y-direction or vertical direction.
+	 * @param 	visibleWindowWidth
+	 * 			The width of the displayed window of the game world.
+	 * @param 	visibleWindowHeight
+	 * 			The height of the displayed window of the game world.
+	 * @param 	targetTileX
+	 * 			The tile position in x-direction of the target tile.
+	 * @param 	targetTileY
+	 * 			The tile position in y-direction of the target tile.
+	 * 
+	 */
 	public World(int tileSize, int nbTilesX, int nbTilesY,
 			int visibleWindowWidth, int visibleWindowHeight,
 			int targetTileX,int targetTileY){
