@@ -240,32 +240,28 @@ public class Facade implements IFacadePart2 {
 
 	@Override
 	public Shark createShark(int x, int y, Sprite[] sprites) {
-		// TODO Auto-generated method stub
-		return null;
+		return new Shark(x,y,sprites);
 	}
 
 	@Override
 	public void addShark(World world, Shark shark) {
-		// TODO Auto-generated method stub
-		
+		world.addAsShark(shark);
 	}
 
 	@Override
 	public Collection<Shark> getSharks(World world) {
-		// TODO Auto-generated method stub
-		return null;
+		return world.getAllSharks();
 	}
 
 	@Override
 	public int[] getLocation(Shark shark) {
-		// TODO Auto-generated method stub
-		return null;
+		return intArray(shark.getPosition().getDisplayedXPosition(),
+				shark.getPosition().getDisplayedYPosition());
 	}
 
 	@Override
 	public Sprite getCurrentSprite(Shark shark) {
-		// TODO Auto-generated method stub
-		return null;
+		return shark.getCurrentSprite();
 	}
 
 	@Override

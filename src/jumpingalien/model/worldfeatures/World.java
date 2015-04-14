@@ -3,8 +3,7 @@ package jumpingalien.model.worldfeatures;
 import java.util.HashSet;
 
 import jumpingalien.model.exceptions.*;
-import jumpingalien.model.gameobjects.Mazub;
-import jumpingalien.model.gameobjects.Plant;
+import jumpingalien.model.gameobjects.*;
 import be.kuleuven.cs.som.annotate.*;
 import static jumpingalien.tests.util.TestUtils.intArray;
 
@@ -274,6 +273,26 @@ public class World {
 
 	private final HashSet<Plant> allPlants = new HashSet<Plant>();
 	
+	public HashSet<Shark> getAllSharks(){
+		return allSharks;
+	}
+	
+	public boolean hasAsShark(Shark shark){
+		return allSharks.contains(shark);
+	}
+	
+	public void addAsShark(Shark shark){
+		getAllSharks().add(shark);
+		shark.setWorld(this);
+	}
+	
+	public void removeAsShark(Shark shark){
+		assert hasAsShark(shark);
+		getAllSharks().remove(shark);
+	}
+	
+	private final HashSet<Shark> allSharks = new HashSet<Shark>();
+	
 	public boolean didPlayerWin(){
 		if (getMazub() == null)
 			return false;
@@ -327,6 +346,10 @@ public class World {
 		for(Plant plant: getAllUnterminatedPlants()){
 			if(!plant.isTerminated())
 				plant.advanceTime(timeDuration);
+		}
+		for(Shark shark: getAllSharks()){
+			if(!shark.isTerminated())
+				shark.advanceTime(timeDuration);
 		}
 	}
 	
