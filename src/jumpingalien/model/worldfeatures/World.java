@@ -2,8 +2,7 @@ package jumpingalien.model.worldfeatures;
 
 import java.util.HashSet;
 
-import jumpingalien.model.exceptions.IllegalXPositionException;
-import jumpingalien.model.exceptions.IllegalYPositionException;
+import jumpingalien.model.exceptions.*;
 import jumpingalien.model.gameobjects.Mazub;
 import jumpingalien.model.gameobjects.Plant;
 import be.kuleuven.cs.som.annotate.*;
@@ -316,7 +315,11 @@ public class World {
 			if (td > timeDuration)
 				td = timeDuration;
 			for (int index = 0; index < timeDuration/td; index++){
-				getMazub().advanceTime(td);	
+				try {
+					getMazub().advanceTime(td);
+				} catch (NullPointerException e) {
+					System.out.println("null pointer advance time world");
+				}
 			}
 			if (getMazub() != null)
 				updateWindowPos();

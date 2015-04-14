@@ -118,7 +118,6 @@ public class Mazub extends Character{
 	
 	@Override
 	protected void updateHitPoints(){
-		super.updateHitPoints();
 		if (isOverlappingWith(Terrain.WATER)){
 			if (getTimeSumHp() > 0.2){
 				setHitPoints(getHitPoints()-2);
@@ -133,6 +132,7 @@ public class Mazub extends Character{
 				setTimeSumHp(getTimeSumHp()-0.2);
 			}
 		}
+		super.updateHitPoints();
 	}
 
 	/**

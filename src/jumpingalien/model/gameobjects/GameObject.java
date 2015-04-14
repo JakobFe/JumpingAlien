@@ -22,7 +22,7 @@ import jumpingalien.util.Sprite;
  * 			| canHaveAsMaxHorVelocity(getMaxHorVelocity())
  * @invar	The hit points of this game object must be a valid number of hit points.
  * 			| isValidHitPoints(hitPoints)
- *  
+ *  f
  * @author 	Jakob Festraets, Vincent Kemps
  * @version	1.0
  */
@@ -615,12 +615,15 @@ public abstract class GameObject {
 	 * 			| ...
 	 */
 	public boolean isOverlappingWith(Tile tile){
-		if (getWorld() == null)
+		
+		try {
+			return !(((getPosition().getDisplayedXPosition()+getWidth()-1) < tile.getXPosition()) ||
+					((tile.getXPosition()+getWorld().getTileSize()-1) < getPosition().getDisplayedXPosition())
+					|| ((getPosition().getDisplayedYPosition() + getHeight() -1) < tile.getYPosition())
+					|| ((tile.getYPosition()+getWorld().getTileSize()-1) < getPosition().getDisplayedYPosition()));
+		} catch (NullPointerException e) {
 			return false;
-		return !(((getPosition().getDisplayedXPosition()+getWidth()-1) < tile.getXPosition()) ||
-				((tile.getXPosition()+getWorld().getTileSize()-1) < getPosition().getDisplayedXPosition())
-				|| ((getPosition().getDisplayedYPosition() + getHeight() -1) < tile.getYPosition())
-				|| ((tile.getYPosition()+getWorld().getTileSize()-1) < getPosition().getDisplayedYPosition()));
+		}
 	}
 	
 	/**
@@ -632,16 +635,18 @@ public abstract class GameObject {
 	 * 			| ...
 	 */
 	public boolean isOverlappingWith(GameObject object){
-		if (getWorld() == null)
+		try {
+			return !(((getPosition().getDisplayedXPosition()+getWidth()-1) < 
+					   object.getPosition().getDisplayedXPosition()) ||
+					((object.getPosition().getDisplayedXPosition()+ object.getWidth()-1) < 
+							getPosition().getDisplayedXPosition()) ||
+					((getPosition().getDisplayedYPosition() + getHeight() - 1) < 
+					  object.getPosition().getDisplayedYPosition()) ||
+					((object.getPosition().getDisplayedYPosition()+object.getHeight()-1) 
+					  < getPosition().getDisplayedYPosition()));
+		} catch (NullPointerException e) {
 			return false;
-		return !(((getPosition().getDisplayedXPosition()+getWidth()-1) < 
-				   object.getPosition().getDisplayedXPosition()) ||
-				((object.getPosition().getDisplayedXPosition()+ object.getWidth()-1) < 
-						getPosition().getDisplayedXPosition()) ||
-				((getPosition().getDisplayedYPosition() + getHeight() - 1) < 
-				  object.getPosition().getDisplayedYPosition()) ||
-				((object.getPosition().getDisplayedYPosition()+object.getHeight()-1) 
-				  < getPosition().getDisplayedYPosition()));
+		}
 	}
 	
 	public boolean isOverlappingWith(Terrain terrain){

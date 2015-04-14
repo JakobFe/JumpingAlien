@@ -37,6 +37,7 @@ public class Facade implements IFacadePart2 {
 			return intArray(alien.getPosition().getDisplayedXPosition(),
 					alien.getPosition().getDisplayedYPosition());
 		} catch (NullPointerException e) {
+			System.out.println("Modelexception!");
 			throw new ModelException("This Mazub is terminated!");
 		}
 	}
