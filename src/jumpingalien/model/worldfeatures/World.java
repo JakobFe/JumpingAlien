@@ -4,6 +4,7 @@ import java.util.HashSet;
 
 import jumpingalien.model.exceptions.*;
 import jumpingalien.model.gameobjects.*;
+import jumpingalien.model.gameobjects.Character;
 import be.kuleuven.cs.som.annotate.*;
 import static jumpingalien.tests.util.TestUtils.intArray;
 
@@ -237,6 +238,7 @@ public class World {
 	
 	public void setMazub(Mazub alien){
 		this.mazub = alien;
+		getAllCharacters().add(alien);
 		if (alien != null)
 			getMazub().setWorld(this);
 	}
@@ -292,6 +294,7 @@ public class World {
 	
 	public void addAsSlime(Slime slime){
 		getAllSlimes().add(slime);
+		getAllCharacters().add(slime);
 		slime.setWorld(this);
 	}
 	
@@ -312,6 +315,7 @@ public class World {
 	
 	public void addAsShark(Shark shark){
 		getAllSharks().add(shark);
+		getAllCharacters().add(shark);
 		shark.setWorld(this);
 	}
 	
@@ -321,6 +325,12 @@ public class World {
 	}
 	
 	private final HashSet<Shark> allSharks = new HashSet<Shark>();
+	
+	public HashSet<Character> getAllCharacters(){
+		return allCharacters; 
+	}
+	
+	private final HashSet<Character> allCharacters = new HashSet<Character>();
 	
 	public boolean didPlayerWin(){
 		if (getMazub() == null)

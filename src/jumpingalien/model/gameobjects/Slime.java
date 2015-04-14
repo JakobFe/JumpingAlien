@@ -1,8 +1,11 @@
 package jumpingalien.model.gameobjects;
 
+import java.util.Random;
+
 import jumpingalien.model.exceptions.IllegalTimeIntervalException;
 import jumpingalien.model.exceptions.IllegalXPositionException;
 import jumpingalien.model.exceptions.IllegalYPositionException;
+import jumpingalien.model.other.Direction;
 import jumpingalien.model.worldfeatures.World;
 import jumpingalien.util.Sprite;
 import be.kuleuven.cs.som.annotate.Basic;
@@ -13,6 +16,16 @@ public class Slime extends Character{
 	
 	public Slime(int x, int y, Sprite[] sprites, School school){
 		super(x,y,0,SLIME_VELOCITY,sprites);
+		setRandomDirection();
+	}
+	
+	private void setRandomDirection() {
+		Random rn = new Random();
+		int startIndex = rn.nextInt(2);
+		if(startIndex == 0)
+			setHorDirection(Direction.LEFT);
+		else
+			setHorDirection(Direction.RIGHT);
 	}
 	
 	@Override

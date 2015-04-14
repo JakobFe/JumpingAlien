@@ -1,7 +1,9 @@
 package jumpingalien.model.gameobjects;
 
+import static jumpingalien.tests.util.TestUtils.doubleArray;
 import jumpingalien.model.exceptions.*;
 import jumpingalien.model.other.*;
+import jumpingalien.model.worldfeatures.Tile;
 import jumpingalien.util.Sprite;
 import be.kuleuven.cs.som.annotate.*;
 
@@ -252,9 +254,7 @@ public abstract class Character extends GameObject{
 	 * 			|			vertAcceleration == getMaxVertAcceleration());
 	 */
 	@Model
-	protected static boolean isValidVertAcceleration(double vertAcceleration){
-		return (vertAcceleration == 0 || vertAcceleration == getMaxVertAcceleration());
-	}
+	protected abstract boolean isValidVertAcceleration(double vertAcceleration);
 	
 	/**
 	 * Sets the vertical acceleration to the given value.
@@ -304,6 +304,78 @@ public abstract class Character extends GameObject{
 	protected void startFall(){
 		setVertDirection(Direction.DOWN);
 		setVertAcceleration(getMaxVertAcceleration());
+	}
+	
+	protected double[] updatePositionTileCollision(double[] newPos){
+		assert newPos.length == 2;
+		double newXPos = newPos[0];
+		double newYPos = newPos[1];
+		for (Tile impassableTile: getWorld().getImpassableTiles()){
+			if (this.isOverlappingWith(impassableTile)){
+				if (isColliding(Direction.DOWN, impassableTile)){
+					//System.out.println("Colliding down");
+					if (isMoving(Direction.DOWN))
+						newYPos = impassableTile.getYPosition()+getWorld().getTileSize()-1;
+					endMovement(Direction.DOWN);
+				}
+				else if(isColliding(Direction.UP, impassableTile)){
+					if (isMoving(Direction.UP))
+						newYPos = impassableTile.getYPosition()-getHeight()+1;
+					endMovement(Direction.UP);
+					//System.out.println("Colliding up");
+				}
+				if(isColliding(Direction.LEFT, impassableTile)){
+					if (isMoving(Direction.LEFT))
+						newXPos = impassableTile.getXPosition()+getWorld().getTileSize()-1;
+					endMovement(Direction.LEFT);
+					//System.out.println("Colliding left");
+				}
+				else if(isColliding(Direction.RIGHT, impassableTile)){
+					if (isMoving(Direction.RIGHT))
+						newXPos = impassableTile.getXPosition()-getWidth()+1;
+					endMovement(Direction.RIGHT);
+					//System.out.println("Colliding right");
+				}
+			}
+		}
+		return doubleArray(newXPos,newYPos);
+	}
+	
+	protected double[] updatePositionObjectCollision(double[] newPos){
+		assert newPos.length == 2;
+		double newXPos = newPos[0];
+		double newYPos = newPos[1];
+		for (Character object: getWorld().getAllCharacters()){
+			if ((object != this) && this.isOverlappingWith(object)){
+				if (isColliding(Direction.DOWN, object)){
+					//System.out.print("Colliding down with object");
+					//System.out.print(object.toString());
+					if (isMoving(Direction.DOWN))
+						newYPos = object.getPosition().getYPosition()+object.getHeight()-1;
+					endMovement(Direction.DOWN);
+				}
+				else if(isColliding(Direction.UP, object)){
+					if (isMoving(Direction.UP))
+						newYPos = object.getPosition().getYPosition()-getHeight()+1;
+					endMovement(Direction.UP);
+					//System.out.println("Colliding up");
+				}
+				if(isColliding(Direction.LEFT, object)){
+					if (isMoving(Direction.LEFT))
+						newXPos = object.getPosition().getXPosition()+object.getWidth()-1;
+					endMovement(Direction.LEFT);
+					//System.out.println("Colliding left");
+				}
+				else if(isColliding(Direction.RIGHT, object)){
+					if (isMoving(Direction.RIGHT))
+						newXPos = object.getPosition().getXPosition()-getWidth()+1;
+					endMovement(Direction.RIGHT);
+					//System.out.println("Colliding right");
+				}
+			}
+		}
+		
+		return doubleArray(newXPos,newYPos);
 	}
 	
 	/**
@@ -381,6 +453,12 @@ public abstract class Character extends GameObject{
 		}
 	}
 	
+	@Override
+	public boolean isMoving(Direction direction){
+		assert (direction != Direction.NULL);
+		return (getHorDirection() == direction || getVertDirection() == direction);
+	}
+
 	
 	/**
 	 * Return the stored period of elapsed time .

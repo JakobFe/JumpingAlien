@@ -15,6 +15,7 @@ import jumpingalien.model.other.Position;
 import jumpingalien.model.worldfeatures.Terrain;
 import jumpingalien.model.worldfeatures.Tile;
 import jumpingalien.model.worldfeatures.World;
+import static jumpingalien.tests.util.TestUtils.doubleArray;
 
 /**
  * A class that implements the player character with the ability to jump, duck and
@@ -134,7 +135,25 @@ public class Mazub extends Character{
 		}
 		super.updateHitPoints();
 	}
+	
+	public boolean isImmune() {
+		return (getImmuneTimer() < 0.6);
+	}
 
+	public double getImmuneTimer() {
+		return immuneTimer;
+	}
+
+	public void setImmuneTimer(double immuneTimer) {
+		this.immuneTimer = immuneTimer;
+	}
+	
+	public void counterImmune(double timeDuration){
+		setImmuneTimer(getImmuneTimer()+timeDuration);
+	}
+
+	private double immuneTimer = 0.6;
+	
 	/**
 	 * Check whether the given world is a valid world for this Mazub.
 	 * 
@@ -234,7 +253,11 @@ public class Mazub extends Character{
 	 * This variable will always have 8 m/s as its value.
 	 */
 	private static final double INIT_VERT_VELOCITY = 8;
-
+	
+	@Override
+	protected boolean isValidVertAcceleration(double vertAcceleration){
+		return (vertAcceleration == 0 || vertAcceleration == getMaxVertAcceleration());
+	}
 
 	/**
 	 * Method to start the movement of the Mazub to the given direction.
@@ -453,6 +476,8 @@ public class Mazub extends Character{
 		updateLastDirection();
 		counter(timeDuration);
 		updateHitPoints();
+		System.out.println(getImmuneTimer());
+		counterImmune(timeDuration);
 		if (isOverlappingWith(Terrain.WATER) || isOverlappingWith(Terrain.MAGMA))
 			counterHp(timeDuration);
 		else
@@ -475,40 +500,44 @@ public class Mazub extends Character{
 		if (newYPos<0)
 			newYPos = 0;
 		boolean enableFall = true;
-		for (Tile impassableTile: getWorld().getImpassableTiles()){
-			if (this.isOverlappingWith(impassableTile)){
-				if (isColliding(Direction.DOWN, impassableTile)){
-					//System.out.println("Colliding down");
-					if (isMoving(Direction.DOWN))
-						newYPos = impassableTile.getYPosition()+getWorld().getTileSize()-1;
-					endMovement(Direction.DOWN);
-					enableFall = false;
-				}
-				else if(isColliding(Direction.UP, impassableTile)){
-					if (isMoving(Direction.UP))
-						newYPos = impassableTile.getYPosition()-getHeight()+1;
-					endMovement(Direction.UP);
-					//System.out.println("Colliding up");
-				}
-				if(isColliding(Direction.LEFT, impassableTile)){
-					if (isMoving(Direction.LEFT))
-						newXPos = impassableTile.getXPosition()+getWorld().getTileSize()-1;
-					endMovement(Direction.LEFT);
-					//System.out.println("Colliding left");
-				}
-				else if(isColliding(Direction.RIGHT, impassableTile)){
-					if (isMoving(Direction.RIGHT))
-						newXPos = impassableTile.getXPosition()-getWidth()+1;
-					endMovement(Direction.RIGHT);
-					//System.out.println("Colliding right");
-				}
-			}
-		}
+		double[] newPos = updatePositionTileCollision(doubleArray(newXPos,newYPos));
+		updatePositionObjectCollision(newPos);
+		newXPos = newPos[0];
+		newYPos = newPos[1];
+		
+		if(standsOnTile() || standsOnObject())
+			enableFall = false;
+		
 		if (enableFall && !isMoving(Direction.UP)){
 			startFall();
 		}
 		getPosition().terminate();
 		setPosition(new Position(newXPos,newYPos,getWorld()));
+	}
+	
+	private boolean standsOnTile(){
+		for (Tile impassableTile: getWorld().getImpassableTiles()){
+			if (this.isOverlappingWith(impassableTile)){
+				if (isColliding(Direction.DOWN, impassableTile))
+					return true;
+			}
+		}
+		return false;
+	}
+	
+	private boolean standsOnObject(){
+		for (Character character: getWorld().getAllCharacters()){
+			if ((character != this) && this.isOverlappingWith(character)){
+				if (isColliding(Direction.DOWN, character))
+					return true;
+			}
+		}
+		return false;
+	}
+	
+	public boolean standsOn(Character character){
+		return ((character != this) && this.isOverlappingWith(character)
+				&& isColliding(Direction.DOWN, character));
 	}
 	
 	/**
