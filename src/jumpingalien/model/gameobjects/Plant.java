@@ -148,6 +148,7 @@ public class Plant extends GameObject {
 	 * A method to update the sprite index of this plant.
 	 */
 	// moet volgens mij NIET geimpl worden
+	// nee want in tegenstelling tot wat in de opgave staat, heeft een plant blijkbaar maar 1 sprite.
 	@Override
 	public void updateSpriteIndex() {
 		setIndex((getIndex()+1)%2);
