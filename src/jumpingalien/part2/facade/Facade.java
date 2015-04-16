@@ -208,8 +208,7 @@ public class Facade implements IFacadePart2 {
 
 	@Override
 	public boolean isImmune(Mazub alien) {
-		// TODO Auto-generated method stub
-		return false;
+		return alien.isImmune();
 	}
 
 	@Override
@@ -240,65 +239,73 @@ public class Facade implements IFacadePart2 {
 
 	@Override
 	public Shark createShark(int x, int y, Sprite[] sprites) {
-		return new Shark(x,y,sprites);
+		//return new Shark(x,y,sprites);
+		return null;
 	}
 
 	@Override
 	public void addShark(World world, Shark shark) {
-		world.addAsShark(shark);
+		//world.addAsShark(shark);
 	}
 
 	@Override
 	public Collection<Shark> getSharks(World world) {
-		return world.getAllSharks();
+		//return world.getAllSharks();
+		return null;
 	}
 
 	@Override
 	public int[] getLocation(Shark shark) {
-		return intArray(shark.getPosition().getDisplayedXPosition(),
-				shark.getPosition().getDisplayedYPosition());
+		//return intArray(shark.getPosition().getDisplayedXPosition(),
+		//		shark.getPosition().getDisplayedYPosition());
+		return null;
 	}
 
 	@Override
 	public Sprite getCurrentSprite(Shark shark) {
-		return shark.getCurrentSprite();
+		//return shark.getCurrentSprite();
+		return null;
 	}
 
 	@Override
 	public School createSchool() {
-		// TODO Auto-generated method stub
+		//return new School();
 		return null;
 	}
 
 	@Override
 	public Slime createSlime(int x, int y, Sprite[] sprites, School school) {
-		return new Slime(x,y,sprites,school);
+		//return new Slime(x,y,sprites,school);
+		return null;
 	}
 
 	@Override
 	public void addSlime(World world, Slime slime) {
-		world.addAsSlime(slime);
+		//world.addAsSlime(slime);
 	}
 
 	@Override
 	public Collection<Slime> getSlimes(World world) {
-		return world.getAllSlimes();
+		//return world.getAllSlimes();
+		return null;
 	}
 
 	@Override
 	public int[] getLocation(Slime slime) {
-		return intArray(slime.getPosition().getDisplayedXPosition(),
-				slime.getPosition().getDisplayedYPosition());
+		//return intArray(slime.getPosition().getDisplayedXPosition(),
+		//		slime.getPosition().getDisplayedYPosition());
+		return null;
 	}
 
 	@Override
 	public Sprite getCurrentSprite(Slime slime) {
-		return slime.getCurrentSprite();
+		//return slime.getCurrentSprite();
+		return null;
 	}
 
 	@Override
 	public School getSchool(Slime slime) {
-		// TODO Auto-generated method stub
+		//return slime.getSchool();
 		return null;
 	}
 
