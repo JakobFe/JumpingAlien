@@ -111,8 +111,6 @@ public class Facade implements IFacadePart2 {
 	public void endDuck(Mazub alien) {
 		alien.endDuck();
 	}
-
-
 	
 	@Override
 	public int getNbHitPoints(Mazub alien) {
@@ -213,12 +211,16 @@ public class Facade implements IFacadePart2 {
 
 	@Override
 	public Plant createPlant(int x, int y, Sprite[] sprites) {
-		return new Plant(x,y,sprites);
+		if(enablePlants)
+			return new Plant(x,y,sprites);
+		else
+			return null;
 	}
 
 	@Override
 	public void addPlant(World world, Plant plant) {
-		world.addAsPlant(plant);
+		if(enablePlants)
+			world.addAsPlant(plant);
 	}
 
 	@Override
@@ -239,74 +241,84 @@ public class Facade implements IFacadePart2 {
 
 	@Override
 	public Shark createShark(int x, int y, Sprite[] sprites) {
-		//return new Shark(x,y,sprites);
-		return null;
+		if(enableSharks)
+			return new Shark(x,y,sprites);
+		else
+			return null;
 	}
 
 	@Override
 	public void addShark(World world, Shark shark) {
-		//world.addAsShark(shark);
+		if(enableSharks)
+			world.addAsShark(shark);
 	}
 
 	@Override
 	public Collection<Shark> getSharks(World world) {
-		//return world.getAllSharks();
-		return null;
+		return world.getAllSharks();
 	}
 
 	@Override
 	public int[] getLocation(Shark shark) {
-		//return intArray(shark.getPosition().getDisplayedXPosition(),
-		//		shark.getPosition().getDisplayedYPosition());
-		return null;
+		return intArray(shark.getPosition().getDisplayedXPosition(),
+				shark.getPosition().getDisplayedYPosition());
 	}
 
 	@Override
 	public Sprite getCurrentSprite(Shark shark) {
-		//return shark.getCurrentSprite();
-		return null;
+		return shark.getCurrentSprite();
 	}
 
 	@Override
 	public School createSchool() {
-		//return new School();
-		return null;
+		return new School();
+		//return null;
 	}
 
 	@Override
 	public Slime createSlime(int x, int y, Sprite[] sprites, School school) {
-		//return new Slime(x,y,sprites,school);
-		return null;
+		if(enableSlimes)	
+			return new Slime(x,y,sprites,school);
+		else
+			return null;
 	}
 
 	@Override
 	public void addSlime(World world, Slime slime) {
-		//world.addAsSlime(slime);
+		if(enableSlimes)
+			world.addAsSlime(slime);
 	}
 
 	@Override
 	public Collection<Slime> getSlimes(World world) {
-		//return world.getAllSlimes();
-		return null;
+		return world.getAllSlimes();
 	}
 
 	@Override
 	public int[] getLocation(Slime slime) {
-		//return intArray(slime.getPosition().getDisplayedXPosition(),
-		//		slime.getPosition().getDisplayedYPosition());
-		return null;
+		return intArray(slime.getPosition().getDisplayedXPosition(),
+				slime.getPosition().getDisplayedYPosition());
 	}
 
 	@Override
 	public Sprite getCurrentSprite(Slime slime) {
-		//return slime.getCurrentSprite();
-		return null;
+		return slime.getCurrentSprite();
 	}
 
 	@Override
 	public School getSchool(Slime slime) {
-		//return slime.getSchool();
-		return null;
+		return slime.getSchool();
 	}
-
+	
+	/**
+	 * Added constants to easily turn off plants, sharks and slimes.
+	 */
+	private static final boolean enablePlants = false;
+	private static final boolean enableSharks = false;
+	private static final boolean enableSlimes = false;
+	
+	//private static final boolean enablePlants = true;
+	//private static final boolean enableSharks = true;
+	//private static final boolean enableSlimes = true;
+	
 }
