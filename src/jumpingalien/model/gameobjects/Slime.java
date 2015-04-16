@@ -71,5 +71,11 @@ public class Slime extends Character{
 
 	@Override
 	public void updateSpriteIndex() {}
+
+	@Override
+	protected boolean isValidVertAcceleration(double vertAcceleration) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 	
 }
