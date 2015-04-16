@@ -309,6 +309,16 @@ public class World {
 		return allSharks;
 	}
 	
+	public HashSet<Shark> getAllUnterminatedSharks(){
+		HashSet<Shark> result = new HashSet<Shark>();
+		for(Shark shark: getAllSharks()){
+			if(!shark.isTerminated())
+				result.add(shark);
+		}	
+		return result;	
+	}
+	
+	
 	public boolean hasAsShark(Shark shark){
 		return allSharks.contains(shark);
 	}
@@ -372,7 +382,7 @@ public class World {
 			if(!plant.isTerminated())
 				plant.advanceTime(timeDuration);
 		}
-		for(Shark shark: getAllSharks()){
+		for(Shark shark: getAllUnterminatedSharks()){
 			if(!shark.isTerminated())
 				shark.advanceTime(timeDuration);
 		}
