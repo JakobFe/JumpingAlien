@@ -4,6 +4,7 @@ import jumpingalien.model.exceptions.*;
 import jumpingalien.model.other.*;
 import jumpingalien.model.worldfeatures.*;
 import jumpingalien.util.Sprite;
+
 import java.util.Random;
 
 /**
@@ -156,5 +157,12 @@ public class Plant extends GameObject {
 		super.terminate();
 		getWorld().removeAsPlant(this);
 		setWorld(null);
+	}
+	
+	@Override
+	public String toString(){
+		return "Plant at " + getPosition().getDisplayedXPosition() + "," +
+							 getPosition().getDisplayedYPosition() + " with" +
+							 getHitPoints() + "hit points.";
 	}
 }

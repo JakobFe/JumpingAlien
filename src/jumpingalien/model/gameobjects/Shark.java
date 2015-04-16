@@ -75,11 +75,11 @@ public class Shark extends Character {
 		return INIT_VERT_VELOCITY;
 	}
 	
-	private static final double INIT_VERT_VELOCITY = 5;
+	private static final double INIT_VERT_VELOCITY = 2;
 	
 	@Override
 	protected boolean isValidWorld(World world) {
-		return world.hasAsShark(this);
+		return world == null || world.hasAsShark(this);
 	}
 	
 	public double getPeriodDuration() {
@@ -209,11 +209,7 @@ public class Shark extends Character {
 			endMove();
 			setPeriodDuration(0);
 		}
-		double tdHor = 0.01/(Math.abs(getHorVelocity())
-				+Math.abs(getHorAcceleration())*timeDuration);
-		double tdVert = 0.01/(Math.abs(getVertVelocity())
-				+Math.abs(getVertAcceleration())*timeDuration);
-		double td = Math.min(tdHor, tdVert);
+		double td = getTimeToMoveOnePixel(timeDuration);
 		if (td > timeDuration)
 			td = timeDuration;
 		for (int index = 0; index < timeDuration/td; index++){
@@ -224,10 +220,9 @@ public class Shark extends Character {
 			} catch (NullPointerException e) {
 			}
 		}
+		counterHp(timeDuration);
 		updateHitPoints();
-		counter(timeDuration);
-		
-		
+		counter(timeDuration);		
 	}	
 	
 	@Override
@@ -287,9 +282,19 @@ public class Shark extends Character {
 			setHitPoints(getHitPoints()-50);
 			if (!alien.isImmune() && !alien.standsOn(this)){
 				alien.setImmuneTimer(0);
-				//alien.setHitPoints(getHitPoints()-50);
+				alien.setHitPoints(alien.getHitPoints()-50);
+				assert alien.isImmune();
 			}
-		}	
+		}
+		if (isOverlappingWith(Terrain.AIR)){
+			if(getTimeSumHp() >= 0.2){
+				setHitPoints(getHitPoints()-2);
+				setTimeSumHp(getTimeSumHp()-0.2);
+			}
+		}
+		else
+			setTimeSumHp(0);
+		super.updateHitPoints();		
 	}
 
 	@Override
@@ -298,6 +303,21 @@ public class Shark extends Character {
 			setIndex(0);
 		else
 			setIndex(1);
+	}
+	
+	@Override
+	public String toString(){
+		return "Shark at " + getPosition().getDisplayedXPosition() + "," +
+							 getPosition().getDisplayedYPosition() + " with" +
+							 getHitPoints() + "hit points.";
+	}
+	
+	@Override
+	protected void terminate(){
+		assert getHitPoints() == 0;
+		//super.terminate();
+		//getWorld().removeAsShark(this);
+		//setWorld(null);
 	}
 	
 }

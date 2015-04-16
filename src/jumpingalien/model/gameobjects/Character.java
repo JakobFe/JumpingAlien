@@ -294,6 +294,14 @@ public abstract class Character extends GameObject{
 	 */
 	private static final double MAX_VERT_ACCELERATION = -10;
 	
+	protected double getTimeToMoveOnePixel(double timeDuration){
+		double tdHor = 0.01/(Math.abs(getHorVelocity())
+				+Math.abs(getHorAcceleration())*timeDuration);
+		double tdVert = 0.01/(Math.abs(getVertVelocity())
+				+Math.abs(getVertAcceleration())*timeDuration);
+		return Math.min(tdHor, tdVert);
+	}
+	
 	/**
 	 * A method to start falling, this means start moving down.
 	 * 
@@ -376,25 +384,33 @@ public abstract class Character extends GameObject{
 				if (isColliding(Direction.DOWN, object)){
 					//System.out.print("Colliding down with object");
 					//System.out.print(object.toString());
-					if (isMoving(Direction.DOWN))
+					if (isMoving(Direction.DOWN)){
 						newYPos = object.getPosition().getYPosition()+object.getHeight()-1;
+						//newYPos = object.getPosition().getYPosition();
+					}
 					endMovement(Direction.DOWN);
 				}
 				else if(isColliding(Direction.UP, object)){
-					if (isMoving(Direction.UP))
+					if (isMoving(Direction.UP)){
 						newYPos = object.getPosition().getYPosition()-getHeight()+1;
+						//newYPos = object.getPosition().getYPosition();
+					}
 					endMovement(Direction.UP);
 					//System.out.println("Colliding up");
 				}
 				if(isColliding(Direction.LEFT, object)){
-					if (isMoving(Direction.LEFT))
+					if (isMoving(Direction.LEFT)){
 						newXPos = object.getPosition().getXPosition()+object.getWidth()-1;
+						//newXPos = object.getPosition().getXPosition();
+					}
 					endMovement(Direction.LEFT);
 					//System.out.println("Colliding left");
 				}
 				else if(isColliding(Direction.RIGHT, object)){
-					if (isMoving(Direction.RIGHT))
+					if (isMoving(Direction.RIGHT)){
 						newXPos = object.getPosition().getXPosition()-getWidth()+1;
+						//newXPos = object.getPosition().getXPosition();
+					}
 					endMovement(Direction.RIGHT);
 					//System.out.println("Colliding right");
 				}

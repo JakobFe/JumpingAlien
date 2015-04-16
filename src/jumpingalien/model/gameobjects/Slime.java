@@ -127,11 +127,7 @@ public class Slime extends Character{
 			endMove();
 			setPeriodDuration(0);
 		}
-		double tdHor = 0.01/(Math.abs(getHorVelocity())
-				+Math.abs(getHorAcceleration())*timeDuration);
-		double tdVert = 0.01/(Math.abs(getVertVelocity())
-				+Math.abs(getVertAcceleration())*timeDuration);
-		double td = Math.min(tdHor, tdVert);
+		double td = getTimeToMoveOnePixel(timeDuration);
 		if (td > timeDuration)
 			td = timeDuration;
 		for (int index = 0; index < timeDuration/td; index++){
@@ -182,6 +178,13 @@ public class Slime extends Character{
 			setIndex(0);
 		else
 			setIndex(1);
+	}
+	
+	@Override
+	public String toString(){
+		return "Slime at " + getPosition().getDisplayedXPosition() + "," +
+							 getPosition().getDisplayedYPosition() + " with" +
+							 getHitPoints() + "hit points.";
 	}
 	
 }

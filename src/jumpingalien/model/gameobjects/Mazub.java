@@ -119,6 +119,8 @@ public class Mazub extends Character{
 	
 	@Override
 	protected void updateHitPoints(){
+		if (!isOverlappingWith(Terrain.WATER) && !isOverlappingWith(Terrain.MAGMA))
+			setTimeSumHp(0);
 		if (isOverlappingWith(Terrain.WATER)){
 			if (getTimeSumHp() > 0.2){
 				setHitPoints(getHitPoints()-2);
@@ -465,11 +467,7 @@ public class Mazub extends Character{
 			throw new IllegalTimeIntervalException(this);
 		if (isEnableStandUp())
 			endDuck();
-		double tdHor = 0.01/(Math.abs(getHorVelocity())
-				+Math.abs(getHorAcceleration())*timeDuration);
-		double tdVert = 0.01/(Math.abs(getVertVelocity())
-				+Math.abs(getVertAcceleration())*timeDuration);
-		double td = Math.min(tdHor, tdVert);
+		double td = getTimeToMoveOnePixel(timeDuration);
 		if (td > timeDuration)
 			td = timeDuration;
 		for (int index = 0; index < timeDuration/td; index++){
