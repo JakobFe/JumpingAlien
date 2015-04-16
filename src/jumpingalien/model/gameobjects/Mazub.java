@@ -465,18 +465,30 @@ public class Mazub extends Character{
 			throw new IllegalTimeIntervalException(this);
 		if (isEnableStandUp())
 			endDuck();
-		try {
-			updatePosition(timeDuration);
-		} catch (IllegalXPositionException | IllegalYPositionException e) {
-			setHitPoints(0);
-			terminate();
+		double tdHor = 0.01/(Math.abs(getHorVelocity())
+				+Math.abs(getHorAcceleration())*timeDuration);
+		double tdVert = 0.01/(Math.abs(getVertVelocity())
+				+Math.abs(getVertAcceleration())*timeDuration);
+		double td = Math.min(tdHor, tdVert);
+		if (td > timeDuration)
+			td = timeDuration;
+		for (int index = 0; index < timeDuration/td; index++){
+			try {
+				updatePosition(td);
+			} catch (IllegalXPositionException | IllegalYPositionException e) {
+				setHitPoints(0);
+				terminate();
+			}
+			try {
+				updateHorVelocity(td);
+				updateVertVelocity(td);
+			} catch (NullPointerException e) {
+			}
 		}
-		updateHorVelocity(timeDuration);
-		updateVertVelocity(timeDuration);
 		updateLastDirection();
 		counter(timeDuration);
 		updateHitPoints();
-		System.out.println(getImmuneTimer());
+		//System.out.println(getImmuneTimer());
 		counterImmune(timeDuration);
 		if (isOverlappingWith(Terrain.WATER) || isOverlappingWith(Terrain.MAGMA))
 			counterHp(timeDuration);
@@ -513,31 +525,6 @@ public class Mazub extends Character{
 		}
 		getPosition().terminate();
 		setPosition(new Position(newXPos,newYPos,getWorld()));
-	}
-	
-	private boolean standsOnTile(){
-		for (Tile impassableTile: getWorld().getImpassableTiles()){
-			if (this.isOverlappingWith(impassableTile)){
-				if (isColliding(Direction.DOWN, impassableTile))
-					return true;
-			}
-		}
-		return false;
-	}
-	
-	private boolean standsOnObject(){
-		for (Character character: getWorld().getAllCharacters()){
-			if ((character != this) && this.isOverlappingWith(character)){
-				if (isColliding(Direction.DOWN, character))
-					return true;
-			}
-		}
-		return false;
-	}
-	
-	public boolean standsOn(Character character){
-		return ((character != this) && this.isOverlappingWith(character)
-				&& isColliding(Direction.DOWN, character));
 	}
 	
 	/**

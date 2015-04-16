@@ -365,22 +365,8 @@ public class World {
 	public void advanceTime(double timeDuration) throws
 	IllegalXPositionException,IllegalYPositionException{
 		if (getMazub() != null){
-			double tdHor = 0.01/(Math.abs(getMazub().getHorVelocity())
-					+Math.abs(getMazub().getHorAcceleration())*timeDuration);
-			double tdVert = 0.01/(Math.abs(getMazub().getVertVelocity())
-					+Math.abs(getMazub().getVertAcceleration())*timeDuration);
-			double td = Math.min(tdHor, tdVert);
-			if (td > timeDuration)
-				td = timeDuration;
-			for (int index = 0; index < timeDuration/td; index++){
-				try {
-					getMazub().advanceTime(td);
-				} catch (NullPointerException e) {
-					System.out.println("null pointer advance time world");
-				}
-			}
-			if (getMazub() != null)
-				updateWindowPos();
+			getMazub().advanceTime(timeDuration);
+			updateWindowPos();
 		}
 		for(Plant plant: getAllUnterminatedPlants()){
 			if(!plant.isTerminated())
@@ -390,13 +376,21 @@ public class World {
 			if(!shark.isTerminated())
 				shark.advanceTime(timeDuration);
 		}
+		for(Slime slime: allSlimes){
+			if(!slime.isTerminated())
+				slime.advanceTime(timeDuration);
+		}
+		
+		
 	}
 	
 	private void updateWindowPos(){
-		setWindowXPos(getMazub().getPosition().getDisplayedXPosition()-
-					  (getVisibleWindowWidth()-getMazub().getWidth())/2);
-		setWindowYPos(getMazub().getPosition().getDisplayedYPosition()-
-					  (getVisibleWindowHeight()-getMazub().getHeight())/2);
+		if(getMazub() != null){
+			setWindowXPos(getMazub().getPosition().getDisplayedXPosition()-
+						  (getVisibleWindowWidth()-getMazub().getWidth())/2);
+			setWindowYPos(getMazub().getPosition().getDisplayedYPosition()-
+						  (getVisibleWindowHeight()-getMazub().getHeight())/2);
+		}
 	}
 	
 	@Override

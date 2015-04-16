@@ -42,7 +42,8 @@ public abstract class Character extends GameObject{
 	 * 			| super(x,y,initHorVelocity,maxHorVelocity,sprites,hitPoints)
 	 */
 	@Raw
-	protected Character(int x, int y, double initHorVelocity, double maxHorVelocity, Sprite[] sprites, int hitPoints) 
+	protected Character(int x, int y, double initHorVelocity, 
+			double maxHorVelocity, Sprite[] sprites, int hitPoints) 
 			throws IllegalXPositionException,IllegalYPositionException{
 		super(x,y,initHorVelocity,maxHorVelocity,sprites,hitPoints);
 	}
@@ -304,6 +305,31 @@ public abstract class Character extends GameObject{
 	protected void startFall(){
 		setVertDirection(Direction.DOWN);
 		setVertAcceleration(getMaxVertAcceleration());
+	}
+	
+	protected boolean standsOnTile(){
+		for (Tile impassableTile: getWorld().getImpassableTiles()){
+			if (this.isOverlappingWith(impassableTile)){
+				if (isColliding(Direction.DOWN, impassableTile))
+					return true;
+			}
+		}
+		return false;
+	}
+	
+	protected boolean standsOnObject(){
+		for (Character character: getWorld().getAllCharacters()){
+			if ((character != this) && this.isOverlappingWith(character)){
+				if (isColliding(Direction.DOWN, character))
+					return true;
+			}
+		}
+		return false;
+	}
+	
+	protected boolean standsOn(Character character){
+		return ((character != this) && this.isOverlappingWith(character)
+				&& isColliding(Direction.DOWN, character));
 	}
 	
 	protected double[] updatePositionTileCollision(double[] newPos){
