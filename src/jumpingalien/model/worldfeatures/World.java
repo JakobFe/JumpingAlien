@@ -64,7 +64,6 @@ public class World {
 					worldTiles[row][col] = new Tile(this, col*tileSize, row*tileSize,false);
 			}
 		}
-		
 	}
 	
 	/**

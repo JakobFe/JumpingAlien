@@ -121,7 +121,8 @@ public class Shark extends Character {
 	private int periodCounter;
 	
 	public boolean canJump(){
-		return (getPeriodCounter() >= MIN_NON_JUMPING_PERIOD);
+		return ((getPeriodCounter() >= MIN_NON_JUMPING_PERIOD)
+				&& (standsOnTile() || isSubmergedIn(Terrain.WATER)));
 	}
 	
 	private static final int MIN_NON_JUMPING_PERIOD = 4;
@@ -144,14 +145,16 @@ public class Shark extends Character {
 	}
 
 	private void riseOrDive() {
-		setRandomVertAcceleration();
-		if(getVertAcceleration()<0){
-			setVertDirection(Direction.DOWN);
-			setDiving(true);
-		}
-		else{
-			setVertDirection(Direction.UP);
-			setRising(true);
+		if(isSubmergedIn(Terrain.WATER)){
+			setRandomVertAcceleration();
+			if(getVertAcceleration()<0){
+				setVertDirection(Direction.DOWN);
+				setDiving(true);
+			}
+			else{
+				setVertDirection(Direction.UP);
+				setRising(true);
+			}
 		}
 	}
 
@@ -221,7 +224,7 @@ public class Shark extends Character {
 			}
 		}
 		counterHp(timeDuration);
-		//updateHitPoints();
+		updateHitPoints();
 		counter(timeDuration);		
 	}	
 	
@@ -234,10 +237,15 @@ public class Shark extends Character {
 				0.5*getVertAcceleration()*Math.pow(timeDuration, 2))*100;
 		if (newYPos<0)
 			newYPos = 0;
+		boolean enableFall = true;
 		double[] newPos = updatePositionTileCollision(doubleArray(newXPos,newYPos));
 		newPos = updatePositionObjectCollision(newPos);
 		newXPos = newPos[0];
 		newYPos = newPos[1];
+		if(standsOnTile() || standsOnObject() || isSubmergedIn(Terrain.WATER))
+			enableFall = false;
+		if (enableFall && !isMoving(Direction.UP))
+			startFall();
 		getPosition().terminate();
 		setPosition(new Position(newXPos,newYPos,getWorld()));
 	}
@@ -278,23 +286,39 @@ public class Shark extends Character {
 	@Override
 	protected void updateHitPoints(){
 		Mazub alien = getWorld().getMazub();
-		if (isOverlappingWith(alien) && !alien.isImmune()){
+		boolean isHurt = false;
+		if (getHitPoints() != 0 && !isOverlappingWith(Terrain.AIR) && !isOverlappingWith(Terrain.MAGMA))
+			setTimeSumHp(0);
+		if (isOverlappingWith(alien) && !alien.isImmune() && getHitPoints() != 0){
 			setHitPoints(getHitPoints()-50);
+			isHurt = true;
 			if (!alien.standsOn(this)){
 				alien.setImmuneTimer(0);
 				alien.setHitPoints(alien.getHitPoints()-50);
 				assert alien.isImmune();
 			}
 		}
-		if (isOverlappingWith(Terrain.AIR)){
+		if (getHitPoints() != 0 && isOverlappingWith(Terrain.AIR)){
 			if(getTimeSumHp() >= 0.2){
 				setHitPoints(getHitPoints()-2);
+				isHurt = true;
 				setTimeSumHp(getTimeSumHp()-0.2);
 			}
 		}
-		else
+		if (getHitPoints() != 0 && isOverlappingWith(Terrain.MAGMA)){
+			if (getTimeSumHp() == 0)
+				setHitPoints(getHitPoints()-50);
+			else if (getTimeSumHp() > 0.2){
+				setHitPoints(getHitPoints()-50);
+				isHurt = true;
+				setTimeSumHp(getTimeSumHp()-0.2);
+			}
+		}
+		if (isHurt && getHitPoints() == 0){
 			setTimeSumHp(0);
-		super.updateHitPoints();		
+		}
+		else if (getHitPoints() == 0 && getTimeSumHp()>= 0.6)
+			terminate();
 	}
 
 	@Override
@@ -315,9 +339,11 @@ public class Shark extends Character {
 	@Override
 	protected void terminate(){
 		assert getHitPoints() == 0;
-		//super.terminate();
-		//getWorld().removeAsShark(this);
-		//setWorld(null);
+		assert getTimeSumHp() >= 0.6;
+		super.terminate();
+		getWorld().removeAsShark(this);
+		getWorld().getAllCharacters().remove(this);
+		setWorld(null);
 	}
 	
 }
