@@ -420,6 +420,7 @@ public abstract class Character extends GameObject{
 		return doubleArray(newXPos,newYPos);
 	}
 	
+
 	/**
 	 * A method to update the vertical velocity over a given time interval.
 	 * 

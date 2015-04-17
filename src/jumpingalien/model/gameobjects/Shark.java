@@ -221,7 +221,7 @@ public class Shark extends Character {
 			}
 		}
 		counterHp(timeDuration);
-		updateHitPoints();
+		//updateHitPoints();
 		counter(timeDuration);		
 	}	
 	
@@ -278,9 +278,9 @@ public class Shark extends Character {
 	@Override
 	protected void updateHitPoints(){
 		Mazub alien = getWorld().getMazub();
-		if (isOverlappingWith(alien)){
+		if (isOverlappingWith(alien) && !alien.isImmune()){
 			setHitPoints(getHitPoints()-50);
-			if (!alien.isImmune() && !alien.standsOn(this)){
+			if (!alien.standsOn(this)){
 				alien.setImmuneTimer(0);
 				alien.setHitPoints(alien.getHitPoints()-50);
 				assert alien.isImmune();

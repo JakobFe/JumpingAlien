@@ -653,8 +653,8 @@ public abstract class GameObject {
 		if (getWorld() == null)
 			return false;
 		HashSet<Tile> affectedTiles = getWorld().getTilesIn(getPosition().getDisplayedXPosition(),
-				getPosition().getDisplayedYPosition(), getPosition().getDisplayedXPosition()+getWidth(),
-				getPosition().getDisplayedYPosition()+getHeight());
+				getPosition().getDisplayedYPosition(), getPosition().getDisplayedXPosition()+getWidth()-1,
+				getPosition().getDisplayedYPosition()+getHeight()-1);
 		for (Tile tile: affectedTiles){
 			if (tile.getGeoFeature() == terrain)
 				return true;

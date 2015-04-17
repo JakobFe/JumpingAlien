@@ -485,7 +485,7 @@ public class Mazub extends Character{
 		}
 		updateLastDirection();
 		counter(timeDuration);
-		updateHitPoints();
+		//updateHitPoints();
 		//System.out.println(getImmuneTimer());
 		counterImmune(timeDuration);
 		if (isOverlappingWith(Terrain.WATER) || isOverlappingWith(Terrain.MAGMA))

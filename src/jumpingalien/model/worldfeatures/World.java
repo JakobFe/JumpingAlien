@@ -1,10 +1,12 @@
 package jumpingalien.model.worldfeatures;
 
+import java.util.HashMap;
 import java.util.HashSet;
 
 import jumpingalien.model.exceptions.*;
 import jumpingalien.model.gameobjects.*;
 import jumpingalien.model.gameobjects.Character;
+import jumpingalien.model.other.Position;
 import be.kuleuven.cs.som.annotate.*;
 import static jumpingalien.tests.util.TestUtils.intArray;
 
@@ -112,6 +114,12 @@ public class World {
 		return result;
 	}
 
+	public GameObject getFeatureOnPosition(Position position){
+		assert (worldFeatures.containsKey(position));
+		return worldFeatures.get(position);
+	}
+	
+	public HashMap<Position,GameObject> worldFeatures = new HashMap<Position,GameObject>(); 
 	
 	public int getWorldWidth() {
 		return worldWidth;
@@ -237,10 +245,17 @@ public class World {
 	}
 	
 	public void setMazub(Mazub alien){
+		if (getMazub() != null){
+			worldFeatures.remove(getMazub().getPosition());
+			getMazub().setWorld(null);
+			getAllCharacters().remove(getMazub());
+		}
 		this.mazub = alien;
 		getAllCharacters().add(alien);
-		if (alien != null)
+		if (alien != null){
 			getMazub().setWorld(this);
+			worldFeatures.put(alien.getPosition(), alien);
+		}
 	}
 	
 	private Mazub mazub;
@@ -252,7 +267,7 @@ public class World {
 	
 	public HashSet<Plant> getAllUnterminatedPlants(){
 		HashSet<Plant> result = new HashSet<Plant>();
-		for(Plant plant: getAllPlants()){
+		for(Plant plant: allPlants){
 			if(!plant.isTerminated())
 				result.add(plant);
 		}	
@@ -265,12 +280,14 @@ public class World {
 	
 	public void addAsPlant(Plant plant){
 		getAllPlants().add(plant);
+		worldFeatures.put(plant.getPosition(), plant);
 		plant.setWorld(this);
 	}
 	
 	public void removeAsPlant(Plant plant){
 		assert hasAsPlant(plant);
 		allPlants.remove(plant);
+		worldFeatures.remove(plant.getPosition());
 	}
 
 	private final HashSet<Plant> allPlants = new HashSet<Plant>();
@@ -295,12 +312,14 @@ public class World {
 	public void addAsSlime(Slime slime){
 		getAllSlimes().add(slime);
 		getAllCharacters().add(slime);
+		worldFeatures.put(slime.getPosition(), slime);
 		slime.setWorld(this);
 	}
 	
 	public void removeAsSlime(Slime slime){
 		assert hasAsSlime(slime);
 		allSlimes.remove(slime);
+		worldFeatures.remove(slime.getPosition());
 	}
 
 	private final HashSet<Slime> allSlimes = new HashSet<Slime>();
@@ -311,7 +330,7 @@ public class World {
 	
 	public HashSet<Shark> getAllUnterminatedSharks(){
 		HashSet<Shark> result = new HashSet<Shark>();
-		for(Shark shark: getAllSharks()){
+		for(Shark shark: allSharks){
 			if(!shark.isTerminated())
 				result.add(shark);
 		}	
@@ -326,12 +345,14 @@ public class World {
 	public void addAsShark(Shark shark){
 		getAllSharks().add(shark);
 		getAllCharacters().add(shark);
+		worldFeatures.put(shark.getPosition(), shark);
 		shark.setWorld(this);
 	}
 	
 	public void removeAsShark(Shark shark){
 		assert hasAsShark(shark);
 		getAllSharks().remove(shark);
+		worldFeatures.remove(shark.getPosition());
 	}
 	
 	private final HashSet<Shark> allSharks = new HashSet<Shark>();
@@ -390,8 +411,6 @@ public class World {
 			if(!slime.isTerminated())
 				slime.advanceTime(timeDuration);
 		}
-		
-		
 	}
 	
 	private void updateWindowPos(){
