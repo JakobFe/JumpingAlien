@@ -48,12 +48,13 @@ public class School {
 	void removeSlime(Slime slime){
 		assert hasAsSlime(slime);
 		slimes.remove(slime);
+		slime.setSchool(null);
 	}
 	
 	private HashSet<Slime> slimes = new HashSet<Slime>();
 	
 	@Override
 	public String toString(){
-		return " school " + hashCode()%5;
+		return " - " + hashCode()%5;
 	}
 }

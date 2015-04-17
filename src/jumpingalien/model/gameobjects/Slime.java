@@ -97,6 +97,7 @@ public class Slime extends Character{
 	}
 
 	public void setSchool(School school) {
+		assert school == null || school.hasAsSlime(this);
 		this.school = school;
 	}
 
@@ -240,9 +241,9 @@ public class Slime extends Character{
 			for (Slime other: getWorld().getAllUnterminatedSlimes()){
 				if(isOverlappingWith(other)){
 					if(other.getSchool().getNbSlimes() > this.getSchool().getNbSlimes())
-						this.setSchool(other);
+						this.changeSchool(other);
 					else if (other.getSchool().getNbSlimes() < this.getSchool().getNbSlimes())
-						other.setSchool(this);
+						other.changeSchool(this);
 				}
 			}
 		}
@@ -252,11 +253,13 @@ public class Slime extends Character{
 	 * Sets the school of this slime to the school of the other slime and ...
 	 * @param 	other 
 	 */
-	void setSchool(Slime other){
+	void changeSchool(Slime other){
 		getSchool().addHpAll(this);
 		setHitPoints(getHitPoints()-getSchool().getNbSlimes()+1);
 		setHitPoints(getHitPoints()+other.getSchool().getNbSlimes());
-		this.setSchool(other.getSchool());
+		this.getSchool().removeSlime(this);
+		other.getSchool().addSlime(this);
+		//this.setSchool(other.getSchool());
 		other.getSchool().reduceHpAll(this);
 		
 	}
