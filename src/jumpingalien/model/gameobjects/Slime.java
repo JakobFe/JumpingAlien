@@ -179,6 +179,7 @@ public class Slime extends Character{
 	protected void updateHitPoints(){
 		Mazub alien = getWorld().getMazub();
 		boolean isHurt = false;
+		boolean isDamaged = false;
 		if (getHitPoints() != 0 && !isOverlappingWith(Terrain.WATER) && !isOverlappingWith(Terrain.MAGMA))
 			setTimeSumHp(0);
 		
@@ -202,27 +203,29 @@ public class Slime extends Character{
 				}
 			}
 		}
-		
 		if (getHitPoints() != 0 && isOverlappingWith(Terrain.WATER)){
 			if (getTimeSumHp() > 0.2){
+				isDamaged = true;
 				setHitPoints(getHitPoints()-2);
 				setTimeSumHp(getTimeSumHp()-0.2);
 			}
 		}
 		if (getHitPoints() != 0 && isOverlappingWith(Terrain.MAGMA)){
-			if (getTimeSumHp() == 0)
+			if (getTimeSumHp() == 0){
 				setHitPoints(getHitPoints()-50);
+				isDamaged = true;
+			}
 			else if (getTimeSumHp() > 0.2){
 				setHitPoints(getHitPoints()-50);
 				setTimeSumHp(getTimeSumHp()-0.2);
+				isDamaged = true;
 			}
 		}
 		
-		if (isHurt){
+		if(isHurt || isDamaged)
 			updateHpSchool();
-			if(getHitPoints() == 0)
-				setTimeSumHp(0);
-		}
+		if (isHurt && getHitPoints() == 0)
+			setTimeSumHp(0);
 		else if (getHitPoints() == 0 && getTimeSumHp()>= 0.6){
 			terminate();
 		}
@@ -233,12 +236,14 @@ public class Slime extends Character{
 	}
 	
 	void updateSchool(){
-		for (Slime other: getWorld().getAllUnterminatedSlimes()){
-			if(isOverlappingWith(other)){
-				if(other.getSchool().getNbSlimes() > this.getSchool().getNbSlimes())
-					this.setSchool(other);
-				else if (other.getSchool().getNbSlimes() < this.getSchool().getNbSlimes())
-					other.setSchool(this);
+		if (getWorld() != null && getWorld().getAllUnterminatedSlimes()!= null){
+			for (Slime other: getWorld().getAllUnterminatedSlimes()){
+				if(isOverlappingWith(other)){
+					if(other.getSchool().getNbSlimes() > this.getSchool().getNbSlimes())
+						this.setSchool(other);
+					else if (other.getSchool().getNbSlimes() < this.getSchool().getNbSlimes())
+						other.setSchool(this);
+				}
 			}
 		}
 	}
@@ -266,7 +271,7 @@ public class Slime extends Character{
 	
 	@Override
 	public String toString(){
-		return getHitPoints() + "";
+		return getHitPoints() + getSchool().toString();
 		/*return "Slime at " + getPosition().getDisplayedXPosition() + "," +
 							 getPosition().getDisplayedYPosition() + " with" +
 							 getHitPoints() + "hit points.";*/

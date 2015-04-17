@@ -51,4 +51,9 @@ public class School {
 	}
 	
 	private HashSet<Slime> slimes = new HashSet<Slime>();
+	
+	@Override
+	public String toString(){
+		return " school " + hashCode()%5;
+	}
 }
