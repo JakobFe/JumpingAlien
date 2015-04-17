@@ -9,6 +9,7 @@ import jumpingalien.model.exceptions.IllegalXPositionException;
 import jumpingalien.model.exceptions.IllegalYPositionException;
 import jumpingalien.model.other.Direction;
 import jumpingalien.model.other.Position;
+import jumpingalien.model.worldfeatures.Terrain;
 import jumpingalien.model.worldfeatures.World;
 import jumpingalien.util.Sprite;
 import be.kuleuven.cs.som.annotate.Basic;
@@ -62,10 +63,10 @@ public class Slime extends Character{
 	}
 	
 	/**
-	 * Return the horizontal velocity of this slime.
+	 * Return the maximum horizontal velocity of this slime.
 	 */
 	@Override
-	public final double getHorVelocity(){
+	public final double getMaxHorVelocity(){
 		return SLIME_VELOCITY;
 	}
 	
@@ -138,8 +139,10 @@ public class Slime extends Character{
 			} catch (NullPointerException e) {
 			}
 		}
+		counterHp(timeDuration);
 		updateHitPoints();
 		counter(timeDuration);
+		updateSchool();
 	}
 	
 	@Override
@@ -173,6 +176,87 @@ public class Slime extends Character{
 	}
 	
 	@Override
+	protected void updateHitPoints(){
+		Mazub alien = getWorld().getMazub();
+		boolean isHurt = false;
+		if (getHitPoints() != 0 && !isOverlappingWith(Terrain.WATER) && !isOverlappingWith(Terrain.MAGMA))
+			setTimeSumHp(0);
+		
+		if (getHitPoints() != 0 && alien != null && !alien.isImmune() && isOverlappingWith(alien)){
+			setHitPoints(getHitPoints()-50);
+			isHurt = true;
+			System.out.println(alien.standsOn(this));
+			if (!alien.standsOn(this)){
+				alien.setImmuneTimer(0);
+				alien.setHitPoints(alien.getHitPoints()-50);
+				assert alien.isImmune();
+			}
+		}
+		
+		if (getHitPoints() != 0){
+			for (Shark shark: getWorld().getAllUnterminatedSharks()){
+				if(isOverlappingWith(shark)){
+					setHitPoints(getHitPoints()-50);
+					isHurt = true;
+					shark.setHitPoints(shark.getHitPoints()-50);
+				}
+			}
+		}
+		
+		if (getHitPoints() != 0 && isOverlappingWith(Terrain.WATER)){
+			if (getTimeSumHp() > 0.2){
+				setHitPoints(getHitPoints()-2);
+				setTimeSumHp(getTimeSumHp()-0.2);
+			}
+		}
+		if (getHitPoints() != 0 && isOverlappingWith(Terrain.MAGMA)){
+			if (getTimeSumHp() == 0)
+				setHitPoints(getHitPoints()-50);
+			else if (getTimeSumHp() > 0.2){
+				setHitPoints(getHitPoints()-50);
+				setTimeSumHp(getTimeSumHp()-0.2);
+			}
+		}
+		
+		if (isHurt){
+			updateHpSchool();
+			if(getHitPoints() == 0)
+				setTimeSumHp(0);
+		}
+		else if (getHitPoints() == 0 && getTimeSumHp()>= 0.6){
+			terminate();
+		}
+	}
+	
+	void updateHpSchool(){
+		getSchool().reduceHpAll(this);
+	}
+	
+	void updateSchool(){
+		for (Slime other: getWorld().getAllUnterminatedSlimes()){
+			if(isOverlappingWith(other)){
+				if(other.getSchool().getNbSlimes() > this.getSchool().getNbSlimes())
+					this.setSchool(other);
+				else if (other.getSchool().getNbSlimes() < this.getSchool().getNbSlimes())
+					other.setSchool(this);
+			}
+		}
+	}
+	
+	/**
+	 * Sets the school of this slime to the school of the other slime and ...
+	 * @param 	other 
+	 */
+	void setSchool(Slime other){
+		getSchool().addHpAll(this);
+		setHitPoints(getHitPoints()-getSchool().getNbSlimes()+1);
+		setHitPoints(getHitPoints()+other.getSchool().getNbSlimes());
+		this.setSchool(other.getSchool());
+		other.getSchool().reduceHpAll(this);
+		
+	}
+	
+	@Override
 	public void updateSpriteIndex() {
 		if(getHorDirection() == Direction.LEFT)
 			setIndex(0);
@@ -182,9 +266,19 @@ public class Slime extends Character{
 	
 	@Override
 	public String toString(){
-		return "Slime at " + getPosition().getDisplayedXPosition() + "," +
+		return getHitPoints() + "";
+		/*return "Slime at " + getPosition().getDisplayedXPosition() + "," +
 							 getPosition().getDisplayedYPosition() + " with" +
-							 getHitPoints() + "hit points.";
+							 getHitPoints() + "hit points.";*/
 	}
 	
+	@Override
+	protected void terminate(){
+		assert getHitPoints() == 0;
+		assert getTimeSumHp() >= 0.6;
+		super.terminate();
+		getWorld().removeAsSlime(this);
+		getWorld().getAllCharacters().remove(this);
+		setWorld(null);
+	}
 }

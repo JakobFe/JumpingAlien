@@ -5,18 +5,10 @@ import static jumpingalien.tests.util.TestUtils.intArray;
 
 import java.util.Collection;
 
-import jumpingalien.model.exceptions.IllegalJumpInvokeException;
-import jumpingalien.model.exceptions.IllegalTimeIntervalException;
-import jumpingalien.model.exceptions.IllegalXPositionException;
-import jumpingalien.model.exceptions.IllegalYPositionException;
-import jumpingalien.model.gameobjects.Mazub;
-import jumpingalien.model.gameobjects.Plant;
-import jumpingalien.model.gameobjects.School;
-import jumpingalien.model.gameobjects.Shark;
-import jumpingalien.model.gameobjects.Slime;
-import jumpingalien.model.other.Direction;
-import jumpingalien.model.worldfeatures.Terrain;
-import jumpingalien.model.worldfeatures.World;
+import jumpingalien.model.exceptions.*;
+import jumpingalien.model.gameobjects.*;
+import jumpingalien.model.other.*;
+import jumpingalien.model.worldfeatures.*;
 import jumpingalien.util.ModelException;
 import jumpingalien.util.Sprite;
 
@@ -24,7 +16,7 @@ public class Facade implements IFacadePart2 {
 
 	@Override
 	public Mazub createMazub(int pixelLeftX, int pixelBottomY, Sprite[] sprites) {
-		try{return new Mazub(pixelLeftX,pixelBottomY,sprites);}
+		try{return new Mazub(1100,680,sprites);}
 		catch (IllegalXPositionException exc){
 			throw new ModelException("Illegal X Position!");}
 		catch (IllegalYPositionException exc){
@@ -272,7 +264,6 @@ public class Facade implements IFacadePart2 {
 	@Override
 	public School createSchool() {
 		return new School();
-		//return null;
 	}
 
 	@Override
@@ -315,10 +306,10 @@ public class Facade implements IFacadePart2 {
 	 */
 	//private static final boolean enablePlants = false;
 	//private static final boolean enableSharks = false;
-	private static final boolean enableSlimes = false;
+	//private static final boolean enableSlimes = false;
 	
 	private static final boolean enablePlants = true;
 	private static final boolean enableSharks = true;
-	//private static final boolean enableSlimes = true;
+	private static final boolean enableSlimes = true;
 	
 }

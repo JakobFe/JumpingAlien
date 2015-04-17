@@ -10,6 +10,32 @@ public class School {
 		return slimes.size();
 	}
 	
+	HashSet<Slime> getAllSlimes(){
+		return slimes;
+	}
+	
+	/**
+	 * reduce all buiten deze slime
+	 * @param slime
+	 */
+	void reduceHpAll(Slime other){
+		for(Slime slime: slimes){
+			if(slime != other)
+				slime.setHitPoints(slime.getHitPoints()-1);
+		}
+	}
+	
+	/**
+	 * add all buiten deze slime
+	 * @param slime
+	 */
+	void addHpAll(Slime other){
+		for(Slime slime: slimes){
+			if(slime != other)
+				slime.setHitPoints(slime.getHitPoints()+1);
+		}
+	}
+	
 	void addSlime(Slime slime){
 		slimes.add(slime);
 		slime.setSchool(this);
