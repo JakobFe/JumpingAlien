@@ -283,6 +283,11 @@ public class Mazub extends Character{
 		setHorDirection(direction);
 		setHorAcceleration(getMaxHorAcceleration());
 		setTimeSum(0);
+		if(direction == Direction.LEFT)
+			setEnableMoveRight(false);
+		else
+			setEnableMoveLeft(false);
+		setEnableMove(true);
 	}
 	
 	/**
@@ -303,11 +308,25 @@ public class Mazub extends Character{
 	 */
 	public void endMove(Direction direction){
 		assert ((direction == Direction.LEFT) || (direction == Direction.RIGHT));
-		assert (isMoving(direction));
+		//assert (isMoving(direction));
+		assert (!isMoving(oppositeDirection(direction)));
 		setHorVelocity(0);
 		setHorDirection(Direction.NULL);
 		setHorAcceleration(0);
 		setTimeSum(0);
+		if(direction == Direction.LEFT)
+			setEnableMoveLeft(false);
+		else
+			setEnableMoveRight(false);
+		setEnableMove(false);
+	}
+	
+	public Direction oppositeDirection(Direction direction){
+		assert ((direction == Direction.LEFT) || (direction == Direction.RIGHT));
+		if (direction == Direction.LEFT)
+			return Direction.RIGHT;
+		else
+			return Direction.LEFT;
 	}
 	
 	/**
@@ -437,6 +456,77 @@ public class Mazub extends Character{
 
 	private boolean enableStandUp = false;
 	
+	public boolean isEnableMoveRight() {
+		return enableMoveRight;
+	}
+
+	public void setEnableMoveRight(boolean enableMoveRight) {
+		this.enableMoveRight = enableMoveRight;
+	}
+
+	private boolean enableMoveRight;
+	
+	
+	public boolean isEnableMoveLeft() {
+		return enableMoveLeft;
+	}
+
+	public void setEnableMoveLeft(boolean enableMoveLeft) {
+		this.enableMoveLeft = enableMoveLeft;
+	}
+
+	private boolean enableMoveLeft;
+	
+	public boolean isEnableMove() {
+		return enableMove;
+	}
+
+	public void setEnableMove(boolean enableMove) {
+		this.enableMove = enableMove;
+	}
+
+	private boolean enableMove;
+	
+	@Override
+	protected double[] updatePositionTileCollision(double[] newPos){
+		assert newPos.length == 2;
+		double newXPos = newPos[0];
+		double newYPos = newPos[1];
+		for (Tile impassableTile: getWorld().getImpassableTiles()){
+			if (this.isOverlappingWith(impassableTile)){
+				if (isColliding(Direction.DOWN, impassableTile)){
+					//System.out.println("Colliding down");
+					if (isMoving(Direction.DOWN))
+						newYPos = impassableTile.getYPosition()+getWorld().getTileSize()-1;
+					endMovement(Direction.DOWN);
+				}
+				else if(isColliding(Direction.UP, impassableTile)){
+					if (isMoving(Direction.UP))
+						newYPos = impassableTile.getYPosition()-getHeight()+1;
+					endMovement(Direction.UP);
+					//System.out.println("Colliding up");
+				}
+				if(isColliding(Direction.LEFT, impassableTile)){
+					if (isMoving(Direction.LEFT)){
+						newXPos = impassableTile.getXPosition()+getWorld().getTileSize()-1;
+						setEnableMoveLeft(true);
+					}
+					endMovement(Direction.LEFT);
+					//System.out.println("Colliding left");
+				}
+				else if(isColliding(Direction.RIGHT, impassableTile)){
+					if (isMoving(Direction.RIGHT)){
+						newXPos = impassableTile.getXPosition()-getWidth()+1;
+						setEnableMoveRight(true);
+					}
+					endMovement(Direction.RIGHT);
+					//System.out.println("Colliding right");
+				}
+			}
+		}
+		return doubleArray(newXPos,newYPos);
+	}
+	
 	/**
 	 * Method to update the position and velocity of the Mazub based on the current position,
 	 * velocity and a given time duration in seconds.
@@ -467,6 +557,18 @@ public class Mazub extends Character{
 			throw new IllegalTimeIntervalException(this);
 		if (isEnableStandUp())
 			endDuck();
+		if(isEnableMove() && isEnableMoveRight()){
+			setHorVelocity(getInitHorVelocity());
+			setHorDirection(Direction.RIGHT);
+			setHorAcceleration(getMaxHorAcceleration());
+			setEnableMoveRight(false);
+		}
+		if(isEnableMove() && isEnableMoveLeft()){
+			setHorVelocity(getInitHorVelocity());
+			setHorDirection(Direction.LEFT);
+			setHorAcceleration(getMaxHorAcceleration());
+			setEnableMoveLeft(false);
+		}
 		double td = getTimeToMoveOnePixel(timeDuration);
 		if (td > timeDuration)
 			td = timeDuration;
