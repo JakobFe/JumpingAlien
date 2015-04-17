@@ -693,7 +693,7 @@ public abstract class GameObject {
 			positionsToCheck = getLeftPerimeter();
 		else
 			positionsToCheck = new int[0][0];
-		for(int index=1;index<positionsToCheck.length-1;index++){
+		for(int index=1;index<positionsToCheck.length-2;index++){
 			if((getWorld().getBelongingTileXPosition(positionsToCheck[index][0]) == tile.getTileXPos()) 
 				&& getWorld().getBelongingTileYPosition(positionsToCheck[index][1]) == tile.getTileYPos())
 				return true;
@@ -731,7 +731,7 @@ public abstract class GameObject {
 			positionsToCheck = getLeftPerimeter();
 		else
 			positionsToCheck = new int[0][0];
-		for(int index=1;index<positionsToCheck.length-1;index++){
+		for(int index=1;index<positionsToCheck.length-2;index++){
 			if(object.occupiesPosition(new Position(positionsToCheck[index][0],
 			   positionsToCheck[index][1])))
 				return true;

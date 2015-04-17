@@ -3,7 +3,6 @@ package jumpingalien.model.gameobjects;
 import java.util.HashSet;
 import java.util.Random;
 
-import be.kuleuven.cs.som.annotate.Model;
 import jumpingalien.model.exceptions.*;
 import jumpingalien.model.other.*;
 import jumpingalien.model.worldfeatures.*;
@@ -260,17 +259,7 @@ public class Shark extends Character {
 		}
 		return true;
 	}
-	
-	@Model @Override
-	protected void updateHorVelocity(double timeDuration){
-		double newVel = getHorVelocity() + getHorAcceleration() * timeDuration;
-		if (newVel > getMaxHorVelocity()){
-			setHorVelocity(getMaxHorVelocity());
-			setHorAcceleration(0);
-		}
-		else
-			setHorVelocity(newVel);
-	}
+
 	
 	@Override
 	protected void updateVertVelocity(double timeDuration){
