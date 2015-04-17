@@ -337,7 +337,8 @@ public abstract class Character extends GameObject{
 	
 	protected boolean standsOn(Character character){
 		return ((character != this) && this.isOverlappingWith(character)
-				&& isColliding(Direction.DOWN, character));
+				&& isColliding(Direction.DOWN, character) &&
+				character.isColliding(Direction.UP, this));
 	}
 	
 	protected double[] updatePositionTileCollision(double[] newPos){
@@ -419,8 +420,18 @@ public abstract class Character extends GameObject{
 		
 		return doubleArray(newXPos,newYPos);
 	}
-	
 
+	@Model @Override
+	protected void updateHorVelocity(double timeDuration){
+		double newVel = getHorVelocity() + getHorAcceleration() * timeDuration;
+		if (newVel > getMaxHorVelocity()){
+			setHorVelocity(getMaxHorVelocity());
+			setHorAcceleration(0);
+		}
+		else
+			setHorVelocity(newVel);
+	}
+	
 	/**
 	 * A method to update the vertical velocity over a given time interval.
 	 * 
@@ -501,7 +512,6 @@ public abstract class Character extends GameObject{
 		assert (direction != Direction.NULL);
 		return (getHorDirection() == direction || getVertDirection() == direction);
 	}
-
 	
 	/**
 	 * Return the stored period of elapsed time .

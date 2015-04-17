@@ -406,7 +406,7 @@ public class World {
 			if(!shark.isTerminated())
 				shark.advanceTime(timeDuration);
 		}
-		for(Slime slime: allSlimes){
+		for(Slime slime: getAllUnterminatedSlimes()){
 			if(!slime.isTerminated())
 				slime.advanceTime(timeDuration);
 		}
