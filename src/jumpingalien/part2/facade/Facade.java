@@ -314,11 +314,11 @@ public class Facade implements IFacadePart2 {
 	 * Added constants to easily turn off plants, sharks and slimes.
 	 */
 	//private static final boolean enablePlants = false;
-	//private static final boolean enableSharks = false;
-	private static final boolean enableSlimes = false;
+	private static final boolean enableSharks = false;
+	//private static final boolean enableSlimes = false;
 	
 	private static final boolean enablePlants = true;
-	private static final boolean enableSharks = true;
-	//private static final boolean enableSlimes = true;
+	//private static final boolean enableSharks = true;
+	private static final boolean enableSlimes = true;
 	
 }
