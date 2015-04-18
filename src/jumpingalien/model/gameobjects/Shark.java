@@ -11,15 +11,12 @@ import static jumpingalien.tests.util.TestUtils.doubleArray;
 
 public class Shark extends Character {
 
-	public Shark(int x, int y, double initHorVelocity, double maxHorVelocity,
-			Sprite[] sprites, int hitPoints) throws IllegalXPositionException,
-			IllegalYPositionException{
-		super(x,y,initHorVelocity,maxHorVelocity,sprites,hitPoints);
+	public Shark(int x, int y,Sprite[] sprites) 
+			throws IllegalXPositionException,IllegalYPositionException{
+		super(x,y,SHARK_INIT_VEL,SHARK_MAX_VEL,sprites,SHARK_HP);
 	}
 	
-	public Shark(int x, int y, Sprite[] sprites) {
-		this(x,y,0,4,sprites,100);
-	}
+	private static final int SHARK_HP = 100;
 	
 	private void setRandomHorDirection() {
 		Random rn = new Random();
@@ -41,13 +38,20 @@ public class Shark extends Character {
 	
 	private void setRandomVertAcceleration(){
 		Random rn = new Random();
-		setVertAcceleration(-0.2 + (0.4*rn.nextDouble()));
+		setVertAcceleration(SHARK_DIVING_ACCEL + 
+				((SHARK_RISING_ACCEL-SHARK_RISING_ACCEL)*rn.nextDouble()));
 	}
+	
+	private static final double SHARK_DIVING_ACCEL = -0.2;
+	
+	private static final double SHARK_RISING_ACCEL = 0.2;
 	
 	@Override
 	public final double getInitHorVelocity(){
-		return 0;
+		return SHARK_INIT_VEL;
 	}
+	
+	private static final double SHARK_INIT_VEL = 0;
 	
 	@Override
 	public final double getMaxHorVelocity() {
@@ -58,14 +62,15 @@ public class Shark extends Character {
 	
 	@Override
 	public final double getMaxHorAcceleration() {
-		return SHARK_ACCEL;
+		return SHARK_MAX_HOR_ACCEL;
 	}
 	
-	private static final double SHARK_ACCEL = 1.5;
+	private static final double SHARK_MAX_HOR_ACCEL = 1.5;
 	
 	@Override
 	public boolean isValidVertAcceleration(double acceleration){
-		return ((acceleration >= -0.2 && acceleration<= 0.2) ||
+		return ((acceleration >= SHARK_DIVING_ACCEL && 
+				acceleration<= SHARK_RISING_ACCEL) ||
 				acceleration == getMaxVertAcceleration());
 	}
 	
@@ -120,7 +125,7 @@ public class Shark extends Character {
 	private int periodCounter;
 	
 	public boolean canJump(){
-		return ((getPeriodCounter() >= MIN_NON_JUMPING_PERIOD)
+		return ((getPeriodCounter() > MIN_NON_JUMPING_PERIOD)
 				&& (standsOnTile() || isSubmergedIn(Terrain.WATER)));
 	}
 	
@@ -135,11 +140,8 @@ public class Shark extends Character {
 			if (isMoving(Direction.UP)){
 				startJump();
 			}
-			else{
-				riseOrDive();
-			}
 		}
-		else
+		if(!isMoving(Direction.UP))
 			riseOrDive();
 	}
 
@@ -179,7 +181,7 @@ public class Shark extends Character {
 
 	private void startJump() {
 		System.out.println("jump!");
-		setPeriodCounter(-1);
+		setPeriodCounter(0);
 		setVertVelocity(INIT_VERT_VELOCITY);
 		setVertAcceleration(getMaxVertAcceleration());
 	}
@@ -289,7 +291,7 @@ public class Shark extends Character {
 		}
 		if (getHitPoints() != 0 && isOverlappingWith(Terrain.AIR)){
 			if(getTimeSumHp() >= 0.2){
-				setHitPoints(getHitPoints()-2);
+				setHitPoints(getHitPoints()-6);
 				isHurt = true;
 				setTimeSumHp(getTimeSumHp()-0.2);
 			}
