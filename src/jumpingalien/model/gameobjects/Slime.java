@@ -120,12 +120,12 @@ public class Slime extends Character{
 		if (!isValidTimeInterval(timeDuration))
 			throw new IllegalTimeIntervalException(this);
 		if(getPeriodDuration() == 0){
-			setTimeSum(0);
+			getSpritesTimer().setTimeSum(0);
 			setRandomDirection();
 			updateSpriteIndex();
 			startMove();
 		}
-		else if (getTimeSum() >= getPeriodDuration()){
+		else if (getSpritesTimer().getTimeSum() >= getPeriodDuration()){
 			endMove();
 			setPeriodDuration(0);
 		}
@@ -140,9 +140,9 @@ public class Slime extends Character{
 			} catch (NullPointerException e) {
 			}
 		}
-		counterHp(timeDuration);
+		getHpTimer().counter(timeDuration);
 		updateHitPoints();
-		counter(timeDuration);
+		getSpritesTimer().counter(timeDuration);
 		updateSchool();
 	}
 	
@@ -182,14 +182,14 @@ public class Slime extends Character{
 		boolean isHurt = false;
 		boolean isDamaged = false;
 		if (getHitPoints() != 0 && !isOverlappingWith(Terrain.WATER) && !isOverlappingWith(Terrain.MAGMA))
-			setTimeSumHp(0);
+			getHpTimer().reset();
 		
 		if (getHitPoints() != 0 && alien != null && !alien.isImmune() && isOverlappingWith(alien)){
 			setHitPoints(getHitPoints()-50);
 			isHurt = true;
-			System.out.println(alien.standsOn(this));
+			//System.out.println(alien.standsOn(this));
 			if (!alien.standsOn(this)){
-				alien.setImmuneTimer(0);
+				alien.getImmuneTimer().reset();
 				alien.setHitPoints(alien.getHitPoints()-50);
 				assert alien.isImmune();
 			}
@@ -205,20 +205,20 @@ public class Slime extends Character{
 			}
 		}
 		if (getHitPoints() != 0 && isOverlappingWith(Terrain.WATER)){
-			if (getTimeSumHp() > 0.2){
+			if (getHpTimer().getTimeSum() > 0.2){
 				isDamaged = true;
 				setHitPoints(getHitPoints()-2);
-				setTimeSumHp(getTimeSumHp()-0.2);
+				getHpTimer().setTimeSum(getHpTimer().getTimeSum()-0.2);
 			}
 		}
 		if (getHitPoints() != 0 && isOverlappingWith(Terrain.MAGMA)){
-			if (getTimeSumHp() == 0){
+			if (getHpTimer().getTimeSum() == 0){
 				setHitPoints(getHitPoints()-50);
 				isDamaged = true;
 			}
-			else if (getTimeSumHp() > 0.2){
+			else if (getHpTimer().getTimeSum() > 0.2){
 				setHitPoints(getHitPoints()-50);
-				setTimeSumHp(getTimeSumHp()-0.2);
+				getHpTimer().setTimeSum(getHpTimer().getTimeSum()-0.2);
 				isDamaged = true;
 			}
 		}
@@ -226,8 +226,8 @@ public class Slime extends Character{
 		if(isHurt || isDamaged)
 			updateHpSchool();
 		if (isHurt && getHitPoints() == 0)
-			setTimeSumHp(0);
-		else if (getHitPoints() == 0 && getTimeSumHp()>= 0.6){
+			getHpTimer().reset();
+		else if (getHitPoints() == 0 && getHpTimer().getTimeSum()>= 0.6){
 			terminate();
 		}
 	}
@@ -283,7 +283,7 @@ public class Slime extends Character{
 	@Override
 	protected void terminate(){
 		assert getHitPoints() == 0;
-		assert getTimeSumHp() >= 0.6;
+		assert getHpTimer().getTimeSum() >= 0.6;
 		super.terminate();
 		getWorld().removeAsSlime(this);
 		getWorld().getAllCharacters().remove(this);
