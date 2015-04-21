@@ -112,22 +112,30 @@ public class Mazub extends Character{
 	
 	@Override
 	protected void updateHitPoints(){
-		if (!isOverlappingWith(Terrain.WATER) && !isOverlappingWith(Terrain.MAGMA))
-			getHpTimer().setTimeSum(0);
-		if (isOverlappingWith(Terrain.WATER)){
-			if (getHpTimer().getTimeSum() > 0.2){
-				setHitPoints(getHitPoints()-2);
-				getHpTimer().setTimeSum(getHpTimer().getTimeSum()-0.2);
+		boolean isHurt = false;
+		if(!isDead()){
+			if (!isOverlappingWith(Terrain.WATER) && !isOverlappingWith(Terrain.MAGMA))
+				getHpTimer().setTimeSum(0);
+			if (isOverlappingWith(Terrain.WATER)){
+				if (getHpTimer().getTimeSum() > 0.2){
+					setHitPoints(getHitPoints()-2);
+					getHpTimer().setTimeSum(getHpTimer().getTimeSum()-0.2);
+				}
+			}
+			if (isOverlappingWith(Terrain.MAGMA)){
+				if (getHpTimer().getTimeSum() == 0)
+					setHitPoints(getHitPoints()-50);
+				else if (getHpTimer().getTimeSum() > 0.2){
+					setHitPoints(getHitPoints()-50);
+					getHpTimer().setTimeSum(getHpTimer().getTimeSum()-0.2);
+				}
 			}
 		}
-		if (isOverlappingWith(Terrain.MAGMA)){
-			if (getHpTimer().getTimeSum() == 0)
-				setHitPoints(getHitPoints()-50);
-			else if (getHpTimer().getTimeSum() > 0.2){
-				setHitPoints(getHitPoints()-50);
-				getHpTimer().setTimeSum(getHpTimer().getTimeSum()-0.2);
-			}
+		if(isHurt && isDead()){
+			getHpTimer().reset();
 		}
+		if(isDead() && getHpTimer().getTimeSum()>0.6)
+			terminate();
 	}
 	
 	public boolean isImmune() {
@@ -481,18 +489,18 @@ public class Mazub extends Character{
 				if (isColliding(Direction.DOWN, impassableTile)){
 					//System.out.println("Colliding down");
 					if (isMoving(Direction.DOWN))
-						newYPos = impassableTile.getYPosition()+getWorld().getTileSize()-1;
+						newYPos = this.getPosition().getYPosition();
 					endMovement(Direction.DOWN);
 				}
 				else if(isColliding(Direction.UP, impassableTile)){
 					if (isMoving(Direction.UP))
-						newYPos = impassableTile.getYPosition()-getHeight()+1;
+						newYPos = this.getPosition().getYPosition();
 					endMovement(Direction.UP);
 					//System.out.println("Colliding up");
 				}
 				if(isColliding(Direction.LEFT, impassableTile)){
 					if (isMoving(Direction.LEFT)){
-						newXPos = impassableTile.getXPosition()+getWorld().getTileSize()-1;
+						newXPos = this.getPosition().getXPosition();
 						setEnableMoveLeft(true);
 					}
 					endMovement(Direction.LEFT);
@@ -500,7 +508,7 @@ public class Mazub extends Character{
 				}
 				else if(isColliding(Direction.RIGHT, impassableTile)){
 					if (isMoving(Direction.RIGHT)){
-						newXPos = impassableTile.getXPosition()-getWidth()+1;
+						newXPos = this.getPosition().getXPosition();
 						setEnableMoveRight(true);
 					}
 					endMovement(Direction.RIGHT);
@@ -559,13 +567,11 @@ public class Mazub extends Character{
 				0.5*getVertAcceleration()*Math.pow(timeDuration, 2))*100;
 		//assert ((Math.abs(newXPos - getPosition().getXPosition()) <= 1) &&
 		//		(Math.abs(newYPos - getPosition().getYPosition()) <= 1));
-		if(newXPos != getPosition().getXPosition())
-			//System.out.println((Math.abs(newXPos - getPosition().getXPosition())));
 		if (newYPos<0)
 			newYPos = 0;
 		boolean enableFall = true;
 		double[] newPos = updatePositionTileCollision(doubleArray(newXPos,newYPos));
-		updatePositionObjectCollision(newPos);
+		newPos = updatePositionObjectCollision(newPos);
 		newXPos = newPos[0];
 		newYPos = newPos[1];
 		

@@ -322,7 +322,7 @@ public abstract class Character extends GameObject{
 	public void advanceTime(double timeDuration){
 		if (!isValidTimeInterval(timeDuration))
 			throw new IllegalTimeIntervalException(this);
-		updateMovement();
+			updateMovement();
 		double td = getTimeToMoveOnePixel(timeDuration);
 		if (td > timeDuration)
 			td = timeDuration;
@@ -339,6 +339,7 @@ public abstract class Character extends GameObject{
 				terminate();
 			}
 		}
+		
 		updateTimers(timeDuration);
 		updateHitPoints();
 	}	

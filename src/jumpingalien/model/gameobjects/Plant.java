@@ -9,6 +9,9 @@ import jumpingalien.util.Sprite;
 import java.util.HashSet;
 import java.util.Random;
 
+import be.kuleuven.cs.som.annotate.Basic;
+import be.kuleuven.cs.som.annotate.Model;
+
 /**
  * A class concerning plants as a subclass of game objects.
  * 
@@ -47,6 +50,7 @@ public class Plant extends GameObject {
 			setHorDirection(Direction.LEFT);
 		else
 			setHorDirection(Direction.RIGHT);
+		setLastDirection(getHorDirection());
 	}
 	
 	/**
@@ -75,6 +79,34 @@ public class Plant extends GameObject {
 	}
 	
 	/**
+	 * Return the last registered horizontal direction of the Mazub.
+	 */
+	@Basic @Model
+	private Direction getLastDirection() {
+		return lastDirection;
+	}
+
+	/**
+	 * Sets the last registered horizontal direction to the given last direction.
+	 * 
+	 * @param 	lastDirection
+	 * 			the lastDirection to set.
+	 * @post	The new last direction equals the given lastDirection.
+	 * 			| new.getLastDirection == lastDirection
+	 */
+	@Model
+	private void setLastDirection(Direction lastDirection) {
+		this.lastDirection = lastDirection;
+	}
+	
+	/**
+	 * A variable storing the last horizontal direction of movement of this Mazub
+	 * within the last second of in-game-time.
+	 */
+	private Direction lastDirection;
+
+	
+	/**
 	 * Method to update the position and velocity of this game object based on the current position,
 	 * velocity and a given time duration in seconds.
 	 * 
@@ -91,13 +123,27 @@ public class Plant extends GameObject {
 	IllegalYPositionException,IllegalTimeIntervalException{
 		if (!isValidTimeInterval(timeDuration))
 			throw new IllegalTimeIntervalException(this);
-		if (getSpritesTimer().getTimeSum()>0.5){
-			alternateDirection();
-			getSpritesTimer().setTimeSum((getSpritesTimer().getTimeSum()-0.5));
+		if(!isDead()){
+			if (getSpritesTimer().getTimeSum()>0.5){
+				alternateDirection();
+				setLastDirection(getHorDirection());
+				setHorVelocity(PLANT_VELOCITY);
+				getSpritesTimer().setTimeSum((getSpritesTimer().getTimeSum()-0.5));
+			}
+			double td = getTimeToMoveOnePixel(timeDuration);
+			for (int index = 0; index < timeDuration/td; index++)
+					updatePosition(td);
 		}
-		updatePosition(timeDuration);
 		updateHitPoints();
 		updateTimers(timeDuration);
+	}
+	
+	
+	protected double getTimeToMoveOnePixel(double timeDuration){
+		if(getHorVelocity()!=0)
+			return 0.01/(Math.abs(getHorVelocity()));
+		else
+			return timeDuration;
 	}
 	
 	/**
@@ -112,30 +158,25 @@ public class Plant extends GameObject {
 			if (this.isOverlappingWith(impassableTile)){
 				if(isColliding(Direction.LEFT, impassableTile)){
 					if (isMoving(Direction.LEFT))
-						newXPos = impassableTile.getXPosition()+getWorld().getTileSize()-1;
-					setHorDirection(Direction.RIGHT);
+						newXPos = this.getPosition().getXPosition();
+					endMovement(Direction.LEFT);
 					//System.out.println("Colliding left");
 				}
 				else if(isColliding(Direction.RIGHT, impassableTile)){
 					if (isMoving(Direction.RIGHT))
-						newXPos = impassableTile.getXPosition()-getWidth()+1;
-					setHorDirection(Direction.LEFT);
+						newXPos = this.getPosition().getXPosition();
 					//System.out.println("Colliding right");
+					endMovement(Direction.RIGHT);
 				}
 			}
 		}
 		double[] newPos = updatePositionObjectCollision(doubleArray(newXPos,this.getPosition().getYPosition()));
 		newXPos = newPos[0];
-		if(isOverlappingWith(getWorld().getMazub()) &&
-		   getWorld().getMazub().canConsumePlant() && getHitPoints() != 0){
-				setHitPoints(0);
-				getHpTimer().reset();
-				getWorld().getMazub().consumePlant();
-		}
 		getPosition().terminate();
 		setPosition(new Position(newXPos,getPosition().getYPosition(),getWorld()));
 	}
 	
+	@Override
 	protected double[] updatePositionObjectCollision(double[] newPos){
 		HashSet<GameObject> collection = new HashSet<GameObject>();
 		collection.addAll(getWorld().getAllPlants());
@@ -144,7 +185,13 @@ public class Plant extends GameObject {
 	}
 	
 	protected void updateHitPoints(){
-		if (getHitPoints() == 0 && getHpTimer().getTimeSum() > 0.6){
+		if(isOverlappingWith(getWorld().getMazub()) &&
+		   getWorld().getMazub().canConsumePlant() && !isDead()){
+			setHitPoints(0);
+			getHpTimer().reset();
+			getWorld().getMazub().consumePlant();
+		}
+		if (isDead() && getHpTimer().getTimeSum() > 0.6){
 			terminate();
 		}
 	}
@@ -160,9 +207,9 @@ public class Plant extends GameObject {
 	 *			|	then setHorDirection(Direction.LEFT)
 	 */
 	private void alternateDirection(){
-		if(getHorDirection() == Direction.LEFT)
+		if(getLastDirection() == Direction.LEFT)
 			setHorDirection(Direction.RIGHT);
-		else if(getHorDirection() == Direction.RIGHT)
+		else if(getLastDirection() == Direction.RIGHT)
 			setHorDirection(Direction.LEFT);
 	}
 	
@@ -171,8 +218,7 @@ public class Plant extends GameObject {
 	
 	@Override
 	public void terminate(){
-		System.out.println("terminate plant");
-		assert getSpritesTimer().getTimeSum() >= 0.6;
+		assert getHpTimer().getTimeSum() >= 0.6;
 		super.terminate();
 		getWorld().removeAsPlant(this);
 		setWorld(null);

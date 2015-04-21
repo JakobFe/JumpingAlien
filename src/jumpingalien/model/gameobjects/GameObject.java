@@ -625,37 +625,37 @@ public abstract class GameObject {
 		assert newPos.length == 2;
 		double newXPos = newPos[0];
 		double newYPos = newPos[1];
-		for (GameObject gameObject: collection){
-			if ((gameObject != this) && this.isOverlappingWith(gameObject)){
-				if (isColliding(Direction.DOWN, gameObject)){
+		for (GameObject other: collection){
+			if ((other != this) && this.isOverlappingWith(other)){
+				if (isColliding(Direction.DOWN, other)){
 					//System.out.print("Colliding down with object");
 					//System.out.print(object.toString());
-					if (isMoving(Direction.DOWN)){
-						newYPos = gameObject.getPosition().getYPosition()+gameObject.getHeight()-1;
-						//newYPos = object.getPosition().getYPosition();
+					if (this.isMoving(Direction.DOWN) || other.isMoving(Direction.UP)){
+						//newYPos = gameObject.getPosition().getYPosition()+gameObject.getHeight()-1;
+						newYPos = this.getPosition().getYPosition();
 					}
 					endMovement(Direction.DOWN);
 				}
-				else if(isColliding(Direction.UP, gameObject)){
-					if (isMoving(Direction.UP)){
-						newYPos = gameObject.getPosition().getYPosition()-getHeight()+1;
-						//newYPos = object.getPosition().getYPosition();
+				else if(isColliding(Direction.UP, other)){
+					if (isMoving(Direction.UP) || other.isMoving(Direction.DOWN)){
+						//newYPos = gameObject.getPosition().getYPosition()-getHeight()+1;
+						newYPos = this.getPosition().getYPosition();
 					}
 					endMovement(Direction.UP);
 					//System.out.println("Colliding up");
 				}
-				if(isColliding(Direction.LEFT, gameObject)){
-					if (isMoving(Direction.LEFT)){
-						newXPos = gameObject.getPosition().getXPosition()+gameObject.getWidth()-1;
-						//newXPos = object.getPosition().getXPosition();
+				if(isColliding(Direction.LEFT, other)){
+					if (isMoving(Direction.LEFT) || other.isMoving(Direction.RIGHT)){
+						//newXPos = gameObject.getPosition().getXPosition()+gameObject.getWidth()-1;
+						newXPos = this.getPosition().getXPosition();
 					}
 					endMovement(Direction.LEFT);
 					//System.out.println("Colliding left");
 				}
-				else if(isColliding(Direction.RIGHT, gameObject)){
-					if (isMoving(Direction.RIGHT)){
-						newXPos = gameObject.getPosition().getXPosition()-getWidth()+1;
-						//newXPos = object.getPosition().getXPosition();
+				else if(isColliding(Direction.RIGHT, other)){
+					if (isMoving(Direction.RIGHT) || other.isMoving(Direction.LEFT)){
+						//newXPos = gameObject.getPosition().getXPosition()-getWidth()+1;
+						newXPos = this.getPosition().getXPosition();
 					}
 					endMovement(Direction.RIGHT);
 					//System.out.println("Colliding right");
@@ -778,7 +778,7 @@ public abstract class GameObject {
 			positionsToCheck = getLeftPerimeter();
 		else
 			positionsToCheck = new int[0][0];
-		for(int index=1;index<positionsToCheck.length-2;index++){
+		for(int index=1;index<positionsToCheck.length-1;index++){
 			if(object.occupiesPosition(new Position(positionsToCheck[index][0],
 			   positionsToCheck[index][1])))
 				return true;
@@ -932,6 +932,11 @@ public abstract class GameObject {
 	 * A variable registering whether or not this game object has been terminated.
 	 */
 	private boolean isTerminated;
+	
+
+	public boolean isDead() {
+		return getHitPoints() == 0;
+	}
 
 	
 }
