@@ -2,6 +2,7 @@ package jumpingalien.model.gameobjects;
 
 import static jumpingalien.tests.util.TestUtils.doubleArray;
 
+import java.util.HashSet;
 import java.util.Random;
 
 import jumpingalien.model.exceptions.IllegalTimeIntervalException;
@@ -158,7 +159,12 @@ public class Slime extends Character{
 		getPosition().terminate();
 		setPosition(new Position(newXPos,newYPos,getWorld()));
 	}
-
+	
+	protected double[] updatePositionObjectCollision(double[] newPos){
+		HashSet<GameObject> collection = new HashSet<GameObject>();
+		collection.addAll(getWorld().getAllCharacters());
+		return getPositionAfterCollision(newPos,collection);
+	}
 
 	@Override
 	protected boolean isValidVertAcceleration(double vertAcceleration) {
@@ -275,7 +281,7 @@ public class Slime extends Character{
 		assert getHpTimer().getTimeSum() >= 0.6;
 		super.terminate();
 		getWorld().removeAsSlime(this);
-		getWorld().getAllCharacters().remove(this);
+		getWorld().getAllGameObjects().remove(this);
 		setWorld(null);
 	}
 }

@@ -1,5 +1,8 @@
 package jumpingalien.model.gameobjects;
 
+
+import static jumpingalien.tests.util.TestUtils.doubleArray;
+
 import java.util.HashSet;
 
 import be.kuleuven.cs.som.annotate.*;
@@ -573,13 +576,7 @@ public abstract class GameObject {
 	 * 			The given timeduration is not a valid time interval.
 	 * 			| !(isValidTimeInterval(timeDuration))
 	 */
-	public void advanceTime(double timeDuration) throws IllegalTimeIntervalException{
-		if (!isValidTimeInterval(timeDuration))
-			throw new IllegalTimeIntervalException(this);
-		updatePosition(timeDuration);
-		updateHorVelocity(timeDuration);
-		getSpritesTimer().counter(timeDuration);
-	}
+	public abstract void advanceTime(double timeDuration) throws IllegalTimeIntervalException;
 
 	/**
 	 * A method to check whether the given time interval is a valid
@@ -606,6 +603,8 @@ public abstract class GameObject {
 	 */
 	protected abstract void updatePosition(double timeDuration);
 	
+	
+	
 	/**
 	 * A method to check whether this game object is overlapping with a given tile.
 	 * 
@@ -625,6 +624,52 @@ public abstract class GameObject {
 			return false;
 		}
 	}
+	
+	protected double[] getPositionAfterCollision(double[] newPos, HashSet<GameObject> collection){
+		assert newPos.length == 2;
+		double newXPos = newPos[0];
+		double newYPos = newPos[1];
+		for (GameObject gameObject: collection){
+			if ((gameObject != this) && this.isOverlappingWith(gameObject)){
+				if (isColliding(Direction.DOWN, gameObject)){
+					//System.out.print("Colliding down with object");
+					//System.out.print(object.toString());
+					if (isMoving(Direction.DOWN)){
+						newYPos = gameObject.getPosition().getYPosition()+gameObject.getHeight()-1;
+						//newYPos = object.getPosition().getYPosition();
+					}
+					endMovement(Direction.DOWN);
+				}
+				else if(isColliding(Direction.UP, gameObject)){
+					if (isMoving(Direction.UP)){
+						newYPos = gameObject.getPosition().getYPosition()-getHeight()+1;
+						//newYPos = object.getPosition().getYPosition();
+					}
+					endMovement(Direction.UP);
+					//System.out.println("Colliding up");
+				}
+				if(isColliding(Direction.LEFT, gameObject)){
+					if (isMoving(Direction.LEFT)){
+						newXPos = gameObject.getPosition().getXPosition()+gameObject.getWidth()-1;
+						//newXPos = object.getPosition().getXPosition();
+					}
+					endMovement(Direction.LEFT);
+					//System.out.println("Colliding left");
+				}
+				else if(isColliding(Direction.RIGHT, gameObject)){
+					if (isMoving(Direction.RIGHT)){
+						newXPos = gameObject.getPosition().getXPosition()-getWidth()+1;
+						//newXPos = object.getPosition().getXPosition();
+					}
+					endMovement(Direction.RIGHT);
+					//System.out.println("Colliding right");
+				}
+			}
+		}
+		return doubleArray(newXPos,newYPos);
+	}
+
+	protected abstract double[] updatePositionObjectCollision(double[] newPos);
 	
 	/**
 	 * A method to check whether this game object is overlapping with another game object.
@@ -693,7 +738,7 @@ public abstract class GameObject {
 			positionsToCheck = getLeftPerimeter();
 		else
 			positionsToCheck = new int[0][0];
-		for(int index=1;index<positionsToCheck.length-2;index++){
+		for(int index=1;index<positionsToCheck.length-1;index++){
 			if((getWorld().getBelongingTileXPosition(positionsToCheck[index][0]) == tile.getTileXPos()) 
 				&& getWorld().getBelongingTileYPosition(positionsToCheck[index][1]) == tile.getTileYPos())
 				return true;

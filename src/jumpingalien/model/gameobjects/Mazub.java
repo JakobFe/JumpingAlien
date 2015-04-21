@@ -512,6 +512,10 @@ public class Mazub extends Character{
 		return doubleArray(newXPos,newYPos);
 	}
 	
+	protected double[] updatePositionObjectCollision(double[] newPos){
+		return getPositionAfterCollision(newPos,getWorld().getAllGameObjects());
+	}
+	
 	@Override
 	public void advanceTime(double timeDuration) throws IllegalXPositionException,
 	IllegalYPositionException,IllegalTimeIntervalException{
