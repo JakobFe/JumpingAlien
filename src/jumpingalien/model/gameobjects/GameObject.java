@@ -2,7 +2,6 @@ package jumpingalien.model.gameobjects;
 
 
 import static jumpingalien.tests.util.TestUtils.doubleArray;
-
 import java.util.HashSet;
 
 import be.kuleuven.cs.som.annotate.*;
@@ -706,6 +705,12 @@ public abstract class GameObject {
 		}
 		return false;
 	}
+	
+	public void moveUp(){
+		assert this.isOverlappingWith(Terrain.GROUND);
+		setPosition(new Position(getPosition().getXPosition(),getPosition().getYPosition()+1,getWorld()));
+	}
+	
 	
 	/**
 	 * Check whether this game object collides with a given tile in a given direction.
