@@ -115,10 +115,14 @@ public class Slime extends Character{
 	}
 	
 	@Override
-	public void advanceTime(double timeDuration) throws IllegalXPositionException,
+	public void advanceTime(double timeDuration)throws IllegalXPositionException,
 	IllegalYPositionException,IllegalTimeIntervalException{
-		if (!isValidTimeInterval(timeDuration))
-			throw new IllegalTimeIntervalException(this);
+		super.advanceTime(timeDuration);
+		updateSchool();
+	}
+	
+	@Override
+	protected void updateMovement(){
 		if(getPeriodDuration() == 0){
 			getSpritesTimer().setTimeSum(0);
 			setRandomDirection();
@@ -129,21 +133,6 @@ public class Slime extends Character{
 			endMove();
 			setPeriodDuration(0);
 		}
-		double td = getTimeToMoveOnePixel(timeDuration);
-		if (td > timeDuration)
-			td = timeDuration;
-		for (int index = 0; index < timeDuration/td; index++){
-			try {
-				updatePosition(td);
-				updateHorVelocity(td);
-				updateVertVelocity(td);
-			} catch (NullPointerException e) {
-			}
-		}
-		getHpTimer().counter(timeDuration);
-		updateHitPoints();
-		getSpritesTimer().counter(timeDuration);
-		updateSchool();
 	}
 	
 	@Override

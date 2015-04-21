@@ -512,34 +512,15 @@ public class Mazub extends Character{
 		return doubleArray(newXPos,newYPos);
 	}
 	
-	/**
-	 * Method to update the position and velocity of the Mazub based on the current position,
-	 * velocity and a given time duration in seconds.
-	 * 
-	 * @param	timeDuration
-	 * 			A variable indicating the length of the time interval
-	 * 			to simulate the movement of this Mazub. 
-	 * @effect	The horizontal position is updated with the given timeDuration.
-	 * 			| updateHorPosition(timeDuration)
-	 * @effect	The horizontal velocity is updated with the given timeDuration.
-	 * 			| updateHorVelocity(timeDuration)
-	 * @effect	The vertical position is updated with the given timeDuration.
-	 * 			| updateVertPosition(timeDuration)
-	 * @effect	The vertical velocity is updated with the given timeDuration.
-	 * 			| updateVertVelocity(timeDuration)
-	 * @effect	The given timeDuration is added to the timeSum.
-	 * 			| counter(timeDuration)
-	 * @effect	The last direction in which the Mazub was moving is updated.
-	 * 			| updateLastDirection()
-	 * @throws	IllegalTimeIntervalException(this)
-	 * 			The given timeduration is not a valid time interval.
-	 * 			| !(isValidTimeInterval(timeDuration))
-	 */
 	@Override
 	public void advanceTime(double timeDuration) throws IllegalXPositionException,
-				IllegalYPositionException,IllegalTimeIntervalException{
-		if (!isValidTimeInterval(timeDuration))
-			throw new IllegalTimeIntervalException(this);
+	IllegalYPositionException,IllegalTimeIntervalException{
+		super.advanceTime(timeDuration);
+		updateLastDirection();
+	}
+	
+	@Override
+	protected void updateMovement(){
 		if (isEnableStandUp())
 			endDuck();
 		if(isEnableMove() && isEnableMoveRight()){
@@ -554,34 +535,17 @@ public class Mazub extends Character{
 			setHorAcceleration(getMaxHorAcceleration());
 			setEnableMoveLeft(false);
 		}
-		double td = getTimeToMoveOnePixel(timeDuration);
-		if (td > timeDuration)
-			td = timeDuration;
-		for (int index = 0; index < timeDuration/td; index++){
-			try {
-				updatePosition(td);
-			} catch (IllegalXPositionException | IllegalYPositionException e) {
-				setHitPoints(0);
-				terminate();
-			}
-			try {
-				updateHorVelocity(td);
-				updateVertVelocity(td);
-			} catch (NullPointerException e) {
-			}
-		}
-		updateLastDirection();
+	}
+	
+	@Override
+	protected void updateTimers(double timeDuration){
 		getSpritesTimer().counter(timeDuration);
-		updateHitPoints();
-		//System.out.println(getImmuneTimer());
 		getImmuneTimer().counter(timeDuration);
 		if (isOverlappingWith(Terrain.WATER) || isOverlappingWith(Terrain.MAGMA))
 			getHpTimer().counter(timeDuration);
 		else
 			getHpTimer().reset();
 	}
-	
-	
 	
 	@Override
 	protected void updatePosition(double timeDuration){

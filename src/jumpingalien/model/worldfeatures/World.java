@@ -162,6 +162,10 @@ public class World {
 	}
 	
 	public Tile getTileAtTilePos(int tileXPos, int tileYPos){
+		if(tileXPos >= worldTiles[0].length)
+			tileXPos = (getWorldWidth()-1)/getTileSize();
+		if(tileYPos >= worldTiles.length)
+			tileYPos = (getWorldHeight()-1)/getTileSize();
 		return getWorldTiles()[tileYPos][tileXPos];
 	}
 	

@@ -294,6 +294,61 @@ public abstract class Character extends GameObject{
 	 */
 	private static final double MAX_VERT_ACCELERATION = -10;
 	
+
+	/**
+	 * Method to update the position and velocity of the Mazub based on the current position,
+	 * velocity and a given time duration in seconds.
+	 * 
+	 * @param	timeDuration
+	 * 			A variable indicating the length of the time interval
+	 * 			to simulate the movement of this Mazub. 
+	 * @effect	The horizontal position is updated with the given timeDuration.
+	 * 			| updateHorPosition(timeDuration)
+	 * @effect	The horizontal velocity is updated with the given timeDuration.
+	 * 			| updateHorVelocity(timeDuration)
+	 * @effect	The vertical position is updated with the given timeDuration.
+	 * 			| updateVertPosition(timeDuration)
+	 * @effect	The vertical velocity is updated with the given timeDuration.
+	 * 			| updateVertVelocity(timeDuration)
+	 * @effect	The given timeDuration is added to the timeSum.
+	 * 			| counter(timeDuration)
+	 * @effect	The last direction in which the Mazub was moving is updated.
+	 * 			| updateLastDirection()
+	 * @throws	IllegalTimeIntervalException(this)
+	 * 			The given timeduration is not a valid time interval.
+	 * 			| !(isValidTimeInterval(timeDuration))
+	 */
+	@Override
+	public void advanceTime(double timeDuration){
+		if (!isValidTimeInterval(timeDuration))
+			throw new IllegalTimeIntervalException(this);
+		updateMovement();
+		double td = getTimeToMoveOnePixel(timeDuration);
+		if (td > timeDuration)
+			td = timeDuration;
+		for (int index = 0; index < timeDuration/td; index++){
+			try {
+				updatePosition(td);
+				updateHorVelocity(td);
+				updateVertVelocity(td);
+			} catch (NullPointerException e) {
+			}
+			catch(IllegalXPositionException | IllegalYPositionException exc){
+				setHitPoints(0);
+				terminate();
+			}
+		}
+		updateTimers(timeDuration);
+		updateHitPoints();
+	}	
+	
+	protected abstract void updateMovement();
+	
+	protected void updateTimers(double timeDuration){
+		getHpTimer().counter(timeDuration);
+		getSpritesTimer().counter(timeDuration);
+	}
+	
 	protected double getTimeToMoveOnePixel(double timeDuration){
 		double tdHor = 0.01/(Math.abs(getHorVelocity())
 				+Math.abs(getHorAcceleration())*timeDuration);
