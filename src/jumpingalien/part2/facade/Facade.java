@@ -79,7 +79,9 @@ public class Facade implements IFacadePart2 {
 
 	@Override
 	public void endMoveLeft(Mazub alien) {
-		if (alien.isMoving(Direction.LEFT))
+		//if (alien.isMoving(Direction.LEFT))
+		//	alien.endMove(Direction.LEFT);
+		if(!alien.isMoving(Direction.RIGHT))
 			alien.endMove(Direction.LEFT);
 	}
 
@@ -90,7 +92,9 @@ public class Facade implements IFacadePart2 {
 
 	@Override
 	public void endMoveRight(Mazub alien) {
-		if (alien.isMoving(Direction.RIGHT))
+		//if (alien.isMoving(Direction.RIGHT))
+		//alien.endMove(Direction.RIGHT);
+		if(!alien.isMoving(Direction.LEFT))
 			alien.endMove(Direction.RIGHT);
 	}
 
@@ -305,11 +309,11 @@ public class Facade implements IFacadePart2 {
 	 * Added constants to easily turn off plants, sharks and slimes.
 	 */
 	//private static final boolean enablePlants = false;
-	private static final boolean enableSharks = false;
+	//private static final boolean enableSharks = false;
 	//private static final boolean enableSlimes = false;
 	
 	private static final boolean enablePlants = true;
-	//private static final boolean enableSharks = true;
+	private static final boolean enableSharks = true;
 	private static final boolean enableSlimes = true;
 	
 }

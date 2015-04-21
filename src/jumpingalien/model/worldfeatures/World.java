@@ -166,7 +166,7 @@ public class World {
 	}
 	
 	public Tile getTileAtPos(int xPos, int yPos){
-		return getTileAtTilePos(yPos/getTileSize(),xPos/getTileSize());
+		return getTileAtTilePos(xPos/getTileSize(),yPos/getTileSize());
 	}
 	
 	private final Tile[][] worldTiles;

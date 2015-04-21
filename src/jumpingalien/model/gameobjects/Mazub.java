@@ -5,16 +5,9 @@ import java.util.HashSet;
 
 import jumpingalien.util.Sprite;
 import be.kuleuven.cs.som.annotate.*;
-import jumpingalien.model.exceptions.CollisionException;
-import jumpingalien.model.exceptions.IllegalJumpInvokeException;
-import jumpingalien.model.exceptions.IllegalTimeIntervalException;
-import jumpingalien.model.exceptions.IllegalXPositionException;
-import jumpingalien.model.exceptions.IllegalYPositionException;
-import jumpingalien.model.other.Direction;
-import jumpingalien.model.other.Position;
-import jumpingalien.model.worldfeatures.Terrain;
-import jumpingalien.model.worldfeatures.Tile;
-import jumpingalien.model.worldfeatures.World;
+import jumpingalien.model.exceptions.*;
+import jumpingalien.model.other.*;
+import jumpingalien.model.worldfeatures.*;
 import static jumpingalien.tests.util.TestUtils.doubleArray;
 
 /**
@@ -120,41 +113,33 @@ public class Mazub extends Character{
 	@Override
 	protected void updateHitPoints(){
 		if (!isOverlappingWith(Terrain.WATER) && !isOverlappingWith(Terrain.MAGMA))
-			setTimeSumHp(0);
+			getHpTimer().setTimeSum(0);
 		if (isOverlappingWith(Terrain.WATER)){
-			if (getTimeSumHp() > 0.2){
+			if (getHpTimer().getTimeSum() > 0.2){
 				setHitPoints(getHitPoints()-2);
-				setTimeSumHp(getTimeSumHp()-0.2);
+				getHpTimer().setTimeSum(getHpTimer().getTimeSum()-0.2);
 			}
 		}
 		if (isOverlappingWith(Terrain.MAGMA)){
-			if (getTimeSumHp() == 0)
+			if (getHpTimer().getTimeSum() == 0)
 				setHitPoints(getHitPoints()-50);
-			else if (getTimeSumHp() > 0.2){
+			else if (getHpTimer().getTimeSum() > 0.2){
 				setHitPoints(getHitPoints()-50);
-				setTimeSumHp(getTimeSumHp()-0.2);
+				getHpTimer().setTimeSum(getHpTimer().getTimeSum()-0.2);
 			}
 		}
 		super.updateHitPoints();
 	}
 	
 	public boolean isImmune() {
-		return (getImmuneTimer() < 0.6);
+		return (getImmuneTimer().getTimeSum() < 0.6);
 	}
 
-	public double getImmuneTimer() {
+	public Timer getImmuneTimer() {
 		return immuneTimer;
 	}
 
-	public void setImmuneTimer(double immuneTimer) {
-		this.immuneTimer = immuneTimer;
-	}
-	
-	public void counterImmune(double timeDuration){
-		setImmuneTimer(getImmuneTimer()+timeDuration);
-	}
-
-	private double immuneTimer = 0.6;
+	private Timer immuneTimer = new Timer(0.6);
 	
 	/**
 	 * Check whether the given world is a valid world for this Mazub.
@@ -282,7 +267,12 @@ public class Mazub extends Character{
 		setHorVelocity(getInitHorVelocity());
 		setHorDirection(direction);
 		setHorAcceleration(getMaxHorAcceleration());
-		setTimeSum(0);
+		getSpritesTimer().reset();
+		if(direction == Direction.LEFT)
+			setEnableMoveRight(false);
+		else
+			setEnableMoveLeft(false);
+		setEnableMove(true);
 	}
 	
 	/**
@@ -303,11 +293,25 @@ public class Mazub extends Character{
 	 */
 	public void endMove(Direction direction){
 		assert ((direction == Direction.LEFT) || (direction == Direction.RIGHT));
-		assert (isMoving(direction));
+		//assert (isMoving(direction));
+		assert (!isMoving(oppositeDirection(direction)));
 		setHorVelocity(0);
 		setHorDirection(Direction.NULL);
 		setHorAcceleration(0);
-		setTimeSum(0);
+		getSpritesTimer().reset();
+		if(direction == Direction.LEFT)
+			setEnableMoveLeft(false);
+		else
+			setEnableMoveRight(false);
+		setEnableMove(false);
+	}
+	
+	public Direction oppositeDirection(Direction direction){
+		assert ((direction == Direction.LEFT) || (direction == Direction.RIGHT));
+		if (direction == Direction.LEFT)
+			return Direction.RIGHT;
+		else
+			return Direction.LEFT;
 	}
 	
 	/**
@@ -437,6 +441,77 @@ public class Mazub extends Character{
 
 	private boolean enableStandUp = false;
 	
+	public boolean isEnableMoveRight() {
+		return enableMoveRight;
+	}
+
+	public void setEnableMoveRight(boolean enableMoveRight) {
+		this.enableMoveRight = enableMoveRight;
+	}
+
+	private boolean enableMoveRight;
+	
+	
+	public boolean isEnableMoveLeft() {
+		return enableMoveLeft;
+	}
+
+	public void setEnableMoveLeft(boolean enableMoveLeft) {
+		this.enableMoveLeft = enableMoveLeft;
+	}
+
+	private boolean enableMoveLeft;
+	
+	public boolean isEnableMove() {
+		return enableMove;
+	}
+
+	public void setEnableMove(boolean enableMove) {
+		this.enableMove = enableMove;
+	}
+
+	private boolean enableMove;
+	
+	@Override
+	protected double[] updatePositionTileCollision(double[] newPos){
+		assert newPos.length == 2;
+		double newXPos = newPos[0];
+		double newYPos = newPos[1];
+		for (Tile impassableTile: getWorld().getImpassableTiles()){
+			if (this.isOverlappingWith(impassableTile)){
+				if (isColliding(Direction.DOWN, impassableTile)){
+					//System.out.println("Colliding down");
+					if (isMoving(Direction.DOWN))
+						newYPos = impassableTile.getYPosition()+getWorld().getTileSize()-1;
+					endMovement(Direction.DOWN);
+				}
+				else if(isColliding(Direction.UP, impassableTile)){
+					if (isMoving(Direction.UP))
+						newYPos = impassableTile.getYPosition()-getHeight()+1;
+					endMovement(Direction.UP);
+					//System.out.println("Colliding up");
+				}
+				if(isColliding(Direction.LEFT, impassableTile)){
+					if (isMoving(Direction.LEFT)){
+						newXPos = impassableTile.getXPosition()+getWorld().getTileSize()-1;
+						setEnableMoveLeft(true);
+					}
+					endMovement(Direction.LEFT);
+					//System.out.println("Colliding left");
+				}
+				else if(isColliding(Direction.RIGHT, impassableTile)){
+					if (isMoving(Direction.RIGHT)){
+						newXPos = impassableTile.getXPosition()-getWidth()+1;
+						setEnableMoveRight(true);
+					}
+					endMovement(Direction.RIGHT);
+					//System.out.println("Colliding right");
+				}
+			}
+		}
+		return doubleArray(newXPos,newYPos);
+	}
+	
 	/**
 	 * Method to update the position and velocity of the Mazub based on the current position,
 	 * velocity and a given time duration in seconds.
@@ -467,6 +542,18 @@ public class Mazub extends Character{
 			throw new IllegalTimeIntervalException(this);
 		if (isEnableStandUp())
 			endDuck();
+		if(isEnableMove() && isEnableMoveRight()){
+			setHorVelocity(getInitHorVelocity());
+			setHorDirection(Direction.RIGHT);
+			setHorAcceleration(getMaxHorAcceleration());
+			setEnableMoveRight(false);
+		}
+		if(isEnableMove() && isEnableMoveLeft()){
+			setHorVelocity(getInitHorVelocity());
+			setHorDirection(Direction.LEFT);
+			setHorAcceleration(getMaxHorAcceleration());
+			setEnableMoveLeft(false);
+		}
 		double td = getTimeToMoveOnePixel(timeDuration);
 		if (td > timeDuration)
 			td = timeDuration;
@@ -484,14 +571,14 @@ public class Mazub extends Character{
 			}
 		}
 		updateLastDirection();
-		counter(timeDuration);
+		getSpritesTimer().counter(timeDuration);
 		updateHitPoints();
 		//System.out.println(getImmuneTimer());
-		counterImmune(timeDuration);
+		getImmuneTimer().counter(timeDuration);
 		if (isOverlappingWith(Terrain.WATER) || isOverlappingWith(Terrain.MAGMA))
-			counterHp(timeDuration);
+			getHpTimer().counter(timeDuration);
 		else
-			setTimeSumHp(0);
+			getHpTimer().reset();
 	}
 	
 	
@@ -623,7 +710,7 @@ public class Mazub extends Character{
 	 */
 	private boolean wasMoving(){
 		if (getLastDirection() != Direction.NULL &&
-			getTimeSum() < 1.0)
+			getSpritesTimer().getTimeSum() < 1.0)
 				return true;
 		return false;
 	}
@@ -734,13 +821,13 @@ public class Mazub extends Character{
 	private void updateWalkingAnimationRight() {
 		if ((getIndex() < 8 || getIndex() > (8+getNumberOfWalkingSprites())))
 			setIndex(8);
-		if (getTimeSum()>0.075){
-			int newIndex = getIndex() + (int) (Math.floor(getTimeSum()/0.075));
+		if (getSpritesTimer().getTimeSum()>0.075){
+			int newIndex = getIndex() + (int) (Math.floor(getSpritesTimer().getTimeSum()/0.075));
 			if (newIndex > (8+getNumberOfWalkingSprites()))
 				setIndex((newIndex-8)%getNumberOfWalkingSprites() + 8);
 			else
 				setIndex(newIndex);
-			setTimeSum(getTimeSum()%0.075);}
+			getSpritesTimer().setTimeSum(getSpritesTimer().getTimeSum()%0.075);}
 	}
 
 	/**
@@ -757,14 +844,14 @@ public class Mazub extends Character{
 	private void updateWalkingAnimationLeft() {
 		if ((getIndex() < (9+getNumberOfWalkingSprites())))
 			setIndex(9+getNumberOfWalkingSprites());
-		if (getTimeSum()>0.075){
-			int newIndex = getIndex() + (int) (Math.floor(getTimeSum()/0.075));
+		if (getSpritesTimer().getTimeSum()>0.075){
+			int newIndex = getIndex() + (int) (Math.floor(getSpritesTimer().getTimeSum()/0.075));
 			if (newIndex > (9+2*getNumberOfWalkingSprites()))
 				setIndex((newIndex-(9+getNumberOfWalkingSprites()))%getNumberOfWalkingSprites()
 						+ 9+getNumberOfWalkingSprites());
 			else
 				setIndex(newIndex);
-			setTimeSum(getTimeSum()%0.075);}
+			getSpritesTimer().setTimeSum(getSpritesTimer().getTimeSum()%0.075);}
 	}
 	
 	

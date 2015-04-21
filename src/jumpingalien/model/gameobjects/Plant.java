@@ -90,13 +90,13 @@ public class Plant extends GameObject {
 	IllegalYPositionException,IllegalTimeIntervalException{
 		if (!isValidTimeInterval(timeDuration))
 			throw new IllegalTimeIntervalException(this);
-		if (getTimeSum()>0.5){
+		if (getSpritesTimer().getTimeSum()>0.5){
 			alternateDirection();
-			setTimeSum((getTimeSum()-0.5));
+			getSpritesTimer().setTimeSum((getSpritesTimer().getTimeSum()-0.5));
 		}
 		updatePosition(timeDuration);
 		updateHitPoints();
-		counter(timeDuration);
+		getSpritesTimer().counter(timeDuration);
 	}
 	
 	/**

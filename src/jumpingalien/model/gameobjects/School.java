@@ -4,7 +4,6 @@ import java.util.HashSet;
 
 public class School {
 	
-	public School(){}
 	
 	int getNbSlimes(){
 		return slimes.size();

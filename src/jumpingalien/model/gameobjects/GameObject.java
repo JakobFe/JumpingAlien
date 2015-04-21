@@ -22,7 +22,7 @@ import jumpingalien.util.Sprite;
  * 			| canHaveAsMaxHorVelocity(getMaxHorVelocity())
  * @invar	The hit points of this game object must be a valid number of hit points.
  * 			| isValidHitPoints(hitPoints)
- *  f
+ *  
  * @author 	Jakob Festraets, Vincent Kemps
  * @version	1.0
  */
@@ -524,7 +524,7 @@ public abstract class GameObject {
 			if (direction == Direction.LEFT || direction == Direction.RIGHT){
 				setHorVelocity(0);
 				setHorDirection(Direction.NULL);
-				setTimeSum(0);
+				getSpritesTimer().reset();
 			} 
 		}
 	}
@@ -578,7 +578,7 @@ public abstract class GameObject {
 			throw new IllegalTimeIntervalException(this);
 		updatePosition(timeDuration);
 		updateHorVelocity(timeDuration);
-		counter(timeDuration);
+		getSpritesTimer().counter(timeDuration);
 	}
 
 	/**
@@ -757,38 +757,8 @@ public abstract class GameObject {
 			setHorVelocity(newVel);
 	}
 
-	/**
-	 * Return the stored period of elapsed time .
-	 */
-	@Basic @Model
-	protected double getTimeSum() {
-		return timeSum;
-	}
-
-	/**
-	 * Sets the time sum to a given sum.
-	 * 
-	 * @param 	timeSum
-	 * 			The timeSum to set.
-	 * @post	The new time sum is equal to the given timeSum.
-	 * 			| new.getTimeSum() = timeSum 
-	 */
-	@Model
-	protected void setTimeSum(double timeSum) {
-		this.timeSum = timeSum;
-	}
-	
-	/**
-	 * A method to increment the time sum with the given time duration.
-	 * 
-	 * @param 	timeDuration
-	 * 			The time duration to add to time sum.
-	 * @post	The new time sum is incremented with the given time duration.
-	 * 			| new.getTimeSum() == this.getTimeSum() + timeDuration
-	 */
-	@Model
-	protected void counter(double timeDuration){
-		setTimeSum(getTimeSum()+timeDuration);
+	protected Timer getSpritesTimer(){
+		return this.spritesTimer;
 	}
 	
 	/**
@@ -796,7 +766,7 @@ public abstract class GameObject {
 	 * functions as a timer that increments subsequent time intervals
 	 * in the method advanceTime.
 	 */
-	private double timeSum;
+	private final Timer spritesTimer = new Timer();
 
 	/**
 	 * Return the index of the current sprite in the array of sprites,
@@ -891,6 +861,8 @@ public abstract class GameObject {
 	protected void terminate(){
 		assert (getHitPoints()==0);
 		this.isTerminated = true;
+		setHorDirection(Direction.NULL);
+		setHorVelocity(0);
 	}
 	
 	/**

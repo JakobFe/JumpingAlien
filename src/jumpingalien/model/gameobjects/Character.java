@@ -493,7 +493,7 @@ public abstract class Character extends GameObject{
 				setHorVelocity(0);
 				setHorDirection(Direction.NULL);
 				setHorAcceleration(0);
-				setTimeSum(0);
+				getSpritesTimer().reset();
 			} 
 			else if (direction == Direction.DOWN){
 				setVertVelocity(0);
@@ -513,38 +513,8 @@ public abstract class Character extends GameObject{
 		return (getHorDirection() == direction || getVertDirection() == direction);
 	}
 	
-	/**
-	 * Return the stored period of elapsed time .
-	 */
-	@Basic @Model
-	protected double getTimeSumHp() {
-		return timeSumHp;
-	}
-
-	/**
-	 * Sets the time sum to a given sum.
-	 * 
-	 * @param 	timeSum
-	 * 			The timeSum to set.
-	 * @post	The new time sum is equal to the given timeSum.
-	 * 			| new.getTimeSum() = timeSum 
-	 */
-	@Model
-	protected void setTimeSumHp(double timeSumHp) {
-		this.timeSumHp = timeSumHp;
-	}
-	
-	/**
-	 * A method to increment the time sum with the given time duration.
-	 * 
-	 * @param 	timeDuration
-	 * 			The time duration to add to time sum.
-	 * @post	The new time sum is incremented with the given time duration.
-	 * 			| new.getTimeSum() == this.getTimeSum() + timeDuration
-	 */
-	@Model
-	protected void counterHp(double timeDuration){
-		setTimeSumHp(getTimeSumHp()+timeDuration);
+	protected Timer getHpTimer(){
+		return hpTimer;
 	}
 	
 	/**
@@ -552,6 +522,6 @@ public abstract class Character extends GameObject{
 	 * functions as a timer that increments subsequent time intervals
 	 * in the method advanceTime.
 	 */
-	private double timeSumHp;
+	private final Timer hpTimer = new Timer();
 
 }
