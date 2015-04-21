@@ -269,11 +269,10 @@ public class Slime extends Character{
 	
 	@Override
 	public String toString(){
-		return getHitPoints() + getSchool().toString();
-		/*return "Slime at " + getPosition().getDisplayedXPosition() + "," +
-							 getPosition().getDisplayedYPosition() + " with" +
-							 getHitPoints() + "hit points.";*/
+		//return getHitPoints() + getSchool().toString();
+		return getPosition().toString();
 	}
+	
 	
 	@Override
 	protected void terminate(){
@@ -281,7 +280,6 @@ public class Slime extends Character{
 		assert getHpTimer().getTimeSum() >= 0.6;
 		super.terminate();
 		getWorld().removeAsSlime(this);
-		getWorld().getAllGameObjects().remove(this);
 		setWorld(null);
 	}
 }

@@ -189,4 +189,9 @@ public class Position {
 	public Position copy(){
 		return new Position(getXPosition(),getYPosition(),getWorld());
 	}
+	
+	@Override
+	public String toString(){
+		return "x: " + getDisplayedXPosition() + ", y: " + getDisplayedYPosition();
+	}
 }

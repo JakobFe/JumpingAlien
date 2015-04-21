@@ -403,6 +403,7 @@ public abstract class Character extends GameObject{
 				if (isColliding(Direction.DOWN, impassableTile)){
 					//System.out.println("Colliding down");
 					if (isMoving(Direction.DOWN))
+						//newYPos = impassableTile.getYPosition() + getWorld().getTileSize() -1; 
 						newYPos = this.getPosition().getYPosition();
 					endMovement(Direction.DOWN);
 				}
