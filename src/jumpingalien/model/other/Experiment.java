@@ -58,14 +58,14 @@ public class Experiment {
 			System.out.print(rightPerimeter[index][0]);
 			System.out.print(rightPerimeter[index][1]);
 			System.out.println();
-		}*/
+		}
 		Mazub alien = new Mazub(70,70,spriteArrayForSize(10, 10, 30));
 		int[][] lowerPerimeter = alien.getLowerPerimeter();
 		for(int index=0;index<lowerPerimeter.length;index++){
 			System.out.print(lowerPerimeter[index][0]);
 			System.out.print(lowerPerimeter[index][1]);
 			System.out.println();
-		}
+		}*/
 		/*
 		Mazub alien = new Mazub(0,0,spriteArrayForSize(10, 10, 30));
 		int[][] upperPerimeter = alien.getUpperPerimeter();
@@ -75,7 +75,7 @@ public class Experiment {
 			System.out.println();
 		}*/
 		World testWorld = new World(70,6,4,100,100,5,3);
-		testWorld.getTileAtTilePos(0, 0).setGeoFeature(Terrain.GROUND);
+		/*testWorld.getTileAtTilePos(0, 0).setGeoFeature(Terrain.GROUND);
 		testWorld.getTileAtTilePos(1, 0).setGeoFeature(Terrain.GROUND);
 		testWorld.getTileAtTilePos(2, 0).setGeoFeature(Terrain.GROUND);
 		testWorld.getTileAtTilePos(3, 0).setGeoFeature(Terrain.GROUND);
@@ -98,6 +98,8 @@ public class Experiment {
 				System.out.print(tile.toString());
 				System.out.println();
 			}
-		}
+		}*/
+		System.out.println(1399/70);
+		System.out.println(testWorld.getTileAtPos(419, 0));
 	}
 }

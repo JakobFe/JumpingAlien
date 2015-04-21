@@ -22,7 +22,7 @@ import jumpingalien.util.Sprite;
  * 			| canHaveAsMaxHorVelocity(getMaxHorVelocity())
  * @invar	The hit points of this game object must be a valid number of hit points.
  * 			| isValidHitPoints(hitPoints)
- *  f
+ *  
  * @author 	Jakob Festraets, Vincent Kemps
  * @version	1.0
  */
@@ -861,6 +861,8 @@ public abstract class GameObject {
 	protected void terminate(){
 		assert (getHitPoints()==0);
 		this.isTerminated = true;
+		setHorDirection(Direction.NULL);
+		setHorVelocity(0);
 	}
 	
 	/**
