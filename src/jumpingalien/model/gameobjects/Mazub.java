@@ -128,7 +128,6 @@ public class Mazub extends Character{
 				getHpTimer().setTimeSum(getHpTimer().getTimeSum()-0.2);
 			}
 		}
-		super.updateHitPoints();
 	}
 	
 	public boolean isImmune() {

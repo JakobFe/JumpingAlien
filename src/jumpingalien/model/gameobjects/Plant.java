@@ -97,7 +97,7 @@ public class Plant extends GameObject {
 		}
 		updatePosition(timeDuration);
 		updateHitPoints();
-		getSpritesTimer().counter(timeDuration);
+		updateTimers(timeDuration);
 	}
 	
 	/**
@@ -124,10 +124,12 @@ public class Plant extends GameObject {
 				}
 			}
 		}
-		updatePositionObjectCollision(doubleArray(newXPos,this.getPosition().getYPosition()));
+		double[] newPos = updatePositionObjectCollision(doubleArray(newXPos,this.getPosition().getYPosition()));
+		newXPos = newPos[0];
 		if(isOverlappingWith(getWorld().getMazub()) &&
-		   getWorld().getMazub().canConsumePlant()){
+		   getWorld().getMazub().canConsumePlant() && getHitPoints() != 0){
 				setHitPoints(0);
+				getHpTimer().reset();
 				getWorld().getMazub().consumePlant();
 		}
 		getPosition().terminate();
@@ -139,6 +141,12 @@ public class Plant extends GameObject {
 		collection.addAll(getWorld().getAllPlants());
 		collection.add(getWorld().getMazub());
 		return getPositionAfterCollision(newPos,collection);
+	}
+	
+	protected void updateHitPoints(){
+		if (getHitPoints() == 0 && getHpTimer().getTimeSum() > 0.6){
+			terminate();
+		}
 	}
 	
 	/**
@@ -163,6 +171,8 @@ public class Plant extends GameObject {
 	
 	@Override
 	public void terminate(){
+		System.out.println("terminate plant");
+		assert getSpritesTimer().getTimeSum() >= 0.6;
 		super.terminate();
 		getWorld().removeAsPlant(this);
 		setWorld(null);

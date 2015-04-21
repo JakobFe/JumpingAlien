@@ -345,11 +345,6 @@ public abstract class Character extends GameObject{
 	
 	protected abstract void updateMovement();
 	
-	protected void updateTimers(double timeDuration){
-		getHpTimer().counter(timeDuration);
-		getSpritesTimer().counter(timeDuration);
-	}
-	
 	protected double getTimeToMoveOnePixel(double timeDuration){
 		double tdHor = 0.01/(Math.abs(getHorVelocity())
 				+Math.abs(getHorAcceleration())*timeDuration);
@@ -532,16 +527,4 @@ public abstract class Character extends GameObject{
 		assert (direction != Direction.NULL);
 		return (getHorDirection() == direction || getVertDirection() == direction);
 	}
-	
-	protected Timer getHpTimer(){
-		return hpTimer;
-	}
-	
-	/**
-	 * A variable storing a period of elapsed time. This variable 
-	 * functions as a timer that increments subsequent time intervals
-	 * in the method advanceTime.
-	 */
-	private final Timer hpTimer = new Timer();
-
 }

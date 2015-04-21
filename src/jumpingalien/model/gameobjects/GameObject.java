@@ -306,10 +306,7 @@ public abstract class GameObject {
 		}
 	}
 	
-	protected void updateHitPoints(){
-		if(getHitPoints() == 0)
-			terminate();
-	}
+	protected abstract void updateHitPoints();
 	
 	/**
 	 * A variable storing the current amount of hit points.
@@ -802,6 +799,22 @@ public abstract class GameObject {
 			setHorVelocity(newVel);
 	}
 
+	protected void updateTimers(double timeDuration){
+		getHpTimer().counter(timeDuration);
+		getSpritesTimer().counter(timeDuration);
+	}
+	
+	protected Timer getHpTimer(){
+		return hpTimer;
+	}
+	
+	/**
+	 * A variable storing a period of elapsed time. This variable 
+	 * functions as a timer that increments subsequent time intervals
+	 * in the method advanceTime.
+	 */
+	private final Timer hpTimer = new Timer();
+	
 	protected Timer getSpritesTimer(){
 		return this.spritesTimer;
 	}
