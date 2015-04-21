@@ -334,6 +334,7 @@ public abstract class Character extends GameObject{
 			} catch (NullPointerException e) {
 			}
 			catch(IllegalXPositionException | IllegalYPositionException exc){
+				System.out.println("Illegal position!");
 				setHitPoints(0);
 				terminate();
 			}
