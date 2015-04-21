@@ -479,12 +479,18 @@ public abstract class Character extends GameObject{
 	@Model @Override
 	protected void updateHorVelocity(double timeDuration){
 		double newVel = getHorVelocity() + getHorAcceleration() * timeDuration;
-		if (newVel > getMaxHorVelocity()){
-			setHorVelocity(getMaxHorVelocity());
+		if (getHitPoints() != 0){
+			if (newVel > getMaxHorVelocity()){
+				setHorVelocity(getMaxHorVelocity());
+				setHorAcceleration(0);
+			}
+			else
+				setHorVelocity(newVel);
+		}
+		else{
+			setHorVelocity(0);
 			setHorAcceleration(0);
 		}
-		else
-			setHorVelocity(newVel);
 	}
 	
 	/**
