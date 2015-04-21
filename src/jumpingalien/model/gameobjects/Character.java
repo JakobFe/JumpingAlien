@@ -355,6 +355,8 @@ public abstract class Character extends GameObject{
 				+Math.abs(getHorAcceleration())*timeDuration);
 		double tdVert = 0.01/(Math.abs(getVertVelocity())
 				+Math.abs(getVertAcceleration())*timeDuration);
+		if(Math.min(tdHor, tdVert) > 1.0 && Math.min(tdHor, tdVert) < 10)
+			System.out.println(Math.min(tdHor, tdVert));
 		return Math.min(tdHor, tdVert);
 	}
 	
@@ -382,9 +384,9 @@ public abstract class Character extends GameObject{
 	}
 	
 	protected boolean standsOnObject(){
-		for (Character character: getWorld().getAllCharacters()){
-			if ((character != this) && this.isOverlappingWith(character)){
-				if (isColliding(Direction.DOWN, character))
+		for (GameObject gameObject: getWorld().getAllGameObjects()){
+			if ((gameObject != this) && this.isOverlappingWith(gameObject)){
+				if (isColliding(Direction.DOWN, gameObject))
 					return true;
 			}
 		}
@@ -406,74 +408,30 @@ public abstract class Character extends GameObject{
 				if (isColliding(Direction.DOWN, impassableTile)){
 					//System.out.println("Colliding down");
 					if (isMoving(Direction.DOWN))
-						newYPos = impassableTile.getYPosition()+getWorld().getTileSize()-1;
+						newYPos = this.getPosition().getYPosition();
 					endMovement(Direction.DOWN);
 				}
 				else if(isColliding(Direction.UP, impassableTile)){
 					if (isMoving(Direction.UP))
-						newYPos = impassableTile.getYPosition()-getHeight()+1;
+						newYPos = this.getPosition().getYPosition();
 					endMovement(Direction.UP);
 					//System.out.println("Colliding up");
 				}
 				if(isColliding(Direction.LEFT, impassableTile)){
-					if (isMoving(Direction.LEFT))
-						newXPos = impassableTile.getXPosition()+getWorld().getTileSize()-1;
+					if (isMoving(Direction.LEFT)){
+						newXPos = this.getPosition().getXPosition();
+					}
 					endMovement(Direction.LEFT);
 					//System.out.println("Colliding left");
 				}
 				else if(isColliding(Direction.RIGHT, impassableTile)){
 					if (isMoving(Direction.RIGHT))
-						newXPos = impassableTile.getXPosition()-getWidth()+1;
+						newXPos = this.getPosition().getXPosition();
 					endMovement(Direction.RIGHT);
 					//System.out.println("Colliding right");
 				}
 			}
 		}
-		return doubleArray(newXPos,newYPos);
-	}
-	
-	protected double[] updatePositionObjectCollision(double[] newPos){
-		assert newPos.length == 2;
-		double newXPos = newPos[0];
-		double newYPos = newPos[1];
-		for (Character object: getWorld().getAllCharacters()){
-			if ((object != this) && this.isOverlappingWith(object)){
-				if (isColliding(Direction.DOWN, object)){
-					//System.out.print("Colliding down with object");
-					//System.out.print(object.toString());
-					if (isMoving(Direction.DOWN)){
-						newYPos = object.getPosition().getYPosition()+object.getHeight()-1;
-						//newYPos = object.getPosition().getYPosition();
-					}
-					endMovement(Direction.DOWN);
-				}
-				else if(isColliding(Direction.UP, object)){
-					if (isMoving(Direction.UP)){
-						newYPos = object.getPosition().getYPosition()-getHeight()+1;
-						//newYPos = object.getPosition().getYPosition();
-					}
-					endMovement(Direction.UP);
-					//System.out.println("Colliding up");
-				}
-				if(isColliding(Direction.LEFT, object)){
-					if (isMoving(Direction.LEFT)){
-						newXPos = object.getPosition().getXPosition()+object.getWidth()-1;
-						//newXPos = object.getPosition().getXPosition();
-					}
-					endMovement(Direction.LEFT);
-					//System.out.println("Colliding left");
-				}
-				else if(isColliding(Direction.RIGHT, object)){
-					if (isMoving(Direction.RIGHT)){
-						newXPos = object.getPosition().getXPosition()-getWidth()+1;
-						//newXPos = object.getPosition().getXPosition();
-					}
-					endMovement(Direction.RIGHT);
-					//System.out.println("Colliding right");
-				}
-			}
-		}
-		
 		return doubleArray(newXPos,newYPos);
 	}
 

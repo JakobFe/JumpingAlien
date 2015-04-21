@@ -1,10 +1,12 @@
 package jumpingalien.model.gameobjects;
 
 import jumpingalien.model.exceptions.*;
+import static jumpingalien.tests.util.TestUtils.doubleArray;
 import jumpingalien.model.other.*;
 import jumpingalien.model.worldfeatures.*;
 import jumpingalien.util.Sprite;
 
+import java.util.HashSet;
 import java.util.Random;
 
 /**
@@ -84,7 +86,6 @@ public class Plant extends GameObject {
 	 * 			|	then updateSpriteIndex()
 	 * 			... 
 	 */
-	//maar deze implementatie mag niet volgens LISKOV!!!
 	@Override
 	public void advanceTime(double timeDuration) throws IllegalXPositionException,
 	IllegalYPositionException,IllegalTimeIntervalException{
@@ -123,6 +124,7 @@ public class Plant extends GameObject {
 				}
 			}
 		}
+		updatePositionObjectCollision(doubleArray(newXPos,this.getPosition().getYPosition()));
 		if(isOverlappingWith(getWorld().getMazub()) &&
 		   getWorld().getMazub().canConsumePlant()){
 				setHitPoints(0);
@@ -130,6 +132,13 @@ public class Plant extends GameObject {
 		}
 		getPosition().terminate();
 		setPosition(new Position(newXPos,getPosition().getYPosition(),getWorld()));
+	}
+	
+	protected double[] updatePositionObjectCollision(double[] newPos){
+		HashSet<GameObject> collection = new HashSet<GameObject>();
+		collection.addAll(getWorld().getAllPlants());
+		collection.add(getWorld().getMazub());
+		return getPositionAfterCollision(newPos,collection);
 	}
 	
 	/**

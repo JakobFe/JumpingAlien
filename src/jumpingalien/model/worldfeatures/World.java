@@ -251,10 +251,9 @@ public class World {
 		if (getMazub() != null){
 			worldFeatures.remove(getMazub().getPosition());
 			getMazub().setWorld(null);
-			getAllCharacters().remove(getMazub());
+			getAllGameObjects().remove(getMazub());
 		}
 		this.mazub = alien;
-		getAllCharacters().add(alien);
 		if (alien != null){
 			getMazub().setWorld(this);
 			worldFeatures.put(alien.getPosition(), alien);
@@ -282,15 +281,13 @@ public class World {
 	}
 	
 	public void addAsPlant(Plant plant){
-		getAllPlants().add(plant);
-		worldFeatures.put(plant.getPosition(), plant);
+		allPlants.add(plant);
 		plant.setWorld(this);
 	}
 	
 	public void removeAsPlant(Plant plant){
 		assert hasAsPlant(plant);
 		allPlants.remove(plant);
-		worldFeatures.remove(plant.getPosition());
 	}
 
 	private final HashSet<Plant> allPlants = new HashSet<Plant>();
@@ -314,15 +311,12 @@ public class World {
 	
 	public void addAsSlime(Slime slime){
 		getAllSlimes().add(slime);
-		getAllCharacters().add(slime);
-		worldFeatures.put(slime.getPosition(), slime);
 		slime.setWorld(this);
 	}
 	
 	public void removeAsSlime(Slime slime){
 		assert hasAsSlime(slime);
 		allSlimes.remove(slime);
-		worldFeatures.remove(slime.getPosition());
 	}
 
 	private final HashSet<Slime> allSlimes = new HashSet<Slime>();
@@ -347,24 +341,34 @@ public class World {
 	
 	public void addAsShark(Shark shark){
 		getAllSharks().add(shark);
-		getAllCharacters().add(shark);
-		worldFeatures.put(shark.getPosition(), shark);
 		shark.setWorld(this);
 	}
 	
 	public void removeAsShark(Shark shark){
 		assert hasAsShark(shark);
 		getAllSharks().remove(shark);
-		worldFeatures.remove(shark.getPosition());
 	}
 	
 	private final HashSet<Shark> allSharks = new HashSet<Shark>();
 	
-	public HashSet<Character> getAllCharacters(){
-		return allCharacters; 
+	public HashSet<GameObject> getAllGameObjects(){
+		HashSet<GameObject> result = new HashSet<GameObject>();
+		result.addAll(allSharks);
+		result.addAll(allPlants);
+		result.addAll(allSlimes);
+		result.add(getMazub());
+		return result;
 	}
 	
-	private final HashSet<Character> allCharacters = new HashSet<Character>();
+	public HashSet<Character> getAllCharacters(){
+		HashSet<Character> result = new HashSet<Character>();
+		result.addAll(allSharks);
+		result.addAll(allSlimes);
+		result.add(getMazub());
+		return result;
+	}
+	
+	
 	
 	public boolean didPlayerWin(){
 		if (getMazub() == null)

@@ -233,6 +233,12 @@ public class Shark extends Character {
 		getPosition().terminate();
 		setPosition(new Position(newXPos,newYPos,getWorld()));
 	}
+	
+	protected double[] updatePositionObjectCollision(double[] newPos){
+		HashSet<GameObject> collection = new HashSet<GameObject>();
+		collection.addAll(getWorld().getAllCharacters());
+		return getPositionAfterCollision(newPos,collection);
+	}
 
 	private boolean isSubmergedIn(Terrain terrain){ 
 		HashSet<Tile> affectedTiles = getWorld().getTilesIn(getPosition().getDisplayedXPosition()+1,
@@ -316,7 +322,7 @@ public class Shark extends Character {
 		assert getHpTimer().getTimeSum() >= 0.6;
 		super.terminate();
 		getWorld().removeAsShark(this);
-		getWorld().getAllCharacters().remove(this);
+		getWorld().getAllGameObjects().remove(this);
 		setWorld(null);
 	}
 	
