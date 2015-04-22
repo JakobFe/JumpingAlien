@@ -180,8 +180,10 @@ public class Slime extends Character{
 			getHpTimer().reset();
 		
 		if (getHitPoints() != 0 && alien != null && !alien.isImmune() && isOverlappingWith(alien)){
-			setHitPoints(getHitPoints()-50);
-			isHurt = true;
+			if(!isImmune()){
+				setHitPoints(getHitPoints()-50);
+				isHurt = true;
+			}
 			//System.out.println(alien.standsOn(this));
 			if (!alien.standsOn(this)){
 				alien.getImmuneTimer().reset();
@@ -193,9 +195,12 @@ public class Slime extends Character{
 		if (getHitPoints() != 0){
 			for (Shark shark: getWorld().getAllUnterminatedSharks()){
 				if(isOverlappingWith(shark)){
-					setHitPoints(getHitPoints()-50);
-					isHurt = true;
-					shark.setHitPoints(shark.getHitPoints()-50);
+					if(!isImmune()){
+						setHitPoints(getHitPoints()-50);
+						isHurt = true;
+					}
+					if(!shark.isImmune())
+						shark.setHitPoints(shark.getHitPoints()-50);
 				}
 			}
 		}
@@ -220,6 +225,8 @@ public class Slime extends Character{
 		
 		if(isHurt || isDamaged)
 			updateHpSchool();
+		if(isHurt)
+			getImmuneTimer().reset();
 		if (isHurt && getHitPoints() == 0)
 			getHpTimer().reset();
 		else if (getHitPoints() == 0 && getHpTimer().getTimeSum()>= 0.6){
@@ -269,8 +276,8 @@ public class Slime extends Character{
 	
 	@Override
 	public String toString(){
-		//return getHitPoints() + getSchool().toString();
-		return getPosition().toString();
+		return getHitPoints() + getSchool().toString();
+		//return getPosition().toString();
 	}
 	
 	

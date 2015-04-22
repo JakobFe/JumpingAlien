@@ -112,7 +112,6 @@ public class Mazub extends Character{
 	
 	@Override
 	protected void updateHitPoints(){
-		boolean isHurt = false;
 		if(!isDead()){
 			if (!isOverlappingWith(Terrain.WATER) && !isOverlappingWith(Terrain.MAGMA))
 				getHpTimer().setTimeSum(0);
@@ -131,22 +130,9 @@ public class Mazub extends Character{
 				}
 			}
 		}
-		if(isHurt && isDead()){
-			getHpTimer().reset();
-		}
 		if(isDead() && getHpTimer().getTimeSum()>0.6)
 			terminate();
 	}
-	
-	public boolean isImmune() {
-		return (getImmuneTimer().getTimeSum() < 0.6);
-	}
-
-	public Timer getImmuneTimer() {
-		return immuneTimer;
-	}
-
-	private Timer immuneTimer = new Timer(0.6);
 	
 	/**
 	 * Check whether the given world is a valid world for this Mazub.
@@ -526,7 +512,10 @@ public class Mazub extends Character{
 	@Override
 	public void advanceTime(double timeDuration) throws IllegalXPositionException,
 	IllegalYPositionException,IllegalTimeIntervalException{
+		int oldHitPoints = getHitPoints();
 		super.advanceTime(timeDuration);
+		if(getHitPoints() != oldHitPoints && isDead())
+			getHpTimer().reset();
 		updateLastDirection();
 	}
 	

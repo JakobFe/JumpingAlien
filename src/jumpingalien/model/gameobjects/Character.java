@@ -346,6 +346,12 @@ public abstract class Character extends GameObject{
 	
 	protected abstract void updateMovement();
 	
+	@Override
+	protected void updateTimers(double timeDuration){
+		super.updateTimers(timeDuration);
+		getImmuneTimer().counter(timeDuration);
+	}
+	
 	protected double getTimeToMoveOnePixel(double timeDuration){
 		double tdHor = 0.01/(Math.abs(getHorVelocity())
 				+Math.abs(getHorAcceleration())*timeDuration);
@@ -529,4 +535,14 @@ public abstract class Character extends GameObject{
 		assert (direction != Direction.NULL);
 		return (getHorDirection() == direction || getVertDirection() == direction);
 	}
+	
+	public boolean isImmune() {
+		return (getImmuneTimer().getTimeSum() < 0.6);
+	}
+
+	public Timer getImmuneTimer() {
+		return immuneTimer;
+	}
+
+	private Timer immuneTimer = new Timer(0.6);
 }
