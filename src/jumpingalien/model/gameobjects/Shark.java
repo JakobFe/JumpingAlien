@@ -272,13 +272,11 @@ public class Shark extends Character {
 			getHpTimer().reset();
 		if (isOverlappingWith(alien) && !alien.isImmune() && getHitPoints() != 0){
 			if(!isImmune()){
-				setHitPoints(getHitPoints()-50);
+				getHurtBy(alien);
 				isHurt = true;
 			}
 			if (!alien.standsOn(this)){
-				alien.getImmuneTimer().reset();
-				alien.setHitPoints(alien.getHitPoints()-50);
-				assert alien.isImmune();
+				alien.getHurtBy(this);
 			}
 		}
 		if (getHitPoints() != 0 && !isImmune() && isOverlappingWith(Terrain.AIR)){
@@ -305,7 +303,28 @@ public class Shark extends Character {
 		else if (getHitPoints() == 0 && getHpTimer().getTimeSum()>= 0.6)
 			terminate();
 	}
-
+	
+	@Override
+	protected void getHurtBy(GameObject other){
+		if(!isImmune()){
+			if(other instanceof Mazub){
+				setHitPoints(getHitPoints()-50);
+			}
+			else
+				other.hurt(this);
+		}
+	}
+	
+	@Override
+	protected void hurt(GameObject other){
+		if(other instanceof Mazub && !((Mazub) other).isImmune() &&
+				!((Mazub) other).standsOn(this)){
+			((Mazub) other).getImmuneTimer().reset();
+			((Mazub) other).setHitPoints(((Mazub) other).getHitPoints()-50);
+		}
+		
+	}
+	
 	@Override
 	public void updateSpriteIndex() {
 		if(getHorDirection() == Direction.LEFT)

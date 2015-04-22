@@ -187,13 +187,21 @@ public class Plant extends GameObject {
 	protected void updateHitPoints(){
 		if(isOverlappingWith(getWorld().getMazub()) &&
 		   getWorld().getMazub().canConsumePlant() && !isDead()){
-			setHitPoints(0);
-			getHpTimer().reset();
-			getWorld().getMazub().consumePlant();
+			getHurtBy(getWorld().getMazub());
 		}
 		if (isDead() && getHpTimer().getTimeSum() > 0.6){
 			terminate();
 		}
+	}
+	
+	protected void getHurtBy(GameObject other){
+		if(other instanceof Mazub){
+			setHitPoints(0);
+			getHpTimer().reset();
+			getWorld().getMazub().consumePlant();
+		}
+		else
+			other.hurt(this);
 	}
 	
 	/**

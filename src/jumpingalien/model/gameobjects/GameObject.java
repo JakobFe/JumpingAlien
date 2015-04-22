@@ -307,6 +307,10 @@ public abstract class GameObject {
 	
 	protected abstract void updateHitPoints();
 	
+	protected void getHurtBy(GameObject other){}
+	
+	protected void hurt(GameObject other){}
+	
 	/**
 	 * A variable storing the current amount of hit points.
 	 * 

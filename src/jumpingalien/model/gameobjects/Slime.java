@@ -181,14 +181,11 @@ public class Slime extends Character{
 		
 		if (getHitPoints() != 0 && alien != null && !alien.isImmune() && isOverlappingWith(alien)){
 			if(!isImmune()){
-				setHitPoints(getHitPoints()-50);
+				getHurtBy(alien);
 				isHurt = true;
 			}
-			//System.out.println(alien.standsOn(this));
 			if (!alien.standsOn(this)){
-				alien.getImmuneTimer().reset();
-				alien.setHitPoints(alien.getHitPoints()-50);
-				assert alien.isImmune();
+				alien.getHurtBy(this);
 			}
 		}
 		
@@ -196,11 +193,11 @@ public class Slime extends Character{
 			for (Shark shark: getWorld().getAllUnterminatedSharks()){
 				if(isOverlappingWith(shark)){
 					if(!isImmune()){
-						setHitPoints(getHitPoints()-50);
+						getHurtBy(shark);
 						isHurt = true;
 					}
 					if(!shark.isImmune())
-						shark.setHitPoints(shark.getHitPoints()-50);
+						shark.getHurtBy(this);
 				}
 			}
 		}
@@ -231,6 +228,30 @@ public class Slime extends Character{
 			getHpTimer().reset();
 		else if (getHitPoints() == 0 && getHpTimer().getTimeSum()>= 0.6){
 			terminate();
+		}
+	}
+	
+	@Override
+	protected void getHurtBy(GameObject other){
+		if(!isImmune()){
+			if(other instanceof Mazub)
+				setHitPoints(getHitPoints()-50);
+			else if(other instanceof Shark)
+				setHitPoints(getHitPoints()-50);
+			else
+				other.hurt(this);
+		}
+	}
+	
+	protected void hurt(GameObject other){
+		if(other instanceof Mazub && !((Mazub) other).isImmune() &&
+				!((Mazub) other).standsOn(this)){
+			((Mazub) other).getImmuneTimer().reset();
+			((Mazub) other).setHitPoints(((Mazub) other).getHitPoints()-50);
+		}	
+		else if(other instanceof Shark && !((Shark) other).isImmune()){
+			other.setHitPoints(other.getHitPoints()-50);
+			((Shark)other).getImmuneTimer().reset();
 		}
 	}
 	

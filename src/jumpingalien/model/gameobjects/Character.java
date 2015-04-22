@@ -339,7 +339,6 @@ public abstract class Character extends GameObject{
 				terminate();
 			}
 		}
-		
 		updateTimers(timeDuration);
 		updateHitPoints();
 	}	

@@ -134,6 +134,7 @@ public class Mazub extends Character{
 			terminate();
 	}
 	
+	
 	/**
 	 * Check whether the given world is a valid world for this Mazub.
 	 * 
