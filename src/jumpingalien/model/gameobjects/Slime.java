@@ -17,6 +17,15 @@ import be.kuleuven.cs.som.annotate.Basic;
 import be.kuleuven.cs.som.annotate.Immutable;
 import be.kuleuven.cs.som.annotate.Model;
 
+/**
+ * A class concerning slimes as a subclass of characters.
+ * 
+ * @invar	
+ * 			| hasProperSchool()
+ * 
+ * @author Jakob Festraets, Vincent Kemps
+ * @version 1.0
+ */
 public class Slime extends Character{
 	
 	public Slime(int x, int y, Sprite[] sprites, School school){
@@ -60,7 +69,7 @@ public class Slime extends Character{
 	
 	@Override
 	protected boolean isValidWorld(World world) {
-		return (world == null || world.hasAsSlime(this));
+		return super.isValidWorld(world) && (world == null || world.hasAsSlime(this));
 	}
 	
 	/**
@@ -96,9 +105,17 @@ public class Slime extends Character{
 	public School getSchool() {
 		return school;
 	}
-
+	
+	boolean isValidSchool(School school){
+		return school == null || school.hasAsSlime(this);
+	}
+	
+	boolean hasProperSchool(){
+		return isValidSchool(getSchool());
+	}
+	
 	public void setSchool(School school) {
-		assert school == null || school.hasAsSlime(this);
+		isValidSchool(school);
 		this.school = school;
 	}
 

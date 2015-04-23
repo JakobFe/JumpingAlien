@@ -75,7 +75,8 @@ public class Plant extends GameObject {
 	 */
 	@Override
 	protected boolean isValidWorld(World world) {
-		return (world == null || world.hasAsPlant(this));
+		return super.isValidWorld(world) && (world == null || world.hasAsPlant(this));
+		
 	}
 	
 	/**

@@ -24,6 +24,8 @@ import jumpingalien.util.Sprite;
  * 			| canHaveAsMaxHorVelocity(getMaxHorVelocity())
  * @invar	The hit points of this game object must be a valid number of hit points.
  * 			| isValidHitPoints(hitPoints)
+ * @invar	
+ * 			| hasProperWorld()
  *  
  * @author 	Jakob Festraets, Vincent Kemps
  * @version	1.0
@@ -323,7 +325,7 @@ public abstract class GameObject {
 	 * 
 	 * Null is returned if this game object doesn't belong to any world.
 	 */
-	protected World getWorld() {
+	public World getWorld() {
 		return world;
 	}
 	
@@ -332,7 +334,14 @@ public abstract class GameObject {
 	 * @param 	world
 	 * 			The world to check.
 	 */
-	protected abstract boolean isValidWorld(World world);
+	protected  boolean isValidWorld(World world){
+		//return (world == null) || (!world.isGameStarted());
+		return true;
+	}
+	
+	protected boolean hasProperWorld(){
+		return isValidWorld(getWorld());
+	}
 	
 	/**
 	 * A method to set the world of this game object to the given world.
@@ -927,6 +936,7 @@ public abstract class GameObject {
 	 */
 	protected void terminate(){
 		assert (getHitPoints()==0);
+		assert getHpTimer().getTimeSum()>0.6;
 		this.isTerminated = true;
 		setHorDirection(Direction.NULL);
 		setHorVelocity(0);

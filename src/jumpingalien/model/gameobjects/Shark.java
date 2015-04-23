@@ -83,7 +83,7 @@ public class Shark extends Character {
 	
 	@Override
 	protected boolean isValidWorld(World world) {
-		return world == null || world.hasAsShark(this);
+		return super.isValidWorld(world) && (world == null || world.hasAsShark(this));
 	}
 	
 	public double getPeriodDuration() {

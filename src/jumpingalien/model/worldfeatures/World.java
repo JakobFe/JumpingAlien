@@ -1,17 +1,20 @@
 package jumpingalien.model.worldfeatures;
 
-import java.util.HashMap;
 import java.util.HashSet;
 
 import jumpingalien.model.exceptions.*;
 import jumpingalien.model.gameobjects.*;
 import jumpingalien.model.gameobjects.Character;
-import jumpingalien.model.other.Position;
 import be.kuleuven.cs.som.annotate.*;
 import static jumpingalien.tests.util.TestUtils.intArray;
 
 /**
  * A class concerning the world in which the game is played.
+ * 
+ * @invar	...
+ * 			| hasProperGameObjects()
+ * @invar	...
+ * 			| hasProperTiles()
  * 
  * @author Jakob Festraets, Vincent Kemps
  * @version 1.0
@@ -112,13 +115,6 @@ public class World {
 		}
 		return result;
 	}
-
-	public GameObject getFeatureOnPosition(Position position){
-		assert (worldFeatures.containsKey(position));
-		return worldFeatures.get(position);
-	}
-	
-	public HashMap<Position,GameObject> worldFeatures = new HashMap<Position,GameObject>(); 
 	
 	public int getWorldWidth() {
 		return worldWidth;
@@ -156,21 +152,20 @@ public class World {
 	
 	private final int MIN_BORDER_DISTANCE = 200;
 	
-	@Basic
-	public Tile[][] getWorldTiles() {
-		return worldTiles;
-	}
-	
 	public Tile getTileAtTilePos(int tileXPos, int tileYPos){
 		if(tileXPos >= worldTiles[0].length)
 			tileXPos = (getWorldWidth()-1)/getTileSize();
 		if(tileYPos >= worldTiles.length)
 			tileYPos = (getWorldHeight()-1)/getTileSize();
-		return getWorldTiles()[tileYPos][tileXPos];
+		return worldTiles[tileYPos][tileXPos];
 	}
 	
 	public Tile getTileAtPos(int xPos, int yPos){
 		return getTileAtTilePos(xPos/getTileSize(),yPos/getTileSize());
+	}
+	
+	public boolean hasAsTile(Tile tile){
+		return true;
 	}
 	
 	private final Tile[][] worldTiles;
@@ -247,16 +242,20 @@ public class World {
 		return mazub;
 	}
 	
+	private boolean canHaveAsMazub(Mazub alien){
+		return (alien == null) || (!alien.isDead() && canAddGameObjects());
+	}
+	
 	public void setMazub(Mazub alien){
 		if (getMazub() != null){
-			worldFeatures.remove(getMazub().getPosition());
 			getMazub().setWorld(null);
 			getAllGameObjects().remove(getMazub());
 		}
+		/*if(canHaveAsMazub(alien))
+			this.mazub = alien;*/
 		this.mazub = alien;
 		if (alien != null){
 			getMazub().setWorld(this);
-			worldFeatures.put(alien.getPosition(), alien);
 		}
 	}
 	
@@ -280,9 +279,19 @@ public class World {
 		return getAllPlants().contains(plant);
 	}
 	
+	private boolean hasProperPlants(){
+		for(Plant plant: allPlants){
+			if(plant.getWorld() != this)
+				return false;
+		}
+		return true;
+	}
+	
 	public void addAsPlant(Plant plant){
-		allPlants.add(plant);
-		plant.setWorld(this);
+		if(canAddGameObjects()){
+			allPlants.add(plant);
+			plant.setWorld(this);
+		}
 	}
 	
 	public void removeAsPlant(Plant plant){
@@ -309,9 +318,19 @@ public class World {
 		return getAllSlimes().contains(slime);
 	}
 	
+	private boolean hasProperSlimes(){
+		for(Slime slime: allSlimes){
+			if(slime.getWorld() != this)
+				return false;
+		}
+		return true;
+	}
+	
 	public void addAsSlime(Slime slime){
-		getAllSlimes().add(slime);
-		slime.setWorld(this);
+		if(canAddGameObjects()){
+			getAllSlimes().add(slime);
+			slime.setWorld(this);
+		}
 	}
 	
 	public void removeAsSlime(Slime slime){
@@ -339,9 +358,19 @@ public class World {
 		return allSharks.contains(shark);
 	}
 	
+	private boolean hasProperScharks(){
+		for(Shark shark: allSharks){
+			if(shark.getWorld() != this)
+				return false;
+		}
+		return true;
+	}
+	
 	public void addAsShark(Shark shark){
-		getAllSharks().add(shark);
-		shark.setWorld(this);
+		if(canAddGameObjects()){
+			getAllSharks().add(shark);
+			shark.setWorld(this);
+		}
 	}
 	
 	public void removeAsShark(Shark shark){
@@ -351,6 +380,10 @@ public class World {
 	
 	private final HashSet<Shark> allSharks = new HashSet<Shark>();
 	
+	private boolean canAddGameObjects(){
+		return true;
+	}
+	
 	public HashSet<GameObject> getAllGameObjects(){
 		HashSet<GameObject> result = new HashSet<GameObject>();
 		result.addAll(allSharks);
@@ -358,6 +391,22 @@ public class World {
 		result.addAll(allSlimes);
 		result.add(getMazub());
 		return result;
+	}
+	
+	private boolean hasProperGameObjects(){
+		HashSet<GameObject> allGameObjects = getAllGameObjects();
+		if(getMazub()!= null && allGameObjects.size() > 100)
+			return false;
+		else if(allGameObjects.size()>101)
+			return false;
+		else{
+			for(GameObject gameObject: allGameObjects){
+				if(gameObject.getWorld() != this)
+					return false;
+			}
+		}
+		return true;
+			
 	}
 	
 	public HashSet<Character> getAllCharacters(){

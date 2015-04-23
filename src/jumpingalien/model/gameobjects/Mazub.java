@@ -154,7 +154,7 @@ public class Mazub extends Character{
 	 * 			| result == (world != null && world.getMazub() == this) 
 	 */
 	public boolean isValidWorld(World world){
-		return (world == null || world.getMazub() == this);
+		return super.isValidWorld(world) && (world == null || world.getMazub() == this);
 	}
 		
 	/**

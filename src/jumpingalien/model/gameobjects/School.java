@@ -13,6 +13,14 @@ public class School {
 		return slimes;
 	}
 	
+	boolean hasProperSlimes(){
+		for(Slime slime: slimes){
+			if(slime.getSchool() != this)
+				return false;
+		}
+		return true;
+	}
+	
 	/**
 	 * reduce all buiten deze slime
 	 * @param slime
