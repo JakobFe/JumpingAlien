@@ -59,11 +59,13 @@ public class Facade implements IFacadePart2 {
 
 	@Override
 	public void startJump(Mazub alien) {
-		try{
-			alien.startJump();}
-		catch (IllegalJumpInvokeException exc){
-			new ModelException("Illegal Jumping Invoke!");
-			System.out.println("Illegal Jumping Invoke!");
+		if(!alien.isDead()){
+			try{
+				alien.startJump();}
+			catch (IllegalJumpInvokeException exc){
+				new ModelException("Illegal Jumping Invoke!");
+				System.out.println("Illegal Jumping Invoke!");
+			}
 		}
 	}
 
@@ -74,7 +76,8 @@ public class Facade implements IFacadePart2 {
 
 	@Override
 	public void startMoveLeft(Mazub alien) {
-		alien.startMove(Direction.LEFT);
+		if(!alien.isDead())
+			alien.startMove(Direction.LEFT);
 	}
 
 	@Override
@@ -87,7 +90,8 @@ public class Facade implements IFacadePart2 {
 
 	@Override
 	public void startMoveRight(Mazub alien) {
-		alien.startMove(Direction.RIGHT);
+		if(!alien.isDead())
+			alien.startMove(Direction.RIGHT);
 	}
 
 	@Override
@@ -100,7 +104,8 @@ public class Facade implements IFacadePart2 {
 
 	@Override
 	public void startDuck(Mazub alien) {
-		alien.startDuck();
+		if(!alien.isDead())
+			alien.startDuck();
 	}
 
 	@Override

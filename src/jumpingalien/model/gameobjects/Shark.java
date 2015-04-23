@@ -10,7 +10,7 @@ import jumpingalien.util.Sprite;
 import static jumpingalien.tests.util.TestUtils.doubleArray;
 
 public class Shark extends Character {
-
+	
 	public Shark(int x, int y,Sprite[] sprites) 
 			throws IllegalXPositionException,IllegalYPositionException{
 		super(x,y,SHARK_INIT_VEL,SHARK_MAX_VEL,sprites,SHARK_HP);
@@ -271,7 +271,11 @@ public class Shark extends Character {
 				&& !isOverlappingWith(Terrain.MAGMA))
 			getHpTimer().reset();
 		if(!isDead()){
-			if (isOverlappingWith(alien) && !alien.isImmune() && getHitPoints() != 0){
+			if(isOverlappingWith(Terrain.AIR))
+				updateHitPointsTerrain(Terrain.AIR);
+			if(isOverlappingWith(Terrain.MAGMA))
+				updateHitPointsTerrain(Terrain.MAGMA);
+			if (isOverlappingWith(alien) && !alien.isImmune() && !isDead()){
 				if(!isImmune()){
 					getHurtBy(alien);
 					isHurt = true;
@@ -280,26 +284,6 @@ public class Shark extends Character {
 					alien.getHurtBy(this);
 				}
 			}
-			if(isOverlappingWith(Terrain.AIR))
-				updateHitPointsTerrain(Terrain.AIR);
-			if(isOverlappingWith(Terrain.MAGMA))
-				updateHitPointsTerrain(Terrain.MAGMA);
-			/*if (getHitPoints() != 0 && isOverlappingWith(Terrain.AIR)){
-				if(getHpTimer().getTimeSum() >= 0.2){
-					setHitPoints(getHitPoints()-6);
-					isHurt = true;
-					getHpTimer().setTimeSum(getHpTimer().getTimeSum()-0.2);
-				}
-			}
-			if (getHitPoints() != 0 && isOverlappingWith(Terrain.MAGMA)){
-				if (getHpTimer().getTimeSum() == 0)
-					setHitPoints(getHitPoints()-50);
-				else if (getHpTimer().getTimeSum() > 0.2){
-					setHitPoints(getHitPoints()-50);
-					isHurt = true;
-					getHpTimer().setTimeSum(getHpTimer().getTimeSum()-0.2);
-				}
-			}*/
 		}
 		if(isHurt)
 			getImmuneTimer().reset();
@@ -330,6 +314,8 @@ public class Shark extends Character {
 			if (other.isDead())
 				other.getHpTimer().reset();
 		}
+		else
+			other.getHurtBy(this);
 		
 	}
 	

@@ -381,7 +381,7 @@ public class World {
 	private final HashSet<Shark> allSharks = new HashSet<Shark>();
 	
 	private boolean canAddGameObjects(){
-		return true;
+		return !isGameStarted();
 	}
 	
 	public HashSet<GameObject> getAllGameObjects(){
@@ -447,7 +447,7 @@ public class World {
 		this.gameStarted = gameStarted;
 	}
 
-	private boolean gameStarted = true;
+	private boolean gameStarted = false;
 	
 	public void advanceTime(double timeDuration) throws
 	IllegalXPositionException,IllegalYPositionException{

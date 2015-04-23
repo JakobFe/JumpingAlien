@@ -335,8 +335,7 @@ public abstract class GameObject {
 	 * 			The world to check.
 	 */
 	protected  boolean isValidWorld(World world){
-		//return (world == null) || (!world.isGameStarted());
-		return true;
+		return (world == null) || (!world.isGameStarted());
 	}
 	
 	protected boolean hasProperWorld(){
