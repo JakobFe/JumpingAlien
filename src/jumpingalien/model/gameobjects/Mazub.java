@@ -134,6 +134,14 @@ public class Mazub extends Character{
 			terminate();
 	}
 	
+	protected void getHurtBy(GameObject other){
+		if(!isImmune())
+			other.hurt(this);
+	}
+	
+	protected void hurt(GameObject other){
+		other.getHurtBy(this);
+	}
 	
 	/**
 	 * Check whether the given world is a valid world for this Mazub.

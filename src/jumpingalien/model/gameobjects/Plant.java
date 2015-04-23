@@ -185,8 +185,8 @@ public class Plant extends GameObject {
 	}
 	
 	protected void updateHitPoints(){
-		if(isOverlappingWith(getWorld().getMazub()) &&
-		   getWorld().getMazub().canConsumePlant() && !isDead()){
+		if(!isDead() && isOverlappingWith(getWorld().getMazub()) &&
+		   getWorld().getMazub().canConsumePlant()){
 			getHurtBy(getWorld().getMazub());
 		}
 		if (isDead() && getHpTimer().getTimeSum() > 0.6){
