@@ -1,7 +1,7 @@
 package jumpingalien.model.worldfeatures;
 
 public enum Terrain {
-	AIR(0,0,true), GROUND(1,0,false), WATER(2,2,true), MAGMA(3,50,true);
+	AIR(0,6,true), GROUND(1,0,false), WATER(2,2,true), MAGMA(3,50,true);
 	
 	private Terrain(int value, int hpLoss, boolean isPassable){
 		this.value = value;

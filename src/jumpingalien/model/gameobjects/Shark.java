@@ -39,7 +39,7 @@ public class Shark extends Character {
 	private void setRandomVertAcceleration(){
 		Random rn = new Random();
 		setVertAcceleration(SHARK_DIVING_ACCEL + 
-				((SHARK_RISING_ACCEL-SHARK_RISING_ACCEL)*rn.nextDouble()));
+				((SHARK_RISING_ACCEL-SHARK_DIVING_ACCEL)*rn.nextDouble()));
 	}
 	
 	private static final double SHARK_DIVING_ACCEL = -0.2;
@@ -267,40 +267,46 @@ public class Shark extends Character {
 	protected void updateHitPoints(){
 		Mazub alien = getWorld().getMazub();
 		boolean isHurt = false;
-		if (getHitPoints() != 0 && !isOverlappingWith(Terrain.AIR) 
+		if (!isDead() && !isOverlappingWith(Terrain.AIR) 
 				&& !isOverlappingWith(Terrain.MAGMA))
 			getHpTimer().reset();
-		if (isOverlappingWith(alien) && !alien.isImmune() && getHitPoints() != 0){
-			if(!isImmune()){
-				getHurtBy(alien);
-				isHurt = true;
+		if(!isDead()){
+			if (isOverlappingWith(alien) && !alien.isImmune() && getHitPoints() != 0){
+				if(!isImmune()){
+					getHurtBy(alien);
+					isHurt = true;
+				}
+				if (!alien.standsOn(this)){
+					alien.getHurtBy(this);
+				}
 			}
-			if (!alien.standsOn(this)){
-				alien.getHurtBy(this);
+			if(isOverlappingWith(Terrain.AIR))
+				updateHitPointsTerrain(Terrain.AIR);
+			if(isOverlappingWith(Terrain.MAGMA))
+				updateHitPointsTerrain(Terrain.MAGMA);
+			/*if (getHitPoints() != 0 && isOverlappingWith(Terrain.AIR)){
+				if(getHpTimer().getTimeSum() >= 0.2){
+					setHitPoints(getHitPoints()-6);
+					isHurt = true;
+					getHpTimer().setTimeSum(getHpTimer().getTimeSum()-0.2);
+				}
 			}
-		}
-		if (getHitPoints() != 0 && !isImmune() && isOverlappingWith(Terrain.AIR)){
-			if(getHpTimer().getTimeSum() >= 0.2){
-				setHitPoints(getHitPoints()-6);
-				isHurt = true;
-				getHpTimer().setTimeSum(getHpTimer().getTimeSum()-0.2);
-			}
-		}
-		if (getHitPoints() != 0 && !isImmune() && isOverlappingWith(Terrain.MAGMA)){
-			if (getHpTimer().getTimeSum() == 0)
-				setHitPoints(getHitPoints()-50);
-			else if (getHpTimer().getTimeSum() > 0.2){
-				setHitPoints(getHitPoints()-50);
-				isHurt = true;
-				getHpTimer().setTimeSum(getHpTimer().getTimeSum()-0.2);
-			}
+			if (getHitPoints() != 0 && isOverlappingWith(Terrain.MAGMA)){
+				if (getHpTimer().getTimeSum() == 0)
+					setHitPoints(getHitPoints()-50);
+				else if (getHpTimer().getTimeSum() > 0.2){
+					setHitPoints(getHitPoints()-50);
+					isHurt = true;
+					getHpTimer().setTimeSum(getHpTimer().getTimeSum()-0.2);
+				}
+			}*/
 		}
 		if(isHurt)
 			getImmuneTimer().reset();
-		if (isHurt && getHitPoints() == 0){
+		if (isHurt && isDead()){
 			getHpTimer().reset();
 		}
-		else if (getHitPoints() == 0 && getHpTimer().getTimeSum()>= 0.6)
+		else if (isDead() && getHpTimer().getTimeSum()>= 0.6)
 			terminate();
 	}
 	
@@ -317,10 +323,12 @@ public class Shark extends Character {
 	
 	@Override
 	protected void hurt(GameObject other){
-		if(other instanceof Mazub && !((Mazub) other).isImmune() &&
+		if(!other.isDead() && other instanceof Mazub && !((Mazub) other).isImmune() &&
 				!((Mazub) other).standsOn(this)){
 			((Mazub) other).getImmuneTimer().reset();
 			((Mazub) other).setHitPoints(((Mazub) other).getHitPoints()-50);
+			if (other.isDead())
+				other.getHpTimer().reset();
 		}
 		
 	}

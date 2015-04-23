@@ -115,7 +115,7 @@ public class Mazub extends Character{
 		if(!isDead()){
 			if (!isOverlappingWith(Terrain.WATER) && !isOverlappingWith(Terrain.MAGMA))
 				getHpTimer().setTimeSum(0);
-			if (isOverlappingWith(Terrain.WATER)){
+			/*if (isOverlappingWith(Terrain.WATER)){
 				if (getHpTimer().getTimeSum() > 0.2){
 					setHitPoints(getHitPoints()-2);
 					getHpTimer().setTimeSum(getHpTimer().getTimeSum()-0.2);
@@ -128,7 +128,11 @@ public class Mazub extends Character{
 					setHitPoints(getHitPoints()-50);
 					getHpTimer().setTimeSum(getHpTimer().getTimeSum()-0.2);
 				}
-			}
+			}*/
+			if(isOverlappingWith(Terrain.WATER))
+				updateHitPointsTerrain(Terrain.WATER);
+			if(isOverlappingWith(Terrain.MAGMA))
+				updateHitPointsTerrain(Terrain.MAGMA);
 		}
 		if(isDead() && getHpTimer().getTimeSum()>0.6)
 			terminate();
@@ -521,10 +525,7 @@ public class Mazub extends Character{
 	@Override
 	public void advanceTime(double timeDuration) throws IllegalXPositionException,
 	IllegalYPositionException,IllegalTimeIntervalException{
-		int oldHitPoints = getHitPoints();
 		super.advanceTime(timeDuration);
-		if(getHitPoints() != oldHitPoints && isDead())
-			getHpTimer().reset();
 		updateLastDirection();
 	}
 	
@@ -550,7 +551,7 @@ public class Mazub extends Character{
 	protected void updateTimers(double timeDuration){
 		getSpritesTimer().counter(timeDuration);
 		getImmuneTimer().counter(timeDuration);
-		if (isOverlappingWith(Terrain.WATER) || isOverlappingWith(Terrain.MAGMA))
+		if (isOverlappingWith(Terrain.WATER) || isOverlappingWith(Terrain.MAGMA) || isDead())
 			getHpTimer().counter(timeDuration);
 		else
 			getHpTimer().reset();

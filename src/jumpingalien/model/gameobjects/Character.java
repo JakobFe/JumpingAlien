@@ -3,6 +3,7 @@ package jumpingalien.model.gameobjects;
 import static jumpingalien.tests.util.TestUtils.doubleArray;
 import jumpingalien.model.exceptions.*;
 import jumpingalien.model.other.*;
+import jumpingalien.model.worldfeatures.Terrain;
 import jumpingalien.model.worldfeatures.Tile;
 import jumpingalien.util.Sprite;
 import be.kuleuven.cs.som.annotate.*;
@@ -343,6 +344,28 @@ public abstract class Character extends GameObject{
 		updateHitPoints();
 	}	
 	
+	protected void updateHitPointsTerrain(Terrain terrain){
+		if(!isDead()){
+			if(damageAtContact(terrain)){
+				if (getHpTimer().getTimeSum() == 0)
+					setHitPoints(getHitPoints()-terrain.getHpLoss());
+				else if (getHpTimer().getTimeSum() > 0.2){
+					setHitPoints(getHitPoints()-terrain.getHpLoss());
+					getHpTimer().setTimeSum(getHpTimer().getTimeSum()-0.2);
+				}
+			}
+			else if (getHpTimer().getTimeSum() > 0.2){
+				setHitPoints(getHitPoints()-terrain.getHpLoss());
+				getHpTimer().setTimeSum(getHpTimer().getTimeSum()-0.2);
+			}
+		}		
+	}
+	
+	protected boolean damageAtContact(Terrain terrain){
+		return (terrain == Terrain.MAGMA);
+	}
+	
+	
 	protected abstract void updateMovement();
 	
 	@Override
@@ -356,8 +379,11 @@ public abstract class Character extends GameObject{
 				+Math.abs(getHorAcceleration())*timeDuration);
 		double tdVert = 0.01/(Math.abs(getVertVelocity())
 				+Math.abs(getVertAcceleration())*timeDuration);
-		if(Math.min(tdHor, tdVert) > 1.0 && Math.min(tdHor, tdVert) < 10)
+		if(Math.min(tdHor, tdVert) > 1.0 && Math.min(tdHor, tdVert) < 10){
+			System.out.print("Distance too long for object ");
+			System.out.println(this.toString());
 			System.out.println(Math.min(tdHor, tdVert));
+		}
 		return Math.min(tdHor, tdVert);
 	}
 	
