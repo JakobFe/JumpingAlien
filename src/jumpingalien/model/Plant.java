@@ -126,8 +126,8 @@ public class Plant extends GameObject {
 	IllegalYPositionException,IllegalTimeIntervalException{
 		if (!isValidTimeInterval(timeDuration))
 			throw new IllegalTimeIntervalException(this);
+		updateMovement();
 		if(!isDead()){
-			updateMovement();
 			double td = getTimeToMoveOnePixel(timeDuration);
 			for (int index = 0; index < timeDuration/td; index++)
 					updatePosition(td);
@@ -137,6 +137,7 @@ public class Plant extends GameObject {
 	}
 
 	protected void updateMovement() {
+		super.updateMovement();
 		if (getSpritesTimer().getTimeSum()>0.5){
 			alternateDirection();
 			setLastDirection(getHorDirection());

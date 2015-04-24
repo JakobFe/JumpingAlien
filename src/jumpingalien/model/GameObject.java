@@ -757,8 +757,15 @@ public abstract class GameObject {
 	/**
 	 * A method to update the movements of this game object.
 	 * As an effect of this method, certain movements may be started.
+	 * 
+	 * 
 	 */
-	protected abstract void updateMovement();
+	protected void updateMovement(){
+		if(isDead()){
+			setHorDirection(Direction.NULL);
+			setHorVelocity(0);
+		}
+	}
 	
 	/**
 	 * Method to update the position and velocity of this game object based on the current position,

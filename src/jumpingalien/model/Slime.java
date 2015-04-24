@@ -142,6 +142,7 @@ public class Slime extends Character{
 	
 	@Override
 	protected void updateMovement(){
+		super.updateMovement();
 		if(getPeriodDuration() == 0){
 			getSpritesTimer().setTimeSum(0);
 			setRandomDirection();

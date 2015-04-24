@@ -203,6 +203,9 @@ public class Shark extends Character {
 	
 	@Override
 	protected void updateMovement(){
+		super.updateMovement();
+		if(isDead() && isDiving() || isRising())
+			setVertAcceleration(0);
 		if(getPeriodDuration() == 0){
 			getSpritesTimer().setTimeSum(0);
 			setRandomHorDirection();

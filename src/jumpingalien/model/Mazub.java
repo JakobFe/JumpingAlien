@@ -523,6 +523,7 @@ public class Mazub extends Character{
 	
 	@Override
 	protected void updateMovement(){
+		super.updateMovement();
 		if (isEnableStandUp())
 			endDuck();
 		if(isEnableMove() && isEnableMoveRight()){

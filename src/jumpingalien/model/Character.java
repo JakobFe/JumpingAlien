@@ -328,6 +328,18 @@ public abstract class Character extends GameObject{
 		updateHitPoints();
 	}	
 	
+	@Override
+	protected void updateMovement() {
+		super.updateMovement();
+		if(isDead()){
+			setHorAcceleration(0);
+			if(isMoving(Direction.UP)){
+				setVertVelocity(0);
+				setVertDirection(Direction.NULL);
+			}
+		}
+	}
+	
 	/**
 	 * A method to update the hit points as  a consequence of being in contact
 	 * with a terrain type.
@@ -353,9 +365,6 @@ public abstract class Character extends GameObject{
 	protected boolean damageAtContact(Terrain terrain){
 		return (terrain == Terrain.MAGMA);
 	}
-	
-	
-	protected abstract void updateMovement();
 	
 	@Override
 	protected void updateTimers(double timeDuration){
