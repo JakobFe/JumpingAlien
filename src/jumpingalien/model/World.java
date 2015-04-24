@@ -1,10 +1,8 @@
-package jumpingalien.model.worldfeatures;
+package jumpingalien.model;
 
 import java.util.HashSet;
 
 import jumpingalien.model.exceptions.*;
-import jumpingalien.model.gameobjects.*;
-import jumpingalien.model.gameobjects.Character;
 import be.kuleuven.cs.som.annotate.*;
 import static jumpingalien.tests.util.TestUtils.intArray;
 
@@ -241,14 +239,18 @@ public class World {
 	public Mazub getMazub() {
 		return mazub;
 	}
-		
+	
+	private boolean canHaveAsMazub(Mazub alien){
+		return (alien == null) || (!alien.isDead() && canAddGameObjects());
+	}
+	
 	public void setMazub(Mazub alien){
 		if (getMazub() != null){
 			getMazub().setWorld(null);
 			getAllGameObjects().remove(getMazub());
 		}
-		/*if(canHaveAsMazub(alien))
-			this.mazub = alien;*/
+		if(canHaveAsMazub(alien))
+			this.mazub = alien;
 		this.mazub = alien;
 		if (alien != null){
 			getMazub().setWorld(this);
@@ -274,7 +276,15 @@ public class World {
 	public boolean hasAsPlant(Plant plant){
 		return getAllPlants().contains(plant);
 	}
-		
+	
+	private boolean hasProperPlants(){
+		for(Plant plant: allPlants){
+			if(plant.getWorld() != this)
+				return false;
+		}
+		return true;
+	}
+	
 	public void addAsPlant(Plant plant){
 		if(canAddGameObjects()){
 			allPlants.add(plant);
@@ -305,7 +315,15 @@ public class World {
 	public boolean hasAsSlime(Slime slime){
 		return getAllSlimes().contains(slime);
 	}
-		
+	
+	private boolean hasProperSlimes(){
+		for(Slime slime: allSlimes){
+			if(slime.getWorld() != this)
+				return false;
+		}
+		return true;
+	}
+	
 	public void addAsSlime(Slime slime){
 		if(canAddGameObjects()){
 			getAllSlimes().add(slime);
@@ -337,7 +355,15 @@ public class World {
 	public boolean hasAsShark(Shark shark){
 		return allSharks.contains(shark);
 	}
-
+	
+	private boolean hasProperScharks(){
+		for(Shark shark: allSharks){
+			if(shark.getWorld() != this)
+				return false;
+		}
+		return true;
+	}
+	
 	public void addAsShark(Shark shark){
 		if(canAddGameObjects()){
 			getAllSharks().add(shark);
@@ -353,7 +379,7 @@ public class World {
 	private final HashSet<Shark> allSharks = new HashSet<Shark>();
 	
 	private boolean canAddGameObjects(){
-		return true;
+		return !isGameStarted();
 	}
 	
 	public HashSet<GameObject> getAllGameObjects(){
@@ -419,7 +445,7 @@ public class World {
 		this.gameStarted = gameStarted;
 	}
 
-	private boolean gameStarted = true;
+	private boolean gameStarted = false;
 	
 	public void advanceTime(double timeDuration) throws
 	IllegalXPositionException,IllegalYPositionException{

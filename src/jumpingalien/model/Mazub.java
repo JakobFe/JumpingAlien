@@ -1,4 +1,4 @@
-package jumpingalien.model.gameobjects;
+package jumpingalien.model;
 
 
 import java.util.HashSet;
@@ -6,8 +6,6 @@ import java.util.HashSet;
 import jumpingalien.util.Sprite;
 import be.kuleuven.cs.som.annotate.*;
 import jumpingalien.model.exceptions.*;
-import jumpingalien.model.other.*;
-import jumpingalien.model.worldfeatures.*;
 import static jumpingalien.tests.util.TestUtils.doubleArray;
 
 /**
@@ -115,20 +113,6 @@ public class Mazub extends Character{
 		if(!isDead()){
 			if (!isOverlappingWith(Terrain.WATER) && !isOverlappingWith(Terrain.MAGMA))
 				getHpTimer().setTimeSum(0);
-			/*if (isOverlappingWith(Terrain.WATER)){
-				if (getHpTimer().getTimeSum() > 0.2){
-					setHitPoints(getHitPoints()-2);
-					getHpTimer().setTimeSum(getHpTimer().getTimeSum()-0.2);
-				}
-			}
-			if (isOverlappingWith(Terrain.MAGMA)){
-				if (getHpTimer().getTimeSum() == 0)
-					setHitPoints(getHitPoints()-50);
-				else if (getHpTimer().getTimeSum() > 0.2){
-					setHitPoints(getHitPoints()-50);
-					getHpTimer().setTimeSum(getHpTimer().getTimeSum()-0.2);
-				}
-			}*/
 			if(isOverlappingWith(Terrain.WATER))
 				updateHitPointsTerrain(Terrain.WATER);
 			if(isOverlappingWith(Terrain.MAGMA))
@@ -270,6 +254,7 @@ public class Mazub extends Character{
 	 */
 	public void startMove(Direction direction){
 		assert ((direction == Direction.LEFT) || (direction == Direction.RIGHT));
+		assert !isDead();
 		setHorVelocity(getInitHorVelocity());
 		setHorDirection(direction);
 		setHorAcceleration(getMaxHorAcceleration());
@@ -334,7 +319,7 @@ public class Mazub extends Character{
 	 * 			| (isJumping())
 	 */
 	public void startJump() throws IllegalJumpInvokeException{
-		if (isJumping()) {
+		if (isJumping() || isDead()) {
 			throw new IllegalJumpInvokeException(this);
 		}
 		setVertVelocity(getInitVertVelocity());
@@ -394,6 +379,8 @@ public class Mazub extends Character{
 	 * 			| setMaxHorVelocity(getMaxHorVelocityDucking())
 	 */
 	public void startDuck(){
+		if(isDead())
+			throw new IllegalStateException();
 		setMaxHorVelocity(getMaxHorVelocityDucking());
 		setIsDucked(true);
 	}

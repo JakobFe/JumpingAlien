@@ -1,6 +1,6 @@
 package jumpingalien.model.exceptions;
 
-import jumpingalien.model.other.Direction;
+import jumpingalien.model.Direction;
 
 
 /**

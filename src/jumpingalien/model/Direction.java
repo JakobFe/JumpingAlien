@@ -1,4 +1,4 @@
-package jumpingalien.model.other;
+package jumpingalien.model;
 
 public enum Direction {
 	

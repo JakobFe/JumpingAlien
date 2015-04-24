@@ -1,13 +1,12 @@
-package jumpingalien.model.gameobjects;
+package jumpingalien.model;
 
 
 import static jumpingalien.tests.util.TestUtils.doubleArray;
+
 import java.util.HashSet;
 
 import be.kuleuven.cs.som.annotate.*;
 import jumpingalien.model.exceptions.*;
-import jumpingalien.model.other.*;
-import jumpingalien.model.worldfeatures.*;
 import jumpingalien.util.Sprite;
 
 /**
@@ -335,8 +334,7 @@ public abstract class GameObject {
 	 * 			The world to check.
 	 */
 	protected  boolean isValidWorld(World world){
-		//return (world == null) || (!world.isGameStarted());
-		return true;
+		return (world == null) || (!world.isGameStarted());
 	}
 	
 	protected boolean hasProperWorld(){

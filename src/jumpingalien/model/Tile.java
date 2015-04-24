@@ -1,11 +1,12 @@
-package jumpingalien.model.worldfeatures;
+package jumpingalien.model;
 
 import be.kuleuven.cs.som.annotate.*;
 
 public class Tile {
-	@Raw
 	public Tile(World world, int xPosition, int yPosition, Terrain geologicalFeature,
 			boolean isTargetTile) throws IllegalArgumentException{
+		if(!isValidWorld(world))
+			throw new IllegalArgumentException("This world is not valid!");
 		this.world = world;
 		assert isValidXPosition(xPosition);
 		assert isValidYPosition(yPosition);
@@ -23,7 +24,7 @@ public class Tile {
 		return world;
 	}
 	
-	private boolean hasProperWorld(World world){
+	private boolean isValidWorld(World world){
 		return world == null || world.hasAsTile(this);
 	}
 	

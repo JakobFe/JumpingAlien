@@ -1,6 +1,5 @@
-package jumpingalien.model.other;
+package jumpingalien.model;
 
-import jumpingalien.model.worldfeatures.World;
 
 public class Experiment {
 	public static void main(String[] args){
