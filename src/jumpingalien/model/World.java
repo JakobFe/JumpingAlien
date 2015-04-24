@@ -37,7 +37,16 @@ public class World {
 	 * 			The tile position in x-direction of the target tile.
 	 * @param 	targetTileY
 	 * 			The tile position in y-direction of the target tile.
-	 * 
+	 * @post	...
+	 *			| if (isValidVisibleWindowWidth(visibleWindowWidth))
+	 *			|	then new.getVisibleWindowWidth() = visibleWindowWidth
+	 *			| else
+	 * 			|	then new.getVisibleWindowWidth() = getWorldWidth()
+	 * @post	...
+	 *			| if (isValidVisibleWindowHeight(visibleWindowHeight))
+	 *			|	then new.getVisibleWindowHeight() = visibleWindowHeight
+	 *			| else
+	 * 			|	then new.getVisibleWindowHeight() = getWorldHeight()
 	 */
 	public World(int tileSize, int nbTilesX, int nbTilesY,
 			int visibleWindowWidth, int visibleWindowHeight,
@@ -80,10 +89,30 @@ public class World {
 	 */
 	private final int tileSize;
 	
+	/**
+	 * Return the belonging tile position of the given x position.
+	 * 
+	 * @param 	xPosition
+	 * 			The given x position.
+	 * @return	Return the tile position in horizontal direction of the tile in which
+	 * 			the given xPosition is, the tile position is the given x position
+	 * 			divided by the tile size.
+	 * 			| result == xPosition/getTileSize()
+	 */
 	public int getBelongingTileXPosition(int xPosition){
 		return xPosition/getTileSize();
 	}
 
+	/**
+	 * Return the belonging tile position of the given y position.
+	 * 
+	 * @param 	yPosition
+	 * 			The given y position
+	 * @return	Return the tile position in vertical direction of the tile in which
+	 * 			the given yPosition is, the tile position is the given y position
+	 * 			divided by the tile size.
+	 * 			| result == yPosition/getTileSize()
+	 */
 	public int getBelongingTileYPosition(int yPosition){
 		return yPosition/getTileSize();
 	}
@@ -277,14 +306,6 @@ public class World {
 		return getAllPlants().contains(plant);
 	}
 	
-	private boolean hasProperPlants(){
-		for(Plant plant: allPlants){
-			if(plant.getWorld() != this)
-				return false;
-		}
-		return true;
-	}
-	
 	public void addAsPlant(Plant plant){
 		if(canAddGameObjects()){
 			allPlants.add(plant);
@@ -314,14 +335,6 @@ public class World {
 	
 	public boolean hasAsSlime(Slime slime){
 		return getAllSlimes().contains(slime);
-	}
-	
-	private boolean hasProperSlimes(){
-		for(Slime slime: allSlimes){
-			if(slime.getWorld() != this)
-				return false;
-		}
-		return true;
 	}
 	
 	public void addAsSlime(Slime slime){
@@ -354,14 +367,6 @@ public class World {
 	
 	public boolean hasAsShark(Shark shark){
 		return allSharks.contains(shark);
-	}
-	
-	private boolean hasProperScharks(){
-		for(Shark shark: allSharks){
-			if(shark.getWorld() != this)
-				return false;
-		}
-		return true;
 	}
 	
 	public void addAsShark(Shark shark){
