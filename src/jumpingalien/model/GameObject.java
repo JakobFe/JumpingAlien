@@ -522,21 +522,32 @@ public abstract class GameObject {
 	}
 	
 	/**
+	 * A method to check whether a given direction is a valid horizontal direction.
+	 * 
+	 * @param 	direction
+	 * 			The direction to check.
+	 * @return	True if the given direction is null, left or right.
+	 * 			| result == (direction == Direction.NULL || direction == Direction.LEFT || 
+	 *			| 			 direction == Direction.RIGHT)
+	 */
+	public boolean isValidHorDirection(Direction direction){
+		return (direction == Direction.NULL || direction == Direction.LEFT || 
+				direction == Direction.RIGHT);
+	}
+	
+	/**
 	 * Set the horizontal direction of this game object to the given horizontal direction.
 	 * 
 	 * @param	horDirection
 	 * 			Horizontal direction to set.
-	 * @pre		The given direction must be left, right or zero.
-	 * 			| horDirection == Direction.NULL ||
-	 * 			| horDirection == Direction.LEFT ||
-	 * 			| horDirection == Direction.RIGHT 
+	 * @pre		The given direction must be a valid horizontal direction.
+	 * 			| isValidHorDirection(horDirection)
 	 * @post	The new horizontal direction of this game object is set to the given direction.
 	 * 			| new.getHorDirection() == horDirection
 	 */
 	@Model
 	protected void setHorDirection(Direction horDirection) {
-		assert (horDirection == Direction.NULL || horDirection == Direction.LEFT || 
-				horDirection == Direction.RIGHT);
+		assert isValidHorDirection(horDirection);
 		this.horDirection = horDirection;
 	}
 	
@@ -744,6 +755,12 @@ public abstract class GameObject {
 	}
 	
 	/**
+	 * A method to update the movements of this game object.
+	 * As an effect of this method, certain movements may be started.
+	 */
+	protected abstract void updateMovement();
+	
+	/**
 	 * Method to update the position and velocity of this game object based on the current position,
 	 * velocity and a given time duration in seconds.
 	 * 
@@ -756,6 +773,8 @@ public abstract class GameObject {
 	 * 			| updateHorVelocity(timeDuration)
 	 * @effect	The timers are updated with the given time duration.
 	 * 			| updateTimers(timeDuration)
+	 * @effect	The movements of this game object are updated.
+	 * 			| updateMovement()
 	 * @throws	IllegalTimeIntervalException(this)
 	 * 			The given time duration is not a valid time interval.
 	 * 			| !(isValidTimeInterval(timeDuration))

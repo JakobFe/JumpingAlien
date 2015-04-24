@@ -127,18 +127,22 @@ public class Plant extends GameObject {
 		if (!isValidTimeInterval(timeDuration))
 			throw new IllegalTimeIntervalException(this);
 		if(!isDead()){
-			if (getSpritesTimer().getTimeSum()>0.5){
-				alternateDirection();
-				setLastDirection(getHorDirection());
-				setHorVelocity(PLANT_VELOCITY);
-				getSpritesTimer().setTimeSum((getSpritesTimer().getTimeSum()-0.5));
-			}
+			updateMovement();
 			double td = getTimeToMoveOnePixel(timeDuration);
 			for (int index = 0; index < timeDuration/td; index++)
 					updatePosition(td);
 		}
 		updateHitPoints();
 		updateTimers(timeDuration);
+	}
+
+	protected void updateMovement() {
+		if (getSpritesTimer().getTimeSum()>0.5){
+			alternateDirection();
+			setLastDirection(getHorDirection());
+			setHorVelocity(PLANT_VELOCITY);
+			getSpritesTimer().setTimeSum((getSpritesTimer().getTimeSum()-0.5));
+		}
 	}
 	
 	

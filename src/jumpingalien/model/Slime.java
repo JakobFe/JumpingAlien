@@ -25,7 +25,7 @@ import be.kuleuven.cs.som.annotate.Model;
 public class Slime extends Character{
 	
 	public Slime(int x, int y, Sprite[] sprites, School school){
-		super(x,y,0,SLIME_VELOCITY,sprites);
+		super(new Position(x,y),0,SLIME_VELOCITY,sprites);
 		setRandomDirection();
 		school.addSlime(this);
 	}
@@ -185,7 +185,7 @@ public class Slime extends Character{
 	}
 
 	@Override
-	protected boolean isValidVertAcceleration(double vertAcceleration) {
+	protected boolean canHaveAsVertAcceleration(double vertAcceleration) {
 		return vertAcceleration == getMaxVertAcceleration();
 	}
 	

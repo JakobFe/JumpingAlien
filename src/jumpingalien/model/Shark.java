@@ -11,7 +11,7 @@ public class Shark extends Character {
 	
 	public Shark(int x, int y,Sprite[] sprites) 
 			throws IllegalXPositionException,IllegalYPositionException{
-		super(x,y,SHARK_INIT_VEL,SHARK_MAX_VEL,sprites,SHARK_HP);
+		super(new Position(x,y),SHARK_INIT_VEL,SHARK_MAX_VEL,sprites,SHARK_HP);
 	}
 	
 	private static final int SHARK_HP = 100;
@@ -66,7 +66,7 @@ public class Shark extends Character {
 	private static final double SHARK_MAX_HOR_ACCEL = 1.5;
 	
 	@Override
-	public boolean isValidVertAcceleration(double acceleration){
+	public boolean canHaveAsVertAcceleration(double acceleration){
 		return ((acceleration >= SHARK_DIVING_ACCEL && 
 				acceleration<= SHARK_RISING_ACCEL) ||
 				acceleration == getMaxVertAcceleration());

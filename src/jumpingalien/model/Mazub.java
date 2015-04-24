@@ -58,7 +58,7 @@ public class Mazub extends Character{
 	@Raw
 	public Mazub(int x, int y, double initHorVelocity, double maxHorVelocity, Sprite[] sprites) 
 			throws IllegalXPositionException,IllegalYPositionException{
-		super(x,y,initHorVelocity,maxHorVelocity,sprites);
+		super(new Position(x,y),initHorVelocity,maxHorVelocity,sprites);
 		assert isValidArrayOfSprites(sprites);
 		this.maxHorVelocityRunning = maxHorVelocity;
 		this.numberOfWalkingSprites = (this.getAllSprites().length - 10)/2;
@@ -237,7 +237,7 @@ public class Mazub extends Character{
 	private static final double INIT_VERT_VELOCITY = 8;
 	
 	@Override
-	protected boolean isValidVertAcceleration(double vertAcceleration){
+	protected boolean canHaveAsVertAcceleration(double vertAcceleration){
 		return (vertAcceleration == 0 || vertAcceleration == getMaxVertAcceleration());
 	}
 
