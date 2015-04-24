@@ -180,6 +180,12 @@ public class Plant extends GameObject {
 	}
 	
 	@Override
+	protected double[] updatePositionTileCollision(double[] newPos) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
 	protected double[] updatePositionObjectCollision(double[] newPos){
 		HashSet<GameObject> collection = new HashSet<GameObject>();
 		collection.addAll(getWorld().getAllPlants());

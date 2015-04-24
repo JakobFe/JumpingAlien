@@ -151,6 +151,31 @@ public abstract class GameObject {
 	}
 	
 	/**
+	 * A method to convert a double array to a position with a given world.
+	 * 
+	 * @param 	doubleArray
+	 * 			The position in the form of a double array.
+	 * @param 	world
+	 * 			The world to add to this new position.
+	 * @pre		The given double array must have two entries.
+	 * 			| doubleArray.length() == 2
+	 * @return	A new position with the first entry of the double array
+	 * 			as its x position, the second entry of the double array
+	 * 			as its y position and the given world as its world.
+	 * @throws	IllegalXPositionException
+	 * 			The first entry is not a valid x position in the given world.
+	 * 			| !Position.isValidXPosition(doubleArray[0],world)
+	 * @throws	IllegalYPositionException
+	 * 			The first entry is not a valid y position in the given world.
+	 * 			| !Position.isValidYPosition(doubleArray[1],world)
+	 */
+	public static Position toPosition(double[] doubleArray, World world)
+		throws IllegalXPositionException,IllegalYPositionException{
+		assert doubleArray.length == 2;
+		return new Position(doubleArray[0],doubleArray[1],world);
+	}
+	
+	/**
 	 * A variable storing the current position of this game object.
 	 */
 	private Position position;
@@ -289,6 +314,39 @@ public abstract class GameObject {
 			result[index][1] = yPos;
 		}
 		return result;
+	}
+	
+	/**
+	 * A method to return the perimeter at the side of the given direction.
+	 * @param 	direction
+	 * 			An indicator for which perimeter to select.
+	 * @return	If the given direction is down, the lower perimeter is returned.
+	 * 			| if (direction == Direction.DOWN)
+	 * 			|	then result = getLowerPerimeter()
+	 * 			Else if the given direction is up, the upper perimeter is returned.
+	 * 			| if (direction == Direction.UP)
+	 * 			|	then result = getUpperPerimeter()
+	 *			Else if the given direction is right, the right perimeter is returned.
+	 * 			| if (direction == Direction.RIGHT)
+	 * 			|	then result = getRightPerimeter()
+	 * 			Else if the given direction is left, the left perimeter is returned.
+	 * 			| if (direction == Direction.LEFT)
+	 * 			|	then result = getLeftPerimeter()
+	 * 			Else, an empty matrix of integers is returned.
+	 * 			| else
+	 * 			|	result == new int[0][0]
+	 */
+	public int[][] getPerimeter(Direction direction){
+		if(direction == Direction.DOWN)
+			return getLowerPerimeter();
+		else if(direction == Direction.UP)
+			return getUpperPerimeter();
+		else if(direction == Direction.RIGHT)
+			return getRightPerimeter();
+		else if(direction == Direction.LEFT)
+			return getLeftPerimeter();
+		else
+			return new int[0][0];
 	}
 	
 	/**
@@ -638,6 +696,29 @@ public abstract class GameObject {
 	private double horVelocity = 0;
 	
 	/**
+	 * Checks whether the game object is moving in horizontal direction.
+	 * 
+	 * @return	True if and only if the game object is moving to the left or to the right.
+	 * 			| result == (getHorDirection() == Direction.LEFT ||
+	 * 			|			 getHorDirection() == Direction.RIGHT)
+	 */
+	public boolean isMoving(){
+		return (getHorDirection() != Direction.NULL);
+	}
+	
+	/**
+	 * Check whether the game object is moving in the given direction.
+	 * @param 	direction
+	 * 			The direction to check.
+	 * @return	True if the horizontal direction is equal to the given direction.
+	 * 			| if (getHorDirection() == direction)
+	 * 			|	then result == true
+	 */
+	public boolean isMoving(Direction direction){
+		return getHorDirection() == direction;
+	}
+	
+	/**
 	 * A method to end the movement in the given direction.
 	 * 
 	 * @param 	direction
@@ -660,29 +741,6 @@ public abstract class GameObject {
 			setHorDirection(Direction.NULL);
 			getSpritesTimer().reset();
 		} 
-	}
-	
-	/**
-	 * Checks whether the game object is moving in horizontal direction.
-	 * 
-	 * @return	True if and only if the game object is moving to the left or to the right.
-	 * 			| result == (getHorDirection() == Direction.LEFT ||
-	 * 			|			 getHorDirection() == Direction.RIGHT)
-	 */
-	public boolean isMoving(){
-		return (getHorDirection() != Direction.NULL);
-	}
-	
-	/**
-	 * Check whether the game object is moving in the given direction.
-	 * @param 	direction
-	 * 			The direction to check.
-	 * @return	True if the horizontal direction is equal to the given direction.
-	 * 			| if (getHorDirection() == direction)
-	 * 			|	then result == true
-	 */
-	public boolean isMoving(Direction direction){
-		return getHorDirection() == direction;
 	}
 	
 	/**
@@ -733,11 +791,15 @@ public abstract class GameObject {
 	 * 
 	 * @param 	tile
 	 * 			The tile to check overlapping with.
-	 * @return	True if this object and the given tile both occupy at least one exact same pixel.
-	 * 			| ...
+	 * @return	False if the given tile is not effective.
+	 * 			| if (tile == null)
+	 * 			|	then result == false
+	 * 			Otherwise true if this game object and the other 
+	 * 			game object have at least one pixel in common. 
+	 * 			This means that there exists a position that is occupied by this game object,
+	 * 			and that is located in the given tile.
 	 */
 	public boolean isOverlappingWith(Tile tile){
-		
 		try {
 			return !(((getPosition().getDisplayedXPosition()+getWidth()-1) < tile.getXPosition()) ||
 					((tile.getXPosition()+getWorld().getTileSize()-1) < getPosition().getDisplayedXPosition())
@@ -748,6 +810,143 @@ public abstract class GameObject {
 		}
 	}
 	
+	/**
+	 * A method to check whether this game object is overlapping with another game object.
+	 * 
+	 * @param 	other
+	 * 			The game object to check overlapping with.
+	 * @return	False if the other game object is not effective.
+	 * 			| if(other == null)
+	 * 			|	then result == false 
+	 * 			Otherwise true if this game object and the other 
+	 * 			game object have at least one pixel in common.
+	 * 			This means that there exists a position that is occupied by
+	 * 			this game object and by the other game object. 			
+	 */
+	public boolean isOverlappingWith(GameObject other){
+		try {
+			return !(((getPosition().getDisplayedXPosition()+getWidth()-1) < 
+					   other.getPosition().getDisplayedXPosition()) ||
+					((other.getPosition().getDisplayedXPosition()+ other.getWidth()-1) < 
+							getPosition().getDisplayedXPosition()) ||
+					((getPosition().getDisplayedYPosition() + getHeight() - 1) < 
+					  other.getPosition().getDisplayedYPosition()) ||
+					((other.getPosition().getDisplayedYPosition()+other.getHeight()-1) 
+					  < getPosition().getDisplayedYPosition()));
+		} catch (NullPointerException e) {
+			return false;
+		}
+	}
+	
+	/**
+	 * A method to check whether this game object is overlapping with a terrain type.
+	 * 
+	 * @param 	terrain
+	 * 			The terrain type to check.
+	 * @return	False if this game object has no effective world.
+	 * 			| if (getWorld() == null)
+	 * 			|	then result == false
+	 * 			Else true if this game object occupies at least one pixel 
+	 * 			that is located in a tile with as terrain type the given terrain.
+	 */
+	public boolean isOverlappingWith(Terrain terrain){
+		if (getWorld() == null)
+			return false;
+		HashSet<Tile> affectedTiles = getWorld().getTilesIn(getPosition().getDisplayedXPosition(),
+				getPosition().getDisplayedYPosition(), getPosition().getDisplayedXPosition()+getWidth()-1,
+				getPosition().getDisplayedYPosition()+getHeight()-1);
+		for (Tile tile: affectedTiles){
+			if (tile.getGeoFeature() == terrain)
+				return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * Check whether this game object collides with a given tile in a given direction.
+	 * 
+	 * @param 	direction
+	 * 			The direction to check collision in.
+	 * @param 	tile
+	 * 			The tile to check collision with.
+	 * @pre		The given direction must differ from null.
+	 * 			| direction != Direction.NULL
+	 * @return	False if this game object is not overlapping with the given tile.
+	 * 			| if (! this.isOverlappingWith(tile)
+	 * 			|	then result == false
+	 * 			Else true if at least one pixel at the most far end in the given direction
+	 * 			of this game object is located in the given tile.	
+	 */
+	public boolean isColliding(Direction direction, Tile tile){
+		assert (direction != Direction.NULL);
+		if (!isOverlappingWith(tile))
+			return false;
+		int[][] positionsToCheck = getPerimeter(direction);
+		for(int index=1;index<positionsToCheck.length-1;index++){
+			if((getWorld().getBelongingTileXPosition(positionsToCheck[index][0]) == tile.getTileXPos()) 
+				&& getWorld().getBelongingTileYPosition(positionsToCheck[index][1]) == tile.getTileYPos())
+				return true;
+		}
+		return false;
+	}
+
+	
+	/** Check whether this game object collides with another game object in a given direction.
+	 * 
+	 * @param 	direction
+	 * 			The direction to check collision in.
+	 * @param 	object
+	 * 			The game object to check collision with.
+	 * @pre		The given direction must differ from null.
+	 * 			| direction != Direction.NULL
+	 * @return	False if this game object is not overlapping with the given game object.
+	 * 			| if (! this.isOverlappingWith(object)
+	 * 			|	then result == false
+	 * 			Else true if at least one pixel at the most far end in the given direction
+	 * 			of this game object is also occupied by the other game object.
+	 */
+	public boolean isColliding(Direction direction, GameObject object){
+		assert (direction != Direction.NULL);
+		if (!isOverlappingWith(object))
+			return false;
+		int[][] positionsToCheck = getPerimeter(direction);
+		for(int index=1;index<positionsToCheck.length-1;index++){
+			if(object.occupiesPosition(new Position(positionsToCheck[index][0],
+			   positionsToCheck[index][1])))
+				return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * 
+	 * @param newPos
+	 * @return
+	 */
+	protected abstract double[] updatePositionTileCollision(double[] newPos);
+	
+	/**
+	 * A method that receives a position in the form of a double array 
+	 * and returns the corrected position, after the given position has been checked 
+	 * for whether or not this game object would collide with other game objects 
+	 * of a given collection if the given position would be assigned to this game object.
+	 *  
+	 * @param 	newPos
+	 * 			The position to check in the form of a double array.
+	 * 			The first entry of this array represents the x position, the
+	 * 			second entry represents the y position.
+	 * @param 	collection
+	 * 			The collection to check for collisions against.
+	 * @pre		The given position must have 2 entries.
+	 * 			| newPos.length == 2
+	 * @return	If the given position would be assigned to this game object and
+	 * 			as a result of that, this game object would collide with another
+	 * 			game object out of the given collection, then the current position
+	 * 			is returned in the form of a double array.
+	 * @return	Else, return the given position.
+	 * 			| else
+	 * 			|	result == newPos
+	 */
 	protected double[] getPositionAfterCollision(double[] newPos, HashSet<GameObject> collection){
 		assert newPos.length == 2;
 		double newXPos = newPos[0];
@@ -791,128 +990,14 @@ public abstract class GameObject {
 		}
 		return doubleArray(newXPos,newYPos);
 	}
-
+	
+	/**
+	 * 
+	 * @param newPos
+	 * @return
+	 */
 	protected abstract double[] updatePositionObjectCollision(double[] newPos);
 	
-	/**
-	 * A method to check whether this game object is overlapping with another game object.
-	 * 
-	 * @param 	object
-	 * 			The game object to check overlapping with.
-	 * @return	True if this object and the other game object both occupy at least one exact same pixel.
-	 * 			| ...
-	 */
-	public boolean isOverlappingWith(GameObject object){
-		try {
-			return !(((getPosition().getDisplayedXPosition()+getWidth()-1) < 
-					   object.getPosition().getDisplayedXPosition()) ||
-					((object.getPosition().getDisplayedXPosition()+ object.getWidth()-1) < 
-							getPosition().getDisplayedXPosition()) ||
-					((getPosition().getDisplayedYPosition() + getHeight() - 1) < 
-					  object.getPosition().getDisplayedYPosition()) ||
-					((object.getPosition().getDisplayedYPosition()+object.getHeight()-1) 
-					  < getPosition().getDisplayedYPosition()));
-		} catch (NullPointerException e) {
-			return false;
-		}
-	}
-	
-	public boolean isOverlappingWith(Terrain terrain){
-		if (getWorld() == null)
-			return false;
-		HashSet<Tile> affectedTiles = getWorld().getTilesIn(getPosition().getDisplayedXPosition(),
-				getPosition().getDisplayedYPosition(), getPosition().getDisplayedXPosition()+getWidth()-1,
-				getPosition().getDisplayedYPosition()+getHeight()-1);
-		for (Tile tile: affectedTiles){
-			if (tile.getGeoFeature() == terrain)
-				return true;
-		}
-		return false;
-	}
-	
-	public void moveUp(){
-		assert this.isOverlappingWith(Terrain.GROUND);
-		setPosition(new Position(getPosition().getXPosition(),getPosition().getYPosition()+1,getWorld()));
-	}
-	
-	
-	/**
-	 * Check whether this game object collides with a given tile in a given direction.
-	 * 
-	 * @param 	direction
-	 * 			The direction to check collision in.
-	 * @param 	tile
-	 * 			The tile to check collision with.
-	 * @pre		The given direction must differ from null.
-	 * 			| direction != Direction.NULL
-	 * @return	False if this game object is not overlapping with the given tile.
-	 * 			| if (! this.isOverlappingWith(tile)
-	 * 			|	then result == false
-	 * 			Else true if at least one pixel at the most far end in the given direction
-	 * 			of this game object is located in the given tile.
-	 * 			| ...
-	 */
-	public boolean isColliding(Direction direction, Tile tile){
-		assert (direction != Direction.NULL);
-		if (!isOverlappingWith(tile))
-			return false;
-		int[][] positionsToCheck;
-		if(direction == Direction.DOWN)
-			positionsToCheck = getLowerPerimeter();
-		else if(direction == Direction.UP)
-			positionsToCheck = getUpperPerimeter();
-		else if(direction == Direction.RIGHT)
-			positionsToCheck = getRightPerimeter();
-		else if(direction == Direction.LEFT)
-			positionsToCheck = getLeftPerimeter();
-		else
-			positionsToCheck = new int[0][0];
-		for(int index=1;index<positionsToCheck.length-1;index++){
-			if((getWorld().getBelongingTileXPosition(positionsToCheck[index][0]) == tile.getTileXPos()) 
-				&& getWorld().getBelongingTileYPosition(positionsToCheck[index][1]) == tile.getTileYPos())
-				return true;
-		}
-		return false;
-	}
-	
-	/** Check whether this game object collides with another game object in a given direction.
-	 * 
-	 * @param 	direction
-	 * 			The direction to check collision in.
-	 * @param 	object
-	 * 			The game object to check collision with.
-	 * @pre		The given direction must differ from null.
-	 * 			| direction != Direction.NULL
-	 * @return	False if this game object is not overlapping with the given game object.
-	 * 			| if (! this.isOverlappingWith(object)
-	 * 			|	then result == false
-	 * 			Else true if at least one pixel at the most far end in the given direction
-	 * 			of this game object is also occupied by the other game object.
-	 * 			| ...
-	 */
-	public boolean isColliding(Direction direction, GameObject object){
-		assert (direction != Direction.NULL);
-		if (!isOverlappingWith(object))
-			return false;
-		int[][] positionsToCheck;
-		if(direction == Direction.DOWN)
-			positionsToCheck = getLowerPerimeter();
-		else if(direction == Direction.UP)
-			positionsToCheck = getUpperPerimeter();
-		else if(direction == Direction.RIGHT)
-			positionsToCheck = getRightPerimeter();
-		else if(direction == Direction.LEFT)
-			positionsToCheck = getLeftPerimeter();
-		else
-			positionsToCheck = new int[0][0];
-		for(int index=1;index<positionsToCheck.length-1;index++){
-			if(object.occupiesPosition(new Position(positionsToCheck[index][0],
-			   positionsToCheck[index][1])))
-				return true;
-		}
-		return false;
-	}
-
 	/**
 	 * A method to update the horizontal velocity over a given time interval.
 	 * 
@@ -929,11 +1014,6 @@ public abstract class GameObject {
 		}
 		else
 			setHorVelocity(newVel);
-	}
-
-	protected void updateTimers(double timeDuration){
-		getHpTimer().counter(timeDuration);
-		getSpritesTimer().counter(timeDuration);
 	}
 	
 	protected Timer getHpTimer(){
@@ -957,7 +1037,12 @@ public abstract class GameObject {
 	 * in the method advanceTime.
 	 */
 	private final Timer spritesTimer = new Timer();
-
+	
+	protected void updateTimers(double timeDuration){
+		getHpTimer().counter(timeDuration);
+		getSpritesTimer().counter(timeDuration);
+	}
+	
 	/**
 	 * Return the index of the current sprite in the array of sprites,
 	 * belonging to this game object.
@@ -996,16 +1081,16 @@ public abstract class GameObject {
 	}
 	
 	/**
+	 * A method to update the sprite index.
+	 */
+	public abstract void updateSpriteIndex();
+	
+	/**
 	 * A variable storing the index of the current sprite.
 	 * The index is an integer number and refers to the position
 	 * of the current sprite in the array of sprites, belonging to this game object.
 	 */
 	private int index;
-	
-	/**
-	 * A method to update the sprite index.
-	 */
-	public abstract void updateSpriteIndex();
 	
 	/**
 	 * A method to retrieve the sprite belonging to the current state

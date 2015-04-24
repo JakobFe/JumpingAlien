@@ -3,6 +3,7 @@ package jumpingalien.model;
 import jumpingalien.model.exceptions.IllegalXPositionException;
 import jumpingalien.model.exceptions.IllegalYPositionException;
 import be.kuleuven.cs.som.annotate.*;
+import static jumpingalien.tests.util.TestUtils.*;
 
 @Value
 public class Position {
@@ -46,11 +47,11 @@ public class Position {
 	 * 			| result == isValidXPosition( (int) Math.floor(x))
 	 */
 	@Model
-	public boolean isValidXPosition(double x){
-		if (getWorld() == null)
+	public static boolean isValidXPosition(double x, World world){
+		if (world == null)
 			return true;
 		else
-			return ((x >= 0) && ((int) Math.floor(x) < (getWorld().getWorldWidth())));
+			return ((x >= 0) && ((int) Math.floor(x) < (world.getWorldWidth())));
 	}
 	
 	/**
@@ -69,7 +70,7 @@ public class Position {
 	 */
 	@Model
 	public void setXPosition(double x) throws IllegalXPositionException{
-		if (!isValidXPosition(x))
+		if (!isValidXPosition(x,getWorld()))
 			throw new IllegalXPositionException((int) Math.floor(x));
 		this.xPosition = x;
 	}
@@ -101,11 +102,11 @@ public class Position {
 	 * 			| result == (y >= 0) && (y < getScreenHeight())
 	 */
 	@Model
-	public boolean isValidYPosition(double y){
-		if (getWorld() == null)
+	public static boolean isValidYPosition(double y, World world){
+		if (world == null)
 			return true;
 		else
-			return (((y >= 0) && ((int) Math.floor(y) < getWorld().getWorldHeight())));
+			return (((y >= 0) && ((int) Math.floor(y) < world.getWorldHeight())));
 	}
 	
 	/**
@@ -121,7 +122,7 @@ public class Position {
 	 */
 	@Raw @Model
 	public void setYPosition(double y) throws IllegalYPositionException{
-		if (!isValidYPosition(y))
+		if (!isValidYPosition(y,getWorld()))
 			throw new IllegalYPositionException((int) Math.floor(y));
 		this.yPosition = y;
 	}
@@ -140,32 +141,9 @@ public class Position {
 	 */
 	private double yPosition = 0;	
 	
-		
-	/**
-	 * Returns the screen width of the game world.
-	 */
-	@Basic @Immutable @Model
-	private static int getScreenWidth(){
-		return SCREEN_WIDTH;
+	public double[] toDoubleArray(Position position){
+		return doubleArray(position.getXPosition(),position.getYPosition());
 	}
-	
-	/**
-	 * A variable storing the screen width of the game world.
-	 */
-	private static final int SCREEN_WIDTH = 1024;
-	
-	/**
-	 * Returns the screen height of the game world.
-	 */
-	@Basic @Immutable @Model
-	private static int getScreenHeight(){
-		return SCREEN_HEIGHT;
-	}
-	
-	/**
-	 * A variable storing the screen height of the game world.
-	 */
-	private static final int SCREEN_HEIGHT = 768;
 	
 	World getWorld(){
 		return this.world;
