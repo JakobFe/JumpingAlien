@@ -43,7 +43,7 @@ public abstract class Character extends GameObject{
 	protected Character(int x, int y, double initHorVelocity, 
 			double maxHorVelocity, Sprite[] sprites, int hitPoints) 
 			throws IllegalXPositionException,IllegalYPositionException{
-		super(x,y,initHorVelocity,maxHorVelocity,sprites,hitPoints);
+		super(new Position(x,y),initHorVelocity,maxHorVelocity,sprites,hitPoints);
 	}
 	
 	/**

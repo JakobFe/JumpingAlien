@@ -80,8 +80,13 @@ public class Shark extends Character {
 	private static final double INIT_VERT_VELOCITY = 2;
 	
 	@Override
-	protected boolean isValidWorld(World world) {
-		return super.isValidWorld(world) && (world == null || world.hasAsShark(this));
+	protected boolean canBeAddedTo(World world) {
+		return super.canBeAddedTo(world) && (world == null || world.hasAsShark(this));
+	}
+	
+	@Override
+	protected boolean hasProperWorld() {
+		return true;
 	}
 	
 	public double getPeriodDuration() {

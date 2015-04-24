@@ -11,10 +11,8 @@ import jumpingalien.util.Sprite;
 
 /**
  * A class concerning game objects with a position, a horizontal velocity,
- * sprites and hit points.
- * 
- * @invar	This game object must have a proper position.
- * 			| hasProperPosition()
+ * sprites, hit points and a world.
+ *
  * @invar	The horizontal direction of this game object must be valid.
  * 			| isValidHorDirection(getHorDirection())
  * @invar 	The initial horizontal velocity of this game object must be valid.
@@ -23,30 +21,29 @@ import jumpingalien.util.Sprite;
  * 			| canHaveAsMaxHorVelocity(getMaxHorVelocity())
  * @invar	The hit points of this game object must be a valid number of hit points.
  * 			| isValidHitPoints(hitPoints)
- * @invar	
+ * @invar	This game object must have a proper world.
  * 			| hasProperWorld()
+ * @invar	The position belonging to this game object must be a valid position
+ * 			for this game object in view of its world.
+ * 			| isValidPosition(getPosition(),getWorld())
  *  
  * @author 	Jakob Festraets, Vincent Kemps
  * @version	1.0
+ * 
  */
 public abstract class GameObject {
 	
 	/**
-	 * Initialize this new game object with given x position, given y position, 
+	 * Initialize this new game object with given position, 
 	 * given initial horizontal velocity, given maximum horizontal velocity,
-	 * given sprites and given number of hit points.
+	 * given sprites, given number of hit points and no world.
 	 * 
-	 * At the moment of initialization the velocity and acceleration are zero
-	 * in all directions.
-	 * 
-	 * @param 	x
-	 * 		  	Initial x position for this game object.
-	 * @param 	y
-	 * 			Initial y position for this game object.
+	 * @param 	position
+	 * 			The start position for this game object.
 	 * @param 	initHorVelocity
 	 * 			Initial horizontal velocity for this game object.
 	 * @param 	maxHorVelocity
-	 * 			Maximum horizontal velocity while running for this game object.
+	 * 			Maximum horizontal velocity for this game object.
 	 * @param	sprites
 	 * 			An array containing the different sprites for this game object.
 	 * @param	hitPoints
@@ -54,58 +51,68 @@ public abstract class GameObject {
 	 * @pre		The initial horizontal velocity must be valid.
 	 * 			| isValidInitHorVelocity(initHorVelocity)
 	 * @pre		The maximum horizontal velocity must be valid.
-	 * 			| canHaveAsMaxHorVelocity(maxHorVelocity)
-	 * @pre		The number of hit points must be a valid number of hit points.
-	 * 			| isValidHitPoints(hitPoints)
-	 * @effect	This game object is initialized with position (x,y).
-	 * 			| setPosition(new Position(x,y))
+	 * 			| canHaveAsMaxHorVelocity(maxHorVelocity,initHorVelocity)
+	 * @post	If the given number of hit points is valid, the new game object
+	 * 			has this number as its hit points.
+	 * 			| if(isValidHitPoints(hitpoints)
+	 * 			|	then new.getHitPoints() == hitPoints
 	 * @post	This new game object has the given sprites as its sprites.
 	 * 			| new.getAllSprites() == sprites
-	 * @throws	IllegalXPositionException(x,this)
-	 * 			The given x position is not a valid x position.
-	 * 			| !Position.isValidXPosition(x)
-	 * @throws	IllegalYPositionException(y,this)
-	 * 			The given y position is not a valid y position.
-	 * 			| !Position.isValidYPosition(y)
+	 * @post	This game object is initialized with position (x,y).
+	 * 			| new.getPosition() == position
+	 * @post	This game object has no world.
+	 * 			| new.getWorld() == null
+	 * @throws	IllegalArgumentException
+	 * 			This game object can not have the given position as its position.
+	 * 			| !isValidPosition(position,null)
 	 */
 	@Raw@Model
-	protected GameObject(int x, int y, double initHorVelocity, double maxHorVelocity, Sprite[] sprites,
-			int hitPoints) throws IllegalXPositionException,IllegalYPositionException{
-		setPosition(new Position(x,y));
-		setHitPoints(hitPoints);
+	protected GameObject(Position position, double initHorVelocity, double maxHorVelocity, Sprite[] sprites,
+			int hitPoints) throws IllegalArgumentException{
 		assert isValidInitHorVelocity(initHorVelocity);
+		assert canHaveAsMaxHorVelocity(maxHorVelocity,initHorVelocity);
+		if(!isValidPosition(position,null))
+			throw new IllegalArgumentException("Invalid position!");
+		setPosition(position);
+		setHitPoints(hitPoints);
 		this.initHorVelocity = initHorVelocity;
-		assert canHaveAsMaxHorVelocity(maxHorVelocity);
-		setMaxHorVelocity(maxHorVelocity);
 		setMaxHorVelocity(maxHorVelocity);
 		this.sprites = sprites;
 	}
 	
 	/**
 	 * Initialize this new game object with given x position, given y position, 
-	 * given initial horizontal velocity, given maximum horizontal velocity,
-	 * given sprites and 100 hit points.
+	 * given initial horizontal velocity given sprites and given hit points.
 	 * 
+	 * In this case the maximum horizontal velocity will be equal to the initial
+	 * horizontal velocity.
+	 * 
+	 * @param 	position
+	 * 			The start position for this game object.
+	 * @param 	initHorVelocity
+	 * 			Initial horizontal velocity and maximum horizontal 
+	 * 			velocity for this game object.
+	 * @param	sprites
+	 * 			An array containing the different sprites for this game object.
+	 * @param	hitPoints
+	 * 			The hit points for this new game object. 
 	 * @pre		The initial horizontal velocity must be valid.
 	 * 			| isValidInitHorVelocity(initHorVelocity)
-	 * @pre		The maximum horizontal velocity must be valid.
-	 * 			| canHaveAsMaxHorVelocity(maxHorVelocity)
-	 * @pre		The number of hit points must be a valid number of hit points.
-	 * 			| isValidHitPoints(hitPoints)
 	 * @effect	This game object is initialized with the given x position, given y position, 
-	 * 			given initial horizontal velocity, given maximum horizontal velocity,
-	 * 			given sprites and 100 hit points.
-	 * 			| this(x,y,initHorVelocity,initHorVelocity,sprites,hitPoints)
+	 * 			given initial horizontal velocity as its initial and maximum horizontal 
+	 * 			velocity, given sprites and given hit points.
+	 * 			| this(position,initHorVelocity,initHorVelocity,sprites,hitPoints)
 	 */
 	@Raw@Model
-	protected GameObject(int x, int y, double initHorVelocity, Sprite[] sprites,
-			int hitPoints) throws IllegalXPositionException,IllegalYPositionException{
-		this(x,y,initHorVelocity,initHorVelocity,sprites,hitPoints);
+	protected GameObject(Position position, double initHorVelocity, Sprite[] sprites,
+			int hitPoints) throws IllegalArgumentException{
+		this(position,initHorVelocity,initHorVelocity,sprites,hitPoints);
 	}
 	
 	/**
 	 * Return the current position of this game object.
 	 */
+	@Basic
 	public Position getPosition(){
 		return position.copy();
 	}
@@ -115,25 +122,14 @@ public abstract class GameObject {
 	 * 
 	 * @param 	position
 	 * 			The position to check.
-	 * @return	True if the x component of the given position is a valid
-	 * 			x position and if the y component of the given position
-	 * 			is a valid y position.
-	 * 			| result == position.isValidXPosition(position.getXPosition()) &&
-			   	|			position.isValidYPosition(position.getYPosition())
+	 * @param	world
+	 * 			The world to check this position against.
+	 * @return	True if the world belonging to the given position and
+	 * 			the given world are the same.
+	 * 			| result == (world == position.getWorld())
 	 */
-	protected boolean isValidPosition(Position position){
-		return position.isValidXPosition(position.getXPosition()) &&
-			   position.isValidYPosition(position.getYPosition());
-	}
-	
-	/**
-	 * Check whether or not this game object has a proper position.
-	 * 
-	 * @return	True if the position of this game object is a valid position.
-	 * 			| result == isValidPosition()
-	 */
-	protected boolean hasProperPosition(){
-		return isValidPosition(getPosition());
+	protected static boolean isValidPosition(Position position, World world){
+		return world == position.getWorld();
 	}
 	
 	/**
@@ -143,13 +139,14 @@ public abstract class GameObject {
 	 * 			The position to set.
 	 * @post	The game object refers to the given position.
 	 * 			| new.getPosition() == position
-	 * @throws	IllegalXPosition
-	 * 			The x component of this position is not a valid x position.
-	 * @throws	IllegalYPosition
-	 * 			The y component of this position is not a valid y position.	 * 
+	 * @throws	IllegalArgumentException
+	 * 			The given position is not a valid position for this game object.
+	 * 			| !isValidPosition(position,getWorld()) 
 	 */
 	protected void setPosition(Position position)
-			throws IllegalXPositionException,IllegalYPositionException{
+			throws IllegalArgumentException{
+		if(!isValidPosition(position, getWorld()))
+			throw new IllegalArgumentException("Invalid world!");
 		this.position = position;
 	}
 	
@@ -162,27 +159,38 @@ public abstract class GameObject {
 	 * Return the width of the current sprite of this game object.
 	 */
 	public int getWidth(){
-		return this.getCurrentSprite().getWidth();
+		return getCurrentSprite().getWidth();
 	}
 	
 	/**
 	 * Return the height of the current sprite of this game object.
 	 */
 	public int getHeight(){
-		return this.getCurrentSprite().getHeight();
+		return getCurrentSprite().getHeight();
 	}
 	
 	/**
 	 * A method to return a matrix containing all positions of this 
-	 * game object that are located at the left side.
+	 * game object that are located at the outer left side of this object.
 	 * 
-	 * @return	A matrix containing all positions of this 
-	 * 			game object that are located at the left side.
-	 * 			| ... 
+	 * @return	The resulting matrix will have a number of rows equal to 
+	 * 			the height of this game object.
+	 * 			| result.length == getHeight()
+	 * @return	The resulting matrix will have 2 columns.
+	 * 			| for each rowNb in 0..(result.length-1)
+	 * 			|	result[rowNb].length == 2
+	 * @return	Each row will have as first entry the current displayed x position
+	 * 			of this game object.
+	 * 			| for each rowNb in 0..(result.length-1)
+	 * 			|	result[rowNb][0] = getPosition().getDisplayedXPosition()
+	 * @return	Each row will have as second entry the current displayed y position
+	 * 			incremented with the number of the row.
+	 *			| for each rowNb in 0..(result.length-1)
+	 * 			|	result[rowNb][1] = getPosition().getDisplayedYPosition() + rowNb 			
 	 */
-	protected int[][] getLeftPerimeter(){
-		int xPos = this.getPosition().getDisplayedXPosition();
-		int yPos = this.getPosition().getDisplayedYPosition();
+	public int[][] getLeftPerimeter(){
+		int xPos = getPosition().getDisplayedXPosition();
+		int yPos = getPosition().getDisplayedYPosition();
 		int [][] result = new int[getHeight()][2];
 		for(int index=0;index<getHeight();index++){
 			result[index][0] = xPos;
@@ -193,15 +201,28 @@ public abstract class GameObject {
 	
 	/**
 	 * A method to return a matrix containing all positions of this 
-	 * game object that are located at the right side.
+	 * game object that are located at the outer right side of this object.
 	 * 
-	 * @return	A matrix containing all positions of this 
-	 * 			game object that are located at the right side.
-	 * 			| ...
+	 * @return	The resulting matrix will have a number of rows equal to 
+	 * 			the height of this game object.
+	 * 			| result.length == getHeight()
+	 * @return	The resulting matrix will have 2 columns.
+	 * 			| for each rowNb in 0..(result.length-1)
+	 * 			|	result[rowNb].length == 2
+	 * @return	Each row will have as first entry the current displayed x position
+	 * 			of this game object incremented with the width of this game object
+	 * 			and decremented with 1.
+	 * 			| for each rowNb in 0..(result.length-1)
+	 * 			|	result[rowNb][0] = getPosition().getDisplayedXPosition() +
+	 * 			|					   getWidth() - 1
+	 * @return	Each row will have as second entry the current displayed y position
+	 * 			incremented with the number of the row.
+	 *			| for each rowNb in 0..(result.length-1)
+	 * 			|	result[rowNb][1] = getPosition().getDisplayedYPosition() + rowNb 	
 	 */
 	public int[][] getRightPerimeter(){
-		int xPos = this.getPosition().getDisplayedXPosition() + this.getWidth()-1;
-		int yPos = this.getPosition().getDisplayedYPosition();
+		int xPos = getPosition().getDisplayedXPosition() + getWidth()-1;
+		int yPos = getPosition().getDisplayedYPosition();
 		int [][] result = new int[getHeight()][2];
 		for(int index=0;index<getHeight();index++){
 			result[index][0] = xPos;
@@ -212,15 +233,25 @@ public abstract class GameObject {
 
 	/**
 	 * A method to return a matrix containing all positions of this 
-	 * game object that are located at the bottom.
+	 * game object that are located at the bottom of this object.
 	 * 
-	 * @return	A matrix containing all positions of this 
-	 * 			game object that are located at the bottom.
-	 * 			| ...
+	 * @return	The resulting matrix will have a number of rows equal to 
+	 * 			the width of this game object.
+	 * 			| result.length == getWidth()
+	 * @return	The resulting matrix will have 2 columns.
+	 * 			| for each rowNb in 0..(result.length-1)
+	 * 			|	result[rowNb].length == 2
+	 * @return	Each row will have as first entry the current displayed x position
+	 * 			of this game object incremented with the number of the row.
+	 * 			| for each rowNb in 0..(result.length-1)
+	 * 			|	result[rowNb][0] = getPosition().getDisplayedXPosition() + rowNb
+	 * @return	Each row will have as second entry the current displayed y position.
+	 *			| for each rowNb in 0..(result.length-1)
+	 * 			|	result[rowNb][1] = getPosition().getDisplayedYPosition() 	
 	 */
 	public int[][] getLowerPerimeter(){
-		int xPos = this.getPosition().getDisplayedXPosition();
-		int yPos = this.getPosition().getDisplayedYPosition();
+		int xPos = getPosition().getDisplayedXPosition();
+		int yPos = getPosition().getDisplayedYPosition();
 		int [][] result = new int[getWidth()][2];
 		for(int index=0;index<getWidth();index++){
 			result[index][0] = xPos + index;
@@ -231,15 +262,27 @@ public abstract class GameObject {
 	
 	/**
 	 * A method to return a matrix containing all positions of this 
-	 * game object that are located at the top.
+	 * game object that are located at the top of this object.
 	 * 
-	 * @return	A matrix containing all positions of this 
-	 * 			game object that are located at the top.
-	 * 			| ...
-	 */
+	 * @return	The resulting matrix will have a number of rows equal to 
+	 * 			the width of this game object.
+	 * 			| result.length == getWidth()
+	 * @return	The resulting matrix will have 2 columns.
+	 * 			| for each rowNb in 0..(result.length-1)
+	 * 			|	result[rowNb].length == 2
+	 * @return	Each row will have as first entry the current displayed x position
+	 * 			of this game object incremented with the number of the row.
+	 * 			| for each rowNb in 0..(result.length-1)
+	 * 			|	result[rowNb][0] = getPosition().getDisplayedXPosition() + rowNb
+	 * @return	Each row will have as second entry the current displayed y position 
+	 * 			incremented with the height of this object and decremented with 1.
+	 *			| for each rowNb in 0..(result.length-1)
+	 * 			|	result[rowNb][1] = getPosition().getDisplayedYPosition() +
+	 * 			|					   getHeigth() - 1 	
+	 */			
 	public int[][] getUpperPerimeter(){
-		int xPos = this.getPosition().getDisplayedXPosition();
-		int yPos = this.getPosition().getDisplayedYPosition() + getHeight()-1;
+		int xPos = getPosition().getDisplayedXPosition();
+		int yPos = getPosition().getDisplayedYPosition() + getHeight()-1;
 		int [][] result = new int[getWidth()][2];
 		for(int index=0;index<getWidth();index++){
 			result[index][0] = xPos + index;
@@ -251,16 +294,20 @@ public abstract class GameObject {
 	/**
 	 * A method to check whether this game object occupies a given position.
 	 * 
+	 * A game object occupies a position if this position is located in between the 
+	 * borders of the current sprite of this game object.
+	 * 
 	 * @param 	position
-	 * 			The position to check
-	 * @pre		The given position must be a valid position.
-	 * 			| isValidPosition(position)
+	 * 			The position to check.
 	 * @return	True if the given position is located between the bottom left,
 	 * 			bottom right, top left and top right corner of this game object.
-	 * 			| ...
+	 * 			| result == 
+	 * 			| (position.getDisplayedXPosition() >= getPosition().getDisplayedXPosition() &&
+	 * 			|  position.getDisplayedXPosition() <= getPosition().getDisplayedXPosition() + getWidth() - 1 &&
+	 * 			|  position.getDisplayedYPosition() >= getPosition().getDisplayedYPosition() &&
+	 * 			|  position.getDisplayedYPosition() <= getPosition().getDisplayedYPosition() + getHeight() - 1)
 	 */
 	public boolean occupiesPosition(Position position){
-		assert isValidPosition(position);
 		int xpos = position.getDisplayedXPosition();
 		int ypos = position.getDisplayedYPosition();
 		return (xpos>=getPosition().getDisplayedXPosition() &&
@@ -286,17 +333,33 @@ public abstract class GameObject {
 	protected boolean isValidHitPoints(int hitPoints){
 		return (hitPoints>=0); 
 	}
+	
+	/**
+	 * Check if this game object is dead.
+	 * 
+	 * A game object that is dead will soon be terminated.
+	 * 
+	 * @return	True if the current number of hit points is zero.
+	 * 			| result == (getHitPoints() == 0)
+	 */
+	public boolean isDead() {
+		return getHitPoints() == 0;
+	}
 
 	/**
 	 * Set the number of hit points to the given number of hit points.
 	 * 
 	 * @param	hitPoints
 	 * 			The amount of hit points to set.
-	 * @post	If the amount of hit points is a valid number of hit points,
+	 * @post	If the given amount of hit points is a valid number of hit points,
 	 * 			the new amount of hit points is equal to the given amount 
 	 * 			of hit points.
 	 * 			| if(isValidHitPoints()
 	 * 			|	then new.getHitPoints() == hitPoints
+	 * @post	If the given amount of hit points is negative, the new amount of 
+	 * 			hit points is zero.
+	 * 			| if(hitPoints < 0)
+	 * 			|	then new.getHitPoints() == 0
 	 */
 	public void setHitPoints(int hitPoints) {
 		if (isValidHitPoints(hitPoints))
@@ -306,16 +369,31 @@ public abstract class GameObject {
 		}
 	}
 	
+	/**
+	 * A method to update the hit points of this game object.
+	 * A game object can damage other objects and can be damaged
+	 * by other game objects.
+	 */
 	protected abstract void updateHitPoints();
 	
-	protected void getHurtBy(GameObject other){}
+	/**
+	 * A method to damage another game object.
+	 * 
+	 * @param	other
+	 * 			The game object to damage.
+	 */
+	protected abstract void getHurtBy(GameObject other);
 	
-	protected void hurt(GameObject other){}
+	/**
+	 * A method to get damage by another game object.
+	 * 
+	 * @param	other
+	 * 			The game object to take damage from.
+	 */
+	protected abstract void hurt(GameObject other);
 	
 	/**
 	 * A variable storing the current amount of hit points.
-	 * 
-	 * If the amount of hit points is zero, a game object dies.
 	 */
 	private int hitPoints;
 	
@@ -324,34 +402,49 @@ public abstract class GameObject {
 	 * 
 	 * Null is returned if this game object doesn't belong to any world.
 	 */
+	@Basic
 	public World getWorld() {
 		return world;
 	}
 	
 	/**
-	 * Check whether the given world is a valid world for this game object.
+	 * Check whether this game object can be added to the given world.
+	 * 
 	 * @param 	world
 	 * 			The world to check.
+	 * @return	True if the given world is not effective.
+	 * 			| if (world == null)
+	 * 			|	then result == true
+	 * 			Otherwise false if the game belonging to the given world already is
+	 * 			started.
+	 * 			| else if (world.isGameStarted())
+	 * 			|	then result == false
 	 */
-	protected  boolean isValidWorld(World world){
+	protected  boolean canBeAddedTo(World world){
 		return (world == null) || (!world.isGameStarted());
 	}
 	
-	protected boolean hasProperWorld(){
-		return isValidWorld(getWorld());
-	}
+	/**
+	 * Check whether this game object has a proper world.
+	 * 
+	 * @return	True if there is no effective world attached to this game object.
+	 * 			| if (world == null)
+	 * 			|	then result == true
+	 */
+	protected abstract boolean hasProperWorld();
 	
 	/**
 	 * A method to set the world of this game object to the given world.
+	 * 
 	 * @param	world
 	 * 			The world to set.
-	 * @pre		The given world must be a valid world.
-	 * 			| isValidWorld(world)
+	 * @pre		It must be possible to add this game object to the given world.
+	 * 			| canBeAddedTo(world)
 	 * @post	The game object refers to the given world.
 	 * 			| new.getWorld() == world
 	 */
-	public void setWorld(World world) {
-		assert isValidWorld(world);
+	protected void setWorld(World world) {
+		assert canBeAddedTo(world);
 		this.world = world;
 	}
 	
@@ -375,13 +468,17 @@ public abstract class GameObject {
 	 * 
 	 * @param	horDirection
 	 * 			Horizontal direction to set.
-	 * @pre		The given direction must be a valid direction.
-	 * 			| isValidDirection(horDirection)
+	 * @pre		The given direction must be left, right or zero.
+	 * 			| horDirection == Direction.NULL ||
+	 * 			| horDirection == Direction.LEFT ||
+	 * 			| horDirection == Direction.RIGHT 
 	 * @post	The new horizontal direction of this game object is set to the given direction.
 	 * 			| new.getHorDirection() == horDirection
 	 */
 	@Model
 	protected void setHorDirection(Direction horDirection) {
+		assert (horDirection == Direction.NULL || horDirection == Direction.LEFT || 
+				horDirection == Direction.RIGHT);
 		this.horDirection = horDirection;
 	}
 	
@@ -414,6 +511,7 @@ public abstract class GameObject {
 	
 	/**
 	 * A variable storing the initial horizontal velocity of this game object.
+	 * This variable will not change once initialized. 
 	 */
 	private final double initHorVelocity;
 	
@@ -427,21 +525,21 @@ public abstract class GameObject {
 	
 	/**
 	 * Checks whether this game object can have the given maximum 
-	 * horizontal velocity as its maximum horizontal velocity.
+	 * horizontal velocity as its maximum horizontal velocity 
+	 * in combination with a given initial horizontal velocity.
 	 * 
 	 * @param	maxHorVelocity
 	 * 			The maximum horizontal velocity to check.
+	 * @param	initHorVelocity
+	 * 			The initial horizontal velocity to check against.
 	 * @return	True if the given maximum horizontal velocity is above or 
 	 * 			equal to the initial horizontal velocity.
-	 * 			| if (maxHorVelocity >= getInitHorVelocity)
+	 * 			| if (maxHorVelocity >= initHorVelocity)
 	 * 			|	then result == true
 	 */
 	@Model
-	protected boolean canHaveAsMaxHorVelocity(double maxHorVelocity){
-		if (maxHorVelocity >= getInitHorVelocity())
-			return true;
-		else
-			return false;
+	protected boolean canHaveAsMaxHorVelocity(double maxHorVelocity, double initHorVelocity){
+		return (maxHorVelocity >= initHorVelocity);
 	}
 	
 	/**
@@ -456,7 +554,7 @@ public abstract class GameObject {
 	 */
 	@Model
 	protected void setMaxHorVelocity(double maxHorVelocity){
-		if (canHaveAsMaxHorVelocity(maxHorVelocity))
+		if (canHaveAsMaxHorVelocity(maxHorVelocity,getInitHorVelocity()))
 			this.maxHorVelocity = maxHorVelocity;
 	}
 	
@@ -472,24 +570,48 @@ public abstract class GameObject {
 	public double getHorVelocity() {
 		return horVelocity;
 	}
+	
+	/**
+	 * A method to check if a given initial horizontal velocity,
+	 * a current horizontal velocity and a maximum horizontal velocity are acceptable.
+	 * 
+	 * @param 	initHorVelocity
+	 * 			The initial horizontal velocity to check.
+	 * @param 	horVelocity
+	 * 			The current horizontal velocity to check.
+	 * @param 	maxHorVelocity
+	 * 			The maximum horizontal velocity to check.
+	 * @return	True if the given horizontal velocity is above or equal to
+	 * 			the given initial horizontal velocity and below or 
+	 * 			equal to the given maximum horizontal velocity, or
+	 * 			if the given horizontal velocity is 0.
+	 * 			| result == (horVelocity == 0) ||
+	 * 			|			((horVelocity >= initHorVelocity) &&
+	 * 			|			(horVelocity <= maxHorVelocity)) 
+	 * 
+	 */
+	private boolean matchesInitHorVelocityHorVelocityMaxHorVelocity
+	(double initHorVelocity, double horVelocity, double maxHorVelocity){
+		return ((horVelocity >= initHorVelocity) &&
+				(horVelocity <= maxHorVelocity));
+	}
+	
 	/**
 	 * Checks whether this game object can have the given horizontal velocity as
 	 * its horizontal velocity.
 	 * 
 	 * @param	horVelocity
 	 * 			The horizontal velocity to check.
-	 * @return	True if the given horizontal velocity is above or equal to
-	 * 			the initial horizontal velocity of this game object and below or 
-	 * 			equal to the maximum horizontal velocity of this game object, or
-	 * 			if the given horizontal velocity is 0.
-	 * 			| result == (horVelocity == 0) ||
-	 * 			|			((horVelocity >= getInitHorVelocity()) &&
-	 * 			|			(horVelocity <= getMaxHorVelocity())) 
+	 * @return	True if the given horizontal velocity matches with the
+	 * 			initial horizontal velocity and the maximum horizontal velocity
+	 * 			of this game object.
+	 * 			| result == matchesInitHorVelocityHorVelocityMaxHorVelocity
+	 *			|			(getInitHorVelocity(), horVelocity, getMaxHorVelocity())
 	 */
 	@Model
 	protected boolean canHaveAsHorVelocity(double horVelocity){
-		return  ((horVelocity >= getInitHorVelocity()) &&
-				(horVelocity <= getMaxHorVelocity()));
+		return  matchesInitHorVelocityHorVelocityMaxHorVelocity
+				(getInitHorVelocity(), horVelocity, getMaxHorVelocity());
 	}
 	
 	/**
@@ -522,30 +644,32 @@ public abstract class GameObject {
 	 * 			The direction in which the movement must be ended.
 	 * @pre		The given direction must be left or right.
 	 * 			| direction == (Direction.LEFT) || direction == (Direction.RIGHT)
-	 * @post	If the given direction is left or right, the horizontal velocity is
-	 * 			is zero, the new horizontal direction is null and the time sum is reset to zero.
+	 * @post	If the given direction is left or right and the game object is moving
+	 * 			in that direction, the new horizontal velocity is zero, 
+	 * 			the new horizontal direction is null and the time sum of the
+	 * 			sprites timer is reset to zero.
 	 * 			| if (direction == Direction.LEFT || direction == Direction.RIGHT)
 	 * 			|	then new.getHorVelocity() == 0 && new.getHorDirection() == Direction.NULL &&
-	 * 			|		 new.getTimeSum() == 0
+	 * 			|		 new.getSpritesTimer().getTimeSum() == 0
 	 */
-	public void endMovement(Direction direction){
+	protected void endMovement(Direction direction){
 		assert (direction != Direction.NULL);
-		if (isMoving(direction)){
-			if (direction == Direction.LEFT || direction == Direction.RIGHT){
-				setHorVelocity(0);
-				setHorDirection(Direction.NULL);
-				getSpritesTimer().reset();
-			} 
-		}
+		if ((direction == Direction.LEFT || direction == Direction.RIGHT) &&
+			 isMoving(direction)){
+			setHorVelocity(0);
+			setHorDirection(Direction.NULL);
+			getSpritesTimer().reset();
+		} 
 	}
 	
 	/**
-	 * Checks whether the game object is moving.
+	 * Checks whether the game object is moving in horizontal direction.
 	 * 
 	 * @return	True if and only if the game object is moving to the left or to the right.
-	 * 			| result == (getHorDirection() != Direction.NULL)
+	 * 			| result == (getHorDirection() == Direction.LEFT ||
+	 * 			|			 getHorDirection() == Direction.RIGHT)
 	 */
-	protected boolean isMoving(){
+	public boolean isMoving(){
 		return (getHorDirection() != Direction.NULL);
 	}
 	
@@ -553,17 +677,12 @@ public abstract class GameObject {
 	 * Check whether the game object is moving in the given direction.
 	 * @param 	direction
 	 * 			The direction to check.
-	 * @return	True if the given direction is a horizontal direction and
-	 * 			the current horizontal direction is equal to the given direction.
+	 * @return	True if the horizontal direction is equal to the given direction.
 	 * 			| if (getHorDirection() == direction)
 	 * 			|	then result == true
 	 */
 	public boolean isMoving(Direction direction){
-		if(getHorDirection() == direction)
-			return true;
-		else
-			// Vrij te kiezen volgens mij.
-			return false;
+		return getHorDirection() == direction;
 	}
 	
 	/**
@@ -573,14 +692,14 @@ public abstract class GameObject {
 	 * @param	timeDuration
 	 * 			A variable indicating the length of the time interval
 	 * 			to simulate the movement of this game object. 
-	 * @effect	The position is updated with the given timeDuration.
+	 * @effect	The position is updated with the given time duration.
 	 * 			| updatePosition(timeDuration)
-	 * @effect	The horizontal velocity is updated with the given timeDuration.
+	 * @effect	The horizontal velocity is updated with the given time duration.
 	 * 			| updateHorVelocity(timeDuration)
-	 * @effect	The given timeDuration is added to the timeSum.
-	 * 			| counter(timeDuration)
+	 * @effect	The timers are updated with the given time duration.
+	 * 			| updateTimers(timeDuration)
 	 * @throws	IllegalTimeIntervalException(this)
-	 * 			The given timeduration is not a valid time interval.
+	 * 			The given time duration is not a valid time interval.
 	 * 			| !(isValidTimeInterval(timeDuration))
 	 */
 	public abstract void advanceTime(double timeDuration) throws IllegalTimeIntervalException;
@@ -595,8 +714,7 @@ public abstract class GameObject {
 	 * 			and it is not greater than 0.2.
 	 * 			| result == (timeDuration >= 0 && timeDuration <= 0.2)
 	 */
-	@Model
-	protected static boolean isValidTimeInterval(double timeDuration){
+	public static boolean isValidTimeInterval(double timeDuration){
 		return (timeDuration >= 0 && timeDuration <= 0.2);
 	}
 	
@@ -609,8 +727,6 @@ public abstract class GameObject {
 	 * 			to simulate the movement of this game object.
 	 */
 	protected abstract void updatePosition(double timeDuration);
-	
-	
 	
 	/**
 	 * A method to check whether this game object is overlapping with a given tile.
@@ -946,9 +1062,7 @@ public abstract class GameObject {
 	private boolean isTerminated;
 	
 
-	public boolean isDead() {
-		return getHitPoints() == 0;
-	}
+
 
 	
 }
