@@ -64,8 +64,13 @@ public class Slime extends Character{
 	private double periodDuration = 0;
 	
 	@Override
-	protected boolean isValidWorld(World world) {
-		return super.isValidWorld(world) && (world == null || world.hasAsSlime(this));
+	protected boolean canBeAddedTo(World world) {
+		return super.canBeAddedTo(world) && (world == null || world.hasAsSlime(this));
+	}
+	
+	@Override
+	protected boolean hasProperWorld() {
+		return true;
 	}
 	
 	/**

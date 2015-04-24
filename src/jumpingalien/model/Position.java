@@ -167,7 +167,7 @@ public class Position {
 	 */
 	private static final int SCREEN_HEIGHT = 768;
 	
-	private World getWorld(){
+	World getWorld(){
 		return this.world;
 	}
 	

@@ -40,7 +40,7 @@ public class Plant extends GameObject {
 	 */
 	public Plant(int x, int y, Sprite[] sprites) 
 			throws IllegalXPositionException,IllegalYPositionException{
-		super(x,y,PLANT_VELOCITY,sprites,1);
+		super(new Position(x,y),PLANT_VELOCITY,sprites,1);
 		setHorVelocity(getInitHorVelocity());
 		Random rn = new Random();
 		int startIndex = rn.nextInt(2);
@@ -72,9 +72,13 @@ public class Plant extends GameObject {
 	 * 			| result == (world != null) && (world.hasAsPlant(this)
 	 */
 	@Override
-	protected boolean isValidWorld(World world) {
-		return super.isValidWorld(world) && (world == null || world.hasAsPlant(this));
-		
+	protected boolean canBeAddedTo(World world) {
+		return super.canBeAddedTo(world) && (world == null || world.hasAsPlant(this));
+	}
+	
+	@Override
+	protected boolean hasProperWorld() {
+		return true;
 	}
 	
 	/**
@@ -193,6 +197,7 @@ public class Plant extends GameObject {
 		}
 	}
 	
+	
 	protected void getHurtBy(GameObject other){
 		if(other instanceof Mazub){
 			setHitPoints(0);
@@ -201,6 +206,11 @@ public class Plant extends GameObject {
 		}
 		else
 			other.hurt(this);
+	}
+	
+	protected void hurt(GameObject other){
+		if(!(other instanceof Mazub))
+			other.getHurtBy(this);
 	}
 	
 	/**

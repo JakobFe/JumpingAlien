@@ -137,8 +137,13 @@ public class Mazub extends Character{
 	 * @return	True if the given world is effective and already references this Mazub.
 	 * 			| result == (world != null && world.getMazub() == this) 
 	 */
-	public boolean isValidWorld(World world){
-		return super.isValidWorld(world) && (world == null || world.getMazub() == this);
+	public boolean canBeAddedTo(World world){
+		return super.canBeAddedTo(world) && (world == null || world.getMazub() == this);
+	}
+	
+	@Override
+	protected boolean hasProperWorld() {
+		return true;
 	}
 		
 	/**
@@ -198,8 +203,8 @@ public class Mazub extends Character{
 	 * 			|			maxHorVelocity == getMaxHorVelocityDucking()
 	 */
 	@Model@Override
-	protected boolean canHaveAsMaxHorVelocity(double maxHorVelocity){
-		return (maxHorVelocity >= getInitHorVelocity()) ||
+	protected boolean canHaveAsMaxHorVelocity(double maxHorVelocity, double initHorVelocity){
+		return (maxHorVelocity >= initHorVelocity) ||
 				maxHorVelocity == getMaxHorVelocityDucking();
 	}	
 	
