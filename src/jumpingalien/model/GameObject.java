@@ -28,7 +28,7 @@ import jumpingalien.util.Sprite;
  * 			| isValidPosition(getPosition(),getWorld())
  *  
  * @author 	Jakob Festraets, Vincent Kemps
- * @version	1.0
+ * @version	1.1
  * 
  */
 public abstract class GameObject {
@@ -919,9 +919,29 @@ public abstract class GameObject {
 	}
 	
 	/**
+	 *  A method that receives a position in the form of a double array 
+	 * and returns the corrected position, after the given position has been checked 
+	 * for whether or not this game object would collide with impassable tiles
+	 * if the given position would be assigned to this game object.
 	 * 
-	 * @param newPos
-	 * @return
+	 * @param 	newPos
+	 * 			The position to check in the form of a double array.
+	 * 			The first entry of this array represents the x position, the
+	 * 			second entry represents the y position.
+	 * @pre		The given position must have 2 entries.
+	 * 			| newPos.length == 2
+	 * @return	If the given position would be assigned to this game object and
+	 * 			as a result of that, this game object would collide with an
+	 * 			impassable tile in a horizontal direction, then the returned array 
+	 * 			will have as first entry the current x position.
+	 * 			Else, the returned array will have as first entry the first entry 
+	 * 			of the given position.
+	 * @return	If the given position would be assigned to this game object and
+	 * 			as a result of that, this game object would collide with an
+	 * 			impassable tile in a vertical direction, then the returned array
+	 * 			will have as second entry the current y position.
+	 * 			Else, the returned array will have as second entry the second entry 
+	 * 			of the given position. 
 	 */
 	protected abstract double[] updatePositionTileCollision(double[] newPos);
 	
@@ -941,11 +961,16 @@ public abstract class GameObject {
 	 * 			| newPos.length == 2
 	 * @return	If the given position would be assigned to this game object and
 	 * 			as a result of that, this game object would collide with another
-	 * 			game object out of the given collection, then the current position
-	 * 			is returned in the form of a double array.
-	 * @return	Else, return the given position.
-	 * 			| else
-	 * 			|	result == newPos
+	 * 			game object out of the given collection in a horizontal direction, 
+	 * 			then the returned array will have as first entry the current x position.
+	 * 			Else, the returned array will have as first entry the first entry 
+	 * 			of the given position.
+	 * @return	If the given position would be assigned to this game object and
+	 * 			as a result of that, this game object would collide with another
+	 * 			game object out of the given collection in a vertical direction, 
+	 * 			then the returned array will have as second entry the current y position.
+	 * 			Else, the returned array will have as second entry the second entry 
+	 * 			of the given position.
 	 */
 	protected double[] getPositionAfterCollision(double[] newPos, HashSet<GameObject> collection){
 		assert newPos.length == 2;
@@ -992,9 +1017,17 @@ public abstract class GameObject {
 	}
 	
 	/**
+	 * A method that receives a position in the form of a double array 
+	 * and returns the corrected position, after the given position has been checked 
+	 * for whether or not this game object would collide with other game objects
+	 * that can block the movement of this game object.
 	 * 
-	 * @param newPos
-	 * @return
+	 * @param 	newPos
+	 * 			The position to check in the form of a double array.
+	 * 			The first entry of this array represents the x position, the
+	 * 			second entry represents the y position.
+	 * @pre		The given position must have 2 entries.
+	 * 			| newPos.length == 2
 	 */
 	protected abstract double[] updatePositionObjectCollision(double[] newPos);
 	
@@ -1007,15 +1040,28 @@ public abstract class GameObject {
 	 * 			time interval and the current attributes of this game object.
 	 */
 	@Model
-	protected void updateHorVelocity(double timeDuration){
-		double newVel = getHorVelocity();
-		if (newVel > getMaxHorVelocity()){
-			setHorVelocity(getMaxHorVelocity());
-		}
-		else
-			setHorVelocity(newVel);
+	protected void updateHorVelocity(double timeDuration){}
+	
+	/**
+	 * Return the sprites timer belonging to this game object.
+	 */
+	@Basic
+	protected Timer getSpritesTimer(){
+		return spritesTimer;
 	}
 	
+	/**
+	 * A variable storing a period of elapsed time. This variable 
+	 * functions as a timer that increments subsequent time intervals
+	 * in the method advanceTime and is mainly used to update the sprite
+	 * of this game object.
+	 */
+	private final Timer spritesTimer = new Timer();
+	
+	/**
+	 * Return the hit points timer belonging to this game object.
+	 */
+	@Basic
 	protected Timer getHpTimer(){
 		return hpTimer;
 	}
@@ -1023,24 +1069,25 @@ public abstract class GameObject {
 	/**
 	 * A variable storing a period of elapsed time. This variable 
 	 * functions as a timer that increments subsequent time intervals
-	 * in the method advanceTime.
+	 * in the method advanceTime and is used to update the hit points 
+	 * of this game object.
 	 */
 	private final Timer hpTimer = new Timer();
 	
-	protected Timer getSpritesTimer(){
-		return this.spritesTimer;
-	}
-	
 	/**
-	 * A variable storing a period of elapsed time. This variable 
-	 * functions as a timer that increments subsequent time intervals
-	 * in the method advanceTime.
+	 * A method to add a given time duration to all timers belonging 
+	 * to this game object.
+	 * 
+	 * @param 	timeDuration
+	 * 			The time duration to add to all the timers.
+	 * @effect	The time duration is added to the sprites timer.
+	 * 			| getSpritesTimer().counter(timeDuration)
+	 * @effect	The time duration is added to the hit points timer.
+	 * 			| getHpTimer().counter(timeDuration)
 	 */
-	private final Timer spritesTimer = new Timer();
-	
 	protected void updateTimers(double timeDuration){
-		getHpTimer().counter(timeDuration);
 		getSpritesTimer().counter(timeDuration);
+		getHpTimer().counter(timeDuration);
 	}
 	
 	/**
@@ -1049,7 +1096,7 @@ public abstract class GameObject {
 	 */
 	@Basic @Model
 	protected int getIndex() {
-		return this.index;
+		return index;
 	}
 	
 	/**
@@ -1058,11 +1105,10 @@ public abstract class GameObject {
 	 * @param 	index
 	 * 			The index to check.
 	 * @return	True if and only if the index is between zero and the length of sprites.
-	 * 			| if(index >= 0)
-	 * 			|	then result == true
+	 * 			| result == (index>=0 && index <= getAllSprites().length)
 	 */
 	protected boolean isValidIndex(int index){
-		return (index >= 0);
+		return (index >= 0 && index<= sprites.length);
 	}
 
 	/**
@@ -1101,12 +1147,13 @@ public abstract class GameObject {
 	 * 			| result == getAllSprites[getIndex()]
 	 */
 	public Sprite getCurrentSprite(){
-		return getAllSprites()[getIndex()];
+		return sprites[getIndex()];
 	}
 	
 	/**
 	 * Return the array of sprites representing the different states of this game object.	
 	 */
+	@Model
 	protected Sprite[] getAllSprites(){
 		return this.sprites;
 	}
@@ -1128,26 +1175,21 @@ public abstract class GameObject {
 	/**
 	 * Terminate this game object.
 	 * 
-	 * @pre		The current number of hit points must be equal to zero.
-	 * 			| getHitPoints() == 0
-	 * @effect	The game object is terminated.
-	 * 			| new.isTerminated() == true
+	 * @pre		The game object must be dead.
+	 * 			| isDead()
+	 * @pre		The time sum belonging to the hit point timer of this
+	 * 			game object must be greater than 0.6 seconds.
+	 * @post	The game object is terminated.
+	 * 			| new.isTerminated() == true 
 	 */
 	protected void terminate(){
 		assert (getHitPoints()==0);
 		assert getHpTimer().getTimeSum()>0.6;
 		this.isTerminated = true;
-		setHorDirection(Direction.NULL);
-		setHorVelocity(0);
 	}
 	
 	/**
 	 * A variable registering whether or not this game object has been terminated.
 	 */
 	private boolean isTerminated;
-	
-
-
-
-	
 }
