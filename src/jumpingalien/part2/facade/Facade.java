@@ -5,10 +5,8 @@ import static jumpingalien.tests.util.TestUtils.intArray;
 
 import java.util.Collection;
 
+import jumpingalien.model.*;
 import jumpingalien.model.exceptions.*;
-import jumpingalien.model.gameobjects.*;
-import jumpingalien.model.other.*;
-import jumpingalien.model.worldfeatures.*;
 import jumpingalien.util.ModelException;
 import jumpingalien.util.Sprite;
 

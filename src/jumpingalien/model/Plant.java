@@ -1,9 +1,7 @@
-package jumpingalien.model.gameobjects;
+package jumpingalien.model;
 
 import jumpingalien.model.exceptions.*;
 import static jumpingalien.tests.util.TestUtils.doubleArray;
-import jumpingalien.model.other.*;
-import jumpingalien.model.worldfeatures.*;
 import jumpingalien.util.Sprite;
 
 import java.util.HashSet;

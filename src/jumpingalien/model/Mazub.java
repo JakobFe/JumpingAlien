@@ -1,4 +1,4 @@
-package jumpingalien.model.gameobjects;
+package jumpingalien.model;
 
 
 import java.util.HashSet;
@@ -6,8 +6,6 @@ import java.util.HashSet;
 import jumpingalien.util.Sprite;
 import be.kuleuven.cs.som.annotate.*;
 import jumpingalien.model.exceptions.*;
-import jumpingalien.model.other.*;
-import jumpingalien.model.worldfeatures.*;
 import static jumpingalien.tests.util.TestUtils.doubleArray;
 
 /**

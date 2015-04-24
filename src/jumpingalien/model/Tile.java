@@ -1,4 +1,4 @@
-package jumpingalien.model.worldfeatures;
+package jumpingalien.model;
 
 import be.kuleuven.cs.som.annotate.*;
 

@@ -1,10 +1,7 @@
-package jumpingalien.model.gameobjects;
+package jumpingalien.model;
 
 import static jumpingalien.tests.util.TestUtils.doubleArray;
 import jumpingalien.model.exceptions.*;
-import jumpingalien.model.other.*;
-import jumpingalien.model.worldfeatures.Terrain;
-import jumpingalien.model.worldfeatures.Tile;
 import jumpingalien.util.Sprite;
 import be.kuleuven.cs.som.annotate.*;
 

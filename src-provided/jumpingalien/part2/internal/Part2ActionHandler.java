@@ -2,7 +2,7 @@ package jumpingalien.part2.internal;
 
 import jumpingalien.common.game.AbstractActionHandler;
 import jumpingalien.part2.facade.IFacadePart2;
-import jumpingalien.model.gameobjects.Mazub;
+import jumpingalien.model.Mazub;
 
 public class Part2ActionHandler extends AbstractActionHandler<Mazub, IFacadePart2> {
 

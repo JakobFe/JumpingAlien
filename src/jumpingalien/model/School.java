@@ -1,4 +1,4 @@
-package jumpingalien.model.gameobjects;
+package jumpingalien.model;
 
 import java.util.HashSet;
 

@@ -1,10 +1,8 @@
-package jumpingalien.model.worldfeatures;
+package jumpingalien.model;
 
 import java.util.HashSet;
 
 import jumpingalien.model.exceptions.*;
-import jumpingalien.model.gameobjects.*;
-import jumpingalien.model.gameobjects.Character;
 import be.kuleuven.cs.som.annotate.*;
 import static jumpingalien.tests.util.TestUtils.intArray;
 
@@ -251,8 +249,8 @@ public class World {
 			getMazub().setWorld(null);
 			getAllGameObjects().remove(getMazub());
 		}
-		/*if(canHaveAsMazub(alien))
-			this.mazub = alien;*/
+		if(canHaveAsMazub(alien))
+			this.mazub = alien;
 		this.mazub = alien;
 		if (alien != null){
 			getMazub().setWorld(this);

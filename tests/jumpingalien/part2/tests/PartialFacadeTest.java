@@ -5,8 +5,8 @@ import static jumpingalien.tests.util.TestUtils.intArray;
 import static jumpingalien.tests.util.TestUtils.spriteArrayForSize;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
-import jumpingalien.model.gameobjects.Mazub;
-import jumpingalien.model.worldfeatures.World;
+import jumpingalien.model.Mazub;
+import jumpingalien.model.World;
 import jumpingalien.part2.facade.Facade;
 import jumpingalien.part2.facade.IFacadePart2;
 import jumpingalien.util.Sprite;
@@ -101,7 +101,6 @@ public class PartialFacadeTest {
 		for (int i = 0; i < 100; i++) {
 			facade.advanceTime(world, 0.2 / 9);
 		}
-
 		assertArrayEquals(doubleArray(3, 0), facade.getVelocity(alien),
 				Util.DEFAULT_EPSILON);
 	}
@@ -117,7 +116,6 @@ public class PartialFacadeTest {
 		// XXXX
 		World world = facade.createWorld(500, 1, 2, 1, 1, 1, 1);
 		facade.setGeologicalFeature(world, 0, 0, FEATURE_SOLID);
-
 		int m = 10;
 		Sprite[] sprites = spriteArrayForSize(3, 3, 10 + 2 * m);
 		Mazub alien = facade.createMazub(0, 499, sprites);

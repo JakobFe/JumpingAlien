@@ -1,11 +1,9 @@
-package jumpingalien.model.gameobjects;
+package jumpingalien.model;
 
 import java.util.HashSet;
 import java.util.Random;
 
 import jumpingalien.model.exceptions.*;
-import jumpingalien.model.other.*;
-import jumpingalien.model.worldfeatures.*;
 import jumpingalien.util.Sprite;
 import static jumpingalien.tests.util.TestUtils.doubleArray;
 
@@ -276,12 +274,12 @@ public class Shark extends Character {
 			if(isOverlappingWith(Terrain.MAGMA))
 				updateHitPointsTerrain(Terrain.MAGMA);
 			if (isOverlappingWith(alien) && !alien.isImmune() && !isDead()){
+				if (!alien.standsOn(this)){
+					alien.getHurtBy(this);
+				}
 				if(!isImmune()){
 					getHurtBy(alien);
 					isHurt = true;
-				}
-				if (!alien.standsOn(this)){
-					alien.getHurtBy(this);
 				}
 			}
 		}

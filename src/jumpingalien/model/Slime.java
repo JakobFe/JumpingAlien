@@ -1,4 +1,4 @@
-package jumpingalien.model.gameobjects;
+package jumpingalien.model;
 
 import static jumpingalien.tests.util.TestUtils.doubleArray;
 
@@ -8,10 +8,6 @@ import java.util.Random;
 import jumpingalien.model.exceptions.IllegalTimeIntervalException;
 import jumpingalien.model.exceptions.IllegalXPositionException;
 import jumpingalien.model.exceptions.IllegalYPositionException;
-import jumpingalien.model.other.Direction;
-import jumpingalien.model.other.Position;
-import jumpingalien.model.worldfeatures.Terrain;
-import jumpingalien.model.worldfeatures.World;
 import jumpingalien.util.Sprite;
 import be.kuleuven.cs.som.annotate.Basic;
 import be.kuleuven.cs.som.annotate.Immutable;
@@ -206,12 +202,12 @@ public class Slime extends Character{
 			if(getHitPoints()<oldHitPoints)
 				isDamaged = true;
 			if (alien != null && !alien.isImmune() && isOverlappingWith(alien)){
+				if (!alien.standsOn(this)){
+					alien.getHurtBy(this);
+				}
 				if(!isImmune()){
 					getHurtBy(alien);
 					isHurt = true;
-				}
-				if (!alien.standsOn(this)){
-					alien.getHurtBy(this);
 				}
 			}
 			for (Shark shark: getWorld().getAllUnterminatedSharks()){
