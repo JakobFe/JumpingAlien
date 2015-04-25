@@ -317,23 +317,56 @@ public abstract class Character extends GameObject{
 			throw new IllegalTimeIntervalException(this);
 		updateMovement();
 		double td = getTimeToMoveOnePixel(timeDuration);
-		for (int index = 0; index < timeDuration/td; index++){
-			try {
-				updatePosition(td);
-				updateHorVelocity(td);
-				updateVertVelocity(td);
-			} catch (NullPointerException e) {
-			}
-			catch(IllegalXPositionException | IllegalYPositionException exc){
-				System.out.println("Illegal position!");
-				setHitPoints(0);
-				getHpTimer().setTimeSum(100);
-				terminate();
-			}
+		double timeLeft = timeDuration;
+		while (timeLeft>td){
+			simulateMovement(td);
+			timeLeft -= td;
 		}
+		simulateMovement(timeLeft);
 		updateTimers(timeDuration);
 		updateHitPoints();
+	}
+	
+	/**
+	 * A method to simulate the movement of this character for a small amount of time, 
+	 * used in advance time to prevent collisions.
+	 * 
+	 * @param 	td
+	 * 			The time to simulate the movement.
+	 * @effect	The position is updated with the given time duration.
+	 * 			| updatePosition(td)
+	 * @effect	The horizontal velocity is updated with the given time duration.
+	 * 			| updateHorVelocity(td)
+	 * @effect	The vertical velocity is updated with the given time duration.
+	 * 			| updateVertVelocity(td)
+	 * @effect	If this character ends up outside the borders of the game world,
+	 * 			the hit points are set to zero, the time sum of the hit points 
+	 * 			timer is set to 100 and this character is terminated.
+	 * 			| let newPos = f(getPosition(),getHorVelocity(),getVertVelocity(),
+	 * 			|			     getHorAcceleration(),getVertAcceleration()),
+	 * 			| in
+	 * 			| 	  if(!Position.isValidXPosition(newPos.getXPosition()) ||
+	 * 			|		 !Position.isValidYPosition(newPos.getYPosition()))
+	 * 			|			then setHitPoints(0),getHpTimer().setTimeSum(100),
+	 * 			|				 terminate() 
+	 * 
+	 */
+	private void simulateMovement(double td) {
+		try {
+			updatePosition(td);
+			updateHorVelocity(td);
+			updateVertVelocity(td);
+		} catch (NullPointerException e) {
+		}
+		catch(IllegalXPositionException | IllegalYPositionException exc){
+			System.out.println("Illegal position!");
+			setHitPoints(0);
+			getHpTimer().setTimeSum(100);
+			terminate();
+		}
 	}	
+	
+
 	
 	/**A method to update the movements of this game object.
 	 * As an effect of this method, certain movements may be started
