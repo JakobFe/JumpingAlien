@@ -515,8 +515,9 @@ public class Mazub extends Character{
 		return doubleArray(newXPos,newYPos);
 	}
 	
-	protected double[] updatePositionObjectCollision(double[] newPos){
-		return getPositionAfterCollision(newPos,getWorld().getAllGameObjects());
+	@Override
+	protected HashSet<GameObject> getBlockingObjects() {
+		return getWorld().getAllGameObjects();
 	}
 	
 	@Override
@@ -580,27 +581,7 @@ public class Mazub extends Character{
 		}
 		getPosition().terminate();
 		setPosition(new Position(newXPos,newYPos,getWorld()));
-	}
-	
-	/**
-	 * A method to update the horizontal velocity over a given time interval.
-	 * 
-	 * @param 	timeDuration
-	 * 			The time interval needed to calculate the new horizontal velocity.
-	 * @effect	The new horizontal velocity is set to a new value based on the 
-	 * 			time interval and the current attributes of this Mazub.
-	 */
-	@Model @Override
-	protected void updateHorVelocity(double timeDuration){
-		double newVel = getHorVelocity() + getHorAcceleration() * timeDuration;
-		if (newVel > getMaxHorVelocity()){
-			setHorVelocity(getMaxHorVelocity());
-			setHorAcceleration(0);
-		}
-		else
-			setHorVelocity(newVel);
-	}
-			
+	}			
 	
 	/**
 	 * Return the last registered horizontal direction of the Mazub.

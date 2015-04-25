@@ -383,11 +383,11 @@ public class World {
 	
 	private final HashSet<Shark> allSharks = new HashSet<Shark>();
 	
-	private boolean canAddGameObjects(){
+	boolean canAddGameObjects(){
 		return !isGameStarted();
 	}
 	
-	public HashSet<GameObject> getAllGameObjects(){
+	HashSet<GameObject> getAllGameObjects(){
 		HashSet<GameObject> result = new HashSet<GameObject>();
 		result.addAll(allSharks);
 		result.addAll(allPlants);

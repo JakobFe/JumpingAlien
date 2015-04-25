@@ -141,8 +141,8 @@ public class Position {
 	 */
 	private double yPosition = 0;	
 	
-	public double[] toDoubleArray(Position position){
-		return doubleArray(position.getXPosition(),position.getYPosition());
+	public double[] toDoubleArray(){
+		return doubleArray(this.getXPosition(),this.getYPosition());
 	}
 	
 	World getWorld(){

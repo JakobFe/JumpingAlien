@@ -479,22 +479,36 @@ public abstract class GameObject {
 	protected World getWorld() {
 		return world;
 	}
+	/**
+	 * A method to check whether a world is a valid world for this game object.
+	 * 
+	 * @param 	world
+	 * 			The world to check.
+	 * @return	True if and only if the world is null or this game object can
+	 * 			be added to the given world.
+	 * 			| result == (world == null) || canBeAddedTo(world)
+	 */
+	protected boolean isValidWorld(World world){
+		return (world == null) || canBeAddedTo(world);
+	}
 	
 	/**
 	 * Check whether this game object can be added to the given world.
 	 * 
 	 * @param 	world
 	 * 			The world to check.
-	 * @return	True if the given world is not effective.
+	 * @return	False if the given world is not effective.
 	 * 			| if (world == null)
-	 * 			|	then result == true
-	 * 			Otherwise false if the game belonging to the given world already is
-	 * 			started.
-	 * 			| else if (world.isGameStarted())
+	 * 			|	then result == false
+	 * 			Otherwise false if the world can not add game objects. 
+	 * 			| else if (!world.canAddGameObjects())
 	 * 			|	then result == false
 	 */
 	protected  boolean canBeAddedTo(World world){
-		return (world == null) || (!world.isGameStarted());
+		if(world == null)
+			return false;
+		else
+			return (world.canAddGameObjects());
 	}
 	
 	/**
@@ -511,13 +525,13 @@ public abstract class GameObject {
 	 * 
 	 * @param	world
 	 * 			The world to set.
-	 * @pre		It must be possible to add this game object to the given world.
-	 * 			| canBeAddedTo(world)
+	 * @pre		The given world must be a valid world for this game object.
+	 * 			| isValidWorld(world)
 	 * @post	The game object refers to the given world.
 	 * 			| new.getWorld() == world
 	 */
 	protected void setWorld(World world) {
-		assert canBeAddedTo(world);
+		assert isValidWorld(world);
 		this.world = world;
 	}
 	
@@ -1080,8 +1094,20 @@ public abstract class GameObject {
 	 * 			second entry represents the y position.
 	 * @pre		The given position must have 2 entries.
 	 * 			| newPos.length == 2
+	 * @return	The result from the method getPositionAfterCollision(newPos,collection)
+	 * 			with as collection the game objects that can block the movement of this game object.
+	 * 			| result == getPositionAfterCollision(newPos,getBlockingObjects())
 	 */
-	protected abstract double[] updatePositionObjectCollision(double[] newPos);
+	protected double[] updatePositionObjectCollision(double[] newPos){
+		return getPositionAfterCollision(newPos, getBlockingObjects());
+	}
+	
+	/**
+	 * Returns all game objects that can block the movement of this game object.
+	 * 
+	 * @return	A hash set of all game objects that can block the movement of this game object.
+	 */
+	protected abstract HashSet<GameObject> getBlockingObjects();
 	
 	/**
 	 * A method to update the horizontal velocity over a given time interval.

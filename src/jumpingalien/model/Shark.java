@@ -240,12 +240,13 @@ public class Shark extends Character {
 		setPosition(new Position(newXPos,newYPos,getWorld()));
 	}
 	
-	protected double[] updatePositionObjectCollision(double[] newPos){
+	@Override
+	protected HashSet<GameObject> getBlockingObjects() {
 		HashSet<GameObject> collection = new HashSet<GameObject>();
 		collection.addAll(getWorld().getAllCharacters());
-		return getPositionAfterCollision(newPos,collection);
+		return collection;
 	}
-
+	
 	private boolean isSubmergedIn(Terrain terrain){ 
 		HashSet<Tile> affectedTiles = getWorld().getTilesIn(getPosition().getDisplayedXPosition()+1,
 				getPosition().getDisplayedYPosition(), getPosition().getDisplayedXPosition()+getWidth()-2,

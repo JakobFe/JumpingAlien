@@ -179,10 +179,11 @@ public class Slime extends Character{
 		setPosition(new Position(newXPos,newYPos,getWorld()));
 	}
 	
-	protected double[] updatePositionObjectCollision(double[] newPos){
+	@Override
+	protected HashSet<GameObject> getBlockingObjects() {
 		HashSet<GameObject> collection = new HashSet<GameObject>();
 		collection.addAll(getWorld().getAllCharacters());
-		return getPositionAfterCollision(newPos,collection);
+		return collection;
 	}
 
 	@Override

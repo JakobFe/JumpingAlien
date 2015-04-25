@@ -20,7 +20,7 @@ public class Tile {
 		this(world,xPosition,yPosition,Terrain.AIR,isTargetTile);
 	}
 	
-	public World getWorld() {
+	protected World getWorld() {
 		return world;
 	}
 	
