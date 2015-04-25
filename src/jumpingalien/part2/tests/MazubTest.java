@@ -25,11 +25,13 @@ public class MazubTest {
 
 	@Before
 	public void setUp() throws Exception {
-		MazubPos_0_0 = new Mazub(0,0,1,3,spriteArrayForSize(2, 2, 30));
-		MazubPos_50_0 = new Mazub(50,0,1,3,spriteArrayForSize(2, 2, 30));
-		MazubPos_800_0 = new Mazub(800,0,1,3,spriteArrayForSize(2, 2, 30));
+		sprites = spriteArrayForSize(2, 2, 10 + 2 * 10);
+		MazubPos_0_0 = new Mazub(0,0,1,3,sprites);
+		MazubPos_50_0 = new Mazub(50,0,1,3,sprites);
+		MazubPos_800_0 = new Mazub(800,0,1,3,sprites);
 	}
 	
+	private Sprite[] sprites;
 	private Mazub MazubPos_0_0;
 	private Mazub MazubPos_50_0;
 	private Mazub MazubPos_800_0;
@@ -73,16 +75,6 @@ public class MazubTest {
 		assertArrayEquals(intArray(20,0),intArray(
 				alien.getPosition().getDisplayedXPosition(),
 				alien.getPosition().getDisplayedYPosition()));
-	}
-	
-	@Test(expected=IllegalXPositionException.class)
-	public void createMazubIllegalXPos(){
-		new Mazub(-4,50,spriteArrayForSize(2, 2));
-	}
-	
-	@Test(expected=IllegalYPositionException.class)
-	public void createMazubIllegalYPos(){
-		new Mazub(40,999999,spriteArrayForSize(2, 2));
 	}
 	
 	////////////////////////////////////////////////////////////////////////////
@@ -373,13 +365,10 @@ public class MazubTest {
 	
 	@Test
 	public void getCurrentSprite1Correct(){
-		int m = 10;
-		Sprite[] sprites = spriteArrayForSize(2, 2, 10 + 2 * m);
 		Mazub alien = new Mazub(0, 0, sprites);
 		
 		alien.startDuck();
 		alien.advanceTime(0.15);
-	
 		alien.updateSpriteIndex();
 		assertEquals(sprites[1], alien.getCurrentSprite());
 	}
@@ -551,8 +540,6 @@ public class MazubTest {
 	
 	@Test
 	public void testWalkAnimationSecondFrameRight() {
-		int m = 10;
-		Sprite[] sprites = spriteArrayForSize(2, 2, 10 + 2 * m);
 		Mazub alien = MazubPos_0_0;
 
 		alien.startMove(Direction.RIGHT);
@@ -593,9 +580,6 @@ public class MazubTest {
 	
 	@Test
 	public void getCurrentSprite0CorrectWasMovingLongTimeAgo(){
-		int m = 10;
-		Sprite[] sprites = spriteArrayForSize(2, 2, 10 + 2 * m);
-		
 		MazubPos_0_0.startMove(Direction.RIGHT);
 		MazubPos_0_0.advanceTime(0.15);
 		MazubPos_0_0.endMove(Direction.RIGHT);

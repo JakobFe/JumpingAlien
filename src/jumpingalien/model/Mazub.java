@@ -624,7 +624,7 @@ public class Mazub extends Character{
 	 * A variable storing the last horizontal direction of movement of this Mazub
 	 * within the last second of in-game-time.
 	 */
-	private Direction lastDirection;
+	private Direction lastDirection = Direction.NULL;
 
 	
 	/**
@@ -724,10 +724,9 @@ public class Mazub extends Character{
 			if (isMoving() || wasMoving()){
 				if (isMoving(Direction.RIGHT) || wasMoving(Direction.RIGHT))
 					setIndex(6);
-				else
-					// isMovingLeft() == true
+				else if (isMoving(Direction.LEFT) || wasMoving(Direction.LEFT))
 					setIndex(7);
-				}
+			}
 			else
 				// only possibility left
 				setIndex(1);
