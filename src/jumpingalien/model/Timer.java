@@ -71,12 +71,29 @@ public class Timer {
 	 * 
 	 * @param 	timeDuration
 	 * 			The time duration to add to time sum.
+	 * @pre		The given time duration must be valid.
+	 * 			| isValidTimeDuration(timeDuration)
 	 * @post	The new time sum is incremented with the given time duration.
 	 * 			| new.getTimeSum() == this.getTimeSum() + timeDuration
 	 */
-	public void counter(double timeDuration){
+	public void increment(double timeDuration){
 		assert isValidTimeDuration(timeDuration);
 		setTimeSum(getTimeSum()+timeDuration);
+	}
+	
+	/**
+	 * A method to decrement the time sum of this timer with the given time duration.
+	 * 
+	 * @param 	timeDuration
+	 * 			The time duration to subtract from the time sum.
+	 * @pre		The given time duration must be valid.
+	 * 			| isValidTimeDuration(timeDuration)
+	 * @post	The new time sum is decremented with the given time duration.
+	 * 			| new.getTimeSum() == this.getTimeSum() - timeDuration
+	 */
+	public void decrement(double timeDuration){
+		assert isValidTimeDuration(timeDuration);
+		setTimeSum(getTimeSum()-timeDuration);
 	}
 	
 	/**

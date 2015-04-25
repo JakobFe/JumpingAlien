@@ -191,6 +191,11 @@ public class Slime extends Character{
 	}
 	
 	@Override
+	protected boolean canBeHurtBy(Terrain terrain) {
+		return (terrain == Terrain.WATER || terrain == Terrain.MAGMA);
+	}
+	
+	@Override
 	protected void updateHitPoints(){
 		Mazub alien = getWorld().getMazub();
 		boolean isHurt = false;

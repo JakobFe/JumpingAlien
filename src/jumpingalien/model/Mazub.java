@@ -109,6 +109,11 @@ public class Mazub extends Character{
 	}
 	
 	@Override
+	protected boolean canBeHurtBy(Terrain terrain) {
+		return (terrain == Terrain.WATER || terrain == Terrain.MAGMA);
+	}
+	
+	@Override
 	protected void updateHitPoints(){
 		if(!isDead()){
 			if (!isOverlappingWith(Terrain.WATER) && !isOverlappingWith(Terrain.MAGMA))
@@ -542,10 +547,10 @@ public class Mazub extends Character{
 	
 	@Override
 	protected void updateTimers(double timeDuration){
-		getSpritesTimer().counter(timeDuration);
-		getImmuneTimer().counter(timeDuration);
+		getSpritesTimer().increment(timeDuration);
+		getImmuneTimer().increment(timeDuration);
 		if (isOverlappingWith(Terrain.WATER) || isOverlappingWith(Terrain.MAGMA) || isDead())
-			getHpTimer().counter(timeDuration);
+			getHpTimer().increment(timeDuration);
 		else
 			getHpTimer().reset();
 	}

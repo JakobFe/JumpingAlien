@@ -9,7 +9,15 @@ import be.kuleuven.cs.som.annotate.*;
  * A class concerning characters as a subclass of game objects.
  * Characters have additional features such as a vertical velocity and acceleration.
  * 
+ * @invar	Each character can have its horizontal acceleration as its 
+ * 			horizontal acceleration.
+ * 			| canHaveAsHorAcceleration(getHorAcceleration())
+ * @invar	Each character must have a valid vertical velocity.
+ * 			| isValidVertVelocity(getVertVelocity())
+ * @invar	Each character can have its vertical acceleration as its vertical acceleration.
+ * 			| canHaveAsVertAcceleration(getVertAcceleration())
  * @invar	This character must have a valid vertical direction.
+ * 			| isValidVertDirection(getVertDirection())
  * 
  * @author 	Jakob Festraets, Vincent Kemps
  * @version 1.0
@@ -152,7 +160,7 @@ public abstract class Character extends GameObject{
 	 * 			| result == (direction == Direction.NULL || direction == Direction.DOWN ||
 	 *			|			 direction == Direction.UP)
 	 */
-	public boolean isValidVertDirection(Direction direction){
+	protected boolean isValidVertDirection(Direction direction){
 		return (direction == Direction.NULL || direction == Direction.DOWN ||
 				direction == Direction.UP);
 	}
@@ -181,7 +189,7 @@ public abstract class Character extends GameObject{
 	/**
 	 * Return the initial vertical velocity of this character.
 	 */
-	@Basic @Model
+	@Basic@Model
 	protected double getInitVertVelocity() {
 		return initVertVelocity;
 	}
@@ -217,7 +225,7 @@ public abstract class Character extends GameObject{
 	 * 
 	 * @param 	vertVelocity 
 	 * 			The vertVelocity to set
-	 * @post	If the given vertical is valid, the vertical velocity
+	 * @post	If the given vertical velocity is valid, the vertical velocity
 	 * 			is set to the given value.
 	 * 			| if (isValidVertVelocity(vertVelocity))
 				| 	then new.vertVelocity = vertVelocity
@@ -237,7 +245,7 @@ public abstract class Character extends GameObject{
 	/**
 	 * Return the maximum vertical acceleration.
 	 */
-	@Basic @Model
+	@Basic@Model
 	protected static double getMaxVertAcceleration() {
 		return MAX_VERT_ACCELERATION;
 	}
@@ -304,13 +312,11 @@ public abstract class Character extends GameObject{
 	 * 			| updateVertVelocity(timeDuration)			
 	 */
 	@Override
-	public void advanceTime(double timeDuration){
+	public void advanceTime(double timeDuration) throws IllegalTimeIntervalException{
 		if (!isValidTimeInterval(timeDuration))
 			throw new IllegalTimeIntervalException(this);
 		updateMovement();
 		double td = getTimeToMoveOnePixel(timeDuration);
-		if (td > timeDuration)
-			td = timeDuration;
 		for (int index = 0; index < timeDuration/td; index++){
 			try {
 				updatePosition(td);
@@ -321,6 +327,7 @@ public abstract class Character extends GameObject{
 			catch(IllegalXPositionException | IllegalYPositionException exc){
 				System.out.println("Illegal position!");
 				setHitPoints(0);
+				getHpTimer().setTimeSum(100);
 				terminate();
 			}
 		}
@@ -328,6 +335,20 @@ public abstract class Character extends GameObject{
 		updateHitPoints();
 	}	
 	
+	/**A method to update the movements of this game object.
+	 * As an effect of this method, certain movements may be started
+	 * 
+	 * @post	If this game object is dead, the horizontal acceleration is set 
+	 * 			to zero.
+	 * 			| if(isDead())
+	 * 			|	then new.getHorAcceleration() == 0
+	 * @post	If this game object is dead and the character is moving up,
+	 * 			the vertical velocity is set to zero and the vertical direction 
+	 * 			is set to null.
+	 * 			| if(isDead() && isMoving(Direction.UP))
+	 * 			|	then new.getVertVelocity() == 0 &&
+	 * 			|		 new.getVertDirection() == Direction.NULL
+	 */
 	@Override
 	protected void updateMovement() {
 		super.updateMovement();
@@ -341,42 +362,133 @@ public abstract class Character extends GameObject{
 	}
 	
 	/**
-	 * A method to update the hit points as  a consequence of being in contact
-	 * with a terrain type.
-	 * @param terrain
+	 * A method to check whether this game object can be hurt by a certain terrain type.
+	 * 
+	 * @param 	terrain
+	 * 			The terrain to check.
 	 */
-	protected void updateHitPointsTerrain(Terrain terrain){
-		if(!isDead()){
-			if(damageAtContact(terrain)){
-				if (getHpTimer().getTimeSum() == 0)
-					setHitPoints(getHitPoints()-terrain.getHpLoss());
-				else if (getHpTimer().getTimeSum() > 0.2){
-					setHitPoints(getHitPoints()-terrain.getHpLoss());
-					getHpTimer().setTimeSum(getHpTimer().getTimeSum()-0.2);
-				}
-			}
-			else if (getHpTimer().getTimeSum() > 0.2){
-				setHitPoints(getHitPoints()-terrain.getHpLoss());
-				getHpTimer().setTimeSum(getHpTimer().getTimeSum()-0.2);
-			}
-		}		
-	}
+	protected abstract boolean canBeHurtBy(Terrain terrain);
 	
+	/**
+	 * A method to check whether a certain terrain type deals damage at contact
+	 * to this game object.
+	 * 
+	 * @param 	terrain
+	 * 			The terrain to check.
+	 * @return	True if the terrain is of type magma.
+	 * 			| if(terrain == Terrain.MAGMA)
+	 * 			|	then result == true
+	 */
 	protected boolean damageAtContact(Terrain terrain){
 		return (terrain == Terrain.MAGMA);
 	}
 	
+	/**
+	 * A method to update the hit points as  a consequence of being in contact
+	 * with a terrain type.
+	 * 
+	 * @param	terrain
+	 * 			The terrain to be damaged by.
+	 * @effect	If the game object is not dead and it can be hurt by this 
+	 * 			terrain type and the given terrain type deals damage at contact
+	 * 			and the time sum of the hit points timer equals zero, an amount
+	 * 			of hit points is subtracted from the hit points of this character.
+	 * 			| if(!isDead() && canBeHurtBy(terrain) && damageAtContact(terrain))
+	 * 			|	if(getHpTimer().getTimeSum() == 0)
+	 * 			|		then subtractHp(terrain.getHpLoss())
+	 * 			Else if the time sum of the hit points timer is greater than 0.2,
+	 * 			the same amount of hit points is subtracted from the hit points 
+	 * 			of this character and the time sum of the hit points timer
+	 * 			is decremented with 0.2.
+	 * 			|	else if(getHpTimer().getTimeSum() > 0.2)
+	 * 			|		then subtractHp(terrain.getHpLoss()) && getHpTimer().decrement(0.2)
+	 * @effect	Else if the game object is not dead and it can be hurt by this 
+	 * 			terrain type and the given terrain type doesn't deal damage at contact
+	 * 			and the the time sum of the hit points timer is greater than 0.2,
+	 * 			an amount of hit points is subtracted from the hit points of this character 
+	 * 			and the time sum of the hit points timer is decremented with 0.2.
+	 * 			| else if(!isDead() && canBeHurtBy(terrain) && !damageAtContact(terrain) &&
+	 * 			|		   getHpTimer().getTimeSum() == 0)
+	 * 			|		then subtractHp(terrain.getHpLoss()) && getHpTimer().decrement(0.2)
+	 */
+	protected void updateHitPointsTerrain(Terrain terrain){
+		if(!isDead() && canBeHurtBy(terrain)){
+			if(damageAtContact(terrain)){
+				if (getHpTimer().getTimeSum() == 0)
+					subtractHp(terrain.getHpLoss());
+				else if (getHpTimer().getTimeSum() > 0.2){
+					subtractHp(terrain.getHpLoss());
+					getHpTimer().decrement(0.2);
+				}
+			}
+			else if (getHpTimer().getTimeSum() > 0.2){
+				subtractHp(terrain.getHpLoss());
+				getHpTimer().decrement(0.2);
+			}
+		}		
+	}
+	
+	/**
+	 * Return the immune timer belonging to this character.
+	 */
+	public Timer getImmuneTimer() {
+		return immuneTimer;
+	}
+	
+	/**
+	 * Check whether this character is immune.
+	 * 
+	 * @return	True if the time sum of the immune timer is lower than 0.6.
+	 * 			| result == (getImmuneTimer().getTimeSum() < 0.6)
+	 */
+	public boolean isImmune() {
+		return (getImmuneTimer().getTimeSum() < 0.6);
+	}
+	
+	/**
+	 * A variable storing a period of elapsed time. This variable 
+	 * functions as a timer that increments subsequent time intervals
+	 * in the method advanceTime and is used to update the immunity 
+	 * of this character.
+	 */
+	private Timer immuneTimer = new Timer(0.6);
+	
+	/**
+	 * A method to add a given time duration to all timers belonging 
+	 * to this game object.
+	 * 
+	 * @effect	The time duration is added to the immune timer.
+	 * 			| getImmuneTimer().counter(timeDuration)
+	 */
 	@Override
 	protected void updateTimers(double timeDuration){
 		super.updateTimers(timeDuration);
-		getImmuneTimer().counter(timeDuration);
+		getImmuneTimer().increment(timeDuration);
 	}
 	
+	/**
+	 * A method to estimate the time duration needed to travel 0.01 meters,
+	 * given a certain time duration.
+	 * 
+	 * @return	The returned value is the result of the following function:
+	 * 			| let tdHor  = 0.01/(Math.abs(getHorVelocity())
+	 *			|			 + Math.abs(getHorAcceleration())*timeDuration),
+	 *			| 	  tdVert = 0.01/(Math.abs(getVertVelocity())
+	 *			|			 + Math.abs(getVertAcceleration())*timeDuration),
+	 *			|	  min = Math.min(tdHor, tdVert)
+	 *			| in
+	 *			|	if(min>timeDuration)
+	 *			|		then result = timeDuration
+	 *			|	else
+	 *			|		result = min 			 
+	 */
 	protected double getTimeToMoveOnePixel(double timeDuration){
 		double tdHor = 0.01/(Math.abs(getHorVelocity())
 				+Math.abs(getHorAcceleration())*timeDuration);
 		double tdVert = 0.01/(Math.abs(getVertVelocity())
 				+Math.abs(getVertAcceleration())*timeDuration);
+		if(Math.min(tdHor, tdVert) > timeDuration)
+			return timeDuration;
 		if(Math.min(tdHor, tdVert) > 1.0 && Math.min(tdHor, tdVert) < 10){
 			System.out.print("Distance too long for object ");
 			System.out.println(this.toString());
@@ -386,7 +498,8 @@ public abstract class Character extends GameObject{
 	}
 	
 	/**
-	 * A method to start falling, this means start moving down.
+	 * A method to start falling, this means start moving down with 
+	 * the maximum vertical acceleration as vertical acceleration.
 	 * 
 	 * @effect	The vertical direction is set to down.
 	 * 			| setVertDirection(Direction.DOWN)
@@ -398,6 +511,15 @@ public abstract class Character extends GameObject{
 		setVertAcceleration(getMaxVertAcceleration());
 	}
 	
+	/**
+	 * A method to check whether this character stands on an impassable tile.
+	 * 
+	 * @return	True if and only if this character is colliding with an impassable
+	 * 			tile in the direction down.
+	 * 			| result == 
+	 * 			|		for some tile in getWorld().getImpassableTiles()
+	 * 			|			this.isColliding(Direction.DOWN,tile)
+	 */
 	protected boolean standsOnTile(){
 		for (Tile impassableTile: getWorld().getImpassableTiles()){
 			if (this.isOverlappingWith(impassableTile)){
@@ -408,6 +530,15 @@ public abstract class Character extends GameObject{
 		return false;
 	}
 	
+	/**
+	 * A method to check whether this character stands on a game object.
+	 * 
+	 * @return	True if and only if this character is colliding with another 
+	 * 			game object in the direction down.
+	 * 			| result == 
+	 * 			|		for some other in getWorld().getAllGameObjects()
+	 * 			|			(this != other) && this.isColliding(Direction.DOWN,other)
+	 */
 	protected boolean standsOnObject(){
 		for (GameObject gameObject: getWorld().getAllGameObjects()){
 			if ((gameObject != this) && this.isOverlappingWith(gameObject)){
@@ -418,12 +549,30 @@ public abstract class Character extends GameObject{
 		return false;
 	}
 	
-	protected boolean standsOn(Character character){
-		return ((character != this) && this.isOverlappingWith(character)
-				&& isColliding(Direction.DOWN, character) &&
-				character.isColliding(Direction.UP, this));
+	/**
+	 * A method to check whether this character stands on a given game object.
+	 * 
+	 * @param 	other
+	 * 			The game object to check.
+	 * @return	True if and only if the other game object is different from
+	 * 			this character and if this character is colliding down with the other 
+	 * 			game object and the other game object is colliding up with this character.
+	 * 			| result == ((other != this) && this.isOverlappingWith(other)
+	 *			|			 && isColliding(Direction.DOWN, other) &&
+	 *			|		     other.isColliding(Direction.UP, this))
+	 */
+	protected boolean standsOn(GameObject other){
+		return ((other != this) && this.isOverlappingWith(other)
+				&& isColliding(Direction.DOWN, other) &&
+				other.isColliding(Direction.UP, this));
 	}
 	
+	/**
+	 * A method that receives a position in the form of a double array 
+	 * and returns the corrected position, after the given position has been checked 
+	 * for whether or not this game object would collide with impassable tiles
+	 * if the given position would be assigned to this game object.
+	 */
 	protected double[] updatePositionTileCollision(double[] newPos){
 		assert newPos.length == 2;
 		double newXPos = newPos[0];
@@ -460,11 +609,18 @@ public abstract class Character extends GameObject{
 		}
 		return doubleArray(newXPos,newYPos);
 	}
-
+	
+	/**
+	 * A method to update the horizontal velocity over a given time interval.
+	 * 
+	 * @post	If the object is dead, the velocity is left unchanged.
+	 * 			| if(isDead())
+	 * 			|	then new.getHorVelocity() == this.getHorVelocity()
+	 */
 	@Model @Override
 	protected void updateHorVelocity(double timeDuration){
 		double newVel = getHorVelocity() + getHorAcceleration() * timeDuration;
-		if (getHitPoints() != 0){
+		if (!isDead()){
 			if (newVel > getMaxHorVelocity()){
 				setHorVelocity(getMaxHorVelocity());
 				setHorAcceleration(0);
@@ -472,10 +628,7 @@ public abstract class Character extends GameObject{
 			else
 				setHorVelocity(newVel);
 		}
-		else{
-			setHorVelocity(0);
-			setHorAcceleration(0);
-		}
+		
 	}
 	
 	/**
@@ -490,7 +643,7 @@ public abstract class Character extends GameObject{
 	 * 			and the vertical direction is set to null.
 	 * 			| if(getPosition().getYPosition() <= 0)
 	 * 			|	then setVertVelocity(0), setVertDirection(Direction.NULL),
-	 * 			|		 setVertAcceleration(0);
+	 * 			|		 setVertAcceleration(0)
 	 */
 	protected void updateVertVelocity(double timeDuration){
 		double newVel = getVertDirection().getFactor()*getVertVelocity() + 
@@ -553,19 +706,21 @@ public abstract class Character extends GameObject{
 		}
 	}
 	
+	/**
+	 * Check whether the game object is moving in the given direction.
+	 * 
+	 * @param 	direction
+	 * 			The direction to check.
+	 * @pre		The direction must be different from null.
+	 * 			| direction != Direction.NULL
+	 * @return	True if the horizontal direction is equal to the given direction
+	 * 			or if the vertical direction is equal to the given direction.
+	 * 			| result == (getHorDirection() == direction || 
+	 * 			|		     getVertDirection() == direction)
+	 */
 	@Override
 	public boolean isMoving(Direction direction){
 		assert (direction != Direction.NULL);
 		return (getHorDirection() == direction || getVertDirection() == direction);
 	}
-	
-	public boolean isImmune() {
-		return (getImmuneTimer().getTimeSum() < 0.6);
-	}
-
-	public Timer getImmuneTimer() {
-		return immuneTimer;
-	}
-
-	private Timer immuneTimer = new Timer(0.6);
 }

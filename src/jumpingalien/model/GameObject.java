@@ -213,7 +213,7 @@ public abstract class GameObject {
 	 *			| for each rowNb in 0..(result.length-1)
 	 * 			|	result[rowNb][1] = getPosition().getDisplayedYPosition() + rowNb 			
 	 */
-	public int[][] getLeftPerimeter(){
+	protected int[][] getLeftPerimeter(){
 		int xPos = getPosition().getDisplayedXPosition();
 		int yPos = getPosition().getDisplayedYPosition();
 		int [][] result = new int[getHeight()][2];
@@ -245,7 +245,7 @@ public abstract class GameObject {
 	 *			| for each rowNb in 0..(result.length-1)
 	 * 			|	result[rowNb][1] = getPosition().getDisplayedYPosition() + rowNb 	
 	 */
-	public int[][] getRightPerimeter(){
+	protected int[][] getRightPerimeter(){
 		int xPos = getPosition().getDisplayedXPosition() + getWidth()-1;
 		int yPos = getPosition().getDisplayedYPosition();
 		int [][] result = new int[getHeight()][2];
@@ -274,7 +274,7 @@ public abstract class GameObject {
 	 *			| for each rowNb in 0..(result.length-1)
 	 * 			|	result[rowNb][1] = getPosition().getDisplayedYPosition() 	
 	 */
-	public int[][] getLowerPerimeter(){
+	protected int[][] getLowerPerimeter(){
 		int xPos = getPosition().getDisplayedXPosition();
 		int yPos = getPosition().getDisplayedYPosition();
 		int [][] result = new int[getWidth()][2];
@@ -305,7 +305,7 @@ public abstract class GameObject {
 	 * 			|	result[rowNb][1] = getPosition().getDisplayedYPosition() +
 	 * 			|					   getHeigth() - 1 	
 	 */			
-	public int[][] getUpperPerimeter(){
+	protected int[][] getUpperPerimeter(){
 		int xPos = getPosition().getDisplayedXPosition();
 		int yPos = getPosition().getDisplayedYPosition() + getHeight()-1;
 		int [][] result = new int[getWidth()][2];
@@ -336,7 +336,7 @@ public abstract class GameObject {
 	 * 			| else
 	 * 			|	result == new int[0][0]
 	 */
-	public int[][] getPerimeter(Direction direction){
+	protected int[][] getPerimeter(Direction direction){
 		if(direction == Direction.DOWN)
 			return getLowerPerimeter();
 		else if(direction == Direction.UP)
@@ -365,7 +365,7 @@ public abstract class GameObject {
 	 * 			|  position.getDisplayedYPosition() >= getPosition().getDisplayedYPosition() &&
 	 * 			|  position.getDisplayedYPosition() <= getPosition().getDisplayedYPosition() + getHeight() - 1)
 	 */
-	public boolean occupiesPosition(Position position){
+	protected boolean occupiesPosition(Position position){
 		int xpos = position.getDisplayedXPosition();
 		int ypos = position.getDisplayedYPosition();
 		return (xpos>=getPosition().getDisplayedXPosition() &&
@@ -419,12 +419,27 @@ public abstract class GameObject {
 	 * 			| if(hitPoints < 0)
 	 * 			|	then new.getHitPoints() == 0
 	 */
-	public void setHitPoints(int hitPoints) {
+	protected void setHitPoints(int hitPoints) {
 		if (isValidHitPoints(hitPoints))
 			this.hitPoints = hitPoints;
 		else if(hitPoints < 0){
 			this.hitPoints = 0;
 		}
+	}
+	
+	/**
+	 * A method to subtract an amount of hit points from the current 
+	 * number of hit points.
+	 *  
+	 * @param 	amount
+	 * 			The amount of hit points to subtract from the current
+	 * 			number of hit points.
+	 * @effect	The hit points are set to the current number of hit points
+	 * 			subtracted with the given amount of hit points.
+	 * 			| setHitPoints(getHitPoints()-amount)
+	 */
+	protected void subtractHp(int amount){
+		setHitPoints(getHitPoints()-amount);
 	}
 	
 	/**
@@ -461,7 +476,7 @@ public abstract class GameObject {
 	 * Null is returned if this game object doesn't belong to any world.
 	 */
 	@Basic
-	public World getWorld() {
+	protected World getWorld() {
 		return world;
 	}
 	
@@ -530,7 +545,7 @@ public abstract class GameObject {
 	 * 			| result == (direction == Direction.NULL || direction == Direction.LEFT || 
 	 *			| 			 direction == Direction.RIGHT)
 	 */
-	public boolean isValidHorDirection(Direction direction){
+	protected boolean isValidHorDirection(Direction direction){
 		return (direction == Direction.NULL || direction == Direction.LEFT || 
 				direction == Direction.RIGHT);
 	}
@@ -559,7 +574,7 @@ public abstract class GameObject {
 	/**
 	 * Return the initial horizontal velocity of this game object.
 	 */
-	@Basic @Immutable @Model
+	@Basic@Immutable@Model
 	protected double getInitHorVelocity(){
 		return this.initHorVelocity;
 	}
@@ -713,7 +728,7 @@ public abstract class GameObject {
 	 * 			| result == (getHorDirection() == Direction.LEFT ||
 	 * 			|			 getHorDirection() == Direction.RIGHT)
 	 */
-	public boolean isMoving(){
+	protected boolean isMoving(){
 		return (getHorDirection() != Direction.NULL);
 	}
 	
@@ -721,11 +736,14 @@ public abstract class GameObject {
 	 * Check whether the game object is moving in the given direction.
 	 * @param 	direction
 	 * 			The direction to check.
+	 * @pre		The direction must be different from null.
+	 * 			| direction != Direction.NULL
 	 * @return	True if the horizontal direction is equal to the given direction.
 	 * 			| if (getHorDirection() == direction)
 	 * 			|	then result == true
 	 */
-	public boolean isMoving(Direction direction){
+	protected boolean isMoving(Direction direction){
+		assert (direction != Direction.NULL);
 		return getHorDirection() == direction;
 	}
 	
@@ -758,7 +776,11 @@ public abstract class GameObject {
 	 * A method to update the movements of this game object.
 	 * As an effect of this method, certain movements may be started.
 	 * 
-	 * 
+	 * @post	If this game object is dead, the horizontal direction is set 
+	 * 			to null and the horizontal velocity is set to zero.
+	 * 			| if(isDead())
+	 * 			|	then new.getHorDirection() == Direction.NULL &&
+	 * 			|		 new.getHorVelocity() == 0
 	 */
 	protected void updateMovement(){
 		if(isDead()){
@@ -774,14 +796,18 @@ public abstract class GameObject {
 	 * @param	timeDuration
 	 * 			A variable indicating the length of the time interval
 	 * 			to simulate the movement of this game object. 
+	 * @post	If the game object crosses the borders of the game world,
+	 * 			this object is terminated.
+	 * @effect	The movements of this game object are updated.
+	 * 			| updateMovement()
 	 * @effect	The position is updated with the given time duration.
 	 * 			| updatePosition(timeDuration)
 	 * @effect	The horizontal velocity is updated with the given time duration.
 	 * 			| updateHorVelocity(timeDuration)
 	 * @effect	The timers are updated with the given time duration.
 	 * 			| updateTimers(timeDuration)
-	 * @effect	The movements of this game object are updated.
-	 * 			| updateMovement()
+	 * @effect	The hit points are updated.
+	 * 			| updateHitPoints()
 	 * @throws	IllegalTimeIntervalException(this)
 	 * 			The given time duration is not a valid time interval.
 	 * 			| !(isValidTimeInterval(timeDuration))
@@ -798,7 +824,7 @@ public abstract class GameObject {
 	 * 			and it is not greater than 0.2.
 	 * 			| result == (timeDuration >= 0 && timeDuration <= 0.2)
 	 */
-	public static boolean isValidTimeInterval(double timeDuration){
+	protected static boolean isValidTimeInterval(double timeDuration){
 		return (timeDuration >= 0 && timeDuration <= 0.2);
 	}
 	
@@ -1112,9 +1138,18 @@ public abstract class GameObject {
 	 * 			| getHpTimer().counter(timeDuration)
 	 */
 	protected void updateTimers(double timeDuration){
-		getSpritesTimer().counter(timeDuration);
-		getHpTimer().counter(timeDuration);
+		getSpritesTimer().increment(timeDuration);
+		getHpTimer().increment(timeDuration);
 	}
+	
+	/**
+	 * A method to estimate the time duration needed to travel 0.01 meters,
+	 * given a certain time duration.
+	 *  
+	 * @param 	timeDuration
+	 * 			The time duration used in the estimation.
+	 */
+	protected abstract double getTimeToMoveOnePixel(double timeDuration);
 	
 	/**
 	 * Return the index of the current sprite in the array of sprites,

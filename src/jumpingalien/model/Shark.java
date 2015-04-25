@@ -270,6 +270,11 @@ public class Shark extends Character {
 	}
 	
 	@Override
+	protected boolean canBeHurtBy(Terrain terrain) {
+		return (terrain == Terrain.AIR || terrain == Terrain.MAGMA);
+	}
+	
+	@Override
 	protected void updateHitPoints(){
 		Mazub alien = getWorld().getMazub();
 		boolean isHurt = false;
