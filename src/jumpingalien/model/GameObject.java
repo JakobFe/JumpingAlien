@@ -690,8 +690,8 @@ public abstract class GameObject {
 	 */
 	private boolean matchesInitHorVelocityHorVelocityMaxHorVelocity
 	(double initHorVelocity, double horVelocity, double maxHorVelocity){
-		return ((horVelocity >= initHorVelocity) &&
-				(horVelocity <= maxHorVelocity));
+		return (horVelocity == 0) ||
+				((horVelocity >= initHorVelocity) && (horVelocity <= maxHorVelocity));
 	}
 	
 	/**

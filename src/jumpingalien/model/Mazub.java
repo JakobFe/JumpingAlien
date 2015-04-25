@@ -568,16 +568,18 @@ public class Mazub extends Character{
 		if (newYPos<0)
 			newYPos = 0;
 		boolean enableFall = true;
-		double[] newPos = updatePositionTileCollision(doubleArray(newXPos,newYPos));
-		newPos = updatePositionObjectCollision(newPos);
-		newXPos = newPos[0];
-		newYPos = newPos[1];
-		
-		if(standsOnTile() || standsOnObject())
-			enableFall = false;
-		
-		if (enableFall && !isMoving(Direction.UP)){
-			startFall();
+		if(getWorld() != null){
+			double[] newPos = updatePositionTileCollision(doubleArray(newXPos,newYPos));
+			newPos = updatePositionObjectCollision(newPos);
+			newXPos = newPos[0];
+			newYPos = newPos[1];
+			
+			if(standsOnTile() || standsOnObject())
+				enableFall = false;
+			
+			if (enableFall && !isMoving(Direction.UP)){
+				startFall();
+			}
 		}
 		getPosition().terminate();
 		setPosition(new Position(newXPos,newYPos,getWorld()));

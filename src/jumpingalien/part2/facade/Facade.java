@@ -211,7 +211,7 @@ public class Facade implements IFacadePart2 {
 	@Override
 	public Plant createPlant(int x, int y, Sprite[] sprites) {
 		if(enablePlants)
-			return new Plant(x,y,sprites);
+			return new Plant(new Position(x,y),sprites);
 		else
 			return null;
 	}
