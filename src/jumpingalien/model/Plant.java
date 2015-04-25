@@ -7,8 +7,7 @@ import jumpingalien.util.Sprite;
 import java.util.HashSet;
 import java.util.Random;
 
-import be.kuleuven.cs.som.annotate.Basic;
-import be.kuleuven.cs.som.annotate.Model;
+import be.kuleuven.cs.som.annotate.*;
 
 /**
  * A class concerning plants as a subclass of game objects.
@@ -32,6 +31,7 @@ public class Plant extends GameObject {
 	 * @effect	...
 	 * 			| setRandomDirection()
 	 */
+	@Raw
 	public Plant(Position position, Sprite[] sprites) 
 			throws IllegalXPositionException,IllegalYPositionException{
 		super(position,PLANT_VELOCITY,sprites,1);
@@ -46,25 +46,19 @@ public class Plant extends GameObject {
 	 * 			| new.getHorDirection() == Direction.LEFT ||
 	 * 			| new.getHorDirection() == Direction.RIGHT
 	 * @effect	...
-	 * 			| new.getLastDirection() == new.getHorDirection()
-	 * @effect	...
-	 * 			| if (new.getHorDirection() == Direction.LEFT)
-	 * 			|	then new.getIndex() == 0
-	 * 			| else
-	 * 			|	new.getIndex() == 1	 
+	 * 			| new.getLastDirection() == new.getHorDirection()	 
 	 */
+	@Model
 	private void setRandomDirection() {
 		Random rn = new Random();
 		int startIndex = rn.nextInt(2);
 		if(startIndex == 0){
 			setHorDirection(Direction.LEFT);
 			setLastDirection(Direction.LEFT);
-			setIndex(0);
 		}
 		else{
 			setHorDirection(Direction.RIGHT);
 			setLastDirection(Direction.RIGHT);
-			setIndex(1);
 		}
 	}	
 	
@@ -77,7 +71,7 @@ public class Plant extends GameObject {
 	/**
 	 * Return the last registered horizontal direction of this plant.
 	 */
-	@Basic @Model
+	@Basic@Model
 	private Direction getLastDirection() {
 		return lastDirection;
 	}
@@ -112,7 +106,7 @@ public class Plant extends GameObject {
 	 * 			| else
 	 * 			|	result == (world.canAddGameObjects() && (world.hasAsPlant(this)))
 	 */
-	@Override
+	@Override@Model
 	protected boolean canBeAddedTo(World world) {
 		return super.canBeAddedTo(world) && (world.hasAsPlant(this));
 	}
@@ -123,7 +117,7 @@ public class Plant extends GameObject {
 	 * @return	...
 	 * 			| result == (getWorld() == null) || (getWorld().hasAsPlant(this))
 	 */
-	@Override
+	@Override@Model
 	protected boolean hasProperWorld() {
 		return (getWorld() == null) || (getWorld().hasAsPlant(this));
 	}
@@ -154,11 +148,13 @@ public class Plant extends GameObject {
 	 * 			|	then  alternateDirection(), setLastDirection(getHorDirection()),
 	 *			|		  setHorVelocity(PLANT_VELOCITY), getSpritesTimer().decrement(0.5)
 	 */
+	@Model
 	protected void updateMovement() {
 		super.updateMovement();
 		if (!isDead() && getSpritesTimer().getTimeSum()>0.5){
 			alternateDirection();
 			setLastDirection(getHorDirection());
+			updateSpriteIndex();
 			setHorVelocity(PLANT_VELOCITY);
 			getSpritesTimer().decrement(0.5);
 		}
@@ -174,6 +170,7 @@ public class Plant extends GameObject {
 	 * 			| else
 	 * 			|	result == 0.01/(Math.abs(getHorVelocity()))
 	 */
+	@Model
 	protected double getTimeToMoveOnePixel(double timeDuration){
 		if(getHorVelocity()!=0)
 			return 0.01/(Math.abs(getHorVelocity()));
@@ -195,7 +192,7 @@ public class Plant extends GameObject {
 	 * 			|	setPosition(toPosition(newPos,getWorld())),
 	 * 			|	oldPosition.terminate()
 	 */ 
-	@Override
+	@Override@Model
 	protected void updatePosition(double timeDuration) {
 		double newXPos = getPosition().getXPosition() + getHorDirection().getFactor()*
 				(getHorVelocity()*timeDuration)*100;
@@ -211,7 +208,7 @@ public class Plant extends GameObject {
 	 * for whether or not this game object would collide with impassable tiles
 	 * if the given position would be assigned to this game object.
 	 */
-	@Override
+	@Override@Model
 	protected double[] updatePositionTileCollision(double[] newPos) {
 		double newXPos = newPos[0];
 		for (Tile impassableTile: getWorld().getImpassableTiles()){
@@ -242,11 +239,30 @@ public class Plant extends GameObject {
 	 * 			| result.contains(getWorld().getMazub())
 	 * 			
 	 */
+	@Override@Model
 	protected HashSet<GameObject> getBlockingObjects() {
 		HashSet<GameObject> collection = new HashSet<GameObject>();
 		collection.addAll(getWorld().getAllPlants());
 		collection.add(getWorld().getMazub());
 		return collection;
+	}
+	
+	/**
+	 * A method to alternate the horizontal direction of this plant.
+	 * 
+	 * @effect	...
+	 * 			| if(getLastDirection() == Direction.LEFT)
+	 *			|	then setHorDirection(Direction.RIGHT)
+	 * @effect	...
+	 * 			| if(getLastDirection() == Direction.RIGHT)
+	 *			|	then setHorDirection(Direction.LEFT)
+	 */
+	@Model
+	private void alternateDirection(){
+		if(getLastDirection() == Direction.LEFT)
+			setHorDirection(Direction.RIGHT);
+		else if(getLastDirection() == Direction.RIGHT)
+			setHorDirection(Direction.LEFT);
 	}
 	
 	/**
@@ -257,9 +273,13 @@ public class Plant extends GameObject {
 	 * @effect	...
 	 * 			| if(!isDead() && isOverlappingWith(getWorld().getMazub()) &&
 	 *	   		| 	  getWorld().getMazub().canConsumePlant())
-	 *			|	then 
+	 *			|	then getHurtBy(getWorld().getMazub())
+	 * @effect	...
+	 * 			| if(isDead() && getHpTimer().getTimeSum() > 0.6)
+	 * 			|	then terminate()
 	 * 			
 	 */
+	@Model
 	protected void updateHitPoints(){
 		if(!isDead() && isOverlappingWith(getWorld().getMazub()) &&
 		   getWorld().getMazub().canConsumePlant()){
@@ -270,7 +290,31 @@ public class Plant extends GameObject {
 		}
 	}
 	
+	/**
+	 * A method to damage another game object.
+	 * 
+	 * @effect	...
+	 * 			| if(!(other instanceof Mazub))
+	 * 			|	then other.getHurtBy(this)
+	 */
+	@Model
+	protected void hurt(GameObject other){
+		if(!(other instanceof Mazub))
+			other.getHurtBy(this);
+	}
 	
+	/**
+	 * A method to get damage by another game object.
+	 * 
+	 * @effect	...
+	 * 			| if(other instanceof Mazub)
+	 * 			|	then setHitPoints(0),getHpTimer().reset(),
+	 * 			|		 getWorld().getMazub().consumePlant()
+	 * 			...
+	 * 			| else
+	 * 			|	other.hurt(this)
+	 */
+	@Model
 	protected void getHurtBy(GameObject other){
 		if(other instanceof Mazub){
 			setHitPoints(0);
@@ -281,43 +325,50 @@ public class Plant extends GameObject {
 			other.hurt(this);
 	}
 	
-	protected void hurt(GameObject other){
-		if(!(other instanceof Mazub))
-			other.getHurtBy(this);
+	/**
+	 * A method to update the sprite index.
+	 * 
+	 * @effect	...
+	 * 			| setIndex((getIndex()+1)%2)
+	 */
+	@Override@Model
+	protected void updateSpriteIndex(){
+		setIndex((getIndex()+1)%2);
 	}
 	
 	/**
-	 * A method to alternate the horizontal direction of this plant.
+	 * Terminate this game object.
 	 * 
-	 * @effect	If the current direction is left, the direction is set to right.
-	 * 			| if(getHorDirection() == Direction.LEFT)
-	 *			|	then setHorDirection(Direction.RIGHT)
-	 * @effect	If the current direction is right, the direction is set to left.
-	 * 			| if(getHorDirection() == Direction.RIGHT)
-	 *			|	then setHorDirection(Direction.LEFT)
-	 */
-	private void alternateDirection(){
-		if(getLastDirection() == Direction.LEFT)
-			setHorDirection(Direction.RIGHT);
-		else if(getLastDirection() == Direction.RIGHT)
-			setHorDirection(Direction.LEFT);
-	}
-	
-	@Override
-	public void updateSpriteIndex(){}
-	
-	@Override
-	public void terminate(){
-		assert getHpTimer().getTimeSum() >= 0.6;
+	 * @pre		.
+	 * 			| isDead()
+	 * @pre		...
+	 * 			| getHpTimer().getTimeSum()>0.6
+	 * @effect	...
+	 * 			| getWorld().removeAsPlant(this)
+	 * @effect	...
+	 * 			| setWorld(null)
+	 */ 
+	@Override@Model
+	protected void terminate(){
 		super.terminate();
 		getWorld().removeAsPlant(this);
 		setWorld(null);
 	}
 	
+	/**
+	 * Return a textual representation of this plant.
+	 * 
+	 * @return	...
+	 * 			| result.contains("Plant at")
+	 * @return	...
+	 * 			| result.contains(getPosition().toString())
+	 * @return	...
+	 * 			| result.contains("with" + String.valueOf(getHitPoints()+
+	 * 			|				  "hit points.") 
+	 */
 	@Override
 	public String toString(){
-		return "Plant at " + getPosition().getDisplayedXPosition() + "," +
-							 getPosition().getDisplayedYPosition() + " with" +
-							 getHitPoints() + "hit points.";
+		return "Plant at " + getPosition().toString() +  " with" +
+							String.valueOf(getHitPoints()) + "hit points.";
 	}
 }

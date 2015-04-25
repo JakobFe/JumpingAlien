@@ -1216,7 +1216,7 @@ public abstract class GameObject {
 	/**
 	 * A method to update the sprite index.
 	 */
-	public abstract void updateSpriteIndex();
+	protected abstract void updateSpriteIndex();
 	
 	/**
 	 * A variable storing the index of the current sprite.
@@ -1266,6 +1266,7 @@ public abstract class GameObject {
 	 * 			| isDead()
 	 * @pre		The time sum belonging to the hit point timer of this
 	 * 			game object must be greater than 0.6 seconds.
+	 * 			| getHpTimer().getTimeSum()>0.6
 	 * @post	The game object is terminated.
 	 * 			| new.isTerminated() == true 
 	 */
