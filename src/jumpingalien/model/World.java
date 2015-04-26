@@ -37,6 +37,12 @@ public class World {
 	 * 			The tile position in x-direction of the target tile.
 	 * @param 	targetTileY
 	 * 			The tile position in y-direction of the target tile.
+	 * @post 	...
+	 * 			| new.getTileSize() = tileSize
+	 * @post	...
+	 * 			| new.getWorldWidth() = tileSize * nbTilesX
+	 * @post	...
+	 * 			| new.getWorldHeight() = tileSize * nbTilesY
 	 * @post	...
 	 *			| if (isValidVisibleWindowWidth(visibleWindowWidth))
 	 *			|	then new.getVisibleWindowWidth() = visibleWindowWidth
@@ -47,6 +53,40 @@ public class World {
 	 *			|	then new.getVisibleWindowHeight() = visibleWindowHeight
 	 *			| else
 	 * 			|	then new.getVisibleWindowHeight() = getWorldHeight()
+	 * @post	...
+	 * 			| new.getMaxWindowXPos() = getWorldWidth()-getVisibleWindowWidth()-1
+	 * @post	...
+	 * 			| new.getMaxWindowYPos() = getWorldHeight()-getVisibleWindowHeight()-1
+	 * @post	... MOGELIJKHEID 1
+	 * 			| let
+	 * 			|	worldOfTile = this
+	 * 			|	xPosition = targetTileX * tileSize
+	 * 			|	yPosition = targetTileY * tileSize
+	 * 			|	isTargetTile = true
+	 * 			| in
+	 * 			|	new.getTargetTile().getWorld().equals(worldOfTile)
+	 * 			|	new.getTargetTile().getXPosition().equals(xPosition)
+	 * 			|	new.getTargetTile().getYPosition().equals(yPosition)
+	 * 			|	new.getTargetTile().isTargetTile().equals(isTargetTile)
+	 * @post	... MOGELIJKHEID 2
+	 * 			| let
+	 * 			|	targetTile = Tile(this,targetTileX*tileSize,targetTileY*tileSize,true) 
+	 * 			| in
+	 * 			|	new.getTargetTile().equals(targetTile)
+	 * @post	...
+	 * 			| let
+	 * 			|	matrixOfTiles = Tile[nbTilesY][nbTilesX]
+	 * 			| in
+	 *			|	new.getWorldTiles().equals(matrixOfTiles)
+	 * @post	...
+	 * 			| let
+	 * 			|	(for each row in 0..nbTilesY-1:
+	 * 			|		(for each col in 0..nbTilesX:
+	 * 			|			if (row == targetTileY && col == targetTileX)
+	 * 			|				then tile = getTargetTile()
+	 * 			|			else tile = Tile(this, col*tileSize, row*tileSize,false) ) )
+	 * 			| in
+	 * 			|	new.getTileAtTilePos(col,row).equals(tile)
 	 */
 	public World(int tileSize, int nbTilesX, int nbTilesY,
 			int visibleWindowWidth, int visibleWindowHeight,
@@ -68,7 +108,7 @@ public class World {
 		this.worldTiles = new Tile[nbTilesY][nbTilesX];
 		for (int row = 0; row < nbTilesY; row++){
 			for (int col = 0; col < nbTilesX; col++){
-				if (row == targetTileY && col == targetTileX )
+				if (row == targetTileY && col == targetTileX)
 					worldTiles[row][col] = getTargetTile();
 				else
 					worldTiles[row][col] = new Tile(this, col*tileSize, row*tileSize,false);
@@ -117,6 +157,31 @@ public class World {
 		return yPosition/getTileSize();
 	}
 	
+	/**
+	 * Returns the tile positions of all tiles within the given rectangular region.
+	 * 
+	 * @param 	pixelLeft
+	 *          The x-coordinate of the left side of the rectangular region.
+	 * @param 	pixelBottom
+	 *          The y-coordinate of the bottom side of the rectangular region.
+	 * @param 	pixelRight
+	 *         	The x-coordinate of the right side of the rectangular region.
+	 * @param 	pixelTop
+	 *          The y-coordinate of the top side of the rectangular region.
+	 * @return	...
+	 * 			| result.length == (getBelongingTileXPosition(pixelRight) - getBelongingTileXPosition(pixelLeft) + 1)
+	 * 			|			* (getBelongingTileYPosition(pixelTop) - getBelongingTileYPosition(pixelBottom) + 1) 
+	 * @return	...
+	 * 			| for each rowNb in 0..(result.length-1)
+	 * 			|	result[rowNb].length == 2
+	 * @return	...
+	 * 			| for each rowNb in 0..(result.length-1)
+	 * 			|	result[rowNb] =
+	 * 			|		intArray(rowNb%(getBelongingTileXPosition(pixelRight) - getBelongingTileXPosition(pixelLeft) + 1)
+	 * 			|		+ getBelongingTileXPosition(pixelLeft),
+	 * 			|				rowNb/(getBelongingTileXPosition(pixelRight) - getBelongingTileXPosition(pixelLeft)
+	 * 			|		+ getBelongingTileYPosition(pixelBottom))
+	 */
 	public int[][] getTilePositionsIn(int pixelLeft, int pixelBottom,
 			int pixelRight, int pixelTop){
 		int firstTileXPos = getBelongingTileXPosition(pixelLeft);
@@ -133,6 +198,20 @@ public class World {
 		return result;
 	}
 	
+	/**
+	 * Returns a set of all tiles within the given rectangular region. 
+	 * 
+	 * @param 	pixelLeft
+	 *          The x-coordinate of the left side of the rectangular region.
+	 * @param 	pixelBottom
+	 *          The y-coordinate of the bottom side of the rectangular region.
+	 * @param 	pixelRight
+	 *         	The x-coordinate of the right side of the rectangular region.
+	 * @param 	pixelTop
+	 *          The y-coordinate of the top side of the rectangular region.
+	 *          
+	 * @return
+	 */
 	public HashSet<Tile> getTilesIn(int pixelLeft, int pixelBottom,
 			int pixelRight, int pixelTop){
 		int[][] tilePositions = getTilePositionsIn(pixelLeft, pixelBottom, pixelRight, pixelTop);
