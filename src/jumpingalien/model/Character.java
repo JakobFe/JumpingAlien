@@ -368,7 +368,8 @@ public abstract class Character extends GameObject{
 	
 
 	
-	/**A method to update the movements of this game object.
+	/**
+	 * A method to update the movements of this game object.
 	 * As an effect of this method, certain movements may be started
 	 * 
 	 * @post	If this game object is dead, the horizontal acceleration is set 

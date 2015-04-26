@@ -241,7 +241,7 @@ public class Facade implements IFacadePart2 {
 	@Override
 	public Shark createShark(int x, int y, Sprite[] sprites) {
 		if(enableSharks)
-			return new Shark(x,y,sprites);
+			return new Shark(new Position(x,y),sprites);
 		else
 			return null;
 	}

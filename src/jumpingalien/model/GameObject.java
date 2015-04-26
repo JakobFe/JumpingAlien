@@ -54,7 +54,7 @@ public abstract class GameObject {
 	 * 			| canHaveAsMaxHorVelocity(maxHorVelocity,initHorVelocity)
 	 * @post	If the given number of hit points is valid, the new game object
 	 * 			has this number as its hit points.
-	 * 			| if(isValidHitPoints(hitpoints)
+	 * 			| if(isValidHitPoints(hitPoints)
 	 * 			|	then new.getHitPoints() == hitPoints
 	 * @post	This new game object has the given sprites as its sprites.
 	 * 			| new.getAllSprites() == sprites
@@ -515,7 +515,7 @@ public abstract class GameObject {
 	 * Check whether this game object has a proper world.
 	 * 
 	 * @return	True if there is no effective world attached to this game object.
-	 * 			| if (world == null)
+	 * 			| if (getWorld() == null)
 	 * 			|	then result == true
 	 */
 	protected abstract boolean hasProperWorld();
