@@ -62,6 +62,6 @@ public class School {
 	
 	@Override
 	public String toString(){
-		return " - " + hashCode()%5;
+		return "" + hashCode()%5;
 	}
 }
