@@ -57,18 +57,7 @@ public class World {
 	 * 			| new.getMaxWindowXPos() = getWorldWidth()-getVisibleWindowWidth()-1
 	 * @post	...
 	 * 			| new.getMaxWindowYPos() = getWorldHeight()-getVisibleWindowHeight()-1
-	 * @post	... MOGELIJKHEID 1
-	 * 			| let
-	 * 			|	worldOfTile = this
-	 * 			|	xPosition = targetTileX * tileSize
-	 * 			|	yPosition = targetTileY * tileSize
-	 * 			|	isTargetTile = true
-	 * 			| in
-	 * 			|	new.getTargetTile().getWorld().equals(worldOfTile)
-	 * 			|	new.getTargetTile().getXPosition().equals(xPosition)
-	 * 			|	new.getTargetTile().getYPosition().equals(yPosition)
-	 * 			|	new.getTargetTile().isTargetTile().equals(isTargetTile)
-	 * @post	... MOGELIJKHEID 2
+	 * @post	...
 	 * 			| let
 	 * 			|	targetTile = Tile(this,targetTileX*tileSize,targetTileY*tileSize,true) 
 	 * 			| in
@@ -209,8 +198,15 @@ public class World {
 	 *         	The x-coordinate of the right side of the rectangular region.
 	 * @param 	pixelTop
 	 *          The y-coordinate of the top side of the rectangular region.
-	 *          
-	 * @return
+	 * @return	...
+	 * 			| result != null
+	 * @return	...
+	 * 			| let
+	 * 			|	tilePositions = getTilePositionsIn(pixelLeft, pixelBottom, pixelRight, pixelTop)
+	 * 			| in
+	 * 			|	for each index in 0...tilePositions.length-1:
+	 * 			|		tile = getTileAtTilePos(tilePositions[index][0], tilePositions[index][1])
+	 * 			|	result.contains(tile)
 	 */
 	public HashSet<Tile> getTilesIn(int pixelLeft, int pixelBottom,
 			int pixelRight, int pixelTop){
@@ -222,89 +218,231 @@ public class World {
 		return result;
 	}
 	
+	/**
+	 * Returns the width of the world.
+	 */
 	public int getWorldWidth() {
 		return worldWidth;
 	}
 
+	/**
+	 * A variable storing the width of the world.
+	 */
 	private final int worldWidth;
 	
+	/**
+	 * Returns the height of the world.
+	 */
 	public int getWorldHeight() {
 		return worldHeight;
 	}
 
+	/**
+	 * A variable storing the height of the world.
+	 */
 	private final int worldHeight;
 	
+	/**
+	 * Returns the width of the visible window.
+	 */
 	public int getVisibleWindowWidth() {
 		return visibleWindowWidth;
 	}
-	
+
+	/**
+	 * Check whether the width of the visible window is valid or not.
+	 * 
+	 * @param 	width
+	 * 			the width to check
+	 * @return	...
+	 * 			| result == (width <= getWorldWidth() && width>2*MIN_BORDER_DISTANCE)
+	 */
 	private boolean isValidVisibleWindowWidth(int width){
 		return (width <= getWorldWidth() && width>
 				2*MIN_BORDER_DISTANCE);
 	}
 
+	/**
+	 * A variable storing the width of the visible window.
+	 */
 	private final int visibleWindowWidth;
 	
+	/**
+	 * Returns the height of the visible window.
+	 */
 	public int getVisibleWindowHeight() {
 		return visibleWindowHeight;
 	}
-
+	
+	/**
+	 * Check whether the height of the visible window is valid or not.
+	 * 
+	 * @param 	height
+	 * 			the height to check
+	 * @return	...
+	 * 			| result == (height <= getWorldHeight() && height>(2*MIN_BORDER_DISTANCE))
+	 */
 	private boolean isValidVisibleWindowHeight(int height){
 		return (height <= getWorldHeight() && height> 
 			   (2*MIN_BORDER_DISTANCE));
 	}
 	
+	/**
+	 * A variable storing the height of the visible window.
+	 */
 	private final int visibleWindowHeight;
 	
+	/**
+	 * A variable storing the minimum amount of pixels there should be between the Mazub
+	 * and the borders of the visible window, if the Mazub isn't positioned close to the borders of the game world. 
+	 */
 	private final int MIN_BORDER_DISTANCE = 200;
 	
+	/**
+	 * Returns the tile at a given tile position.
+	 * 
+	 * @param 	tileXPos
+	 * 			The given tile position in x-direction
+	 * @param 	tileYPos
+	 * 			The given tile position in y-direction
+	 * @return	...
+	 * 			| let
+	 * 			|	tileXPos = Math.min(tileXPos, worldTiles[0].length-1)
+	 * 			|	tileYPos = Math.min(tileYPos, worldTiles.length-1)
+	 * 			| in
+	 * 			|	result.getTileXPos().equals(tileXPos)
+	 * 			|	result.getTileYPos().equals(tileYPos)
+	 */
 	public Tile getTileAtTilePos(int tileXPos, int tileYPos){
-		if(tileXPos >= worldTiles[0].length)
-			tileXPos = (getWorldWidth()-1)/getTileSize();
-		if(tileYPos >= worldTiles.length)
-			tileYPos = (getWorldHeight()-1)/getTileSize();
+		tileXPos = Math.min(tileXPos, worldTiles[0].length-1);
+		tileYPos = Math.min(tileYPos, worldTiles.length-1);
 		return worldTiles[tileYPos][tileXPos];
 	}
 	
+	/**
+	 * Returns the tile at a given position.
+	 * 
+	 * @param 	xPos
+	 * 			The given x-position
+	 * @param 	yPos
+	 * 			The given y-position
+	 * @return	...
+	 * 			| result == getTileAtTilePos(xPos/getTileSize(),yPos/getTileSize())
+	 */
 	public Tile getTileAtPos(int xPos, int yPos){
 		return getTileAtTilePos(xPos/getTileSize(),yPos/getTileSize());
 	}
 	
+	/**
+	 * Checks whether this world has the given tile as tile or not.
+	 * 
+	 * @param 	tile
+	 * 			The tile to check
+	 * @return	...
+	 * 			| result == true
+	 */
 	public boolean hasAsTile(Tile tile){
 		return true;
 	}
 	
+	/**
+	 * A matrix storing the tiles of this world. 
+	 */
 	private final Tile[][] worldTiles;
 	
+	/**
+	 * Returns a set of all impassable tiles in the game world.
+	 */
 	public HashSet<Tile> getImpassableTiles() {
 		return impassableTiles;
 	}
-	
+
+	/**
+	 * Checks whether a tile is passable or not.
+	 * 
+	 * @param 	tile
+	 * 			The tile to check
+	 * @return	...
+	 * 			| result == (!tile.getGeoFeature().isPassable())
+	 */
 	private static boolean isValidImpassableTile(Tile tile){
 		return (!tile.getGeoFeature().isPassable());
 	}
 	
+	/**
+	 * Add the given tile as an impassable tile for this world.
+	 * 
+	 * @param 	tile
+	 * 			The tile to add
+	 * @pre		...
+	 * 			| isValidImpassableTile(tile)
+	 * @post	...
+	 * 			| new.getImpassableTiles().contains(tile)
+	 */
 	public void addAsImpassableTile(Tile tile){
 		assert(isValidImpassableTile(tile));
 		this.impassableTiles.add(tile);
 	}
 	
+	/**
+	 * Checks whether the given tile is references to this world as an impassable tile.
+	 * 
+	 * @param 	tile
+	 * 			The tile to check.
+	 * @return	...
+	 * 			| getImpassableTiles().contains(tile)
+	 */
 	public boolean hasAsImpassableTile(Tile tile){
 		return getImpassableTiles().contains(tile);
 	}
 
+	/**
+	 * A set collecting references to impassable tiles attached to this world.
+	 * 
+	 * @invar	...
+	 * 			| impassableTiles != null
+	 * @invar	...
+	 * 			| for each tile in impassableTiles:
+	 * 			|	isValidImpassableTile(tile)
+	 * @invar	...
+	 * 			| for each tile in impassableTiles:
+	 * 			|	(tile.getWorld() == this)
+	 */
 	private final HashSet<Tile> impassableTiles = new HashSet<Tile>();
 	
+	/**
+	 * Returns the target tile of this game world. 
+	 * The Mazub should reach this tile in order to win the game.
+	 */
 	public Tile getTargetTile() {
 		return targetTile;
 	}
 
+	/**
+	 * A variable storing the target tile.
+	 */
 	private final Tile targetTile;
 	
+	/**
+	 * Returns the x-position of the visible window.
+	 */
 	public int getWindowXPos() {
 		return windowXPos;
 	}
 
+	/**
+	 * Sets the x-position of the visible window to the given x-position.
+	 * Like all other positions, this position should be within the borders of the game world.
+	 * 
+	 * @param 	windowXPos
+	 * 			The given x-position
+	 * @post	...
+	 * 			| if (windowXPos < 0)
+	 *			|	then new.getWindowXPos() = 0
+	 *			| else if (windowXPos > getMaxWindowXPos())
+	 *			|	then new.getWindowXPos() = getMaxWindowXPos()
+	 *			| else getWindowXPos() = windowXPos
+	 */
 	public void setWindowXPos(int windowXPos) {
 		if (windowXPos < 0)
 			this.windowXPos = 0;
@@ -314,12 +452,31 @@ public class World {
 			this.windowXPos = windowXPos;
 	}
 
+	/**
+	 * A variable storing the x-position of the visible window.
+	 */
 	private int windowXPos;
 	
+	/**
+	 * Returns the y-position of the visible window.
+	 */
 	public int getWindowYPos() {
 		return windowYPos;
 	}
 
+	/**
+	 * Sets the x-position of the visible window to the given x-position.
+	 * Like all other positions, this position should be within the borders of the game world.
+	 * 
+	 * @param 	windowYPos
+	 * 			The given y-position
+	 * @post	...
+	 * 			| if (windowYPos < 0)
+	 *			|	then new.getWindowYPos() = 0
+	 *			| else if (windowYPos > getMaxWindowYPos())
+	 *			|	then new.getWindowYPos() = getMaxWindowYPos()
+	 *			| else getWindowYPos() = windowYPos
+	 */
 	public void setWindowYPos(int windowYPos) {
 		if (windowYPos < 0)
 			this.windowYPos = 0;
@@ -329,45 +486,81 @@ public class World {
 			this.windowYPos = windowYPos;
 	}
 
+	/**
+	 * A variable storing the x-position of the visible window.
+	 */
 	private int windowYPos;
 	
-	
+	/**
+	 * Returns the maximum x-position of the visible window.
+	 */
 	public int getMaxWindowXPos() {
 		return MAX_WINDOW_X_POS;
 	}
 
+	/**
+	 * A variable storing the maximum x-position of the visible window.
+	 */
 	private final int MAX_WINDOW_X_POS;
-	
+
+	/**
+	 * Returns the maximum y-position of the visible window.
+	 */
 	public int getMaxWindowYPos() {
 		return MAX_WINDOW_Y_POS;
 	}
 
+	/**
+	 * A variable storing the maximum y-position of the visible window.
+	 */
 	private final int MAX_WINDOW_Y_POS;
 	
+	/**
+	 * Returns the one and only Mazub of this game world.
+	 */
 	public Mazub getMazub() {
 		return mazub;
 	}
-	
+
+	/**
+	 * Checks whether this world can have the given Mazub is its Mazub.
+	 * 
+	 * @param 	alien
+	 * 			The Mazub to check
+	 * @return	...
+	 * 			| result == ((alien == null) || (!alien.isDead() && canAddGameObjects()))
+	 */
 	private boolean canHaveAsMazub(Mazub alien){
 		return (alien == null) || (!alien.isDead() && canAddGameObjects());
 	}
 	
+	/**
+	 * Sets the Mazub of this game world to the given Mazub.
+	 * 
+	 * @param 	alien
+	 * 			The Mazub to set
+	 */
 	public void setMazub(Mazub alien){
 		if (getMazub() != null){
 			getMazub().setWorld(null);
 			getAllGameObjects().remove(getMazub());
 		}
 		if(canHaveAsMazub(alien))
-			this.mazub = alien;
-		this.mazub = alien;
+			this.mazub = alien; //<-
+		this.mazub = alien;		//<- is dit normaal?
 		if (alien != null){
 			getMazub().setWorld(this);
 		}
 	}
 	
+	/**
+	 * A variable storing the Mazub of this game world.
+	 */
 	private Mazub mazub;
 	
-	
+	/**
+	 * Returns a set of all plants in this game world.
+	 */
 	public HashSet<Plant> getAllPlants() {
 		return allPlants;
 	}
@@ -397,6 +590,18 @@ public class World {
 		allPlants.remove(plant);
 	}
 
+	/**
+	 * Set collecting references to all plants attached to this world.
+	 * 
+	 * @invar	...
+	 * 			| allPlants != null
+	 * @invar	...
+	 * 			| for each plant in allPlants:
+	 * 			|	isValidPlant(plant)
+	 * @invar	...
+	 * 			| for each plant in allPlants:
+	 * 			|	hasProperWorld()
+	 */
 	private final HashSet<Plant> allPlants = new HashSet<Plant>();
 
 	public HashSet<Slime> getAllSlimes() {
@@ -475,6 +680,7 @@ public class World {
 		return result;
 	}
 	
+	@SuppressWarnings("unused")
 	private boolean hasProperGameObjects(){
 		HashSet<GameObject> allGameObjects = getAllGameObjects();
 		if(getMazub()!= null && allGameObjects.size() > 100)
