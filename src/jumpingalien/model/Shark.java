@@ -671,23 +671,42 @@ public class Shark extends Character {
 			terminate();
 	}
 	
+	/**
+	 * A method to damage another game object.
+	 * 
+	 * @effect	...
+	 * 			| if(!isImmune() && other instanceof Mazub)
+	 * 			|	then subtractHp(50)
+	 * 			| else
+	 * 			|	other.hurt(this)
+	 */ 
 	@Override
 	protected void getHurtBy(GameObject other){
 		if(!isImmune()){
 			if(other instanceof Mazub){
-				setHitPoints(getHitPoints()-50);
+				subtractHp(50);
 			}
 			else
 				other.hurt(this);
 		}
 	}
 	
+	/**
+	 * A method to get damage by another game object.
+	 * 
+	 * @effect	...
+	 * 			| if(!other.isDead() && other instanceof Mazub && !((Mazub) other).isImmune() &&
+	 *			|    !((Mazub) other).standsOn(this))
+	 *			|	then ((Mazub) other).getImmuneTimer().reset(), other.subtractHp(50)
+	 *			| else
+	 *			|	other.getHurtBy(this)
+	 */
 	@Override
 	protected void hurt(GameObject other){
 		if(!other.isDead() && other instanceof Mazub && !((Mazub) other).isImmune() &&
 				!((Mazub) other).standsOn(this)){
 			((Mazub) other).getImmuneTimer().reset();
-			((Mazub) other).setHitPoints(((Mazub) other).getHitPoints()-50);
+			other.subtractHp(50);
 			if (other.isDead())
 				other.getHpTimer().reset();
 		}
@@ -696,6 +715,15 @@ public class Shark extends Character {
 		
 	}
 	
+	/**
+	 * A method to update the sprite index.
+	 * 
+	 * @effect	...
+	 * 			| if(getHorDirection() == Direction.LEFT)
+	 *			|	then setIndex(0)
+	 *			| else
+	 *			|	setIndex(1)
+	 */
 	@Override
 	public void updateSpriteIndex() {
 		if(getHorDirection() == Direction.LEFT)
@@ -704,20 +732,41 @@ public class Shark extends Character {
 			setIndex(1);
 	}
 	
+	/**
+	 * Return a textual representation of this shark.
+	 * 
+	 * @return	...
+	 * 			| result.contains("Shark at")
+	 * @return	...
+	 * 			| result.contains(getPosition().toString())
+	 * @return	...
+	 * 			| result.contains("with" + String.valueOf(getHitPoints()+
+	 * 			|				  "hit points.") 
+	 */
 	@Override
 	public String toString(){
-		return "Shark at " + getPosition().getDisplayedXPosition() + "," +
-							 getPosition().getDisplayedYPosition() + " with" +
-							 getHitPoints() + "hit points.";
+		return "Shark at " + getPosition().toString() + " with" +
+				String.valueOf(getHitPoints())  + "hit points.";
 	}
 	
+	/**
+	 * Terminate this game object.
+	 * 
+	 * @pre		...
+	 * 			| isDead()
+	 * @pre		...
+	 * 			| getHpTimer().getTimeSum()>0.6
+	 * @effect	...
+	 * 			| getWorld().removeAsShark(this)
+	 * @effect	...
+	 * 			| setWorld(null);
+	 */
 	@Override
 	protected void terminate(){
 		assert getHitPoints() == 0;
 		assert getHpTimer().getTimeSum() >= 0.6;
 		super.terminate();
 		getWorld().removeAsShark(this);
-		getWorld().getAllGameObjects().remove(this);
 		setWorld(null);
 	}
 	
