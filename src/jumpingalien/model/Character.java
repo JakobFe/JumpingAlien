@@ -686,12 +686,12 @@ public abstract class Character extends GameObject{
 			newVel = -newVel;
 			setVertDirection(Direction.DOWN);
 		}
-		if (getPosition().getYPosition() <= 0){
+		/*if (getPosition().getYPosition() <= 0){
 			getPosition().setYPosition(0);
 			setVertVelocity(0);
 			setVertDirection(Direction.NULL);
 			setVertAcceleration(0);
-		}
+		}*/
 		setVertVelocity(newVel);
 	}
 	
