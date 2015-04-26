@@ -276,7 +276,7 @@ public class Facade implements IFacadePart2 {
 	@Override
 	public Slime createSlime(int x, int y, Sprite[] sprites, School school) {
 		if(enableSlimes)	
-			return new Slime(x,y,sprites,school);
+			return new Slime(new Position(x,y),sprites,school);
 		else
 			return null;
 	}

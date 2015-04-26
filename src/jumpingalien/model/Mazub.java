@@ -417,7 +417,7 @@ public class Mazub extends Character{
 					getPosition().getDisplayedYPosition(),getPosition().getDisplayedXPosition()
 					+getWidth()-1, getPosition().getDisplayedYPosition()+getHeight()-1);
 			for(Tile tile: affectedTiles){
-				if(!(tile.getGeoFeature().isPassable) &&
+				if(!(tile.getGeoFeature().isPassable()) &&
 				   isColliding(Direction.UP, tile))
 					throw new CollisionException();
 			}

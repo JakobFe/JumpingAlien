@@ -302,7 +302,7 @@ public abstract class Character extends GameObject{
 	private double vertAcceleration = 0;	
 
 	/**
-	 * Method to update the position and velocity of the Mazub based on the current position,
+	 * Method to update the position and velocity of the character based on the current position,
 	 * velocity and a given time duration in seconds.
 	 *
 	 * @param	timeDuration

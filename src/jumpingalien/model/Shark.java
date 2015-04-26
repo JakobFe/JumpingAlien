@@ -42,7 +42,7 @@ public class Shark extends Character {
 	 * 
 	 * @post	...
 	 * 			| new.getHorDirection() == Direction.LEFT ||
-	 * 			| new.getHorDirection() == Direction.Right
+	 * 			| new.getHorDirection() == Direction.RIGHT
 	 */
 	private void setRandomHorDirection() {
 		Random rn = new Random();
@@ -238,8 +238,8 @@ public class Shark extends Character {
 	}
 	
 	/**
-	 * A method to return a random period duraion between the minimum period
-	 * duration for sharks and the maximum period duration for slimes.
+	 * A method to return a random period duration between the minimum period
+	 * duration for sharks and the maximum period duration for sharks.
 	 * 
 	 * @return	...
 	 * 			| result <= MAX_PERIOD && result >= MIN_PERIOD
@@ -503,7 +503,7 @@ public class Shark extends Character {
 	}
 	
 	/** 
-	 * Method to update the position of this game object based on the current position,
+	 * Method to update the position of this shark based on the current position,
 	 * velocity and a given time duration in seconds.
 	 * 
 	 * @post	...
@@ -539,7 +539,7 @@ public class Shark extends Character {
 	}
 	
 	/**
-	 * Returns all game objects that can block the movement of this game object.
+	 * Returns all game objects that can block the movement of this shark.
 	 * 
 	 * @return	...
 	 * 			| result.contains(getWorld().getAllCharacters())
@@ -598,7 +598,7 @@ public class Shark extends Character {
 	}
 	
 	/**
-	 * A method to check whether this game object can be hurt by a certain terrain type.
+	 * A method to check whether this shark can be hurt by a certain terrain type.
 	 *
 	 * @return	...
 	 * 			| result == (terrain == Terrain.AIR || terrain == Terrain.MAGMA)
@@ -609,8 +609,8 @@ public class Shark extends Character {
 	}
 	
 	/**
-	 * A method to update the hit points of this game object.
-	 * A game object can damage other objects and can be damaged
+	 * A method to update the hit points of this shark.
+	 * A shark can damage other objects and can be damaged
 	 * by other game objects.
 	 * 
 	 * @effect	...
@@ -638,7 +638,7 @@ public class Shark extends Character {
 	 * 			|			then getHpTimer().reset()
 	 * @effect	...
 	 * 			| if(new.isDead() && new.getHpTimer().getTimeSum()>= 0.6)
-	 * 			|	then terminate
+	 * 			|	then terminate()
 	 */
 	@Override
 	protected void updateHitPoints(){
@@ -672,12 +672,12 @@ public class Shark extends Character {
 	}
 	
 	/**
-	 * A method to damage another game object.
+	 * A method to take damage from another object.
 	 * 
 	 * @effect	...
 	 * 			| if(!isImmune() && other instanceof Mazub)
 	 * 			|	then subtractHp(50)
-	 * 			| else
+	 * 			| else if(!(other instanceof Shark))
 	 * 			|	other.hurt(this)
 	 */ 
 	@Override
@@ -686,19 +686,21 @@ public class Shark extends Character {
 			if(other instanceof Mazub){
 				subtractHp(50);
 			}
-			else
+			else if(!(other instanceof Shark))
 				other.hurt(this);
 		}
 	}
 	
 	/**
-	 * A method to get damage by another game object.
+	 * A method to damage another game object.
 	 * 
 	 * @effect	...
 	 * 			| if(!other.isDead() && other instanceof Mazub && !((Mazub) other).isImmune() &&
 	 *			|    !((Mazub) other).standsOn(this))
 	 *			|	then ((Mazub) other).getImmuneTimer().reset(), other.subtractHp(50)
-	 *			| else
+	 *			|	if(other.isDead())
+	 *			|		then other.getHpTimer().reset()
+	 *			| else if(!(other instanceof Shark))
 	 *			|	other.getHurtBy(this)
 	 */
 	@Override
@@ -710,7 +712,7 @@ public class Shark extends Character {
 			if (other.isDead())
 				other.getHpTimer().reset();
 		}
-		else
+		else if(!(other instanceof Shark))
 			other.getHurtBy(this);
 		
 	}
@@ -750,7 +752,7 @@ public class Shark extends Character {
 	}
 	
 	/**
-	 * Terminate this game object.
+	 * Terminate this shark.
 	 * 
 	 * @pre		...
 	 * 			| isDead()
