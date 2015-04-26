@@ -5,6 +5,18 @@ import jumpingalien.model.exceptions.IllegalYPositionException;
 import be.kuleuven.cs.som.annotate.*;
 import static jumpingalien.tests.util.TestUtils.*;
 
+/**
+ * A class involving positions in a game world.
+ * 
+ * @author Jakob Festraets, Vincent Kemps
+ * @version	1.0
+ * 
+ * @invar	...
+ * 			| isValidXPosition(getXPosition())
+ * @invar	...
+ * 			| isValidYPosition(getYPosition())
+ *
+ */
 @Value
 public class Position {
 	

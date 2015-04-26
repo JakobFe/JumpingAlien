@@ -1,5 +1,12 @@
 package jumpingalien.model;
 
+/**
+ * An enumeration involving direction.
+ * 
+ * @author Jakob Festraets, Vincent Kemps
+ * @version	1.0
+ *
+ */
 public enum Direction {
 	
 	RIGHT(1), LEFT(-1), UP(1), DOWN(-1), NULL(0);

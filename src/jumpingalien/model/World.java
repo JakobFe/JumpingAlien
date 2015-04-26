@@ -81,7 +81,7 @@ public class World {
 	 * @post	...
 	 * 			| let
 	 * 			|	(for each row in 0..nbTilesY-1:
-	 * 			|		(for each col in 0..nbTilesX:
+	 * 			|		(for each col in 0..nbTilesX-1:
 	 * 			|			if (row == targetTileY && col == targetTileX)
 	 * 			|				then tile = getTargetTile()
 	 * 			|			else tile = Tile(this, col*tileSize, row*tileSize,false) ) )
