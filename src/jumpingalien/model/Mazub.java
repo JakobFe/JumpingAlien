@@ -320,8 +320,8 @@ public class Mazub extends Character{
 	 * @effect	The horizontal acceleration is set to the maximum 
 	 * 			horizontal acceleration.
 	 * 			| setHorAcceleration(getMaxHorAcceleration());
-	 * @effect	The timer 'Timesum' is reset to zero.
-	 * 			| setTimeSum(0)
+	 * @effect	The timer is reset to zero.
+	 * 			| getSpritesTimer().reset()
 	 */
 	public void startMove(Direction direction){
 		assert ((direction == Direction.LEFT) || (direction == Direction.RIGHT));
@@ -350,7 +350,7 @@ public class Mazub extends Character{
 	 */
 	public void endMove(Direction direction){
 		assert ((direction == Direction.LEFT) || (direction == Direction.RIGHT));
-		//assert (isMoving(direction));
+		assert (isMoving(direction));
 		assert (!isMoving(oppositeDirection(direction)));
 		setHorVelocity(0);
 		setHorDirection(Direction.NULL);

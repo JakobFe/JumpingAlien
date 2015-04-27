@@ -80,8 +80,8 @@ public class Facade implements IFacadePart2 {
 
 	@Override
 	public void endMoveLeft(Mazub alien) {
-		//if (alien.isMoving(Direction.LEFT))
-		//	alien.endMove(Direction.LEFT);
+		if (alien.isMoving(Direction.LEFT))
+			alien.endMove(Direction.LEFT);
 		if(!alien.isMoving(Direction.RIGHT))
 			alien.endMove(Direction.LEFT);
 	}
