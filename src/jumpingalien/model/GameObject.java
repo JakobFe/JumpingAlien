@@ -545,7 +545,7 @@ public abstract class GameObject {
 	 * @post	The game object refers to the given world.
 	 * 			| new.getWorld() == world
 	 */
-	protected void setWorld(World world) {
+	protected void setWorld(@Raw World world) {
 		assert isValidWorld(world);
 		this.world = world;
 	}

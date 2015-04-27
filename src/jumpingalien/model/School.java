@@ -2,6 +2,8 @@ package jumpingalien.model;
 
 import java.util.HashSet;
 
+import be.kuleuven.cs.som.annotate.Raw;
+
 /**
  * A class concerning schools.
  * 
@@ -92,6 +94,7 @@ public class School {
 	 * 			| new.getAllSlimes().contains(slime)
 	 * 			| (new slime).getSchool() == this
 	 */
+	@Raw
 	void addSlime(Slime slime){
 		assert slime.getSchool() == null;
 		slimes.add(slime);

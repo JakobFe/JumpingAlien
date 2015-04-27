@@ -77,6 +77,7 @@ public class World {
 	 * 			| in
 	 * 			|	new.getTileAtTilePos(col,row).equals(tile)
 	 */
+	@Raw
 	public World(int tileSize, int nbTilesX, int nbTilesY,
 			int visibleWindowWidth, int visibleWindowHeight,
 			int targetTileX,int targetTileY){
@@ -638,6 +639,7 @@ public class World {
 	 * 			| if(canAddGameObjects())
 	 * 			|	then (new plant).getWorld() == this
 	 */
+	@Raw
 	public void addAsPlant(Plant plant){
 		assert (isValidGameObject(plant));
 		if(canAddGameObjects()){
@@ -735,6 +737,7 @@ public class World {
 	 * 			| if(canAddGameObjects())
 	 * 			|	then (new slime).getWorld() == this
 	 */
+	@Raw
 	public void addAsSlime(Slime slime){
 		if(canAddGameObjects()){
 			getAllSlimes().add(slime);
@@ -830,6 +833,7 @@ public class World {
 	 * 			| if(canAddGameObjects())
 	 * 			|	then (new shark).getWorld() == this
 	 */
+	@Raw
 	public void addAsShark(Shark shark){
 		if(canAddGameObjects()){
 			getAllSharks().add(shark);
