@@ -554,6 +554,15 @@ public class World {
 	 * 
 	 * @param 	alien
 	 * 			The Mazub to set
+	 * @effect	...
+	 * 			| if (getMazub() != null)
+	 *			|	then getMazub().setWorld(null), getAllGameObjects().remove(getMazub())
+	 * @post	...
+	 * 			| if(canHaveAsMazub(alien))
+	 *			|	then new.getMazub() = alien
+	 * @effect	...
+	 * 			| if (alien != null)
+	 * 			|	then getMazub().setWorld(this)
 	 */
 	public void setMazub(Mazub alien){
 		if (getMazub() != null){
@@ -561,8 +570,7 @@ public class World {
 			getAllGameObjects().remove(getMazub());
 		}
 		if(canHaveAsMazub(alien))
-			this.mazub = alien; //<-
-		this.mazub = alien;		//<- is dit normaal?
+			this.mazub = alien;
 		if (alien != null){
 			getMazub().setWorld(this);
 		}
@@ -575,11 +583,26 @@ public class World {
 	
 	/**
 	 * Returns a set of all plants in this game world.
+	 * 
+	 * @return	...
+	 * 			| result != null
+	 * @return	...
+	 * 			| for each plant in Plant:
+	 * 			|	result.contains(plant) == (plant.getWorld() == this)
 	 */
 	public HashSet<Plant> getAllPlants() {
 		return allPlants;
 	}
 	
+	/**
+	 * Returns a set of all unterminated plants in this game world.
+	 * 
+	 * @return	...
+	 * 			| result != null
+	 * @return	...
+	 * 			| for each plant in Plant:
+	 * 			|	result.contains(plant) == (plant.getWorld() == this)
+	 */
 	public HashSet<Plant> getAllUnterminatedPlants(){
 		HashSet<Plant> result = new HashSet<Plant>();
 		for(Plant plant: allPlants){
@@ -589,20 +612,56 @@ public class World {
 		return result;	
 	}
 	
+	/**
+	 * Check whether the given plant is attached to this game world.
+	 * 
+	 * @param 	plant
+	 * 			The plant to check
+	 * @return	...
+	 * 			| result.contains(plant)
+	 */
 	public boolean hasAsPlant(Plant plant){
 		return getAllPlants().contains(plant);
 	}
 	
+	/**
+	 * Add the given plant to the set of plants.
+	 * 
+	 * @param 	plant
+	 * 			The plant to be added
+	 * @pre		...
+	 * 			| isValidGameObject(plant)
+	 * @post	...
+	 * 			| if(canAddGameObjects())
+	 * 			|	then new.hasAsPlant(plant)
+	 * @post	...
+	 * 			| if(canAddGameObjects())
+	 * 			|	then (new plant).getWorld() == this
+	 */
 	public void addAsPlant(Plant plant){
+		assert (isValidGameObject(plant));
 		if(canAddGameObjects()){
 			allPlants.add(plant);
 			plant.setWorld(this);
 		}
 	}
 	
+	/**
+	 * Remove the given plant from the set of plants.
+	 * 
+	 * @param 	plant
+	 * 			The plant to be removed
+	 * @pre		...
+	 * 			| hasAsPlant(plant)
+	 * @post	...
+	 * 			| ! new.hasAsPlant(plant)
+	 * @post	...
+	 * 			| (new plant).getWorld() == null
+	 */
 	public void removeAsPlant(Plant plant){
 		assert hasAsPlant(plant);
 		allPlants.remove(plant);
+		plant.setWorld(null);
 	}
 
 	/**
@@ -612,17 +671,35 @@ public class World {
 	 * 			| allPlants != null
 	 * @invar	...
 	 * 			| for each plant in allPlants:
-	 * 			|	isValidPlant(plant)
+	 * 			|	isValidGameObject(plant)
 	 * @invar	...
 	 * 			| for each plant in allPlants:
-	 * 			|	hasProperWorld()
+	 * 			|	plant.getWorld() == this
 	 */
 	private final HashSet<Plant> allPlants = new HashSet<Plant>();
 
+	/**
+	 * Returns a set of all slimes in this game world.
+	 * 
+	 * @return	...
+	 * 			| result != null
+	 * @return	...
+	 * 			| for each slime in Slime:
+	 * 			|	result.contains(slime) == (slime.getWorld() == this)
+	 */
 	public HashSet<Slime> getAllSlimes() {
 		return allSlimes;
 	}
 	
+	/**
+	 * Returns a set of all unterminated slimes in this game world.
+	 * 
+	 * @return	...
+	 * 			| result != null
+	 * @return	...
+	 * 			| for each slime in Slime:
+	 * 			|	result.contains(slime) == (slime.getWorld() == this)
+	 */
 	public HashSet<Slime> getAllUnterminatedSlimes(){
 		HashSet<Slime> result = new HashSet<Slime>();
 		for(Slime slime: getAllSlimes()){
@@ -632,10 +709,32 @@ public class World {
 		return result;	
 	}
 	
+	/**
+	 * Check whether the given slime is attached to this game world.
+	 * 
+	 * @param 	slime
+	 * 			The slime to check
+	 * @return	...
+	 * 			| result.contains(slime)
+	 */
 	public boolean hasAsSlime(Slime slime){
 		return getAllSlimes().contains(slime);
 	}
 	
+	/**
+	 * Add the given slime to the set of slimes.
+	 * 
+	 * @param 	slime
+	 * 			The slime to be added
+	 * @pre		...
+	 * 			| isValidGameObject(slime)
+	 * @post	...
+	 * 			| if(canAddGameObjects())
+	 * 			|	then new.hasAsSlime(slime)
+	 * @post	...
+	 * 			| if(canAddGameObjects())
+	 * 			|	then (new slime).getWorld() == this
+	 */
 	public void addAsSlime(Slime slime){
 		if(canAddGameObjects()){
 			getAllSlimes().add(slime);
@@ -643,17 +742,59 @@ public class World {
 		}
 	}
 	
+	/**
+	 * Remove the given slime from the set of slimes.
+	 * 
+	 * @param 	slime
+	 * 			The slime to be removed
+	 * @pre		...
+	 * 			| hasAsSlime(slime)
+	 * @post	...
+	 * 			| ! new.hasAsSlime(slime)
+	 * @post	...
+	 * 			| (new slime).getWorld() == null
+	 */
 	public void removeAsSlime(Slime slime){
 		assert hasAsSlime(slime);
 		allSlimes.remove(slime);
 	}
 
+	/**
+	 * Set collecting references to all slimes attached to this world.
+	 * 
+	 * @invar	...
+	 * 			| allSlimes != null
+	 * @invar	...
+	 * 			| for each slime in allSlimes:
+	 * 			|	isValidGameObject(slime)
+	 * @invar	...
+	 * 			| for each slime in allSlimes:
+	 * 			|	slime.getWorld() == this
+	 */
 	private final HashSet<Slime> allSlimes = new HashSet<Slime>();
 	
+	/**
+	 * Returns a set of all sharks in this game world.
+	 * 
+	 * @return	...
+	 * 			| result != null
+	 * @return	...
+	 * 			| for each shark in Shark:
+	 * 			|	result.contains(shark) == (shark.getWorld() == this)
+	 */
 	public HashSet<Shark> getAllSharks(){
 		return allSharks;
 	}
 	
+	/**
+	 * Returns a set of all unterminated sharks in this game world.
+	 * 
+	 * @return	...
+	 * 			| result != null
+	 * @return	...
+	 * 			| for each shark in Shark:
+	 * 			|	result.contains(shark) == (shark.getWorld() == this)
+	 */
 	public HashSet<Shark> getAllUnterminatedSharks(){
 		HashSet<Shark> result = new HashSet<Shark>();
 		for(Shark shark: allSharks){
@@ -662,12 +803,33 @@ public class World {
 		}	
 		return result;	
 	}
-	
-	
+		
+	/**
+	 * Check whether the given shark is attached to this game world.
+	 * 
+	 * @param 	shark
+	 * 			The shark to check
+	 * @return	...
+	 * 			| result.contains(shark)
+	 */
 	public boolean hasAsShark(Shark shark){
 		return allSharks.contains(shark);
 	}
 	
+	/**
+	 * Add the given shark to the set of sharks.
+	 * 
+	 * @param 	shark
+	 * 			The shark to be added
+	 * @pre		...
+	 * 			| isValidGameObject(shark)
+	 * @post	...
+	 * 			| if(canAddGameObjects())
+	 * 			|	then new.hasAsShark(shark)
+	 * @post	...
+	 * 			| if(canAddGameObjects())
+	 * 			|	then (new shark).getWorld() == this
+	 */
 	public void addAsShark(Shark shark){
 		if(canAddGameObjects()){
 			getAllSharks().add(shark);
@@ -675,17 +837,68 @@ public class World {
 		}
 	}
 	
+	/**
+	 * Remove the given shark from the set of sharks.
+	 * 
+	 * @param 	shark
+	 * 			The shark to be removed
+	 * @pre		...
+	 * 			| hasAsShark(shark)
+	 * @post	...
+	 * 			| ! new.hasAsShark(shark)
+	 * @post	...
+	 * 			| (new shark).getWorld() == null
+	 */
 	public void removeAsShark(Shark shark){
 		assert hasAsShark(shark);
 		getAllSharks().remove(shark);
 	}
 	
+	/**
+	 * Set collecting references to all sharks attached to this world.
+	 * 
+	 * @invar	...
+	 * 			| allSharks != null
+	 * @invar	...
+	 * 			| for each shark in allSharks:
+	 * 			|	isValidGameObject(shark)
+	 * @invar	...
+	 * 			| for each shark in allSharks:
+	 * 			|	shark.getWorld() == this
+	 */
 	private final HashSet<Shark> allSharks = new HashSet<Shark>();
 	
+	/**
+	 * Checks whether game objects can still be added.
+	 * 
+	 * @return	...
+	 * 			| !isGameStarted()
+	 */
 	boolean canAddGameObjects(){
 		return !isGameStarted();
 	}
 	
+	/**
+	 * Checks whether the given game object is effective.
+	 * 
+	 * @param 	object
+	 * 			The object to check
+	 * @return	...
+	 * 			| object != null
+	 */
+	boolean isValidGameObject(GameObject object){
+		return object != null;
+	}
+	
+	/**
+	 * Returns all game objects attached to this game world.
+	 * 
+	 * @return	...
+	 * 			| result != null
+	 * @return	...
+	 * 			| for each object in GameObject:
+	 * 			|	result.contains(object) == (object.getWorld() == this)
+	 */
 	HashSet<GameObject> getAllGameObjects(){
 		HashSet<GameObject> result = new HashSet<GameObject>();
 		result.addAll(allSharks);
@@ -695,10 +908,25 @@ public class World {
 		return result;
 	}
 	
+	/**
+	 * Checks whether this game world has proper game objects or not.
+	 * 
+	 * @return	...
+	 * 			| if(getMazub() == null && getAllGameObjects.size() > 100)
+	 *			|	then result == false
+	 *			...
+	 *			| else if(getAllGameObjects.size()>101)
+	 *			|	then result == false
+	 *			...
+	 *			| else
+	 *			|	result == 
+	 *			|		(for some object in getAllGameObjects():
+	 *			|			gameObject.getWorld() != this))
+	 */
 	@SuppressWarnings("unused")
 	private boolean hasProperGameObjects(){
 		HashSet<GameObject> allGameObjects = getAllGameObjects();
-		if(getMazub()!= null && allGameObjects.size() > 100)
+		if(getMazub() == null && allGameObjects.size() > 100)
 			return false;
 		else if(allGameObjects.size()>101)
 			return false;
@@ -712,6 +940,16 @@ public class World {
 			
 	}
 	
+	/**
+	 * Returns all characters attached to this game world.
+	 * Those characters can be a Mazub, shark or slime.
+	 * 
+	 * @return	...
+	 * 			| result != null
+	 * @return	...
+	 * 			| for each character in Character:
+	 * 			|	result.contains(character) == (character.getWorld() == this)
+	 */
 	public HashSet<Character> getAllCharacters(){
 		HashSet<Character> result = new HashSet<Character>();
 		result.addAll(allSharks);
@@ -720,8 +958,22 @@ public class World {
 		return result;
 	}
 	
-	
-	
+	/**
+	 * Returns whether the player won the game or not.
+	 * 
+	 * @return	...
+	 * 			| if (getMazub() == null)
+	 * 			|	then result == false
+	 * @return	...
+	 * 			| let
+	 * 			|	affectedTiles = getTilesIn(getMazub().getPosition().getDisplayedXPosition(),
+	 *			| 	getMazub().getPosition().getDisplayedYPosition(),getMazub().getPosition().getDisplayedXPosition()
+	 *			|	+getMazub().getWidth()-1, getMazub().getPosition().getDisplayedYPosition()+getMazub().getHeight()-1)
+	 *			| in
+	 *			|	result == 
+	 *			|		(for some tile in affectedTiles:
+	 *			|			(tile = getTargetTile()))
+	 */
 	public boolean didPlayerWin(){
 		if (getMazub() == null)
 			return false;
@@ -735,21 +987,38 @@ public class World {
 		return false;
 	}
 	
+	/**
+	 * Checks whether the game is over or not.
+	 * 
+	 * @return	...
+	 * 			| result == (getMazub() == null || getMazub().isTerminated() || didPlayerWin())
+	 */
 	public boolean isGameOver(){
-		if (getMazub() == null || getMazub().isTerminated() || didPlayerWin())
-			return true;
-		else
-			return false;
+		return (getMazub() == null || getMazub().isTerminated() || didPlayerWin());
 	}
 
+	/**
+	 * Returns whether the game is started or not.
+	 */
 	public boolean isGameStarted() {
 		return gameStarted;
 	}
 
+	/**
+	 * Sets the game started on true or false.
+	 * 
+	 * @param 	gameStarted
+	 * 			The boolean to set
+	 * @post	...
+	 * 			| new.isGameStarted() == gameStarted
+	 */
 	public void setGameStarted(boolean gameStarted) {
 		this.gameStarted = gameStarted;
 	}
 
+	/**
+	 * A boolean variable saying whether the game is started or not.
+	 */
 	private boolean gameStarted = false;
 	
 	public void advanceTime(double timeDuration) throws
@@ -772,6 +1041,16 @@ public class World {
 		}
 	}
 	
+	/**
+	 * A method to update the position of the visible window.
+	 * 
+	 * @effect	...
+	 * 			| if(getMazub() != null)
+	 *			|	then setWindowXPos(getMazub().getPosition().getDisplayedXPosition()-
+	 *			|		  (getVisibleWindowWidth()-getMazub().getWidth())/2),
+	 *			|		 setWindowYPos(getMazub().getPosition().getDisplayedYPosition()-
+	 *			|		  (getVisibleWindowHeight()-getMazub().getHeight())/2)
+	 */
 	private void updateWindowPos(){
 		if(getMazub() != null){
 			setWindowXPos(getMazub().getPosition().getDisplayedXPosition()-
@@ -781,8 +1060,18 @@ public class World {
 		}
 	}
 	
+	/**
+	 * Return a textual representation of this world.
+	 * 
+	 * @return	...
+	 * 			| result.contains("World with dimensions ")
+	 * @return	...
+	 * 			| result.contains(getWorldWidth() + ",")
+	 * @return	...
+	 * 			| result.contains(getWorldHeight() + ".") 
+	 */
 	@Override
 	public String toString(){
-		return "world with dimensions " + getWorldWidth() + "," + getWorldHeight() + ".";
+		return "World with dimensions " + getWorldWidth() + "," + getWorldHeight() + ".";
 	}
 }
