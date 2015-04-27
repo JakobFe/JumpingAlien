@@ -337,16 +337,14 @@ public class Mazub extends Character{
 	 * 
 	 * @pre		The given direction must be left or right.
 	 * 			| (direction == Direction.LEFT) || (direction == Direction.RIGHT)
-	 * @pre		This Mazub must be moving to the given direction.
-	 * 			| isMoving(direction)
-	 * @effect	If this Mazub is moving left,
-	 * 			the horizontal velocity, the horizontal direction and
-	 * 			the horizontal acceleration are set to zero.
-	 * 			| if (isMovingLeft())
-	 * 			| 	then setHorVelocity(0),setHorDirection(0),
-	 * 			|	setHorAcceleration(0)
-	 * @effect	The timer 'Timesum' is reset to zero.
-	 * 			| setTimeSum(0)
+	 * @pre		This Mazub may not be moving to the opposite direction of the given direction.
+	 * 			| !isMoving(oppositeDirection(direction))
+	 * @effect	The horizontal velocity and horizontal acceleration are set to zero.
+	 * 			| setHorVelocity(0), setHorAcceleration(0)
+	 * @effect	The horizontal direction is set to null.
+	 * 			| setHorDirection(Direction.NULL)
+	 * @effect	The timer is reset to zero.
+	 * 			| getSpritesTimer().reset()
 	 */
 	public void endMove(Direction direction){
 		assert ((direction == Direction.LEFT) || (direction == Direction.RIGHT));
@@ -357,6 +355,16 @@ public class Mazub extends Character{
 		getSpritesTimer().reset();
 	}
 	
+	/**
+	 * Returns the opposite direction of the given direction.
+	 * 
+	 * @param 	direction
+	 * 			The given direction.
+	 * @return	Return right if the given direction is left, return left otherwise.
+	 * 			| if (direction == Direction.LEFT)
+	 * 			|	then result == Direction.RIGHT
+	 * 			| else result == Direction.LEFT
+	 */
 	public Direction oppositeDirection(Direction direction){
 		assert ((direction == Direction.LEFT) || (direction == Direction.RIGHT));
 		if (direction == Direction.LEFT)
@@ -437,6 +445,9 @@ public class Mazub extends Character{
 	 * 			| setIsDucked(true)
 	 * @effect	The maximum horizontal velocity is set to the maximum horizontal velocity while ducking.
 	 * 			| setMaxHorVelocity(getMaxHorVelocityDucking())
+	 * @throws 	IllegalStateException()
+	 * 			startDuck can not be invoked when Mazub is dead.
+	 * 			| isDead()
 	 */
 	public void startDuck(){
 		if(isDead())
@@ -450,6 +461,24 @@ public class Mazub extends Character{
 	 * 
 	 * @effect	The ducking state is set to false.
 	 * 			| setIsDucked(false)
+	 * @effect	The sprite index of the Mazub is updated.
+	 * 			| updateSpriteIndex()
+	 * @throws 	CollisionException()
+	 * 			At least one of the tile the Mazub overlaps with is not passable
+	 * 			and Mazub is colliding with this tile in the upper direction.
+	 * 			| let
+	 * 			|	affectedTiles = getWorld().getTilesIn(getPosition().getDisplayedXPosition(),
+	 *			|	getPosition().getDisplayedYPosition(),getPosition().getDisplayedXPosition()
+	 *			|	+getWidth()-1, getPosition().getDisplayedYPosition()+getHeight()-1)
+	 *			| in 
+	 *			|	for some tile in affectedTiles:
+	 *			|		(!(tile.getGeoFeature().isPassable()) && isColliding(Direction.UP, tile))
+	 *			At least one of all game objects in this game world overlaps with Mazub
+	 *			and Mazub is colliding with it in the upper direction.
+	 *			| for some object in getWorld().getAllGameObjects():
+	 *			|	(object != this && isColliding(Direction.UP, object))
+	 * @effect	No exception is thrown and the Mazub will be able to stand up.
+	 * 			| setEnableStandUp(false)
 	 * @effect	The maximum horizontal velocity is set to the maximum horizontal velocity while running.
 	 * 			| setMaxHorVelocity(getMaxHorVelocityRunning())
 	 * @effect	If the ducking movement stops when moving to the right, the Mazub starts running to the right.
@@ -488,17 +517,41 @@ public class Mazub extends Character{
 		}
 	}
 	
+	/**
+	 * Returns whether the Mazub is able to stand up or not.
+	 */
 	public boolean isEnableStandUp() {
 		return enableStandUp;
 	}
 
+	/**
+	 * Sets the variable storing Mazub being able to stand up to the given boolean value.
+	 * 
+	 * @param 	enableStandUp
+	 * 			The given boolean to set.
+	 */
 	public void setEnableStandUp(boolean enableStandUp) {
 		this.enableStandUp = enableStandUp;
 	}
 
+	/**
+	 * A boolean variable to store whether the Mazub is able to stand up or not.
+	 */
 	private boolean enableStandUp = false;
 	
-	
+	/**
+	 *  A method that receives a position in the form of a double array 
+	 * and returns the corrected position, after the given position has been checked 
+	 * for whether or not this game object would collide with impassable tiles
+	 * if the given position would be assigned to this game object.
+	 * 
+	 * @param 	newPos
+	 * 			The position to check in the form of a double array.
+	 * 			The first entry of this array represents the x position, the
+	 * 			second entry represents the y position.
+	 * @pre		The given position must have 2 entries.
+	 * 			| newPos.length == 2
+	 */
 	@Override
 	protected double[] updatePositionTileCollision(double[] newPos){
 		assert newPos.length == 2;
