@@ -195,6 +195,19 @@ public class Position {
 	}
 	
 	/**
+	 * A method to format this position into an int array.
+	 * 
+	 * @return	...
+	 * 			| result.length == 2
+	 * @return	...
+	 * 			| result[0] == getDisplayedXPosition()
+	 * 			| result[1] == getDisplayedYPosition()
+	 */
+	public int[] toIntArray(){
+		return intArray(this.getDisplayedXPosition(),this.getDisplayedYPosition());
+	}
+	
+	/**
 	 * Return the world belonging to this position.
 	 */
 	World getWorld(){

@@ -379,9 +379,24 @@ public class World {
 	 * @post	...
 	 * 			| new.getImpassableTiles().contains(tile)
 	 */
-	public void addAsImpassableTile(Tile tile){
+	void addAsImpassableTile(Tile tile){
 		assert(isValidImpassableTile(tile));
 		this.impassableTiles.add(tile);
+	}
+	
+	/**
+	 * Remove the given tile from the list of impassable tiles for this world.
+	 * 
+	 * @param 	tile
+	 * 			The tile to remove.
+	 * @pre		...
+	 * 			| hasAsImpassableTile(tile)
+	 * @post	...
+	 * 			| !new.getImpassableTile().contains(tile)
+	 */
+	void removeAsImpassableTile(Tile tile){
+		assert hasAsImpassableTile(tile);
+		this.impassableTiles.remove(tile);
 	}
 	
 	/**

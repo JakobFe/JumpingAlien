@@ -1,5 +1,12 @@
 package jumpingalien.model;
 
+/**
+ * A class involving timers with as sole attribute a stored time sum.
+ * 
+ * @author Jakob Festraets, Vincent Kemps
+ * @version	1.0
+ *
+ */
 public class Timer {
 	
 	/**
@@ -100,6 +107,4 @@ public class Timer {
 	 * A variable storing the time sum belonging to this timer.
 	 */
 	private double timeSum;
-	
-	
 }
