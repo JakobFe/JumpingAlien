@@ -27,9 +27,9 @@ public class MazubTest {
 	@Before
 	public void setUp() throws Exception {
 		sprites = spriteArrayForSize(2, 2, 10 + 2 * 10);
-		mazubPos_0_0 = new Mazub(0,0,1,3,sprites);
-		mazubPos_50_0 = new Mazub(50,0,1,3,sprites);
-		mazubPos_800_0 = new Mazub(800,0,1,3,sprites);
+		mazubPos_0_0 = new Mazub(new Position(0,0),1,3,sprites);
+		mazubPos_50_0 = new Mazub(new Position(50,0),1,3,sprites);
+		mazubPos_800_0 = new Mazub(new Position(800,0),1,3,sprites);
 	}
 	
 	private Sprite[] sprites;
@@ -86,7 +86,7 @@ public class MazubTest {
 	// Given test.
 	@Test
 	public void startMoveRightCorrect() {
-		Mazub alien = new Mazub(0, 0, spriteArrayForSize(2, 2));
+		Mazub alien = new Mazub(new Position(0, 0), spriteArrayForSize(2, 2));
 		alien.startMove(Direction.RIGHT);
 		alien.advanceTime(0.1);
 
@@ -241,7 +241,7 @@ public class MazubTest {
 	// Gegeven test.
 	@Test
 	public void testAccellerationZeroWhenNotMoving() {
-		Mazub alien = new Mazub(0, 0, spriteArrayForSize(2, 2));
+		Mazub alien = new Mazub(new Position(0,0), spriteArrayForSize(2, 2));
 		assertArrayEquals(doubleArray(0.0, 0.0),doubleArray(
 				alien.getHorAcceleration(),
 				alien.getVertAcceleration()),Util.DEFAULT_EPSILON);
@@ -342,7 +342,7 @@ public class MazubTest {
 	public void testWalkAnimationLastFrameLeft() {
 		int m = 10;
 		Sprite[] sprites = spriteArrayForSize(2, 2, 10 + 2 * m);
-		Mazub alien = new Mazub(1000, 0, sprites);
+		Mazub alien = new Mazub(new Position(100,0), sprites);
 
 		alien.startMove(Direction.LEFT);
 
@@ -357,7 +357,7 @@ public class MazubTest {
 	
 	@Test
 	public void getCurrentSprite1Correct(){
-		Mazub alien = new Mazub(0, 0, sprites);
+		Mazub alien = new Mazub(new Position(0,0), sprites);
 		
 		alien.startDuck();
 		alien.advanceTime(0.15);
@@ -369,7 +369,7 @@ public class MazubTest {
 	public void getCurrentSprite1CorrectWasMovingLongAGo(){
 		int m = 10;
 		Sprite[] sprites = spriteArrayForSize(2, 2, 10 + 2 * m);
-		Mazub alien = new Mazub(500, 0, sprites);
+		Mazub alien = new Mazub(new Position(500, 0), sprites);
 		
 		alien.startMove(Direction.RIGHT);
 		alien.advanceTime(0.15);
@@ -390,7 +390,7 @@ public class MazubTest {
 	public void getCurrentSprite2Correct(){		
 		int m = 10;
 		Sprite[] sprites = spriteArrayForSize(2, 2, 10 + 2 * m);
-		Mazub alien = new Mazub(0, 0, sprites);
+		Mazub alien = new Mazub(new Position(0,0), sprites);
 		
 		alien.startMove(Direction.RIGHT);
 		alien.advanceTime(0.15);
@@ -405,7 +405,7 @@ public class MazubTest {
 	public void getCurrentSprite3Correct(){
 		int m = 10;
 		Sprite[] sprites = spriteArrayForSize(2, 2, 10 + 2 * m);
-		Mazub alien = new Mazub(500, 0, sprites);
+		Mazub alien = new Mazub(new Position(500,0),sprites);
 		
 		alien.startMove(Direction.LEFT);
 		alien.advanceTime(0.15);
@@ -420,7 +420,7 @@ public class MazubTest {
 	public void getCurrentSprite4Correct(){
 		int m = 10;
 		Sprite[] sprites = spriteArrayForSize(2, 2, 10 + 2 * m);
-		Mazub alien = new Mazub(500, 0, sprites);
+		Mazub alien = new Mazub(new Position(500,0),sprites);
 		
 		alien.startMove(Direction.RIGHT);
 		alien.advanceTime(0.15);
@@ -435,7 +435,7 @@ public class MazubTest {
 	public void getCurrentSprite5Correct(){
 		int m = 10;
 		Sprite[] sprites = spriteArrayForSize(2, 2, 10 + 2 * m);
-		Mazub alien = new Mazub(500, 0, sprites);
+		Mazub alien = new Mazub(new Position(500,0),sprites);
 		
 		alien.startMove(Direction.LEFT);
 		alien.advanceTime(0.15);
@@ -450,7 +450,7 @@ public class MazubTest {
 	public void getCurrentSprite6Correct(){
 		int m = 10;
 		Sprite[] sprites = spriteArrayForSize(2, 2, 10 + 2 * m);
-		Mazub alien = new Mazub(500, 0, sprites);
+		Mazub alien = new Mazub(new Position(500,0),sprites);
 		
 		alien.startMove(Direction.RIGHT);
 		alien.advanceTime(0.15);
@@ -465,7 +465,7 @@ public class MazubTest {
 	public void getCurrentSprite6CorrectWasMoving(){
 		int m = 10;
 		Sprite[] sprites = spriteArrayForSize(2, 2, 10 + 2 * m);
-		Mazub alien = new Mazub(500, 0, sprites);
+		Mazub alien = new Mazub(new Position(500,0),sprites);
 		
 		alien.startMove(Direction.RIGHT);
 		alien.advanceTime(0.15);
@@ -485,7 +485,7 @@ public class MazubTest {
 	public void getCurrentSprite7Correct(){
 		int m = 10;
 		Sprite[] sprites = spriteArrayForSize(2, 2, 10 + 2 * m);
-		Mazub alien = new Mazub(500, 0, sprites);
+		Mazub alien = new Mazub(new Position(500,0),sprites);
 		
 		alien.startMove(Direction.LEFT);
 		alien.advanceTime(0.15);
@@ -500,7 +500,7 @@ public class MazubTest {
 	public void getCurrentSprite7CorrectWasMoving(){
 		int m = 10;
 		Sprite[] sprites = spriteArrayForSize(2, 2, 10 + 2 * m);
-		Mazub alien = new Mazub(500, 0, sprites);
+		Mazub alien = new Mazub(new Position(500,0),sprites);
 		
 		alien.startMove(Direction.LEFT);
 		alien.advanceTime(0.15);
@@ -520,7 +520,7 @@ public class MazubTest {
 	public void testWalkAnimationFirstFrameRight() {
 		int m = 10;
 		Sprite[] sprites = spriteArrayForSize(2, 2, 10 + 2 * m);
-		Mazub alien = new Mazub(0, 0, sprites);
+		Mazub alien = new Mazub(new Position(0,0), sprites);
 
 		alien.startMove(Direction.RIGHT);
 
@@ -546,7 +546,7 @@ public class MazubTest {
 	public void testWalkAnimationFirstFrameLeft() {
 		int m = 10;
 		Sprite[] sprites = spriteArrayForSize(2, 2, 10 + 2 * m);
-		Mazub alien = new Mazub(200, 0, sprites);
+		Mazub alien = new Mazub(new Position(200, 0), sprites);;
 
 		alien.startMove(Direction.LEFT);
 
@@ -560,7 +560,7 @@ public class MazubTest {
 	public void testWalkAnimationSecondFrameLeft() {
 		int m = 10;
 		Sprite[] sprites = spriteArrayForSize(2, 2, 10 + 2 * m);
-		Mazub alien = new Mazub(200, 0, sprites);
+		Mazub alien = new Mazub(new Position(200, 0), sprites);;
 
 		alien.startMove(Direction.LEFT);
 

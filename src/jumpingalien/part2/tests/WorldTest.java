@@ -14,7 +14,7 @@ public class WorldTest {
 	@Before
 	public void setUp() throws Exception {
 		sprites = spriteArrayForSize(10, 10, 10 + 2 * 10);
-		mazubPos_225_50 = new Mazub(225,50,1,3,sprites);
+		mazubPos_225_50 = new Mazub(new Position(225,50),1,3,sprites);
 		
 		// X........X
 		// XM......TX
