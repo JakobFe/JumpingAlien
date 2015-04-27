@@ -101,6 +101,8 @@ public class GameObjectTest {
 		for (int i = 0; i < 200; i++) {
 			mazubPos_225_50.advanceTime(0.2 / 9);
 		}
+		slimePos_100_50.advanceTime(0.1);
+		System.out.println(mazubPos_225_50.getHitPoints());
 		assertTrue(mazubPos_225_50.isDead());
 	}
 	

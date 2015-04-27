@@ -443,6 +443,21 @@ public abstract class GameObject {
 	}
 	
 	/**
+	 * A method to add an amount of hit points to the current 
+	 * number of hit points.
+	 *  
+	 * @param 	amount
+	 * 			The amount of hit points to add from the current
+	 * 			number of hit points.
+	 * @effect	The hit points are set to the current number of hit points
+	 * 			incremented with the given amount of hit points.
+	 * 			| setHitPoints(getHitPoints()+amount)
+	 */
+	protected void addHp(int amount){
+		setHitPoints(getHitPoints()+amount);
+	}
+	
+	/**
 	 * A method to update the hit points of this game object.
 	 * A game object can damage other objects and can be damaged
 	 * by other game objects.
@@ -450,18 +465,18 @@ public abstract class GameObject {
 	protected abstract void updateHitPoints();
 	
 	/**
-	 * A method to damage another game object.
-	 * 
-	 * @param	other
-	 * 			The game object to damage.
-	 */
-	protected abstract void getHurtBy(GameObject other);
-	
-	/**
 	 * A method to get damage by another game object.
 	 * 
 	 * @param	other
 	 * 			The game object to take damage from.
+	 */
+	protected abstract void getHurtBy(GameObject other);
+	
+	/**
+	 * A method to damage another game object.
+	 * 
+	 * @param	other
+	 * 			The game object to damage.
 	 */
 	protected abstract void hurt(GameObject other);
 	

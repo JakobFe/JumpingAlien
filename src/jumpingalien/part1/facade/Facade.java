@@ -3,6 +3,7 @@ package jumpingalien.part1.facade;
 
 import jumpingalien.model.Direction;
 import jumpingalien.model.Mazub;
+import jumpingalien.model.Position;
 import jumpingalien.model.exceptions.*;
 import jumpingalien.util.*;
 import static jumpingalien.tests.util.TestUtils.*;
@@ -12,7 +13,7 @@ public class Facade implements IFacade {
 	@Override
 	public Mazub createMazub(int pixelLeftX, int pixelBottomY, Sprite[] sprites) {
 		// TODO Auto-generated method stub
-		try{return new Mazub(pixelLeftX,pixelBottomY,sprites);}
+		try{return new Mazub(new Position(pixelLeftX,pixelBottomY),sprites);}
 		catch (IllegalXPositionException exc){
 			throw new ModelException("Illegal X Position!");}
 		catch (IllegalYPositionException exc){

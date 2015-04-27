@@ -10,14 +10,7 @@ import static jumpingalien.tests.util.TestUtils.doubleArray;
 
 /**
  * A class that implements the player character with the ability to jump, duck and
- * run to the left and to the right. This class is a part of the project JumpingAlien.
- *
- * @invar 	The initial horizontal velocity of this Mazub must be valid.
- * 			| isValidInitHorVelocity(getInitHorVelocity())
- * @invar 	The maximum horizontal velocity of the Mazub must be valid.
- * 			| canHaveAsMaxHorVelocity(getMaxHorVelocity())
- * @invar 	The current horizontal velocity of this Mazub must be valid.
- * 			| canHaveAsHorVelocity(getVelocity()) 
+ * run to the left and to the right. This class is a subclass of Character.
  * 			
  * @author	Jakob Festraets, Vincent Kemps
  * 			| Course of studies: 2nd Bachelor of engineering
@@ -28,17 +21,13 @@ import static jumpingalien.tests.util.TestUtils.doubleArray;
 public class Mazub extends Character{
 	
 	/**
-	 * Initialize this new Mazub with given x position, given y position, 
-	 * given initial horizontal velocity, given maximum horizontal velocity and 
-	 * given sprites.
+	 * Initialize this new Mazub with given position, 
+	 * given initial horizontal velocity, given maximum horizontal velocity,
+	 * given sprites and 100 hit points.
 	 * 
-	 * At the moment of initialization the velocity and acceleration are zero
-	 * in all directions.
 	 * 
-	 * @param 	x
-	 * 		  	Initial x position for this Mazub.
-	 * @param 	y
-	 * 			Initial y position for this Mazub.
+	 * @param 	position
+	 * 			The position for this new Mazub.
 	 * @param 	initHorVelocity
 	 * 			Initial horizontal velocity for this Mazub.
 	 * @param 	maxHorVelocity
@@ -48,31 +37,36 @@ public class Mazub extends Character{
 	 * @pre		The initial horizontal velocity must be valid.
 	 * 			| isValidInitHorVelocity(initHorVelocity)
 	 * @pre		The maximum horizontal velocity must be valid.
-	 * 			| canHaveAsMaxHorVelocity(maxHorVelocity)
+	 * 			| canHaveAsMaxHorVelocity(maxHorVelocity,initHorVelocity)
 	 * @pre		The sprites must be an array with a valid number of sprites.
 	 * 			| isValidArrayOfSprites(sprites)
-	 * @effect	This Mazub is initialized as a new character with given x position,
-	 * 			given y position, given initial horizontal velocity, given maximum
+	 * @effect	This Mazub is initialized as a new character with given position,
+	 * 			given initial horizontal velocity, given maximum
 	 * 			horizontal velocity, given sprites and 100 hit points.
+	 * 			| super(position,initHorVelocity,maxHorVelocity,sprites)
+	 * @post	The maximum horizontal velocity while running is set
+	 * 			to the given maximum horizontal velocity.
+	 * 			| new.getMaxHorVelocityRunning() == maxHorVelocity
+	 * @post	The number of walking sprites is set to the half of the length of the given
+	 * 			array of sprites, substracted with 10.	
+	 * 			| new.getNumberOfWalkingSprites() == (sprites.length - 10)/2
 	 */
 	@Raw
-	public Mazub(int x, int y, double initHorVelocity, double maxHorVelocity, Sprite[] sprites) 
-			throws IllegalXPositionException,IllegalYPositionException{
-		super(new Position(x,y),initHorVelocity,maxHorVelocity,sprites);
+	public Mazub(Position position, double initHorVelocity, double maxHorVelocity, Sprite[] sprites) 
+			throws IllegalArgumentException{
+		super(position,initHorVelocity,maxHorVelocity,sprites);
 		assert isValidArrayOfSprites(sprites);
 		this.maxHorVelocityRunning = maxHorVelocity;
-		this.numberOfWalkingSprites = (this.getAllSprites().length - 10)/2;
+		this.numberOfWalkingSprites = (sprites.length - 10)/2;
 	}
 	
 	/**
-	 * Initialize this new Mazub with given x position, given y position, 
+	 * Initialize this new Mazub with given position, 
 	 * 1 [m/s] as its initial horizontal velocity, 3 [m/s] as its maximum 
 	 * horizontal velocity and with the given sprites.
 	 * 
-	 * @param 	x
-	 * 		  	Initial x position for this Mazub.
-	 * @param 	y
-	 * 			Initial y position for this Mazub.
+	 * @param 	position
+	 * 		  	Initial position for this Mazub.
 	 * @param	sprites
 	 * 			An array containing the different sprites for this Mazub.
 	 * @pre		The sprites must be an array with a valid number of sprites.
@@ -83,9 +77,9 @@ public class Mazub extends Character{
 	 * 			| this(x,y,1,3,sprites)
 	 */
 	@Raw
-	public Mazub(int x,int y, Sprite[] sprites) 
+	public Mazub(Position position, Sprite[] sprites) 
 			throws IllegalXPositionException, IllegalYPositionException{
-		this(x,y,1,3,sprites);
+		this(position,1,3,sprites);
 	}
 	
 	/**
@@ -99,25 +93,68 @@ public class Mazub extends Character{
 		return (hitPoints>=0 && hitPoints<=500); 
 	}
 	
+	/**
+	 * A method to check whether this Mazub can consume a plant.
+	 * 
+	 * @return	True if the current hit points of this Mazub, incremented with
+	 * 			50, is a valid amount of hit points.
+	 * 			| result == isValidHitPoints(getHitPoints()+50)
+	 */
 	protected boolean canConsumePlant(){
 		return isValidHitPoints(getHitPoints()+50); 
 	}
 	
+	/**
+	 * A method to consume a plant.
+	 * 
+	 * @effect	If this Mazub can consume plants, the hit points 
+	 * 			of this Mazub are incremented with 50.
+	 * 			| if(canConsumePlant())
+ 	 *			|	then addHp(50)
+	 */
 	protected void consumePlant(){
 		if(canConsumePlant())
-			setHitPoints(getHitPoints()+50);
+			addHp(50);
 	}
 	
+	/**
+	 * A method to check whether this game object can be hurt by a certain terrain type.
+	 * 
+	 * @return	True if the given terrain is of type "water" or of type "Magma".
+	 * 			| result == (terrain == Terrain.WATER || terrain == Terrain.MAGMA)
+	 */
 	@Override
 	protected boolean canBeHurtBy(Terrain terrain) {
 		return (terrain == Terrain.WATER || terrain == Terrain.MAGMA);
 	}
 	
+	/**
+	 * A method to update the hit points of this Mazub.
+	 * A game object can damage other objects and can be damaged
+	 * by other game objects.
+	 * 
+	 * @effect	If this Mazub is not dead and it is not overlapping with "Water"
+	 * 			or "Magma", the hit points timer is reset.
+	 * 			| if (!isDead() && !isOverlappingWith(Terrain.WATER) && !isOverlappingWith(Terrain.MAGMA))
+	 * 			|	then getHpTimer().reset()
+	 * @effect	If this Mazub is not dead and it is overlapping with "Water", the hit points
+	 * 			are updated in result of being in contact with "Water".
+	 * 			| if(!isDead() && if(isOverlappingWith(Terrain.WATER)))
+	 * 			|	then updateHitPointsTerrain(Terrain.WATER)
+	 * @effect	If this Mazub is not dead and it is overlapping with "Magma", the hit points
+	 * 			are updated in result of being in contact with "Magma".
+	 * 			| if(!isDead() && if(isOverlappingWith(Terrain.MAGMA)))
+	 * 			|	then updateHitPointsTerrain(Terrain.MAGMA)
+	 * @effect	If this Mazub is dead and the time sum of the hit points timer
+	 * 			is greater than 0.6 seconds, this Mazub is terminated.
+	 * 			| if(isDead() && getHpTimer().getTimeSum()>0.6)
+	 * 			|	 terminate()
+	 */
 	@Override
 	protected void updateHitPoints(){
 		if(!isDead()){
 			if (!isOverlappingWith(Terrain.WATER) && !isOverlappingWith(Terrain.MAGMA))
-				getHpTimer().setTimeSum(0);
+				getHpTimer().reset();
 			if(isOverlappingWith(Terrain.WATER))
 				updateHitPointsTerrain(Terrain.WATER);
 			if(isOverlappingWith(Terrain.MAGMA))
@@ -127,35 +164,64 @@ public class Mazub extends Character{
 			terminate();
 	}
 	
+	/**
+	 * A method to get damage by another game object.
+	 * 
+	 * @effect	If this Mazub is not immune and the other game object is not a Mazub
+	 * 			and is effective, than the other game object will hurt this Mazub.
+	 * 			| if(!isImmune() && !(other instanceof Mazub))
+	 * 			|	then other.hurt(this)
+	 */
+	@Override
 	protected void getHurtBy(GameObject other){
-		if(!isImmune())
+		if(!isImmune() && other != null && !(other instanceof Mazub))
 			other.hurt(this);
 	}
 	
+	/**
+	 * A method to damage another game object.
+	 * 
+	 * @effect	If the other game object is effective and not a Mazub, 
+	 * 			than the other game object will hurt this Mazub.
+	 * 			| if(other != null && !(other instanceof Mazub))
+	 * 			|	then other.getHurtBy(this)
+	 */
 	protected void hurt(GameObject other){
-		other.getHurtBy(this);
+		if(other != null && !(other instanceof Mazub))
+			other.getHurtBy(this);
 	}
 	
 	/**
-	 * Check whether the given world is a valid world for this Mazub.
+	 * Check whether this game object can be added to the given world.
 	 * 
-	 * @return	True if the given world is effective and already references this Mazub.
-	 * 			| result == (world != null && world.getMazub() == this) 
+	 * @return	False if the given world is not effective.
+	 * 			| if (world == null)
+	 * 			|	then result == false
+	 * 			Otherwise true if the world can add game objects and the
+	 * 			world has a reference to this Mazub.
+	 * 			| else
+	 * 			|	result == (world != null && world.canAddGameObjects() &&
+	 * 			|			   world.getMazub() == this)
 	 */
 	public boolean canBeAddedTo(World world){
 		return super.canBeAddedTo(world) && (world == null || world.getMazub() == this);
 	}
 	
+	/**
+	 * Check whether this game object has a proper world.
+	 * 
+	 * @return	True if the world is not effective or if the world has 
+	 * 			this Mazub as its Mazub.
+	 * 			| result == getWorld() == null || getWorld().getMazub() == this
+	 */
 	@Override
 	protected boolean hasProperWorld() {
-		return true;
+		return getWorld() == null || getWorld().getMazub() == this;
 	}
 		
 	/**
 	 * Checks whether the given initial horizontal velocity is valid.
 	 * 
-	 * @param	initHorVelocity
-	 * 			The initial horizontal velocity to check.
 	 * @return	True if the given initial horizontal velocity is greater than
 	 * 			or equal to 1.
 	 * 			| result == (initHorVelocity >= 1)
@@ -198,8 +264,6 @@ public class Mazub extends Character{
 	 * Checks whether this Mazub can have the given maximum 
 	 * horizontal velocity as its maximum horizontal velocity.
 	 * 
-	 * @param	maxHorVelocity
-	 * 			The maximum horizontal velocity to check.
 	 * @return	True if the given maximum horizontal velocity is above or 
 	 * 			equal to the initial horizontal velocity of this Mazub, 
 	 * 			or if the given maximum horizontal velocity is equal
@@ -240,11 +304,6 @@ public class Mazub extends Character{
 	 * This variable will always have 8 m/s as its value.
 	 */
 	private static final double INIT_VERT_VELOCITY = 8;
-	
-	@Override
-	protected boolean canHaveAsVertAcceleration(double vertAcceleration){
-		return (vertAcceleration == 0 || vertAcceleration == getMaxVertAcceleration());
-	}
 
 	/**
 	 * Method to start the movement of the Mazub to the given direction.
