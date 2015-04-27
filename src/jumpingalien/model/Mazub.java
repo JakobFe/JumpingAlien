@@ -541,11 +541,25 @@ public class Mazub extends Character{
 		return doubleArray(newXPos,newYPos);
 	}
 	
+	/**
+	 * Returns all game objects that can block the movement of this game object.
+	 * 
+	 * @return	The resulting hash set contains all game objects belonging to the 
+	 * 			world of this Mazub.
+	 * 			| result.contains(getWorld().getAllGameObjects())
+	 */
 	@Override
 	protected HashSet<GameObject> getBlockingObjects() {
 		return getWorld().getAllGameObjects();
 	}
 	
+	/**
+	 * Method to update the position and velocity of the character based on the current position,
+	 * velocity and a given time duration in seconds.
+	 * 
+	 * @effect	The last direction of this Mazub is updated.
+	 * 			| updateLastDirection()
+	 */
 	@Override
 	public void advanceTime(double timeDuration) throws IllegalXPositionException,
 	IllegalYPositionException,IllegalTimeIntervalException{
@@ -553,6 +567,15 @@ public class Mazub extends Character{
 		updateLastDirection();
 	}
 	
+	/**
+	 * A method to update the movements of this game object.
+	 * As an effect of this method, certain movements may be started
+	 * 
+	 * @post	If this Mazub is ducked and can come out of ducking state,
+	 * 			the Mazub ends ducking.
+	 * 			| if (isEnableStandUp())
+	 * 			|	then endDuck()
+	 */
 	@Override
 	protected void updateMovement(){
 		super.updateMovement();
@@ -560,16 +583,28 @@ public class Mazub extends Character{
 			endDuck();
 	}
 	
-	@Override
-	protected void updateTimers(double timeDuration){
-		getSpritesTimer().increment(timeDuration);
-		getImmuneTimer().increment(timeDuration);
-		if (isOverlappingWith(Terrain.WATER) || isOverlappingWith(Terrain.MAGMA) || isDead())
-			getHpTimer().increment(timeDuration);
-		else
-			getHpTimer().reset();
-	}
-	
+	/** 
+	 * Method to update the position of this game object based on the current position,
+	 * velocity and a given time duration in seconds.
+	 * 
+	 * @post	Calculate the new position as a function of the current attributes
+	 * 			of Mazub. If there is no world attached to this Mazub, this position
+	 * 			will be the new position for this Mazub.
+	 * 			Else, some checkers inspect whether this Mazub can have the newly 
+	 * 			calculated position as its position. They return the corrected position.
+	 * 			This corrected position is than set as the new position for this Mazub.
+	 * 			| let
+	 * 			|	oldPos = getPosition(),
+	 * 			| 	if(getWorld() != null)
+	 * 			|	newPos = f(getPosition(),getHorDirection(),getHorVelocity(),
+	 * 			|			   getHorAcceleration(),getVertDirection(),
+	 * 			|			   getVertVelocity(),getVertAcceleration(),timeDuration),
+	 * 			|	newPos = updatePositionTileCollision(newPos.toDoubleArray()),
+	 * 			|	newPos = updatePositionObjectCollision(newPos)
+	 * 			| in
+	 * 			|	setPosition(toPosition(newPos,getWorld())),
+	 * 			|	oldPosition.terminate()
+	 */
 	@Override
 	protected void updatePosition(double timeDuration){
 		double newXPos = getPosition().getXPosition() + getHorDirection().getFactor()*
@@ -625,12 +660,12 @@ public class Mazub extends Character{
 	 * 
 	 * @post	If Mazub is moving to the left or the right, the last registered direction 
 	 * 			will be updated.
-	 * 			| if (getHorDirection() != 0)
+	 * 			| if (getHorDirection() != Direction.NULL)
 	 *			|	new.getHorDirection() = getHorDirection()
 	 */
 	@Model
 	private void updateLastDirection() {
-		if (getHorDirection().getFactor() != 0)
+		if (getHorDirection() != Direction.NULL)
 			setLastDirection(getHorDirection());
 	}
 	
@@ -653,17 +688,23 @@ public class Mazub extends Character{
 	protected boolean isValidIndex(int index){
 		return (index >= 0 || index < getNumberOfWalkingSprites()*2+10);
 	}
-
+	
 	/**
-	 * Checks whether the Mazub is moving to the right.
+	 * Check whether the Mazub is moving in the given direction.
 	 * 
-	 * @return	True if and only if the horizontal direction of the Mazub is equal to the given direction.
-	 * 			| result == (getHorDirection() == direction)
+	 * @param 	direction
+	 * 			The direction to check.
+	 * @pre		The direction must be different from null.
+	 * 			| direction != Direction.NULL
+	 * @return	True if the horizontal direction is equal to the given direction
+	 * 			or if the vertical direction is equal to the given direction.
+	 * 			| result == (getHorDirection() == direction || 
+	 * 			|		     getVertDirection() == direction)
 	 */
 	@Override
 	public boolean isMoving(Direction direction){
-		return ((getHorDirection() == direction) ||
-				getVertDirection() == direction);
+		assert (direction != Direction.NULL);
+		return (getHorDirection() == direction || getVertDirection() == direction);
 	}
 	
 	/**
@@ -672,22 +713,22 @@ public class Mazub extends Character{
 	 * 
 	 * @return	True if and only if the last registered horizontal direction
 	 * 			of this Mazub is not zero and timeSum has not reached 1 second yet.
-	 * 			| result == ((getLastDirection() != 0) && (getTimeSum() < 1))
+	 * 			| result == ((getLastDirection() != 0) && (getSpritesTimer().getTimeSum() < 1))
 	 * 
 	 */
 	private boolean wasMoving(){
-		if (getLastDirection() != Direction.NULL &&
-			getSpritesTimer().getTimeSum() < 1.0)
-				return true;
-		return false;
+		return (getLastDirection() != Direction.NULL && getSpritesTimer().getTimeSum() < 1.0);
+				
 	}
 	
 	/**
 	 * Checks whether the Mazub has moved to the given direction within the last second of in-game-time.
 	 * 
+	 * @param	direction
+	 * 			The direction to check for.
 	 * @return	True if and only if this Mazub was moving within the last second
 	 * 			of in-game-time and its last direction was equal to the given direction.
-	 * 			| result == (wasMoving() && (getLastDirection() == -1))
+	 * 			| result == (wasMoving() && (getLastDirection() == direction))
 	 */
 	private boolean wasMoving(Direction direction){
 		return (wasMoving() && getLastDirection() == direction);
@@ -697,8 +738,8 @@ public class Mazub extends Character{
 	 * A method to check whether this Mazub is jumping. 
 	 * 
 	 * @return	True if and only if the current vertical direction
-	 * 			differs from zero.
-	 * 			| result == (getVertDirection() != 0)
+	 * 			differs from null.
+	 * 			| result == (getVertDirection() != Direction.NULL)
 	 */
 	private boolean isJumping(){
 		return (getVertDirection() != Direction.NULL);
@@ -823,12 +864,14 @@ public class Mazub extends Character{
 	
 	/**
 	 * A method to check whether the given array of sprites is valid. 
+	 * @param	sprites
+	 * 			The sprites to check.
 	 * @return	True if and only if the length of the array is greater than
 	 * 			or equal to 10 and the length is an even number.
 	 * 			| result == (sprites.length >= 10 && sprites.length %2 == 0)
 	 */
 	@Model
-	private boolean isValidArrayOfSprites(Sprite[] sprites){
+	private static boolean isValidArrayOfSprites(Sprite[] sprites){
 		return (sprites.length >= 10 && sprites.length%2 == 0);
 	}
 	
@@ -845,18 +888,36 @@ public class Mazub extends Character{
 	 */
 	private final int numberOfWalkingSprites;
 	
+	/**
+	 * Terminate this Mazub.
+	 * 
+	 * @pre		The game object must be dead.
+	 * 			| isDead()
+	 * @pre		The time sum belonging to the hit point timer of this
+	 * 			game object must be greater than 0.6 seconds.
+	 * @effect	The world no longer refers to this Mazub.
+	 * 			| getWorld().setMazub(null)
+	 * @effect	This Mazub no longer refers a world.
+	 * 			| setWorld(null) 
+	 */ 
 	@Override
 	public void terminate(){
 		assert (getHitPoints()==0);
 		super.terminate();
 		getWorld().setMazub(null);
 		setWorld(null);
-		//setPosition(null);
 	}
-		
+	
+	/**
+	 * Return a textual representation for this Mazub.
+	 * 
+	 * @return	The representation has a reference to the position and starts with
+	 * 			"Mazub at position ".
+	 * 			| result.contains("Mazub at position ")
+	 * 			| result.contains(getPosition().toString())
+	 */
 	@Override
 	public String toString(){
-		return "Mazub at position " + (getPosition().getDisplayedXPosition()) + ","
-				+ getPosition().getDisplayedYPosition();
+		return "Mazub at position " + getPosition().toString();
 	}
 }
