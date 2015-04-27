@@ -459,11 +459,7 @@ public class Mazub extends Character{
 	/**
 	 * Method to end the ducking movement of the Mazub.
 	 * 
-	 * @effect	The ducking state is set to false.
-	 * 			| setIsDucked(false)
-	 * @effect	The sprite index of the Mazub is updated.
-	 * 			| updateSpriteIndex()
-	 * @throws 	CollisionException()
+	 * @effect	If one of the following conditions hold, no actions are taken.
 	 * 			At least one of the tile the Mazub overlaps with is not passable
 	 * 			and Mazub is colliding with this tile in the upper direction.
 	 * 			| let
@@ -477,14 +473,19 @@ public class Mazub extends Character{
 	 *			and Mazub is colliding with it in the upper direction.
 	 *			| for some object in getWorld().getAllGameObjects():
 	 *			|	(object != this && isColliding(Direction.UP, object))
-	 * @effect	No exception is thrown and the Mazub will be able to stand up.
-	 * 			| setEnableStandUp(false)
-	 * @effect	The maximum horizontal velocity is set to the maximum horizontal velocity while running.
+	 * @effect	Else, the following actions are taken.
+	 * 			The ducking state is set to false.
+	 * 			| setIsDucked(false)
+	 * 			The sprite index of the Mazub is updated.
+	 * 			updateSpriteIndex()
+	 * 			The Mazub is no longer able to stand up, because it will no longer be ducking.
+	 * 			setEnableStandUp(false)
+	 * 			The maximum horizontal velocity is set to the maximum horizontal velocity while running.
 	 * 			| setMaxHorVelocity(getMaxHorVelocityRunning())
-	 * @effect	If the ducking movement stops when moving to the right, the Mazub starts running to the right.
+	 * 			If the ducking movement stops when moving to the right, the Mazub starts running to the right.
 	 * 			| if (isMovingRight())
 	 *			|	startMoveRight()
-	 * @effect	If the ducking movement stops when moving to the left, the Mazub starts running to the left.
+	 * 			Else if the ducking movement stops when moving to the left, the Mazub starts running to the left.
 	 * 			| if (isMovingLeft())
 	 *			|	startMoveLeft()
 	 */
@@ -551,6 +552,10 @@ public class Mazub extends Character{
 	 * 			second entry represents the y position.
 	 * @pre		The given position must have 2 entries.
 	 * 			| newPos.length == 2
+	 * @note	In the current state, this method violates several rules connected
+	 * 			to good programming. It changes the state of an object and returns a value.
+	 * 			We are aware of this problem and we will solve it by defensive programming
+	 * 			before we hand in the final solution. 
 	 */
 	@Override
 	protected double[] updatePositionTileCollision(double[] newPos){

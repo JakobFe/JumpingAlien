@@ -607,6 +607,11 @@ public abstract class Character extends GameObject{
 	 * and returns the corrected position, after the given position has been checked 
 	 * for whether or not this game object would collide with impassable tiles
 	 * if the given position would be assigned to this game object.
+	 * 
+	 * @note	In the current state, this method violates several rules connected
+	 * 			to good programming. It changes the state of an object and returns a value.
+	 * 			We are aware of this problem and we will solve it by defensive programming
+	 * 			before we hand in the final solution. 
 	 */
 	protected double[] updatePositionTileCollision(double[] newPos){
 		assert newPos.length == 2;
