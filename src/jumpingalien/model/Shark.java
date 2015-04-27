@@ -700,7 +700,7 @@ public class Shark extends Character {
 	 *			|	then ((Mazub) other).getImmuneTimer().reset(), other.subtractHp(50)
 	 *			|	if(other.isDead())
 	 *			|		then other.getHpTimer().reset()
-	 *			| else if(!(other instanceof Shark))
+	 *			| else if(!(other instanceof Shark) || !other.isDead())
 	 *			|	other.getHurtBy(this)
 	 */
 	@Override
@@ -712,7 +712,7 @@ public class Shark extends Character {
 			if (other.isDead())
 				other.getHpTimer().reset();
 		}
-		else if(!(other instanceof Shark))
+		else if(!(other instanceof Shark) || !other.isDead())
 			other.getHurtBy(this);
 		
 	}

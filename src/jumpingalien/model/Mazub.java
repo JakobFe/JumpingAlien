@@ -350,7 +350,6 @@ public class Mazub extends Character{
 	 */
 	public void endMove(Direction direction){
 		assert ((direction == Direction.LEFT) || (direction == Direction.RIGHT));
-		assert (isMoving(direction));
 		assert (!isMoving(oppositeDirection(direction)));
 		setHorVelocity(0);
 		setHorDirection(Direction.NULL);
@@ -473,7 +472,7 @@ public class Mazub extends Character{
 					throw new CollisionException();
 			}
 			for(GameObject object: getWorld().getAllGameObjects()){
-				if(isColliding(Direction.UP, object))
+				if(object != this && isColliding(Direction.UP, object))
 					throw new CollisionException();
 			}
 			setEnableStandUp(false);
