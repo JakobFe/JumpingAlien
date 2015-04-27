@@ -21,9 +21,9 @@ public class GameObjectTest {
 	@Before
 	public void setUp() throws Exception {
 		sprites = spriteArrayForSize(10, 10, 10 + 2 * 10);
-		mazubPos_225_50 = new Mazub(225,50,1,3,sprites);
-		mazubPos_400_50 = new Mazub(400,50,1,3,sprites);
-		mazubPos_425_201 = new Mazub(425,201,1,3,sprites);
+		mazubPos_225_50 = new Mazub(new Position(225,50),1,3,sprites);
+		mazubPos_400_50 = new Mazub(new Position(400,50),1,3,sprites);
+		mazubPos_425_201 = new Mazub(new Position(425,201),1,3,sprites);
 		slimeSprites = spriteArrayForSize(10,5,2);
 		slimePos_100_50 = new Slime(new Position(100,50),slimeSprites,new School());
 		slimePos_100_105 = new Slime(new Position(100,105),slimeSprites,new School());
@@ -72,7 +72,7 @@ public class GameObjectTest {
 	
 	@Test
 	public void createGameObjectCorrect(){
-		GameObject alien = new Mazub(20,0,spriteArrayForSize(2, 2));
+		GameObject alien = new Mazub(new Position(20,0),spriteArrayForSize(2, 2));
 		assertArrayEquals(intArray(20,0),intArray(
 				alien.getPosition().getDisplayedXPosition(),
 				alien.getPosition().getDisplayedYPosition()));
