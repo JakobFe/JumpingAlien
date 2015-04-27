@@ -465,7 +465,8 @@ public abstract class Character extends GameObject{
 	/**
 	 * Return the immune timer belonging to this character.
 	 */
-	public Timer getImmuneTimer() {
+	@Basic
+	protected Timer getImmuneTimer() {
 		return immuneTimer;
 	}
 	
@@ -672,12 +673,6 @@ public abstract class Character extends GameObject{
 	 * 			The time interval needed to calculate the new vertical velocity.
 	 * @effect	The new vertical velocity is set to a new value based on the 
 	 * 			time interval and the current attributes of this character.
-	 * @effect	If this character reaches the ground, the y position is set to zero,
-	 * 			the vertical velocity and the vertical acceleration are set to zero
-	 * 			and the vertical direction is set to null.
-	 * 			| if(getPosition().getYPosition() <= 0)
-	 * 			|	then setVertVelocity(0), setVertDirection(Direction.NULL),
-	 * 			|		 setVertAcceleration(0)
 	 */
 	protected void updateVertVelocity(double timeDuration){
 		double newVel = getVertDirection().getFactor()*getVertVelocity() + 
@@ -686,12 +681,6 @@ public abstract class Character extends GameObject{
 			newVel = -newVel;
 			setVertDirection(Direction.DOWN);
 		}
-		/*if (getPosition().getYPosition() <= 0){
-			getPosition().setYPosition(0);
-			setVertVelocity(0);
-			setVertDirection(Direction.NULL);
-			setVertAcceleration(0);
-		}*/
 		setVertVelocity(newVel);
 	}
 	
@@ -719,7 +708,7 @@ public abstract class Character extends GameObject{
 	 * 
 	 */
 	@Override
-	public void endMovement(Direction direction){
+	protected void endMovement(Direction direction){
 		assert (direction != Direction.NULL);
 		if (isMoving(direction)){
 			if (direction == Direction.LEFT || direction == Direction.RIGHT){
@@ -753,7 +742,7 @@ public abstract class Character extends GameObject{
 	 * 			|		     getVertDirection() == direction)
 	 */
 	@Override
-	public boolean isMoving(Direction direction){
+	protected boolean isMoving(Direction direction){
 		assert (direction != Direction.NULL);
 		return (getHorDirection() == direction || getVertDirection() == direction);
 	}

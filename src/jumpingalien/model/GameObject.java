@@ -169,7 +169,7 @@ public abstract class GameObject {
 	 * 			The first entry is not a valid y position in the given world.
 	 * 			| !Position.isValidYPosition(doubleArray[1],world)
 	 */
-	public static Position toPosition(double[] doubleArray, World world)
+	protected static Position toPosition(double[] doubleArray, World world)
 		throws IllegalXPositionException,IllegalYPositionException{
 		assert doubleArray.length == 2;
 		return new Position(doubleArray[0],doubleArray[1],world);
@@ -865,7 +865,7 @@ public abstract class GameObject {
 	 * 			This means that there exists a position that is occupied by this game object,
 	 * 			and that is located in the given tile.
 	 */
-	public boolean isOverlappingWith(Tile tile){
+	protected boolean isOverlappingWith(Tile tile){
 		try {
 			return !(((getPosition().getDisplayedXPosition()+getWidth()-1) < tile.getXPosition()) ||
 					((tile.getXPosition()+getWorld().getTileSize()-1) < getPosition().getDisplayedXPosition())
@@ -889,7 +889,7 @@ public abstract class GameObject {
 	 * 			This means that there exists a position that is occupied by
 	 * 			this game object and by the other game object. 			
 	 */
-	public boolean isOverlappingWith(GameObject other){
+	protected boolean isOverlappingWith(GameObject other){
 		try {
 			return !(((getPosition().getDisplayedXPosition()+getWidth()-1) < 
 					   other.getPosition().getDisplayedXPosition()) ||
@@ -915,7 +915,7 @@ public abstract class GameObject {
 	 * 			Else true if this game object occupies at least one pixel 
 	 * 			that is located in a tile with as terrain type the given terrain.
 	 */
-	public boolean isOverlappingWith(Terrain terrain){
+	protected boolean isOverlappingWith(Terrain terrain){
 		if (getWorld() == null)
 			return false;
 		HashSet<Tile> affectedTiles = getWorld().getTilesIn(getPosition().getDisplayedXPosition(),
@@ -943,7 +943,7 @@ public abstract class GameObject {
 	 * 			Else true if at least one pixel at the most far end in the given direction
 	 * 			of this game object is located in the given tile.	
 	 */
-	public boolean isColliding(Direction direction, Tile tile){
+	protected boolean isColliding(Direction direction, Tile tile){
 		assert (direction != Direction.NULL);
 		if (!isOverlappingWith(tile))
 			return false;
@@ -971,7 +971,7 @@ public abstract class GameObject {
 	 * 			Else true if at least one pixel at the most far end in the given direction
 	 * 			of this game object is also occupied by the other game object.
 	 */
-	public boolean isColliding(Direction direction, GameObject object){
+	protected boolean isColliding(Direction direction, GameObject object){
 		assert (direction != Direction.NULL);
 		if (!isOverlappingWith(object))
 			return false;
@@ -1233,6 +1233,7 @@ public abstract class GameObject {
 	 * 			of sprites of this game object.
 	 * 			| result == getAllSprites[getIndex()]
 	 */
+	@Basic
 	public Sprite getCurrentSprite(){
 		return sprites[getIndex()];
 	}
@@ -1255,7 +1256,7 @@ public abstract class GameObject {
 	/**
 	 * Check whether or not this game object has been terminated.
 	 */
-	public boolean isTerminated(){
+	protected boolean isTerminated(){
 		return isTerminated;
 	}
 	
