@@ -1022,7 +1022,11 @@ public abstract class GameObject {
 	 * 			impassable tile in a vertical direction, then the returned array
 	 * 			will have as second entry the current y position.
 	 * 			Else, the returned array will have as second entry the second entry 
-	 * 			of the given position. 
+	 * 			of the given position.
+	 * @note	In the current state, this method violates several rules connected
+	 * 			to good programming. It changes the state of an object and returns a value.
+	 * 			We are aware of this problem and we will solve it by defensive programming
+	 * 			before we hand in the final solution. 
 	 */
 	protected abstract double[] updatePositionTileCollision(double[] newPos);
 	
@@ -1052,6 +1056,10 @@ public abstract class GameObject {
 	 * 			then the returned array will have as second entry the current y position.
 	 * 			Else, the returned array will have as second entry the second entry 
 	 * 			of the given position.
+	 * @note	In the current state, this method violates several rules connected
+	 * 			to good programming. It changes the state of an object and returns a value.
+	 * 			We are aware of this problem and we will solve it by defensive programming
+	 * 			before we hand in the final solution. 
 	 */
 	protected double[] getPositionAfterCollision(double[] newPos, HashSet<GameObject> collection){
 		assert newPos.length == 2;
@@ -1112,6 +1120,10 @@ public abstract class GameObject {
 	 * @return	The result from the method getPositionAfterCollision(newPos,collection)
 	 * 			with as collection the game objects that can block the movement of this game object.
 	 * 			| result == getPositionAfterCollision(newPos,getBlockingObjects())
+	 * @note	In the current state, this method violates several rules connected
+	 * 			to good programming. It changes the state of an object and returns a value.
+	 * 			We are aware of this problem and we will solve it by defensive programming
+	 * 			before we hand in the final solution.  
 	 */
 	protected double[] updatePositionObjectCollision(double[] newPos){
 		return getPositionAfterCollision(newPos, getBlockingObjects());
