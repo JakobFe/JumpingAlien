@@ -524,6 +524,8 @@ public class Mazub extends Character{
 						newXPos = this.getPosition().getXPosition();
 					}
 					endMovement(Direction.LEFT);
+					if(isMoving(Direction.UP))
+						endJump();
 					//System.out.println("Colliding left");
 				}
 				else if(isColliding(Direction.RIGHT, impassableTile)){
@@ -531,6 +533,8 @@ public class Mazub extends Character{
 						newXPos = this.getPosition().getXPosition();
 					}
 					endMovement(Direction.RIGHT);
+					if(isMoving(Direction.UP))
+						endJump();
 					//System.out.println("Colliding right");
 				}
 			}
