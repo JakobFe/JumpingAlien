@@ -23,14 +23,15 @@ public class GameObjectTest {
 		sprites = spriteArrayForSize(10, 10, 10 + 2 * 10);
 		mazubPos_225_50 = new Mazub(225,50,1,3,sprites);
 		mazubPos_400_50 = new Mazub(400,50,1,3,sprites);
+		mazubPos_425_201 = new Mazub(425,201,1,3,sprites);
 		slimeSprites = spriteArrayForSize(10,5,2);
 		slimePos_100_50 = new Slime(new Position(100,50),slimeSprites,new School());
 		slimePos_100_105 = new Slime(new Position(100,105),slimeSprites,new School());
 		sharkPos_100_95 = new Shark(new Position(100,95),slimeSprites);
 		
 		// X........X
-		// X...XX...X
-		// X........X
+		// X...XX..MX
+		// X.......XX
 		// X........X
 		// XXXXXXXXXX
 		testWorld = new World(50,10,5,500,500,9,4);
@@ -54,12 +55,15 @@ public class GameObjectTest {
 		testWorld.getTileAtTilePos(9,4).setGeoFeature(Terrain.GROUND);
 		testWorld.getTileAtTilePos(4,3).setGeoFeature(Terrain.GROUND);
 		testWorld.getTileAtTilePos(4,4).setGeoFeature(Terrain.GROUND);
+		testWorld.getTileAtTilePos(8,2).setGeoFeature(Terrain.GROUND);
+		testWorld.getTileAtTilePos(8,3).setGeoFeature(Terrain.MAGMA);
 	}
 	
 	private static Sprite[] sprites;
 	private static Sprite[] slimeSprites;
 	private Mazub mazubPos_225_50;
 	private Mazub mazubPos_400_50;
+	private Mazub mazubPos_425_201;
 	private Slime slimePos_100_50;
 	private Slime slimePos_100_105;
 	private Shark sharkPos_100_95;
@@ -86,6 +90,28 @@ public class GameObjectTest {
 			mazubPos_225_50.advanceTime(0.2 / 9);
 		}
 		assertArrayEquals(intArray(109,49),mazubPos_225_50.getPosition().toIntArray());
+	}
+	
+	@Test
+	public void dieEnemyCorrect(){
+		testWorld.setMazub(mazubPos_225_50);
+		testWorld.addAsSlime(slimePos_100_50);
+		mazubPos_225_50.startMove(Direction.LEFT);
+		
+		for (int i = 0; i < 200; i++) {
+			mazubPos_225_50.advanceTime(0.2 / 9);
+		}
+		assertTrue(mazubPos_225_50.isDead());
+	}
+	
+	@Test
+	public void dieTerrainCorrect(){
+		testWorld.setMazub(mazubPos_425_201);
+		
+		for (int i = 0; i < 5; i++){ 
+			testWorld.advanceTime(0.11);
+		}
+		assertTrue(mazubPos_425_201.isDead());
 	}
 	
 	@Test
