@@ -14,7 +14,7 @@ public class Facade implements IFacadePart2 {
 
 	@Override
 	public Mazub createMazub(int pixelLeftX, int pixelBottomY, Sprite[] sprites) {
-		try{return new Mazub(pixelLeftX,pixelBottomY,sprites);}
+		try{return new Mazub(new Position(pixelLeftX,pixelBottomY),sprites);}
 		catch (IllegalXPositionException exc){
 			throw new ModelException("Illegal X Position!");}
 		catch (IllegalYPositionException exc){
