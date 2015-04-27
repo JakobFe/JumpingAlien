@@ -128,7 +128,7 @@ public class World {
 	 * 			divided by the tile size.
 	 * 			| result == xPosition/getTileSize()
 	 */
-	public int getBelongingTileXPosition(int xPosition){
+	protected int getBelongingTileXPosition(int xPosition){
 		return xPosition/getTileSize();
 	}
 
@@ -142,7 +142,7 @@ public class World {
 	 * 			divided by the tile size.
 	 * 			| result == yPosition/getTileSize()
 	 */
-	public int getBelongingTileYPosition(int yPosition){
+	protected int getBelongingTileYPosition(int yPosition){
 		return yPosition/getTileSize();
 	}
 	
@@ -208,7 +208,7 @@ public class World {
 	 * 			|		tile = getTileAtTilePos(tilePositions[index][0], tilePositions[index][1])
 	 * 			|	result.contains(tile)
 	 */
-	public HashSet<Tile> getTilesIn(int pixelLeft, int pixelBottom,
+	protected HashSet<Tile> getTilesIn(int pixelLeft, int pixelBottom,
 			int pixelRight, int pixelTop){
 		int[][] tilePositions = getTilePositionsIn(pixelLeft, pixelBottom, pixelRight, pixelTop);
 		HashSet<Tile> result = new HashSet<Tile>();
@@ -339,10 +339,10 @@ public class World {
 	 * @param 	tile
 	 * 			The tile to check
 	 * @return	...
-	 * 			| result == true
+	 * 			| result == (tile != null && worldTiles[tile.getTileXPos()][tile.getTileYPos()] == tile)
 	 */
-	public boolean hasAsTile(Tile tile){
-		return true;
+	protected boolean hasAsTile(Tile tile){
+		return (tile != null && worldTiles[tile.getTileXPos()][tile.getTileYPos()] == tile);
 	}
 	
 	/**
@@ -353,7 +353,7 @@ public class World {
 	/**
 	 * Returns a set of all impassable tiles in the game world.
 	 */
-	public HashSet<Tile> getImpassableTiles() {
+	protected HashSet<Tile> getImpassableTiles() {
 		return impassableTiles;
 	}
 
@@ -407,7 +407,7 @@ public class World {
 	 * @return	...
 	 * 			| getImpassableTiles().contains(tile)
 	 */
-	public boolean hasAsImpassableTile(Tile tile){
+	protected boolean hasAsImpassableTile(Tile tile){
 		return getImpassableTiles().contains(tile);
 	}
 
@@ -458,7 +458,7 @@ public class World {
 	 *			|	then new.getWindowXPos() = getMaxWindowXPos()
 	 *			| else getWindowXPos() = windowXPos
 	 */
-	public void setWindowXPos(int windowXPos) {
+	protected void setWindowXPos(int windowXPos) {
 		if (windowXPos < 0)
 			this.windowXPos = 0;
 		else if (windowXPos > getMaxWindowXPos())
@@ -492,7 +492,7 @@ public class World {
 	 *			|	then new.getWindowYPos() = getMaxWindowYPos()
 	 *			| else getWindowYPos() = windowYPos
 	 */
-	public void setWindowYPos(int windowYPos) {
+	protected void setWindowYPos(int windowYPos) {
 		if (windowYPos < 0)
 			this.windowYPos = 0;
 		else if (windowYPos > getMaxWindowYPos())
@@ -509,7 +509,7 @@ public class World {
 	/**
 	 * Returns the maximum x-position of the visible window.
 	 */
-	public int getMaxWindowXPos() {
+	protected int getMaxWindowXPos() {
 		return MAX_WINDOW_X_POS;
 	}
 
@@ -521,7 +521,7 @@ public class World {
 	/**
 	 * Returns the maximum y-position of the visible window.
 	 */
-	public int getMaxWindowYPos() {
+	protected int getMaxWindowYPos() {
 		return MAX_WINDOW_Y_POS;
 	}
 
@@ -620,7 +620,7 @@ public class World {
 	 * @return	...
 	 * 			| result.contains(plant)
 	 */
-	public boolean hasAsPlant(Plant plant){
+	protected boolean hasAsPlant(Plant plant){
 		return getAllPlants().contains(plant);
 	}
 	
@@ -658,7 +658,7 @@ public class World {
 	 * @post	...
 	 * 			| (new plant).getWorld() == null
 	 */
-	public void removeAsPlant(Plant plant){
+	protected void removeAsPlant(Plant plant){
 		assert hasAsPlant(plant);
 		allPlants.remove(plant);
 		plant.setWorld(null);
@@ -717,7 +717,7 @@ public class World {
 	 * @return	...
 	 * 			| result.contains(slime)
 	 */
-	public boolean hasAsSlime(Slime slime){
+	protected boolean hasAsSlime(Slime slime){
 		return getAllSlimes().contains(slime);
 	}
 	
@@ -754,7 +754,7 @@ public class World {
 	 * @post	...
 	 * 			| (new slime).getWorld() == null
 	 */
-	public void removeAsSlime(Slime slime){
+	protected void removeAsSlime(Slime slime){
 		assert hasAsSlime(slime);
 		allSlimes.remove(slime);
 	}
@@ -812,7 +812,7 @@ public class World {
 	 * @return	...
 	 * 			| result.contains(shark)
 	 */
-	public boolean hasAsShark(Shark shark){
+	protected boolean hasAsShark(Shark shark){
 		return allSharks.contains(shark);
 	}
 	
@@ -849,7 +849,7 @@ public class World {
 	 * @post	...
 	 * 			| (new shark).getWorld() == null
 	 */
-	public void removeAsShark(Shark shark){
+	protected void removeAsShark(Shark shark){
 		assert hasAsShark(shark);
 		getAllSharks().remove(shark);
 	}
@@ -950,7 +950,7 @@ public class World {
 	 * 			| for each character in Character:
 	 * 			|	result.contains(character) == (character.getWorld() == this)
 	 */
-	public HashSet<Character> getAllCharacters(){
+	protected HashSet<Character> getAllCharacters(){
 		HashSet<Character> result = new HashSet<Character>();
 		result.addAll(allSharks);
 		result.addAll(allSlimes);
@@ -991,16 +991,16 @@ public class World {
 	 * Checks whether the game is over or not.
 	 * 
 	 * @return	...
-	 * 			| result == (getMazub() == null || getMazub().isTerminated() || didPlayerWin())
+	 * 			| result == (getMazub() == null || didPlayerWin())
 	 */
 	public boolean isGameOver(){
-		return (getMazub() == null || getMazub().isTerminated() || didPlayerWin());
+		return (getMazub() == null || didPlayerWin());
 	}
 
 	/**
 	 * Returns whether the game is started or not.
 	 */
-	public boolean isGameStarted() {
+	protected boolean isGameStarted() {
 		return gameStarted;
 	}
 
