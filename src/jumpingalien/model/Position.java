@@ -63,12 +63,11 @@ public class Position {
 		this(x,y,null);
 	}
 	
-	
 	/**
 	 * Return the x component of this position.
 	 */
 	@Basic@Immutable
-	public double getXPosition(){
+	protected double getXPosition(){
 		return this.xPosition;
 	}
 	
@@ -127,7 +126,7 @@ public class Position {
 	 * Return the y component of this position.
 	 */
 	@Basic@Immutable
-	public double getYPosition(){
+	protected double getYPosition(){
 		return this.yPosition;
 	}
 	
@@ -190,7 +189,7 @@ public class Position {
 	 * 			| result[0] == getXPosition()
 	 * 			| result[1] == getYPosition()
 	 */
-	public double[] toDoubleArray(){
+	protected double[] toDoubleArray(){
 		return doubleArray(this.getXPosition(),this.getYPosition());
 	}
 	
@@ -244,7 +243,7 @@ public class Position {
 	/**
 	 * Return a copy of this position.
 	 */
-	public Position copy(){
+	protected Position copy(){
 		return new Position(getXPosition(),getYPosition(),getWorld());
 	}
 	
