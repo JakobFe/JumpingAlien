@@ -310,6 +310,8 @@ public class Mazub extends Character{
 	 * 
 	 * @pre		The given direction must be left or right.
 	 * 			| (direction == Direction.LEFT) || (direction == Direction.RIGHT)
+	 * @pre		The Mazub may not be dead.
+	 * 			| !isDead()
 	 * @effect	The horizontal velocity of this Mazub is set to the initial
 	 * 			horizontal velocity.
 	 * 			| setHorVelocity(getInitHorVelocity())
@@ -328,11 +330,6 @@ public class Mazub extends Character{
 		setHorDirection(direction);
 		setHorAcceleration(getMaxHorAcceleration());
 		getSpritesTimer().reset();
-		if(direction == Direction.LEFT)
-			setEnableMoveRight(false);
-		else
-			setEnableMoveLeft(false);
-		setEnableMove(true);
 	}
 	
 	/**
@@ -359,11 +356,6 @@ public class Mazub extends Character{
 		setHorDirection(Direction.NULL);
 		setHorAcceleration(0);
 		getSpritesTimer().reset();
-		if(direction == Direction.LEFT)
-			setEnableMoveLeft(false);
-		else
-			setEnableMoveRight(false);
-		setEnableMove(false);
 	}
 	
 	public Direction oppositeDirection(Direction direction){
@@ -480,6 +472,10 @@ public class Mazub extends Character{
 				   isColliding(Direction.UP, tile))
 					throw new CollisionException();
 			}
+			for(GameObject object: getWorld().getAllGameObjects()){
+				if(isColliding(Direction.UP, object))
+					throw new CollisionException();
+			}
 			setEnableStandUp(false);
 			setMaxHorVelocity(getMaxHorVelocityRunning());
 			if (isMoving(Direction.RIGHT))
@@ -503,36 +499,6 @@ public class Mazub extends Character{
 
 	private boolean enableStandUp = false;
 	
-	public boolean isEnableMoveRight() {
-		return enableMoveRight;
-	}
-
-	public void setEnableMoveRight(boolean enableMoveRight) {
-		this.enableMoveRight = enableMoveRight;
-	}
-
-	private boolean enableMoveRight;
-	
-	
-	public boolean isEnableMoveLeft() {
-		return enableMoveLeft;
-	}
-
-	public void setEnableMoveLeft(boolean enableMoveLeft) {
-		this.enableMoveLeft = enableMoveLeft;
-	}
-
-	private boolean enableMoveLeft;
-	
-	public boolean isEnableMove() {
-		return enableMove;
-	}
-
-	public void setEnableMove(boolean enableMove) {
-		this.enableMove = enableMove;
-	}
-
-	private boolean enableMove;
 	
 	@Override
 	protected double[] updatePositionTileCollision(double[] newPos){
@@ -556,7 +522,6 @@ public class Mazub extends Character{
 				if(isColliding(Direction.LEFT, impassableTile)){
 					if (isMoving(Direction.LEFT)){
 						newXPos = this.getPosition().getXPosition();
-						setEnableMoveLeft(true);
 					}
 					endMovement(Direction.LEFT);
 					if(isMoving(Direction.UP))
@@ -566,7 +531,6 @@ public class Mazub extends Character{
 				else if(isColliding(Direction.RIGHT, impassableTile)){
 					if (isMoving(Direction.RIGHT)){
 						newXPos = this.getPosition().getXPosition();
-						setEnableMoveRight(true);
 					}
 					endMovement(Direction.RIGHT);
 					if(isMoving(Direction.UP))
@@ -595,18 +559,6 @@ public class Mazub extends Character{
 		super.updateMovement();
 		if (isEnableStandUp())
 			endDuck();
-		if(isEnableMove() && isEnableMoveRight()){
-			setHorVelocity(getInitHorVelocity());
-			setHorDirection(Direction.RIGHT);
-			setHorAcceleration(getMaxHorAcceleration());
-			setEnableMoveRight(false);
-		}
-		if(isEnableMove() && isEnableMoveLeft()){
-			setHorVelocity(getInitHorVelocity());
-			setHorDirection(Direction.LEFT);
-			setHorAcceleration(getMaxHorAcceleration());
-			setEnableMoveLeft(false);
-		}
 	}
 	
 	@Override
