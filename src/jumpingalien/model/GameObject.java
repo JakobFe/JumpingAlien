@@ -1028,7 +1028,7 @@ public abstract class GameObject {
 	 * 			We are aware of this problem and we will solve it by defensive programming
 	 * 			before we hand in the final solution. 
 	 */
-	protected abstract double[] updatePositionTileCollision(double[] newPos);
+	protected abstract void updatePositionTileCollision(double[] newPos);
 	
 	/**
 	 * A method that receives a position in the form of a double array 
@@ -1061,7 +1061,7 @@ public abstract class GameObject {
 	 * 			We are aware of this problem and we will solve it by defensive programming
 	 * 			before we hand in the final solution. 
 	 */
-	protected double[] getPositionAfterCollision(double[] newPos, HashSet<GameObject> collection){
+	protected void setPositionAfterCollision(double[] newPos, HashSet<GameObject> collection){
 		assert newPos.length == 2;
 		double newXPos = newPos[0];
 		double newYPos = newPos[1];
@@ -1102,7 +1102,8 @@ public abstract class GameObject {
 				}
 			}
 		}
-		return doubleArray(newXPos,newYPos);
+		getPosition().terminate();
+		setPosition(new Position(newXPos,newYPos,getWorld()));
 	}
 	
 	/**
@@ -1125,8 +1126,8 @@ public abstract class GameObject {
 	 * 			We are aware of this problem and we will solve it by defensive programming
 	 * 			before we hand in the final solution.  
 	 */
-	protected double[] updatePositionObjectCollision(double[] newPos){
-		return getPositionAfterCollision(newPos, getBlockingObjects());
+	protected void updatePositionObjectCollision(double[] newPos){
+		setPositionAfterCollision(newPos, getBlockingObjects());
 	}
 	
 	/**

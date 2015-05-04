@@ -558,7 +558,7 @@ public class Mazub extends Character{
 	 * 			before we hand in the final solution. 
 	 */
 	@Override
-	protected double[] updatePositionTileCollision(double[] newPos){
+	protected void updatePositionTileCollision(double[] newPos){
 		assert newPos.length == 2;
 		double newXPos = newPos[0];
 		double newYPos = newPos[1];
@@ -569,6 +569,7 @@ public class Mazub extends Character{
 					if (isMoving(Direction.DOWN))
 						newYPos = this.getPosition().getYPosition();
 					endMovement(Direction.DOWN);
+					setCanFall(false);
 				}
 				else if(isColliding(Direction.UP, impassableTile)){
 					if (isMoving(Direction.UP))
@@ -596,7 +597,8 @@ public class Mazub extends Character{
 				}
 			}
 		}
-		return doubleArray(newXPos,newYPos);
+		getPosition().terminate();
+		setPosition(new Position(newXPos,newYPos,getWorld()));
 	}
 	
 	/**
@@ -674,24 +676,18 @@ public class Mazub extends Character{
 		//		(Math.abs(newYPos - getPosition().getYPosition()) <= 1));
 		if (newYPos<0)
 			newYPos = 0;
-		boolean enableFall = true;
+		
 		if(getWorld() != null){
-			double[] newPos = updatePositionTileCollision(doubleArray(newXPos,newYPos));
-			newPos = updatePositionObjectCollision(newPos);
-			newXPos = newPos[0];
-			newYPos = newPos[1];
-			
-			if(standsOnTile() || standsOnObject())
-				enableFall = false;
-			
-			if (enableFall && !isMoving(Direction.UP)){
+			updatePositionTileCollision(doubleArray(newXPos,newYPos));
+			updatePositionObjectCollision(getPosition().toDoubleArray());
+			if (canFall() && !isMoving(Direction.UP)){
 				startFall();
 			}
+			else
+				setCanFall(true);
 		}
-		getPosition().terminate();
-		setPosition(new Position(newXPos,newYPos,getWorld()));
-	}			
-	
+	}
+
 	/**
 	 * Return the last registered horizontal direction of the Mazub.
 	 */
