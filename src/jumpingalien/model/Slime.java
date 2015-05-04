@@ -549,12 +549,14 @@ public class Slime extends Character{
 	 */
 	void changeSchool(Slime other){
 		assert getSchool() != null;
+		assert other.getSchool() != null;
 		getSchool().addHpAll(this);
 		setHitPoints(getHitPoints()-getSchool().getNbSlimes()+1+other.getSchool().getNbSlimes());
+		getWorld().decrementValueOfSchool(this.getSchool());
 		this.getSchool().removeSlime(this);
 		other.getSchool().addSlime(this);
+		getWorld().incrementValueOfSchool(other.getSchool());
 		other.getSchool().reduceHpAll(this);
-		
 	}
 	
 	/**

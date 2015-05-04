@@ -1,6 +1,8 @@
 package jumpingalien.model;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Set;
 
 import jumpingalien.model.exceptions.*;
 import be.kuleuven.cs.som.annotate.*;
@@ -739,9 +741,10 @@ public class World {
 	 */
 	@Raw
 	public void addAsSlime(Slime slime){
-		if(canAddGameObjects()){
+		if(canAddGameObjects() && canHaveAsSlime(slime)){
 			getAllSlimes().add(slime);
 			slime.setWorld(this);
+			addAsSchool(slime.getSchool());
 		}
 	}
 	
@@ -760,8 +763,13 @@ public class World {
 	protected void removeAsSlime(Slime slime){
 		assert hasAsSlime(slime);
 		allSlimes.remove(slime);
+		decrementValueOfSchool(slime.getSchool());
 	}
 
+	protected boolean canHaveAsSlime(Slime slime){
+		return (hasAsSchool(slime.getSchool()) || canAddSchool());
+	}
+	
 	/**
 	 * Set collecting references to all slimes attached to this world.
 	 * 
@@ -776,6 +784,106 @@ public class World {
 	 */
 	private final HashSet<Slime> allSlimes = new HashSet<Slime>();
 	
+	/**
+	 * Returns a set of all slimes in this game world.
+	 * 
+	 * @return	...
+	 * 			| result != null
+	 * @return	...
+	 * 			| for each slime in Slime:
+	 * 			|	result.contains(slime) == (slime.getWorld() == this)
+	 */
+	public Set<School> getAllSchools() {
+		return allSchools.keySet();
+	}
+		
+	/**
+	 * Check whether the given slime is attached to this game world.
+	 * 
+	 * @param 	slime
+	 * 			The slime to check
+	 * @return	...
+	 * 			| result.contains(slime)
+	 */
+	protected boolean hasAsSchool(School school){
+		return allSchools.containsKey(school);
+	}
+	
+	/**
+	 * Add the given slime to the set of slimes.
+	 * 
+	 * @param 	slime
+	 * 			The slime to be added
+	 * @pre		...
+	 * 			| isValidGameObject(slime)
+	 * @post	...
+	 * 			| if(canAddGameObjects())
+	 * 			|	then new.hasAsSlime(slime)
+	 * @post	...
+	 * 			| if(canAddGameObjects())
+	 * 			|	then (new slime).getWorld() == this
+	 */
+	@Raw
+	public void addAsSchool(School school){
+		if(!hasAsSchool(school)){
+			allSchools.put(school,1);
+		}
+		else
+			incrementValueOfSchool(school);
+	}
+	
+	/**
+	 * Remove the given slime from the set of slimes.
+	 * 
+	 * @param 	slime
+	 * 			The slime to be removed
+	 * @pre		...
+	 * 			| hasAsSlime(slime)
+	 * @post	...
+	 * 			| ! new.hasAsSlime(slime)
+	 * @post	...
+	 * 			| (new slime).getWorld() == null
+	 */
+	protected void removeAsSchool(School school){
+		assert hasAsSchool(school);
+		assert allSchools.get(school) == 0;
+		allSchools.remove(school);
+	}
+
+	protected boolean canAddSchool(){
+		return (numberOfSchools() < 10);
+	}
+	
+	protected int numberOfSchools(){
+		return allSchools.size();
+	}
+	
+	protected void incrementValueOfSchool(School school){
+		allSchools.put(school, allSchools.get(school) + 1);
+	}
+	
+	protected void decrementValueOfSchool(School school){
+		if(allSchools.get(school) > 0)
+			allSchools.put(school, allSchools.get(school) - 1);
+		if(allSchools.get(school) == 0)
+			removeAsSchool(school);
+
+	}
+
+	/**
+	 * Set collecting references to all slimes attached to this world.
+	 * 
+	 * @invar	...
+	 * 			| allSlimes != null
+	 * @invar	...
+	 * 			| for each slime in allSlimes:
+	 * 			|	isValidGameObject(slime)
+	 * @invar	...
+	 * 			| for each slime in allSlimes:
+	 * 			|	slime.getWorld() == this
+	 */
+	private final HashMap<School,Integer> allSchools = new HashMap<School,Integer>();
+
 	/**
 	 * Returns a set of all sharks in this game world.
 	 * 
@@ -1043,6 +1151,7 @@ public class World {
 			if(!slime.isTerminated())
 				slime.advanceTime(timeDuration);
 		}
+		System.out.println(numberOfSchools());
 	}
 	
 	/**
