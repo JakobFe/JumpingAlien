@@ -55,7 +55,7 @@ public class Slime extends Character{
 	 * 			| new.getHorDirection() == Direction.LEFT ||
 	 * 			| new.getHorDirection() == Direction.RIGHT
 	 */
-	private void setRandomDirection() {
+	public void setRandomHorDirection() {
 		Random rn = new Random();
 		int startIndex = rn.nextInt(2);
 		if(startIndex == 0)
@@ -67,9 +67,10 @@ public class Slime extends Character{
 	/**
 	 * A method to get the duration of the current period.
 	 */
-	private double getPeriodDuration() {
+	public double getPeriodDuration() {
 		return periodDuration;
 	}
+	
 	/**
 	 * A method to check whether a given period duration is valid.
 	 * 
@@ -78,7 +79,7 @@ public class Slime extends Character{
 	 * @return	...
 	 * 			| result == (period == 0 || (period <=MAX_PERIOD && period >= MIN_PERIOD)) 
 	 */
-	private boolean isValidPeriod(double period){
+	public boolean isValidPeriod(double period){
 		return (period == 0 || (period <=MAX_PERIOD && period >= MIN_PERIOD));
 	}
 	
@@ -92,6 +93,7 @@ public class Slime extends Character{
 	 */
 	private static final double MAX_PERIOD = 6;
 	
+
 	/**
 	 * A method to set the period duration to a given value.
 	 * 
@@ -102,7 +104,7 @@ public class Slime extends Character{
 	 * @post	...
 	 * 			| new.getPeriodDuration() == periodDuration
 	 */
-	private void setPeriodDuration(double periodDuration) {
+	public void setPeriodDuration(double periodDuration) {
 		assert isValidPeriod(periodDuration);
 		this.periodDuration = periodDuration;
 	}
@@ -114,7 +116,7 @@ public class Slime extends Character{
 	 * @return	...
 	 * 			| result <= MAX_PERIOD && result >= MIN_PERIOD
 	 */
-	private double randomPeriodDuration(){
+	public double randomPeriodDuration(){
 		Random rn = new Random();
 		return MIN_PERIOD + (MAX_PERIOD - MIN_PERIOD) * rn.nextDouble();
 	}
@@ -287,7 +289,7 @@ public class Slime extends Character{
 		super.updateMovement();
 		if(getPeriodDuration() == 0){
 			getSpritesTimer().reset();
-			setRandomDirection();
+			setRandomHorDirection();
 			updateSpriteIndex();
 			startMove();
 		}

@@ -12,7 +12,7 @@ import static jumpingalien.tests.util.TestUtils.doubleArray;
  * @author 	Jakob Festraets, Vincent Kemps
  * @version	1.0
  */
-public class Shark extends Character {
+public class Shark extends Character{
 	
 	/**
 	 * Initialize this new shark with a given position, given sprites the initial
@@ -44,7 +44,7 @@ public class Shark extends Character {
 	 * 			| new.getHorDirection() == Direction.LEFT ||
 	 * 			| new.getHorDirection() == Direction.RIGHT
 	 */
-	private void setRandomHorDirection() {
+	public void setRandomHorDirection() {
 		Random rn = new Random();
 		int startIndex = rn.nextInt(2);
 		if(startIndex == 0)
@@ -196,7 +196,7 @@ public class Shark extends Character {
 	/**
 	 * A method to get the duration of the current period.
 	 */
-	private double getPeriodDuration() {
+	public double getPeriodDuration() {
 		return periodDuration;
 	}
 	
@@ -208,7 +208,7 @@ public class Shark extends Character {
 	 * @return	...
 	 * 			| result == (period == 0 || (period <=MAX_PERIOD && period >= MIN_PERIOD)) 
 	 */
-	private boolean isValidPeriod(double period){
+	public boolean isValidPeriod(double period){
 		return (period == 0 || (period <=MAX_PERIOD && period >= MIN_PERIOD));
 	}
 	
@@ -232,7 +232,7 @@ public class Shark extends Character {
 	 * @post	...
 	 * 			| new.getPeriodDuration() == periodDuration
 	 */
-	private void setPeriodDuration(double periodDuration) {
+	public void setPeriodDuration(double periodDuration) {
 		assert isValidPeriod(periodDuration);
 		this.periodDuration = periodDuration;
 	}
@@ -244,7 +244,7 @@ public class Shark extends Character {
 	 * @return	...
 	 * 			| result <= MAX_PERIOD && result >= MIN_PERIOD
 	 */
-	private double randomPeriodDuration(){
+	public double randomPeriodDuration(){
 		Random rn = new Random();
 		return MIN_PERIOD + (MAX_PERIOD - MIN_PERIOD) * rn.nextDouble();
 	}
