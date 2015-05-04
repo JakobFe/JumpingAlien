@@ -298,7 +298,7 @@ public class Shark extends Character{
 	 */
 	private boolean canJump(){
 		return ((getPeriodCounter() > MIN_NON_JUMPING_PERIOD)
-				&& (standsOnTile() || isSubmergedIn(Terrain.WATER)));
+				&& (!canFall() || isSubmergedIn(Terrain.WATER)));
 	}
 	
 	/**
@@ -527,15 +527,12 @@ public class Shark extends Character{
 				0.5*getVertAcceleration()*Math.pow(timeDuration, 2))*100;
 		if (newYPos<0)
 			newYPos = 0;
-		boolean enableFall = true;
-		double[] newPos = updatePositionTileCollision(doubleArray(newXPos,newYPos));
-		newPos = updatePositionObjectCollision(newPos);
-		if(standsOnTile() || standsOnObject() || isSubmergedIn(Terrain.WATER))
-			enableFall = false;
-		if (enableFall && !isMoving(Direction.UP))
+		updatePositionTileCollision(doubleArray(newXPos,newYPos));
+		updatePositionObjectCollision(getPosition().toDoubleArray());
+		if ((canFall() && !isSubmergedIn(Terrain.WATER)) && !isMoving(Direction.UP))
 			startFall();
-		getPosition().terminate();
-		setPosition(toPosition(newPos,getWorld()));
+		else
+			setCanFall(true);
 	}
 	
 	/**

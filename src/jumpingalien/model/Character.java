@@ -1,6 +1,9 @@
 package jumpingalien.model;
 
 import static jumpingalien.tests.util.TestUtils.doubleArray;
+
+import java.util.HashSet;
+
 import jumpingalien.model.exceptions.*;
 import jumpingalien.util.Sprite;
 import be.kuleuven.cs.som.annotate.*;
@@ -547,44 +550,6 @@ public abstract class Character extends GameObject{
 	}
 	
 	/**
-	 * A method to check whether this character stands on an impassable tile.
-	 * 
-	 * @return	True if and only if this character is colliding with an impassable
-	 * 			tile in the direction down.
-	 * 			| result == 
-	 * 			|		for some tile in getWorld().getImpassableTiles()
-	 * 			|			this.isColliding(Direction.DOWN,tile)
-	 */
-	protected boolean standsOnTile(){
-		for (Tile impassableTile: getWorld().getImpassableTiles()){
-			if (this.isOverlappingWith(impassableTile)){
-				if (isColliding(Direction.DOWN, impassableTile))
-					return true;
-			}
-		}
-		return false;
-	}
-	
-	/**
-	 * A method to check whether this character stands on a game object.
-	 * 
-	 * @return	True if and only if this character is colliding with another 
-	 * 			game object in the direction down.
-	 * 			| result == 
-	 * 			|		for some other in getWorld().getAllGameObjects()
-	 * 			|			(this != other) && this.isColliding(Direction.DOWN,other)
-	 */
-	protected boolean standsOnObject(){
-		for (GameObject gameObject: getWorld().getAllGameObjects()){
-			if ((gameObject != this) && this.isOverlappingWith(gameObject)){
-				if (isColliding(Direction.DOWN, gameObject))
-					return true;
-			}
-		}
-		return false;
-	}
-	
-	/**
 	 * A method to check whether this character stands on a given game object.
 	 * 
 	 * @param 	other
@@ -613,7 +578,7 @@ public abstract class Character extends GameObject{
 	 * 			We are aware of this problem and we will solve it by defensive programming
 	 * 			before we hand in the final solution. 
 	 */
-	protected double[] updatePositionTileCollision(double[] newPos){
+	protected void updatePositionTileCollision(double[] newPos){
 		assert newPos.length == 2;
 		double newXPos = newPos[0];
 		double newYPos = newPos[1];
@@ -647,8 +612,98 @@ public abstract class Character extends GameObject{
 				}
 			}
 		}
-		return doubleArray(newXPos,newYPos);
+		getPosition().terminate();
+		setPosition(new Position(newXPos,newYPos,getWorld()));
 	}
+	
+	/**
+	 * A method that receives a position in the form of a double array 
+	 * and returns the corrected position, after the given position has been checked 
+	 * for whether or not this game object would collide with other game objects 
+	 * of a given collection if the given position would be assigned to this game object.
+	 *  
+	 * @param 	newPos
+	 * 			The position to check in the form of a double array.
+	 * 			The first entry of this array represents the x position, the
+	 * 			second entry represents the y position.
+	 * @param 	collection
+	 * 			The collection to check for collisions against.
+	 * @pre		The given position must have 2 entries.
+	 * 			| newPos.length == 2
+	 * @return	If the given position would be assigned to this game object and
+	 * 			as a result of that, this game object would collide with another
+	 * 			game object out of the given collection in a horizontal direction, 
+	 * 			then the returned array will have as first entry the current x position.
+	 * 			Else, the returned array will have as first entry the first entry 
+	 * 			of the given position.
+	 * @return	If the given position would be assigned to this game object and
+	 * 			as a result of that, this game object would collide with another
+	 * 			game object out of the given collection in a vertical direction, 
+	 * 			then the returned array will have as second entry the current y position.
+	 * 			Else, the returned array will have as second entry the second entry 
+	 * 			of the given position.
+	 * @note	In the current state, this method violates several rules connected
+	 * 			to good programming. It changes the state of an object and returns a value.
+	 * 			We are aware of this problem and we will solve it by defensive programming
+	 * 			before we hand in the final solution. 
+	 */
+	@Override
+	protected void setPositionAfterCollision(double[] newPos, HashSet<GameObject> collection){
+		assert newPos.length == 2;
+		double newXPos = newPos[0];
+		double newYPos = newPos[1];
+		for (GameObject other: collection){
+			if ((other != this) && this.isOverlappingWith(other)){
+				if (isColliding(Direction.DOWN, other)){
+					//System.out.print("Colliding down with object");
+					//System.out.print(object.toString());
+					if (this.isMoving(Direction.DOWN) || other.isMoving(Direction.UP)){
+						//newYPos = gameObject.getPosition().getYPosition()+gameObject.getHeight()-1;
+						newYPos = this.getPosition().getYPosition();
+					}
+					endMovement(Direction.DOWN);
+					setCanFall(false);
+				}
+				else if(isColliding(Direction.UP, other)){
+					if (isMoving(Direction.UP) || other.isMoving(Direction.DOWN)){
+						//newYPos = gameObject.getPosition().getYPosition()-getHeight()+1;
+						newYPos = this.getPosition().getYPosition();
+					}
+					endMovement(Direction.UP);
+					//System.out.println("Colliding up");
+				}
+				if(isColliding(Direction.LEFT, other)){
+					if (isMoving(Direction.LEFT) || other.isMoving(Direction.RIGHT)){
+						//newXPos = gameObject.getPosition().getXPosition()+gameObject.getWidth()-1;
+						newXPos = this.getPosition().getXPosition();
+					}
+					endMovement(Direction.LEFT);
+					//System.out.println("Colliding left");
+				}
+				else if(isColliding(Direction.RIGHT, other)){
+					if (isMoving(Direction.RIGHT) || other.isMoving(Direction.LEFT)){
+						//newXPos = gameObject.getPosition().getXPosition()-getWidth()+1;
+						newXPos = this.getPosition().getXPosition();
+					}
+					endMovement(Direction.RIGHT);
+					//System.out.println("Colliding right");
+				}
+			}
+		}
+		getPosition().terminate();
+		setPosition(new Position(newXPos,newYPos,getWorld()));
+	}
+	
+	protected boolean canFall() {
+		return canFall;
+	}
+
+	protected void setCanFall(boolean canFall) {
+		this.canFall = canFall;
+	}
+
+	private boolean canFall = true;
+	
 	
 	/**
 	 * A method to update the horizontal velocity over a given time interval.
