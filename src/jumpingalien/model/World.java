@@ -104,6 +104,7 @@ public class World {
 					worldTiles[row][col] = getTargetTile();
 				else
 					worldTiles[row][col] = new Tile(this, col*tileSize, row*tileSize,false);
+				System.out.println(worldTiles[row][col].toString());
 			}
 		}
 	}
@@ -1151,7 +1152,6 @@ public class World {
 			if(!slime.isTerminated())
 				slime.advanceTime(timeDuration);
 		}
-		System.out.println(numberOfSchools());
 	}
 	
 	/**

@@ -275,8 +275,11 @@ public class Facade implements IFacadePart2 {
 
 	@Override
 	public Slime createSlime(int x, int y, Sprite[] sprites, School school) {
-		if(enableSlimes)	
+		if(enableSlimes){	
+			System.out.print("Slime added at position");
+			System.out.println(new Position(x,y).toString());
 			return new Slime(new Position(x,y),sprites,school);
+		}
 		else
 			return null;
 	}
