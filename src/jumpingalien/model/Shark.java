@@ -747,8 +747,9 @@ public class Shark extends Character{
 	 */
 	@Override
 	public String toString(){
-		return "Shark at " + getPosition().toString() + " with" +
-				String.valueOf(getHitPoints())  + "hit points.";
+		/*return "Shark at " + getPosition().toString() + " with" +
+				String.valueOf(getHitPoints())  + "hit points.";*/
+		return getVertVelocity() + "";
 	}
 	
 	/**
