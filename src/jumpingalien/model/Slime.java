@@ -252,11 +252,13 @@ public class Slime extends Character{
 	 * A method to end a movement period.
 	 * 
 	 * @effect	...
-	 * 			| setHorVelocity(0), setHorAcceleration(0)
+	 * 			| setHorVelocity(0), setHorAcceleration(0),
+	 * 			| setHorDirection(Direction.NULL)
 	 */
 	private void endMove(){
 		setHorVelocity(0);
 		setHorAcceleration(0);
+		setHorDirection(Direction.NULL);
 	}
 	
 	/**
