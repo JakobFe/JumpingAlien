@@ -2,11 +2,11 @@ package jumpingalien.part2.facade;
 
 import java.util.Collection;
 
-import jumpingalien.model.Mazub;
 import jumpingalien.model.Plant;
-import jumpingalien.model.School;
 import jumpingalien.model.Shark;
+import jumpingalien.model.Mazub;
 import jumpingalien.model.Slime;
+import jumpingalien.model.School;
 import jumpingalien.model.World;
 import jumpingalien.part1.facade.IFacade;
 import jumpingalien.util.ModelException;
@@ -125,7 +125,7 @@ public interface IFacadePart2 extends jumpingalien.part1.facade.IFacade {
 	 * Returns the size of the given game world, in number of pixels.
 	 * 
 	 * @param world
-	 *         The world for which to return the size.
+	 *            The world for which to return the size.
 	 * @return The size of the game world, in pixels, as an array of two
 	 *         elements: width (X) and height (Y), in that order.
 	 */
