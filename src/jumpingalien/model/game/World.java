@@ -584,31 +584,6 @@ public class World {
 	 */
 	private Mazub mazub;
 	
-	public Mazub getBuzam() {
-		return buzam;
-	}
-
-	private boolean canHaveAsBuzam(Buzam alien){
-		return (alien == null) || (!alien.isDead() && canAddGameObjects());
-	}
-	
-	public void setBuzam(Buzam alien){
-		if (getBuzam() != null){
-			getBuzam().setWorld(null);
-			getAllGameObjects().remove(getBuzam());
-		}
-		if(canHaveAsBuzam(alien))
-			this.buzam = alien;
-		if (alien != null){
-			getBuzam().setWorld(this);
-		}
-	}
-	
-	/**
-	 * A variable storing the Mazub of this game world.
-	 */
-	private Buzam buzam;
-	
 	/**
 	 * Returns a set of all plants in this game world.
 	 * 
