@@ -1288,6 +1288,12 @@ public abstract class GameObject {
 		return isTerminated;
 	}
 	
+	protected void setIsTerminated(){
+		assert (getHitPoints()==0);
+		assert getHpTimer().getTimeSum()>0.6;
+		this.isTerminated = true;
+	}
+	
 	/**
 	 * Terminate this game object.
 	 * 
@@ -1302,7 +1308,7 @@ public abstract class GameObject {
 	protected void terminate(){
 		assert (getHitPoints()==0);
 		assert getHpTimer().getTimeSum()>0.6;
-		this.isTerminated = true;
+		setIsTerminated();
 	}
 	
 	/**
