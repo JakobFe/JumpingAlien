@@ -1,4 +1,4 @@
-package jumpingalien.model;
+package jumpingalien.model.game;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -104,7 +104,6 @@ public class World {
 					worldTiles[row][col] = getTargetTile();
 				else
 					worldTiles[row][col] = new Tile(this, col*tileSize, row*tileSize,false);
-				System.out.println(worldTiles[row][col].toString());
 			}
 		}
 	}

@@ -1,4 +1,4 @@
-package jumpingalien.model;
+package jumpingalien.model.game;
 
 import jumpingalien.model.exceptions.*;
 import static jumpingalien.tests.util.TestUtils.doubleArray;

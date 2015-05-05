@@ -1,5 +1,5 @@
 package jumpingalien.model.exceptions;
-import jumpingalien.model.Mazub;
+import jumpingalien.model.game.Mazub;
 import be.kuleuven.cs.som.annotate.*;
 
 /**

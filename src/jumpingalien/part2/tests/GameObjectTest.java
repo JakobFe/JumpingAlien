@@ -4,6 +4,15 @@ import static jumpingalien.tests.util.TestUtils.intArray;
 import static jumpingalien.tests.util.TestUtils.spriteArrayForSize;
 import static org.junit.Assert.*;
 import jumpingalien.model.*;
+import jumpingalien.model.game.Direction;
+import jumpingalien.model.game.GameObject;
+import jumpingalien.model.game.Mazub;
+import jumpingalien.model.game.Position;
+import jumpingalien.model.game.School;
+import jumpingalien.model.game.Shark;
+import jumpingalien.model.game.Slime;
+import jumpingalien.model.game.Terrain;
+import jumpingalien.model.game.World;
 import jumpingalien.util.Sprite;
 
 import org.junit.Before;

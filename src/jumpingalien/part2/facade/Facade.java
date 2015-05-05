@@ -5,8 +5,16 @@ import static jumpingalien.tests.util.TestUtils.intArray;
 
 import java.util.Collection;
 
-import jumpingalien.model.*;
 import jumpingalien.model.exceptions.*;
+import jumpingalien.model.game.Direction;
+import jumpingalien.model.game.Mazub;
+import jumpingalien.model.game.Plant;
+import jumpingalien.model.game.Position;
+import jumpingalien.model.game.School;
+import jumpingalien.model.game.Shark;
+import jumpingalien.model.game.Slime;
+import jumpingalien.model.game.Terrain;
+import jumpingalien.model.game.World;
 import jumpingalien.util.ModelException;
 import jumpingalien.util.Sprite;
 
@@ -276,8 +284,6 @@ public class Facade implements IFacadePart2 {
 	@Override
 	public Slime createSlime(int x, int y, Sprite[] sprites, School school) {
 		if(enableSlimes){	
-			System.out.print("Slime added at position");
-			System.out.println(new Position(x,y).toString());
 			return new Slime(new Position(x,y),sprites,school);
 		}
 		else

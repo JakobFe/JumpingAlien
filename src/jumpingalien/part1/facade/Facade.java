@@ -1,10 +1,10 @@
 package jumpingalien.part1.facade;
 
 
-import jumpingalien.model.Direction;
-import jumpingalien.model.Mazub;
-import jumpingalien.model.Position;
 import jumpingalien.model.exceptions.*;
+import jumpingalien.model.game.Direction;
+import jumpingalien.model.game.Mazub;
+import jumpingalien.model.game.Position;
 import jumpingalien.util.*;
 import static jumpingalien.tests.util.TestUtils.*;
 

@@ -1,4 +1,4 @@
-package jumpingalien.model;
+package jumpingalien.model.game;
 
 /**
  * An enumeration involving terrain types as an attribute for tiles.

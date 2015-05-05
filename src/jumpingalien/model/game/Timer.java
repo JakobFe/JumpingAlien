@@ -1,4 +1,4 @@
-package jumpingalien.model;
+package jumpingalien.model.game;
 
 /**
  * A class involving timers with as sole attribute a stored time sum.

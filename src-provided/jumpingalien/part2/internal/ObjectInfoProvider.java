@@ -4,10 +4,10 @@ import java.util.Collection;
 import java.util.Optional;
 
 import jumpingalien.common.sprites.ImageSprite;
-import jumpingalien.model.Plant;
-import jumpingalien.model.School;
-import jumpingalien.model.Shark;
-import jumpingalien.model.Slime;
+import jumpingalien.model.game.Plant;
+import jumpingalien.model.game.School;
+import jumpingalien.model.game.Shark;
+import jumpingalien.model.game.Slime;
 
 public interface ObjectInfoProvider {
 
