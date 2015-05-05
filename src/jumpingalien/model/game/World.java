@@ -583,6 +583,58 @@ public class World {
 	 * A variable storing the Mazub of this game world.
 	 */
 	private Mazub mazub;
+
+	/**
+	 * Returns the one and only Buzam of this game world.
+	 */
+	public Buzam getBuzam() {
+		return buzam;
+	}
+
+	/**
+	 * Checks whether this world can have the given Buzam is its Buzam.
+	 * 
+	 * @param 	alien
+	 * 			The Buzam to check
+	 * @return	...
+	 * 			| result == ((alien == null) || (!alien.isDead() && canAddGameObjects()))
+	 */
+	private boolean canHaveAsBuzam(Buzam alien){
+		return (alien == null) || (!alien.isDead() && canAddGameObjects());
+	}
+	
+	/**
+	 * Sets the Buzam of this game world to the given Buzam.
+	 * 
+	 * @param 	alien
+	 * 			The Buzam to set
+	 * @effect	...
+	 * 			| if (getBuzam() != null)
+	 *			|	then getBuzam().setWorld(null), getAllGameObjects().remove(getBuzam())
+	 * @post	...
+	 * 			| if(canHaveAsBuzam(alien))
+	 *			|	then new.getBuzam() = alien
+	 * @effect	...
+	 * 			| if (alien != null)
+	 * 			|	then getBuzam().setWorld(this)
+	 */
+	public void setBuzam(Buzam alien){
+		if (getBuzam() != null){
+			getBuzam().setWorld(null);
+			getAllGameObjects().remove(getBuzam());
+		}
+		if(canHaveAsBuzam(alien))
+			this.buzam = alien;
+		if (alien != null){
+			getBuzam().setWorld(this);
+		}
+	}
+	
+	/**
+	 * A variable storing the Buzam of this game world.
+	 */
+	private Buzam buzam;
+
 	
 	/**
 	 * Returns a set of all plants in this game world.
@@ -1137,6 +1189,10 @@ public class World {
 	IllegalXPositionException,IllegalYPositionException{
 		if (getMazub() != null){
 			getMazub().advanceTime(timeDuration);
+			updateWindowPos();
+		}
+		if (getBuzam() != null){
+			getBuzam().advanceTime(timeDuration);
 			updateWindowPos();
 		}
 		for(Plant plant: getAllUnterminatedPlants()){
