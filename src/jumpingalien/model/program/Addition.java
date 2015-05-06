@@ -1,7 +1,6 @@
-package jumpingalien.part3.programs;
+package jumpingalien.model.program;
 
-import jumpingalien.model.program.BinaryOperator;
-import jumpingalien.model.program.Double;
+import jumpingalien.part3.programs.SourceLocation;
 
 public class Addition<T> extends BinaryOperator<T> {
 	// T nodig omdat binary operator generisch is ?!?!? 
