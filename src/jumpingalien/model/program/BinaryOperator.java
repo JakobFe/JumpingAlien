@@ -1,10 +1,13 @@
 package jumpingalien.model.program;
 
+import jumpingalien.part3.programs.SourceLocation;
 import be.kuleuven.cs.som.annotate.Basic;
 
-public abstract class BinaryOperator extends Operator{
-	
-	protected BinaryOperator(Expression leftOperand, Expression rightOperand){
+public abstract class BinaryOperator<T> extends Operator<T>{
+	// parametrisatie nodig voor vb e||e en e+e
+	protected BinaryOperator(SourceLocation sourceLocation, 
+			Expression leftOperand, Expression rightOperand){
+		super(sourceLocation);
 		this.leftOperand = leftOperand;
 		this.rightOperand = rightOperand;
 	}

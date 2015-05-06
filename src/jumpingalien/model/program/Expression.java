@@ -1,6 +1,16 @@
 package jumpingalien.model.program;
 
+import jumpingalien.part3.programs.SourceLocation;
+
 public abstract class Expression {
+	
+	protected Expression(SourceLocation sourceLocation){
+		this.sourceLocation = sourceLocation;
+	}
+	
+	protected Expression(){
+		sourceLocation = null;
+	}
 	
 	public abstract Object outcome();
 	
@@ -11,6 +21,10 @@ public abstract class Expression {
 			return this.outcome() == ((Expression) other).outcome();
 	}
 	
-	
+	public SourceLocation getSourceLocation() {
+		return sourceLocation;
+	}
+
+	private final SourceLocation sourceLocation;
 
 }

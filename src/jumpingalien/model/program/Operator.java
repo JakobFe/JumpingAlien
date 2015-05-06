@@ -1,13 +1,15 @@
 package jumpingalien.model.program;
 
+import jumpingalien.part3.programs.SourceLocation;
 
-public abstract class Operator extends Expression {
+
+public abstract class Operator<T> extends Expression {
 	
-	public abstract Expression getOperandAt(int index) throws IndexOutOfBoundsException;
+	protected Operator(SourceLocation sourceLocation){
+		super(sourceLocation);
+	}
 	
 	public abstract int getNbOperands();
-	
-	public abstract boolean canHaveAsOperandAt(int index, Expression expression);
 	
 	public abstract String getOperatorSymbol();
 
