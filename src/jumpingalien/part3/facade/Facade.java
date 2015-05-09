@@ -10,7 +10,7 @@ import jumpingalien.model.game.School;
 import jumpingalien.model.game.Shark;
 import jumpingalien.model.game.Slime;
 import jumpingalien.model.game.World;
-import jumpingalien.model.program.Program;
+import jumpingalien.model.program.programs.Program;
 import jumpingalien.part3.programs.ParseOutcome;
 import jumpingalien.util.ModelException;
 import jumpingalien.util.Sprite;

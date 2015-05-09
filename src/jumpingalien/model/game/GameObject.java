@@ -490,8 +490,9 @@ public abstract class GameObject {
 	 * 
 	 * Null is returned if this game object doesn't belong to any world.
 	 */
+	// ZOU NIET PUBLIC MOGEN ZIJN!!!!!
 	@Basic
-	protected World getWorld() {
+	public World getWorld() {
 		return world;
 	}
 	/**

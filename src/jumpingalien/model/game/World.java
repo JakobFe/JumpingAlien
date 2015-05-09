@@ -356,7 +356,8 @@ public class World {
 	/**
 	 * Returns a set of all impassable tiles in the game world.
 	 */
-	protected HashSet<Tile> getImpassableTiles() {
+	// NORMAAL NIET PUBLIC!!!!!
+	public HashSet<Tile> getImpassableTiles() {
 		return impassableTiles;
 	}
 
@@ -1063,7 +1064,8 @@ public class World {
 	 * 			| for each object in GameObject:
 	 * 			|	result.contains(object) == (object.getWorld() == this)
 	 */
-	HashSet<GameObject> getAllGameObjects(){
+	// zou niet publiek mogen zijn!!!!!!
+	public HashSet<GameObject> getAllGameObjects(){
 		HashSet<GameObject> result = new HashSet<GameObject>();
 		result.addAll(allSharks);
 		result.addAll(allPlants);

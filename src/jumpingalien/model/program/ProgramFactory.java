@@ -4,6 +4,42 @@ import java.util.List;
 import java.util.Map;
 
 import jumpingalien.model.game.*;
+import jumpingalien.model.program.expressions.Addition;
+import jumpingalien.model.program.expressions.ConditionalAnd;
+import jumpingalien.model.program.expressions.ConditionalOr;
+import jumpingalien.model.program.expressions.Constant;
+import jumpingalien.model.program.expressions.Division;
+import jumpingalien.model.program.expressions.Equals;
+import jumpingalien.model.program.expressions.Expression;
+import jumpingalien.model.program.expressions.GetHeight;
+import jumpingalien.model.program.expressions.GetHp;
+import jumpingalien.model.program.expressions.GetTile;
+import jumpingalien.model.program.expressions.GetWidth;
+import jumpingalien.model.program.expressions.GetX;
+import jumpingalien.model.program.expressions.GetY;
+import jumpingalien.model.program.expressions.GreaterThan;
+import jumpingalien.model.program.expressions.GreaterThanOrEqualTo;
+import jumpingalien.model.program.expressions.IsDead;
+import jumpingalien.model.program.expressions.IsDucking;
+import jumpingalien.model.program.expressions.IsGameObject;
+import jumpingalien.model.program.expressions.IsJumping;
+import jumpingalien.model.program.expressions.IsMoving;
+import jumpingalien.model.program.expressions.IsPassable;
+import jumpingalien.model.program.expressions.IsTerrain;
+import jumpingalien.model.program.expressions.IsTerrainOfType;
+import jumpingalien.model.program.expressions.LessThan;
+import jumpingalien.model.program.expressions.LessThanOrEqualTo;
+import jumpingalien.model.program.expressions.Multiplication;
+import jumpingalien.model.program.expressions.NotBoolean;
+import jumpingalien.model.program.expressions.NotEquals;
+import jumpingalien.model.program.expressions.RandomDouble;
+import jumpingalien.model.program.expressions.SearchObject;
+import jumpingalien.model.program.expressions.SquareRoot;
+import jumpingalien.model.program.expressions.Subtraction;
+import jumpingalien.model.program.expressions.Variable;
+import jumpingalien.model.program.programs.Program;
+import jumpingalien.model.program.statements.Statement;
+import jumpingalien.model.program.types.Type;
 import jumpingalien.part3.programs.IProgramFactory;
 import jumpingalien.part3.programs.SourceLocation;
 
@@ -167,15 +203,13 @@ public class ProgramFactory implements IProgramFactory<Expression,Statement,Type
 	@Override
 	public Expression createGetTile(Expression x, Expression y,
 			SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		return new GetTile(sourceLocation,x,y,createSelf(sourceLocation));
 	}
 
 	@Override
 	public Expression createSearchObject(Expression direction,
 			SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		return new SearchObject(sourceLocation,direction,createSelf(sourceLocation));
 	}
 
 	@Override

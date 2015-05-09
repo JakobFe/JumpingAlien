@@ -3,6 +3,7 @@ package jumpingalien.part3.programs;
 import java.util.List;
 
 import jumpingalien.model.program.*;
+import jumpingalien.model.program.programs.Program;
 
 /**
  * A class that represents the outcome of parsing a string.
