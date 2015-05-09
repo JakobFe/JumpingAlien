@@ -4,15 +4,15 @@ import jumpingalien.part3.programs.SourceLocation;
 
 public class ConditionalAnd extends BinaryOperator {
 
-	protected ConditionalAnd(SourceLocation sourceLocation, Boolean leftOperand,
-			Boolean rightOperand) {
+	protected ConditionalAnd(SourceLocation sourceLocation, Expression leftOperand,
+			Expression rightOperand) {
 		super(sourceLocation, leftOperand, rightOperand);
 	}
 	
-
 	@Override
 	public Boolean outcome() {
-		return (Boolean)getLeftOperand() && (Boolean)getRightOperand();
+		return (Boolean)getLeftOperand().outcome() && 
+			   (Boolean)getRightOperand().outcome();
 	}
 
 	@Override

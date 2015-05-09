@@ -6,7 +6,7 @@ import jumpingalien.part3.programs.SourceLocation;
 
 public class RandomDouble extends UnaryOperator {
 
-	protected RandomDouble(SourceLocation sourceLocation, Double operand) {
+	protected RandomDouble(SourceLocation sourceLocation, Expression operand) {
 		super(sourceLocation, operand);
 	}
 
@@ -15,10 +15,11 @@ public class RandomDouble extends UnaryOperator {
 		return "random";
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Double outcome() {
 		Random rn = new Random();
-		return rn.nextDouble()*(Double)getOperand();
+		return rn.nextDouble()*((Constant<Double>) getOperand()).outcome();
 	}
 
 }
