@@ -2,7 +2,7 @@ package jumpingalien.model.program;
 
 import jumpingalien.part3.programs.SourceLocation;
 
-public class ConditionalOr extends BooleanBinaryOperator {
+public class ConditionalOr extends BinaryOperator {
 
 	protected ConditionalOr(SourceLocation sourceLocation, Boolean leftOperand,
 			Boolean rightOperand) {

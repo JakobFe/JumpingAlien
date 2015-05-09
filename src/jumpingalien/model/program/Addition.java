@@ -4,7 +4,7 @@ package jumpingalien.model.program;
 import jumpingalien.part3.programs.SourceLocation;
 import java.lang.Double;
 
-public class Addition extends DoubleBinaryOperator {
+public class Addition extends BinaryOperator {
 
 	public Addition(SourceLocation sourceLocation, 
 			Double leftOperand, 
@@ -19,8 +19,8 @@ public class Addition extends DoubleBinaryOperator {
 
 	@Override
 	public Number outcome() {
-		return getLeftOperand().doubleValue() + 
-			   getRightOperand().doubleValue(); 
+		return ((Double)getLeftOperand()).doubleValue() + 
+			   ((Double)getRightOperand()).doubleValue(); 
 	}
 
 }

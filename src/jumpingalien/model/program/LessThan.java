@@ -2,22 +2,21 @@ package jumpingalien.model.program;
 
 import jumpingalien.part3.programs.SourceLocation;
 
-public class ConditionalAnd extends BinaryOperator {
+public class LessThan extends BinaryOperator {
 
-	protected ConditionalAnd(SourceLocation sourceLocation, Boolean leftOperand,
-			Boolean rightOperand) {
+	protected LessThan(SourceLocation sourceLocation, Double leftOperand,
+			Double rightOperand) {
 		super(sourceLocation, leftOperand, rightOperand);
 	}
-	
 
 	@Override
 	public Boolean outcome() {
-		return (Boolean)getLeftOperand() && (Boolean)getRightOperand();
+		return (Double)getLeftOperand() < (Double)getRightOperand();
 	}
 
 	@Override
 	public String getOperatorSymbol() {
-		return "&&";
+		return "<";
 	}
 
 }
