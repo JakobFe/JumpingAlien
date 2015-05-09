@@ -29,29 +29,31 @@ public class Experiment {
 		System.out.print("Expected: 11.0 -> Received: ");
 		System.out.println(ad.outcome());
 		
-		Multiplication mult = new Multiplication(loc, new Double(8), new Double(3));
+		Multiplication mult = new Multiplication(loc, new Constant<Double>(loc,8.0),new Constant<Double>(loc,8.0));
 		System.out.print("Expected: 24.0 -> Received: ");
 		System.out.println(mult.outcome());
 		
-		Subtraction sub = new Subtraction(loc, new Double(8), new Double(3));
+		Subtraction sub = new Subtraction(loc, new Constant<Double>(loc,8.0), new Constant<Double>(loc,8.0));
 		System.out.print("Expected: 5.0 -> Received: ");
 		System.out.println(sub.outcome());
 		
-		Division div = new Division(loc, new Double(8), new Double(3));
+		Division div = new Division(loc, new Constant<Double>(loc,8.0), new Constant<Double>(loc,8.0));
 		System.out.print("Expected: 2.666 -> Received: ");
 		System.out.println(div.outcome());
 		
-		SquareRoot sqrt = new SquareRoot(loc, new Double(8));
+		SquareRoot sqrt = new SquareRoot(loc, new Constant<Double>(loc,8.0));
 		System.out.print("Expected: 2.8284 -> Received: ");
 		System.out.println(sqrt.outcome());
 		
 		///////////////////////////////////////////////////////////////////////
 		
-		ConditionalAnd and = new ConditionalAnd(loc, true, false);
+		ConditionalAnd and = new ConditionalAnd(loc, new Constant<Boolean>(loc,true), 
+				new Constant<Boolean>(loc,false));
 		System.out.print("Expected: false -> Received: ");
 		System.out.println(and.outcome());
 
-		ConditionalOr or = new ConditionalOr(loc, true, false);
+		ConditionalOr or = new ConditionalOr(loc, new Constant<Boolean>(loc,true), 
+				new Constant<Boolean>(loc,false));
 		System.out.print("Expected: true -> Received: ");
 		System.out.println(or.outcome());
 		

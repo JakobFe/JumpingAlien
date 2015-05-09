@@ -4,14 +4,14 @@ import jumpingalien.part3.programs.SourceLocation;
 
 public class GreaterThan extends BinaryOperator {
 
-	protected GreaterThan(SourceLocation sourceLocation, Double leftOperand,
-			Double rightOperand) {
+	protected GreaterThan(SourceLocation sourceLocation, Expression leftOperand,
+			Expression rightOperand) {
 		super(sourceLocation, leftOperand, rightOperand);
 	}
 
 	@Override
 	public Boolean outcome() {
-		return (Double)getLeftOperand() > (Double)getRightOperand();
+		return (Double)getLeftOperand().outcome() > (Double)getRightOperand().outcome();
 	}
 
 	@Override

@@ -1,28 +1,35 @@
 package jumpingalien.part3.facade;
 
+import jumpingalien.model.exceptions.IllegalXPositionException;
+import jumpingalien.model.exceptions.IllegalYPositionException;
 import jumpingalien.model.game.Buzam;
 import jumpingalien.model.game.Mazub;
 import jumpingalien.model.game.Plant;
+import jumpingalien.model.game.Position;
 import jumpingalien.model.game.School;
 import jumpingalien.model.game.Shark;
 import jumpingalien.model.game.Slime;
 import jumpingalien.model.game.World;
 import jumpingalien.model.program.Program;
 import jumpingalien.part3.programs.ParseOutcome;
+import jumpingalien.util.ModelException;
 import jumpingalien.util.Sprite;
 
 public class Facade extends jumpingalien.part2.facade.Facade implements IFacadePart3{
 
 	@Override
 	public void advanceTime(Mazub alien, double dt) {
-		// TODO Auto-generated method stub
-		
+		alien.advanceTime(dt);
 	}
 
 	@Override
 	public Buzam createBuzam(int pixelLeftX, int pixelBottomY, Sprite[] sprites) {
-		// TODO Auto-generated method stub
-		return null;
+		try{
+			return new Buzam(new Position(pixelLeftX,pixelBottomY), sprites);
+		}
+		catch(IllegalXPositionException |IllegalYPositionException e){
+			throw new ModelException("Illegal position!");
+		}
 	}
 
 	@Override

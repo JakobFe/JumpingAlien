@@ -4,8 +4,8 @@ import jumpingalien.part3.programs.SourceLocation;
 
 public class NotEquals extends BinaryOperator {
 
-	protected NotEquals(SourceLocation sourceLocation, Object leftOperand,
-			Object rightOperand) {
+	protected NotEquals(SourceLocation sourceLocation, Expression leftOperand,
+			Expression rightOperand) {
 		super(sourceLocation, leftOperand, rightOperand);
 	}
 

@@ -4,14 +4,14 @@ import jumpingalien.part3.programs.SourceLocation;
 
 public class LessThanOrEqualTo extends BinaryOperator {
 
-	protected LessThanOrEqualTo(SourceLocation sourceLocation, Double leftOperand,
-			Double rightOperand) {
+	protected LessThanOrEqualTo(SourceLocation sourceLocation, Expression leftOperand,
+			Expression rightOperand) {
 		super(sourceLocation, leftOperand, rightOperand);
 	}
 
 	@Override
 	public Boolean outcome() {
-		return (Double)getLeftOperand() <= (Double)getRightOperand();
+		return (Double)getLeftOperand().outcome() <= (Double)getRightOperand().outcome();
 	}
 
 	@Override

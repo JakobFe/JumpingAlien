@@ -4,15 +4,16 @@ import jumpingalien.part3.programs.SourceLocation;
 
 public class ConditionalOr extends BinaryOperator {
 
-	protected ConditionalOr(SourceLocation sourceLocation, Boolean leftOperand,
-			Boolean rightOperand) {
+	protected ConditionalOr(SourceLocation sourceLocation, Expression leftOperand,
+			Expression rightOperand) {
 		super(sourceLocation, leftOperand, rightOperand);
 	}
 	
 
 	@Override
 	public Boolean outcome() {
-		return (Boolean)getLeftOperand() || (Boolean)getRightOperand();
+		return (Boolean)getLeftOperand().outcome() || 
+			   (Boolean)getRightOperand().outcome();
 	}
 
 	@Override
