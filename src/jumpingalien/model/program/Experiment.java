@@ -1,11 +1,16 @@
 package jumpingalien.model.program;
 
 import jumpingalien.part3.programs.SourceLocation;
+import jumpingalien.util.*;
+import jumpingalien.model.game.*;
+import static jumpingalien.tests.util.TestUtils.spriteArrayForSize;
 
 public class Experiment {
 
 	public static void main(String[] args) {
 		SourceLocation loc = new SourceLocation(2, 3);
+		Slime theSlime = new Slime(new Position(4,5),spriteArrayForSize(5, 5),new School());
+		Mazub theMazub = new Mazub(new Position(8,6),spriteArrayForSize(4, 4));
 		
 		Addition ad = new Addition(loc, new Double(8), new Double(3));
 		System.out.print("Expected: 11.0 -> Received: ");
@@ -27,6 +32,8 @@ public class Experiment {
 		System.out.print("Expected: 2.8284 -> Received: ");
 		System.out.println(sqrt.outcome());
 		
+		///////////////////////////////////////////////////////////////////////
+		
 		ConditionalAnd and = new ConditionalAnd(loc, true, false);
 		System.out.print("Expected: false -> Received: ");
 		System.out.println(and.outcome());
@@ -34,6 +41,9 @@ public class Experiment {
 		ConditionalOr or = new ConditionalOr(loc, true, false);
 		System.out.print("Expected: true -> Received: ");
 		System.out.println(or.outcome());
+		
+		///////////////////////////////////////////////////////////////////////
+		
 	}
 	
 }
