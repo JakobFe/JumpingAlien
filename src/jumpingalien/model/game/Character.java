@@ -802,7 +802,7 @@ public abstract class Character extends GameObject{
 	 * 			|		     getVertDirection() == direction)
 	 */
 	@Override
-	protected boolean isMoving(Direction direction){
+	public boolean isMoving(Direction direction){
 		assert (direction != Direction.NULL);
 		return (getHorDirection() == direction || getVertDirection() == direction);
 	}

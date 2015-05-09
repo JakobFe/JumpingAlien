@@ -1,22 +1,22 @@
 package jumpingalien.model.program;
 
-import jumpingalien.model.game.GameObject;
+import jumpingalien.model.game.Terrain;
 import jumpingalien.part3.programs.SourceLocation;
 
-public class getHp extends UnaryOperator {
+public class IsPassable extends UnaryOperator {
 
-	protected getHp(SourceLocation sourceLocation, GameObject operand) {
+	protected IsPassable(SourceLocation sourceLocation, Terrain operand) {
 		super(sourceLocation, operand);
 	}
 
 	@Override
 	public String getOperatorSymbol() {
-		return "gethp";
+		return "ispassable";
 	}
 
 	@Override
 	public Object outcome() {
-		return ((GameObject) getOperand()).getHitPoints();
+		return ((Terrain) getOperand()).isPassable();
 	}
 
 }
