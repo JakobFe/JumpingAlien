@@ -2,21 +2,21 @@ package jumpingalien.model.program;
 
 import jumpingalien.part3.programs.SourceLocation;
 
-public class DoubleConstant extends Expression {
+public class Constant<T> extends Expression {
 
-	public DoubleConstant(SourceLocation sourceLocation, double value){
+	public Constant(SourceLocation sourceLocation, T value){
 		super(sourceLocation);
 		this.value = value;
 	}
 	
-	public double getValue() {
+	public T getValue() {
 		return value;
 	}
 
-	private final double value;
+	private final T value;
 	
 	@Override
-	public Double outcome() {
+	public T outcome() {
 		return getValue();
 	}
 
