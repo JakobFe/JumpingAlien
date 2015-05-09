@@ -44,6 +44,21 @@ public class Experiment {
 		
 		///////////////////////////////////////////////////////////////////////
 		
+		isGameObject<Slime> isSlime = new isGameObject<Slime>(loc, theSlime, Slime.class);
+		System.out.print("Expected: true -> Received: ");
+		System.out.println(isSlime.outcome());
+
+		isGameObject<Slime> isSlime2 = new isGameObject<Slime>(loc, theMazub, Slime.class);
+		System.out.print("Expected: false -> Received: ");
+		System.out.println(isSlime2.outcome());
+		
+		isGameObject<Mazub> isMazub = new isGameObject<Mazub>(loc, theSlime, Mazub.class);
+		System.out.print("Expected: false -> Received: ");
+		System.out.println(isMazub.outcome());
+
+		isGameObject<Mazub> isMazub2 = new isGameObject<Mazub>(loc, theMazub, Mazub.class);
+		System.out.print("Expected: true -> Received: ");
+		System.out.println(isMazub2.outcome());
 	}
 	
 }
