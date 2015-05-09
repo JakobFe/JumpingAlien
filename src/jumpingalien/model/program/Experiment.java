@@ -1,7 +1,6 @@
 package jumpingalien.model.program;
 
 import jumpingalien.part3.programs.SourceLocation;
-import jumpingalien.util.*;
 import jumpingalien.model.game.*;
 import static jumpingalien.tests.util.TestUtils.spriteArrayForSize;
 
