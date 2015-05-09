@@ -1,21 +1,23 @@
 package jumpingalien.model.program;
 
-import jumpingalien.model.game.Direction;
 import jumpingalien.model.game.GameObject;
 import jumpingalien.part3.programs.SourceLocation;
 
 public class IsMoving extends UnaryOperator {
 
-	protected IsMoving(SourceLocation sourceLocation, Expression operand,Expression direction) {
+	@SuppressWarnings("unchecked")
+	protected IsMoving(SourceLocation sourceLocation, Expression operand,
+			Expression direction) {
 		super(sourceLocation, operand);
-		this.direction = direction;
+		this.direction = 
+		(Constant<jumpingalien.part3.programs.IProgramFactory.Direction>)direction;
 	}
 
-	public Expression getDirection() {
+	public Constant<jumpingalien.part3.programs.IProgramFactory.Direction> getDirection() {
 		return direction;
 	}
 	
-	private final Expression direction;
+	private final Constant<jumpingalien.part3.programs.IProgramFactory.Direction>  direction;
 	
 	@Override
 	public String getOperatorSymbol() {
@@ -24,7 +26,26 @@ public class IsMoving extends UnaryOperator {
 
 	@Override
 	public Boolean outcome() {
-		return ((GameObject) getOperand().outcome()).isMoving(getDirection());
+		jumpingalien.model.game.Direction theDirection =
+				convertDirection(getDirection());
+		return ((GameObject) getOperand().outcome()).isMoving(theDirection);
+	}
+	
+	
+	public jumpingalien.model.game.Direction convertDirection(
+			Constant<jumpingalien.part3.programs.IProgramFactory.Direction> dir)
+			throws IllegalArgumentException{
+		// TO DO
+		if (dir.outcome() == jumpingalien.part3.programs.IProgramFactory.Direction.LEFT)
+			return jumpingalien.model.game.Direction.LEFT;
+		else if (dir.outcome() == jumpingalien.part3.programs.IProgramFactory.Direction.RIGHT)
+			return jumpingalien.model.game.Direction.RIGHT;
+		else if (dir.outcome() == jumpingalien.part3.programs.IProgramFactory.Direction.DOWN)
+			return jumpingalien.model.game.Direction.DOWN;
+		else if (dir.outcome() == jumpingalien.part3.programs.IProgramFactory.Direction.UP)
+			return jumpingalien.model.game.Direction.UP;
+		else
+			throw new IllegalArgumentException();
 	}
 
 }
