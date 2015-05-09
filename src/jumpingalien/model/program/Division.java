@@ -2,7 +2,7 @@ package jumpingalien.model.program;
 
 import jumpingalien.part3.programs.SourceLocation;
 
-public class Division extends DoubleBinaryOperator {
+public class Division extends BinaryOperator {
 
 	protected Division(SourceLocation sourceLocation,
 			Double leftOperand, Double rightOperand) {
@@ -16,7 +16,7 @@ public class Division extends DoubleBinaryOperator {
 
 	@Override
 	public Number outcome() {
-		return getLeftOperand().doubleValue() / getRightOperand().doubleValue();
+		return (Double)getLeftOperand().doubleValue() / (Double)getRightOperand().doubleValue();
 	}
 
 }

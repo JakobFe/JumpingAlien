@@ -11,17 +11,7 @@ public class Subtraction extends BinaryOperator {
 			Double rightOperand){
 		super(sourceLocation,leftOperand,rightOperand);
 	}
-	
-	@Override
-	public Double getLeftOperand() {
-		return (Double) super.getLeftOperand();
-	}
-	
-	@Override
-	public Double getRightOperand() {
-		return (Double) super.getRightOperand();
-	}
-	
+		
 	@Override
 	public String getOperatorSymbol() {
 		return "-";
@@ -29,8 +19,8 @@ public class Subtraction extends BinaryOperator {
 
 	@Override
 	public Number outcome() {
-		return getLeftOperand().doubleValue() - 
-			   getRightOperand().doubleValue(); 
+		return (Double)getLeftOperand().doubleValue() - 
+			   (Double)getRightOperand().doubleValue(); 
 	}
 
 }

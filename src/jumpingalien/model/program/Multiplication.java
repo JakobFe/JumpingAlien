@@ -2,7 +2,7 @@ package jumpingalien.model.program;
 
 import jumpingalien.part3.programs.SourceLocation;
 
-public class Multiplication extends DoubleBinaryOperator {
+public class Multiplication extends BinaryOperator {
 
 	protected Multiplication(SourceLocation sourceLocation,
 			Double leftOperand, Double rightOperand) {
@@ -16,7 +16,7 @@ public class Multiplication extends DoubleBinaryOperator {
 
 	@Override
 	public Number outcome() {
-		return getLeftOperand().doubleValue() * getRightOperand().doubleValue();
+		return (Double)getLeftOperand().doubleValue() * (Double)getRightOperand().doubleValue();
 	}
 
 }

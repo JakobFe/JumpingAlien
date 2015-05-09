@@ -2,7 +2,7 @@ package jumpingalien.model.program;
 
 import jumpingalien.part3.programs.SourceLocation;
 
-public abstract class SquareRoot extends DoubleUnaryOperator{
+public abstract class SquareRoot extends UnaryOperator{
 	
 	protected SquareRoot(SourceLocation sourceLocation, Double operand){
 		super(sourceLocation, operand);
@@ -15,7 +15,7 @@ public abstract class SquareRoot extends DoubleUnaryOperator{
 
 	@Override
 	public Number outcome() {
-		return Math.sqrt(getOperand().doubleValue()); 
+		return Math.sqrt((Double)getOperand().doubleValue()); 
 	}
 
 }
