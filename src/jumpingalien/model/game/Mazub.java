@@ -413,7 +413,7 @@ public class Mazub extends Character{
 	 * Returns the current ducking state of this Mazub.
 	 */
 	@Basic @Model
-	private boolean getIsDucked(){
+	public boolean getIsDucked(){
 		return this.isDucked;
 	}
 	
@@ -795,7 +795,7 @@ public class Mazub extends Character{
 	 * 			differs from null.
 	 * 			| result == (getVertDirection() != Direction.NULL)
 	 */
-	private boolean isJumping(){
+	public boolean isJumping(){
 		return (getVertDirection() != Direction.NULL);
 	}
 	

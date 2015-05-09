@@ -771,7 +771,7 @@ public abstract class GameObject {
 	 * 			| if (getHorDirection() == direction)
 	 * 			|	then result == true
 	 */
-	protected boolean isMoving(Direction direction){
+	public boolean isMoving(Direction direction){
 		assert (direction != Direction.NULL);
 		return getHorDirection() == direction;
 	}
