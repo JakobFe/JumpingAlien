@@ -4,7 +4,7 @@ import jumpingalien.part3.programs.SourceLocation;
 
 public class SquareRoot extends UnaryOperator{
 	
-	protected SquareRoot(SourceLocation sourceLocation, Double operand){
+	protected SquareRoot(SourceLocation sourceLocation, Expression operand){
 		super(sourceLocation, operand);
 	}
 	
@@ -13,9 +13,10 @@ public class SquareRoot extends UnaryOperator{
 		return "sqrt";
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Number outcome() {
-		return Math.sqrt(((Double)getOperand()).doubleValue()); 
+		return Math.sqrt(((Constant<Double>) getOperand()).outcome());
 	}
 
 }

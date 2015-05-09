@@ -2,8 +2,6 @@ package jumpingalien.model.program;
 
 import java.util.List;
 import java.util.Map;
-
-import jumpingalien.model.game.*;
 import jumpingalien.part3.programs.IProgramFactory;
 import jumpingalien.part3.programs.SourceLocation;
 
@@ -156,30 +154,35 @@ public class ProgramFactory implements IProgramFactory<Expression,Statement,Type
 
 	@Override
 	public Expression createGetX(Expression expr, SourceLocation sourceLocation) {
-		return new GetX(sourceLocation, expr);
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
 	public Expression createGetY(Expression expr, SourceLocation sourceLocation) {
-		return new GetY(sourceLocation, expr);
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
 	public Expression createGetWidth(Expression expr,
 			SourceLocation sourceLocation) {
-		return new GetWidth(sourceLocation, expr);
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
 	public Expression createGetHeight(Expression expr,
 			SourceLocation sourceLocation) {
-		return new GetHeight(sourceLocation, expr);
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
 	public Expression createGetHitPoints(Expression expr,
 			SourceLocation sourceLocation) {
-		return new GetHp(sourceLocation, expr);
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
@@ -199,43 +202,50 @@ public class ProgramFactory implements IProgramFactory<Expression,Statement,Type
 	@Override
 	public Expression createIsMazub(Expression expr,
 			SourceLocation sourceLocation) {
-		return new IsGameObject<Mazub>(sourceLocation, expr, Mazub.class);
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
 	public Expression createIsShark(Expression expr,
 			SourceLocation sourceLocation) {
-		return new IsGameObject<Shark>(sourceLocation, expr, Shark.class);
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
 	public Expression createIsSlime(Expression expr,
 			SourceLocation sourceLocation) {
-		return new IsGameObject<Slime>(sourceLocation, expr, Slime.class);
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
 	public Expression createIsPlant(Expression expr,
 			SourceLocation sourceLocation) {
-		return new IsGameObject<Plant>(sourceLocation, expr, Plant.class);
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
 	public Expression createIsDead(Expression expr,
 			SourceLocation sourceLocation) {
-		return new IsDead(sourceLocation, expr);
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
 	public Expression createIsTerrain(Expression expr,
 			SourceLocation sourceLocation) {
-		return new IsTerrain(sourceLocation, expr);
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
 	public Expression createIsPassable(Expression expr,
 			SourceLocation sourceLocation) {
-		return new IsPassable(sourceLocation, expr);
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override

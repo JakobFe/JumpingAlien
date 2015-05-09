@@ -5,7 +5,7 @@ import jumpingalien.part3.programs.SourceLocation;
 public class Division extends BinaryOperator {
 
 	protected Division(SourceLocation sourceLocation,
-			Double leftOperand, Double rightOperand) {
+			Expression leftOperand, Expression rightOperand) {
 		super(sourceLocation, leftOperand, rightOperand);
 	}
 	
@@ -14,9 +14,11 @@ public class Division extends BinaryOperator {
 		return "/";
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Number outcome() {
-		return ((Double)getLeftOperand()).doubleValue() / ((Double)getRightOperand()).doubleValue();
+		return ((Constant<Double>) getLeftOperand()).outcome() / 
+				((Constant<Double>)getRightOperand()).outcome();
 	}
 
 }
