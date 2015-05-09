@@ -3,20 +3,20 @@ package jumpingalien.model.program;
 import jumpingalien.model.game.GameObject;
 import jumpingalien.part3.programs.SourceLocation;
 
-public class getX extends UnaryOperator {
+public class IsDead extends UnaryOperator {
 
-	protected getX(SourceLocation sourceLocation, GameObject operand) {
+	protected IsDead(SourceLocation sourceLocation, GameObject operand) {
 		super(sourceLocation, operand);
 	}
 
 	@Override
 	public String getOperatorSymbol() {
-		return "getx";
+		return "isDead";
 	}
 
 	@Override
-	public Double outcome() {
-		return ((GameObject) getOperand()).getPosition().getXPosition();
+	public Boolean outcome() {
+		return ((GameObject) getOperand()).isDead();
 	}
 
 }

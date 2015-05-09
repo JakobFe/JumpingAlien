@@ -3,20 +3,20 @@ package jumpingalien.model.program;
 import jumpingalien.model.game.Mazub;
 import jumpingalien.part3.programs.SourceLocation;
 
-public class isDucking extends UnaryOperator {
+public class IsJumping extends UnaryOperator {
 
-	protected isDucking(SourceLocation sourceLocation, Mazub operand) {
+	protected IsJumping(SourceLocation sourceLocation, Mazub operand) {
 		super(sourceLocation, operand);
 	}
 
 	@Override
 	public String getOperatorSymbol() {
-		return "isducking";
+		return "isjumping";
 	}
 
 	@Override
 	public Boolean outcome() {
-		return ((Mazub) getOperand()).getIsDucked();
+		return ((Mazub) getOperand()).isJumping();
 	}
 
 }

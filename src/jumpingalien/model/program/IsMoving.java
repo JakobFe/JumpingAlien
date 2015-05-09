@@ -4,9 +4,9 @@ import jumpingalien.model.game.Direction;
 import jumpingalien.model.game.GameObject;
 import jumpingalien.part3.programs.SourceLocation;
 
-public class isMoving extends UnaryOperator {
+public class IsMoving extends UnaryOperator {
 
-	protected isMoving(SourceLocation sourceLocation, GameObject operand,Direction direction) {
+	protected IsMoving(SourceLocation sourceLocation, GameObject operand,Direction direction) {
 		super(sourceLocation, operand);
 		this.direction = direction;
 	}

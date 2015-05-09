@@ -1,22 +1,22 @@
 package jumpingalien.model.program;
 
-import jumpingalien.model.game.GameObject;
+import jumpingalien.model.game.Mazub;
 import jumpingalien.part3.programs.SourceLocation;
 
-public class isDead extends UnaryOperator {
+public class IsDucking extends UnaryOperator {
 
-	protected isDead(SourceLocation sourceLocation, GameObject operand) {
+	protected IsDucking(SourceLocation sourceLocation, Mazub operand) {
 		super(sourceLocation, operand);
 	}
 
 	@Override
 	public String getOperatorSymbol() {
-		return "isDead";
+		return "isducking";
 	}
 
 	@Override
 	public Boolean outcome() {
-		return ((GameObject) getOperand()).isDead();
+		return ((Mazub) getOperand()).getIsDucked();
 	}
 
 }

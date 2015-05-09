@@ -3,20 +3,20 @@ package jumpingalien.model.program;
 import jumpingalien.model.game.GameObject;
 import jumpingalien.part3.programs.SourceLocation;
 
-public class getY extends UnaryOperator {
+public class GetHp extends UnaryOperator {
 
-	protected getY(SourceLocation sourceLocation, GameObject operand) {
+	protected GetHp(SourceLocation sourceLocation, GameObject operand) {
 		super(sourceLocation, operand);
 	}
 
 	@Override
 	public String getOperatorSymbol() {
-		return "gety";
+		return "gethp";
 	}
 
 	@Override
-	public Double outcome() {
-		return ((GameObject) getOperand()).getPosition().getYPosition();
+	public Object outcome() {
+		return ((GameObject) getOperand()).getHitPoints();
 	}
 
 }
