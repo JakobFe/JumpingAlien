@@ -7,8 +7,8 @@ import java.lang.Double;
 public class Addition extends BinaryOperator {
 
 	public Addition(SourceLocation sourceLocation, 
-			Double leftOperand, 
-			Double rightOperand){
+			Expression leftOperand, 
+			Expression rightOperand){
 		super(sourceLocation,leftOperand,rightOperand);
 	}
 	
