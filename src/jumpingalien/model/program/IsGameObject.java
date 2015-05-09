@@ -23,7 +23,7 @@ public class IsGameObject<T extends GameObject> extends UnaryOperator {
 
 	@Override
 	public Boolean outcome() {
-		return getOperand().getClass() == getType();
+		return getOperand().outcome().getClass() == getType();
 	}
 
 }

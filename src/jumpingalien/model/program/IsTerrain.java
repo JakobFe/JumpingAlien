@@ -16,7 +16,7 @@ public class IsTerrain extends UnaryOperator {
 
 	@Override
 	public Boolean outcome() {
-		return getOperand() instanceof Terrain;
+		return getOperand().outcome() instanceof Terrain;
 	}
 
 }

@@ -16,7 +16,7 @@ public class GetWidth extends UnaryOperator {
 
 	@Override
 	public Integer outcome() {
-		return ((GameObject) getOperand()).getWidth();
+		return ((GameObject) getOperand().outcome()).getWidth();
 	}
 
 }

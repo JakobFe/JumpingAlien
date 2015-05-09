@@ -16,7 +16,7 @@ public class GetY extends UnaryOperator {
 
 	@Override
 	public Double outcome() {
-		return ((GameObject) getOperand()).getPosition().getYPosition();
+		return ((GameObject) getOperand().outcome()).getPosition().getYPosition();
 	}
 
 }

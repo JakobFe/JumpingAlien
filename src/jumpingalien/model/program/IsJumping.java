@@ -5,7 +5,7 @@ import jumpingalien.part3.programs.SourceLocation;
 
 public class IsJumping extends UnaryOperator {
 
-	protected IsJumping(SourceLocation sourceLocation, Mazub operand) {
+	protected IsJumping(SourceLocation sourceLocation, Expression operand) {
 		super(sourceLocation, operand);
 	}
 
@@ -16,7 +16,7 @@ public class IsJumping extends UnaryOperator {
 
 	@Override
 	public Boolean outcome() {
-		return ((Mazub) getOperand()).isJumping();
+		return ((Mazub) getOperand().outcome()).isJumping();
 	}
 
 }

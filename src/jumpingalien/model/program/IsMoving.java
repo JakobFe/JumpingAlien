@@ -6,16 +6,16 @@ import jumpingalien.part3.programs.SourceLocation;
 
 public class IsMoving extends UnaryOperator {
 
-	protected IsMoving(SourceLocation sourceLocation, GameObject operand,Direction direction) {
+	protected IsMoving(SourceLocation sourceLocation, Expression operand,Expression direction) {
 		super(sourceLocation, operand);
 		this.direction = direction;
 	}
 
-	public Direction getDirection() {
+	public Expression getDirection() {
 		return direction;
 	}
 	
-	private final Direction direction;
+	private final Expression direction;
 	
 	@Override
 	public String getOperatorSymbol() {
@@ -24,7 +24,7 @@ public class IsMoving extends UnaryOperator {
 
 	@Override
 	public Boolean outcome() {
-		return ((GameObject) getOperand()).isMoving(getDirection());
+		return ((GameObject) getOperand().outcome()).isMoving(getDirection());
 	}
 
 }

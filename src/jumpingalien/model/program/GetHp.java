@@ -16,7 +16,7 @@ public class GetHp extends UnaryOperator {
 
 	@Override
 	public Object outcome() {
-		return ((GameObject) getOperand()).getHitPoints();
+		return ((GameObject) getOperand().outcome()).getHitPoints();
 	}
 
 }

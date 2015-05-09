@@ -6,7 +6,7 @@ import jumpingalien.part3.programs.SourceLocation;
 public class IsTerrainOfType extends UnaryOperator {
 
 	protected IsTerrainOfType(SourceLocation sourceLocation, 
-			Terrain terrainToCheck, Terrain terrainType) {
+			Expression terrainToCheck, Terrain terrainType) {
 		super(sourceLocation, terrainToCheck); 
 		this.type = terrainType;
 	}
@@ -24,7 +24,7 @@ public class IsTerrainOfType extends UnaryOperator {
 
 	@Override
 	public Boolean outcome() {
-		return getOperand() == getType();
+		return getOperand().outcome() == getType();
 	}
 
 }

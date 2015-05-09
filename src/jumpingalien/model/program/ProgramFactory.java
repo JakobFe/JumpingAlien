@@ -232,42 +232,36 @@ public class ProgramFactory implements IProgramFactory<Expression,Statement,Type
 	@Override
 	public Expression createIsWater(Expression expr,
 			SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		return new IsTerrainOfType(sourceLocation, expr, Terrain.WATER);
 	}
 
 	@Override
 	public Expression createIsMagma(Expression expr,
 			SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		return new IsTerrainOfType(sourceLocation, expr, Terrain.MAGMA);
 	}
 
 	@Override
 	public Expression createIsAir(Expression expr, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		return new IsTerrainOfType(sourceLocation, expr, Terrain.AIR);
 	}
 
 	@Override
 	public Expression createIsMoving(Expression expr, Expression direction,
 			SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		return new IsMoving(sourceLocation, expr, direction);
 	}
 
 	@Override
 	public Expression createIsDucking(Expression expr,
 			SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		return new IsDucking(sourceLocation, expr);
 	}
 
 	@Override
 	public Expression createIsJumping(Expression expr,
 			SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		return new IsJumping(sourceLocation, expr);
 	}
 
 	@Override

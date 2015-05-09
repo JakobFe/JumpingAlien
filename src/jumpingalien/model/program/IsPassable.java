@@ -16,7 +16,7 @@ public class IsPassable extends UnaryOperator {
 
 	@Override
 	public Object outcome() {
-		return ((Terrain) getOperand()).isPassable();
+		return ((Terrain) getOperand().outcome()).isPassable();
 	}
 
 }

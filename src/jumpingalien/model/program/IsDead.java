@@ -16,7 +16,7 @@ public class IsDead extends UnaryOperator {
 
 	@Override
 	public Boolean outcome() {
-		return ((GameObject) getOperand()).isDead();
+		return ((GameObject) getOperand().outcome()).isDead();
 	}
 
 }
