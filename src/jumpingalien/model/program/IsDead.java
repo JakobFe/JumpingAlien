@@ -5,7 +5,7 @@ import jumpingalien.part3.programs.SourceLocation;
 
 public class IsDead extends UnaryOperator {
 
-	protected IsDead(SourceLocation sourceLocation, GameObject operand) {
+	protected IsDead(SourceLocation sourceLocation, Expression operand) {
 		super(sourceLocation, operand);
 	}
 

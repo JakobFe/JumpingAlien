@@ -5,7 +5,7 @@ import jumpingalien.part3.programs.SourceLocation;
 
 public class GetHp extends UnaryOperator {
 
-	protected GetHp(SourceLocation sourceLocation, GameObject operand) {
+	protected GetHp(SourceLocation sourceLocation, Expression operand) {
 		super(sourceLocation, operand);
 	}
 

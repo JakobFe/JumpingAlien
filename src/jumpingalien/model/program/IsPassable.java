@@ -5,7 +5,7 @@ import jumpingalien.part3.programs.SourceLocation;
 
 public class IsPassable extends UnaryOperator {
 
-	protected IsPassable(SourceLocation sourceLocation, Terrain operand) {
+	protected IsPassable(SourceLocation sourceLocation, Expression operand) {
 		super(sourceLocation, operand);
 	}
 

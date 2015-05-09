@@ -5,16 +5,16 @@ import be.kuleuven.cs.som.annotate.Basic;
 
 public abstract class UnaryOperator extends Operator{
 	
-	protected UnaryOperator(SourceLocation sourceLocation, Object operand){
+	protected UnaryOperator(SourceLocation sourceLocation, Expression operand){
 		super(sourceLocation);
 		this.operand = operand;
 	}
 	
-	public Object getOperand() {
+	public Expression getOperand() {
 		return operand;
 	}
 
-	private final Object operand;
+	private final Expression operand;
 		
 	@Override
 	@Basic
