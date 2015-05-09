@@ -2,6 +2,8 @@ package jumpingalien.model.program;
 
 import java.util.List;
 import java.util.Map;
+
+import jumpingalien.model.game.*;
 import jumpingalien.part3.programs.IProgramFactory;
 import jumpingalien.part3.programs.SourceLocation;
 
@@ -17,37 +19,34 @@ public class ProgramFactory implements IProgramFactory<Expression,Statement,Type
 	@Override
 	public Expression createDoubleConstant(double value,
 			SourceLocation sourceLocation) {
-		return new Constant(sourceLocation, value);
+		return new Constant<Double>(sourceLocation, value);
 	}
 
 	@Override
 	public Expression createTrue(SourceLocation sourceLocation) {
-		return new Constant(sourceLocation, true);
+		return new Constant<Boolean>(sourceLocation, true);
 	}
 
 	@Override
 	public Expression createFalse(SourceLocation sourceLocation) {
-		return new Constant(sourceLocation, false);
+		return new Constant<Boolean>(sourceLocation, false);
 	}
 
 	@Override
 	public Expression createNull(SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		return new Constant<Object>(sourceLocation, null);
 	}
 
 	@Override
 	public Expression createSelf(SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		return new Constant<Object>(sourceLocation, this);
 	}
-
+	
 	@Override
 	public Expression createDirectionConstant(
 			jumpingalien.part3.programs.IProgramFactory.Direction value,
 			SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		return new Constant<jumpingalien.part3.programs.IProgramFactory.Direction>(sourceLocation, value);
 	}
 
 	@Override
@@ -59,42 +58,36 @@ public class ProgramFactory implements IProgramFactory<Expression,Statement,Type
 	@Override
 	public Expression createSubtraction(Expression left, Expression right,
 			SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		return new Subtraction(sourceLocation, left, right);
 	}
 
 	@Override
 	public Expression createMultiplication(Expression left, Expression right,
 			SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		return new Multiplication(sourceLocation, left, right);
 	}
 
 	@Override
 	public Expression createDivision(Expression left, Expression right,
 			SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		return new Division(sourceLocation, left, right);
 	}
 
 	@Override
 	public Expression createSqrt(Expression expr, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		return new SquareRoot(sourceLocation, expr);
 	}
 
 	@Override
 	public Expression createRandom(Expression maxValue,
 			SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		return new RandomDouble(sourceLocation, maxValue);
 	}
 
 	@Override
 	public Expression createAnd(Expression left, Expression right,
 			SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		return new ConditionalAnd(sourceLocation, left, right);
 	}
 
 	@Override
@@ -154,35 +147,30 @@ public class ProgramFactory implements IProgramFactory<Expression,Statement,Type
 
 	@Override
 	public Expression createGetX(Expression expr, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		return new GetX(sourceLocation, expr);
 	}
 
 	@Override
 	public Expression createGetY(Expression expr, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		return new GetY(sourceLocation, expr);
 	}
 
 	@Override
 	public Expression createGetWidth(Expression expr,
 			SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		return new GetWidth(sourceLocation, expr);
 	}
 
 	@Override
 	public Expression createGetHeight(Expression expr,
 			SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		return new GetHeight(sourceLocation, expr);
 	}
 
 	@Override
 	public Expression createGetHitPoints(Expression expr,
 			SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		return new GetHp(sourceLocation, expr);
 	}
 
 	@Override
@@ -202,50 +190,43 @@ public class ProgramFactory implements IProgramFactory<Expression,Statement,Type
 	@Override
 	public Expression createIsMazub(Expression expr,
 			SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		return new IsGameObject<Mazub>(sourceLocation, expr, Mazub.class);
 	}
 
 	@Override
 	public Expression createIsShark(Expression expr,
 			SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		return new IsGameObject<Shark>(sourceLocation, expr, Shark.class);
 	}
 
 	@Override
 	public Expression createIsSlime(Expression expr,
 			SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		return new IsGameObject<Slime>(sourceLocation, expr, Slime.class);
 	}
 
 	@Override
 	public Expression createIsPlant(Expression expr,
 			SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		return new IsGameObject<Plant>(sourceLocation, expr, Plant.class);
 	}
 
 	@Override
 	public Expression createIsDead(Expression expr,
 			SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		return new IsDead(sourceLocation, expr);
 	}
 
 	@Override
 	public Expression createIsTerrain(Expression expr,
 			SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		return new IsTerrain(sourceLocation, expr);
 	}
 
 	@Override
 	public Expression createIsPassable(Expression expr,
 			SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		return new IsPassable(sourceLocation, expr);
 	}
 
 	@Override
@@ -422,5 +403,4 @@ public class ProgramFactory implements IProgramFactory<Expression,Statement,Type
 		// TODO Auto-generated method stub
 		return null;
 	}
-
 }
