@@ -2,13 +2,14 @@ package jumpingalien.model.program;
 
 
 import jumpingalien.part3.programs.SourceLocation;
+
 import java.lang.Double;
 
 public class Addition extends BinaryOperator {
 
 	public Addition(SourceLocation sourceLocation, 
-			Double leftOperand, 
-			Double rightOperand){
+			Expression leftOperand, 
+			Expression rightOperand){
 		super(sourceLocation,leftOperand,rightOperand);
 	}
 	
@@ -17,10 +18,11 @@ public class Addition extends BinaryOperator {
 		return "+";
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Number outcome() {
-		return ((Double)getLeftOperand()).doubleValue() + 
-			   ((Double)getRightOperand()).doubleValue(); 
+		return ((Constant<Double>) getLeftOperand()).outcome() + 
+				((Constant<Double>)getRightOperand()).outcome();
 	}
 
 }

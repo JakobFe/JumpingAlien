@@ -7,11 +7,25 @@ import static jumpingalien.tests.util.TestUtils.spriteArrayForSize;
 public class Experiment {
 
 	public static void main(String[] args) {
+		
 		SourceLocation loc = new SourceLocation(2, 3);
 		Slime theSlime = new Slime(new Position(4,5),spriteArrayForSize(5, 5),new School());
 		Mazub theMazub = new Mazub(new Position(8,6),spriteArrayForSize(4, 4));
 		
-		Addition ad = new Addition(loc, new Double(8), new Double(3));
+		///////////////////////////////////////////////////////////////////////
+		
+		Expression doubleConstant = new Constant<Double>(loc,4.0);
+		System.out.print("Expected: 4.0 -> Received: ");
+		System.out.println(doubleConstant.outcome());
+		
+		Expression booleanConstant = new Constant<Boolean>(loc,true);
+		System.out.print("Expected: true -> Received: ");
+		System.out.println(booleanConstant.outcome());
+		
+		
+		///////////////////////////////////////////////////////////////////////
+		
+		Addition ad = new Addition(loc, new Constant<Double>(loc,8.0), new Constant<Double>(loc,3.0));
 		System.out.print("Expected: 11.0 -> Received: ");
 		System.out.println(ad.outcome());
 		
@@ -82,6 +96,7 @@ public class Experiment {
 		IsTerrain isTerrain2 = new IsTerrain(loc, theSlime);
 		System.out.print("Expected: false -> Received: ");
 		System.out.println(isTerrain2.outcome());
+		
 	}
 	
 }
