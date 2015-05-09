@@ -3,9 +3,9 @@ package jumpingalien.model.program;
 import jumpingalien.model.game.GameObject;
 import jumpingalien.part3.programs.SourceLocation;
 
-public class isGameObject<T extends GameObject> extends UnaryOperator {
+public class IsGameObject<T extends GameObject> extends UnaryOperator {
 
-	protected isGameObject(SourceLocation sourceLocation, GameObject operand, Class<T> type) {
+	protected IsGameObject(SourceLocation sourceLocation, GameObject operand, Class<T> type) {
 		super(sourceLocation, operand); 
 		this.type = type;
 	}
@@ -18,7 +18,7 @@ public class isGameObject<T extends GameObject> extends UnaryOperator {
 
 	@Override
 	public String getOperatorSymbol() {
-		return "ismazub";
+		return "is" + getType().toString().substring(30,getType().toString().length()).toLowerCase();
 	}
 
 	@Override
