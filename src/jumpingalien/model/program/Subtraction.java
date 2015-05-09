@@ -19,8 +19,8 @@ public class Subtraction extends BinaryOperator {
 
 	@Override
 	public Number outcome() {
-		return (Double)getLeftOperand().doubleValue() - 
-			   (Double)getRightOperand().doubleValue(); 
+		return ((Double)getLeftOperand()).doubleValue() - 
+			   ((Double)getRightOperand()).doubleValue(); 
 	}
 
 }
