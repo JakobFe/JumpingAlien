@@ -3,26 +3,26 @@ package jumpingalien.model.program;
 import jumpingalien.part3.programs.SourceLocation;
 import be.kuleuven.cs.som.annotate.Basic;
 
-public abstract class BinaryOperator<T> extends Operator<T>{
-	// parametrisatie nodig voor vb e||e en e+e
+public abstract class BinaryOperator extends Operator{
+	
 	protected BinaryOperator(SourceLocation sourceLocation, 
-			Expression leftOperand, Expression rightOperand){
+			Object leftOperand, Object rightOperand){
 		super(sourceLocation);
 		this.leftOperand = leftOperand;
 		this.rightOperand = rightOperand;
 	}
 	
-	public Expression getLeftOperand() {
+	public Object getLeftOperand() {
 		return leftOperand;
 	}
 
-	private final Expression leftOperand;
+	private final Object leftOperand;
 	
-	public Expression getRightOperand() {
+	public Object getRightOperand() {
 		return rightOperand;
 	}
 	
-	private final Expression rightOperand;
+	private final Object rightOperand;
 	
 	@Override
 	@Basic

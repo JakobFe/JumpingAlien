@@ -1,10 +1,11 @@
 package jumpingalien.model.program;
 
-import jumpingalien.part3.programs.SourceLocation;
 
-public class Addition<T> extends BinaryOperator<T> {
-	// T nodig omdat binary operator generisch is ?!?!? 
-	// verklaring?
+import jumpingalien.part3.programs.SourceLocation;
+import java.lang.Double;
+
+public class Addition extends BinaryOperator {
+
 	public Addition(SourceLocation sourceLocation, 
 			Double leftOperand, 
 			Double rightOperand){
@@ -28,8 +29,8 @@ public class Addition<T> extends BinaryOperator<T> {
 
 	@Override
 	public Number outcome() {
-		return getLeftOperand().getValue() + 
-			   getRightOperand().getValue(); 
+		return getLeftOperand().doubleValue() + 
+			   getRightOperand().doubleValue(); 
 	}
 
 }
