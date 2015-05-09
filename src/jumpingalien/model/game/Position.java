@@ -67,7 +67,7 @@ public class Position {
 	 * Return the x component of this position.
 	 */
 	@Basic@Immutable
-	protected double getXPosition(){
+	public double getXPosition(){
 		return this.xPosition;
 	}
 	
@@ -126,7 +126,7 @@ public class Position {
 	 * Return the y component of this position.
 	 */
 	@Basic@Immutable
-	protected double getYPosition(){
+	public double getYPosition(){
 		return this.yPosition;
 	}
 	
