@@ -5,7 +5,7 @@ import jumpingalien.part3.programs.SourceLocation;
 
 public class IsTerrainOfType extends UnaryOperator {
 
-	protected IsTerrainOfType(SourceLocation sourceLocation, 
+	public IsTerrainOfType(SourceLocation sourceLocation, 
 			Expression terrainToCheck, Terrain terrainType) {
 		super(sourceLocation, terrainToCheck); 
 		this.type = terrainType;

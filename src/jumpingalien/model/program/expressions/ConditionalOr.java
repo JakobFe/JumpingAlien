@@ -4,7 +4,7 @@ import jumpingalien.part3.programs.SourceLocation;
 
 public class ConditionalOr extends BinaryOperator {
 
-	protected ConditionalOr(SourceLocation sourceLocation, Expression leftOperand,
+	public ConditionalOr(SourceLocation sourceLocation, Expression leftOperand,
 			Expression rightOperand) {
 		super(sourceLocation, leftOperand, rightOperand);
 	}

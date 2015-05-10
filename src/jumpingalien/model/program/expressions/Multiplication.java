@@ -4,7 +4,7 @@ import jumpingalien.part3.programs.SourceLocation;
 
 public class Multiplication extends BinaryOperator {
 
-	protected Multiplication(SourceLocation sourceLocation,
+	public Multiplication(SourceLocation sourceLocation,
 			Expression leftOperand, Expression rightOperand) {
 		super(sourceLocation, leftOperand, rightOperand);
 	}

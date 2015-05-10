@@ -4,7 +4,7 @@ import jumpingalien.part3.programs.SourceLocation;
 
 public class Equals extends BinaryOperator {
 
-	protected Equals(SourceLocation sourceLocation, Expression leftOperand,
+	public Equals(SourceLocation sourceLocation, Expression leftOperand,
 			Expression rightOperand) {
 		super(sourceLocation, leftOperand, rightOperand);
 	}

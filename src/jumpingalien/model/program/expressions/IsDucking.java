@@ -5,7 +5,7 @@ import jumpingalien.part3.programs.SourceLocation;
 
 public class IsDucking extends UnaryOperator {
 
-	protected IsDucking(SourceLocation sourceLocation, Expression operand) {
+	public IsDucking(SourceLocation sourceLocation, Expression operand) {
 		super(sourceLocation, operand);
 	}
 

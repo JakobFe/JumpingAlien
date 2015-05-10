@@ -4,7 +4,7 @@ import jumpingalien.part3.programs.SourceLocation;
 
 public class NotBoolean extends UnaryOperator {
 
-	protected NotBoolean(SourceLocation sourceLocation, Expression operand) {
+	public NotBoolean(SourceLocation sourceLocation, Expression operand) {
 		super(sourceLocation, operand);
 	}
 

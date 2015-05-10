@@ -5,7 +5,7 @@ import jumpingalien.part3.programs.SourceLocation;
 
 public class GetHeight extends UnaryOperator {
 
-	protected GetHeight(SourceLocation sourceLocation, Expression operand) {
+	public GetHeight(SourceLocation sourceLocation, Expression operand) {
 		super(sourceLocation, operand);
 	}
 

@@ -5,7 +5,7 @@ import jumpingalien.part3.programs.SourceLocation;
 
 public class IsJumping extends UnaryOperator {
 
-	protected IsJumping(SourceLocation sourceLocation, Expression operand) {
+	public IsJumping(SourceLocation sourceLocation, Expression operand) {
 		super(sourceLocation, operand);
 	}
 

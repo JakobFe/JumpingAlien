@@ -5,7 +5,7 @@ import jumpingalien.part3.programs.SourceLocation;
 
 public class IsGameObject<T extends GameObject> extends UnaryOperator {
 
-	protected IsGameObject(SourceLocation sourceLocation, Expression operand, Class<T> type) {
+	public IsGameObject(SourceLocation sourceLocation, Expression operand, Class<T> type) {
 		super(sourceLocation, operand); 
 		this.type = type;
 	}

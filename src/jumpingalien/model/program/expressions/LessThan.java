@@ -4,7 +4,7 @@ import jumpingalien.part3.programs.SourceLocation;
 
 public class LessThan extends BinaryOperator {
 
-	protected LessThan(SourceLocation sourceLocation, Expression leftOperand,
+	public LessThan(SourceLocation sourceLocation, Expression leftOperand,
 			Expression rightOperand) {
 		super(sourceLocation, leftOperand, rightOperand);
 	}

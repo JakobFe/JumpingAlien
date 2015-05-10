@@ -6,7 +6,7 @@ import jumpingalien.part3.programs.SourceLocation;
 
 public class RandomDouble extends UnaryOperator {
 
-	protected RandomDouble(SourceLocation sourceLocation, Expression operand) {
+	public RandomDouble(SourceLocation sourceLocation, Expression operand) {
 		super(sourceLocation, operand);
 	}
 

@@ -5,7 +5,7 @@ import jumpingalien.part3.programs.SourceLocation;
 
 public class GetY extends UnaryOperator {
 
-	protected GetY(SourceLocation sourceLocation, Expression operand) {
+	public GetY(SourceLocation sourceLocation, Expression operand) {
 		super(sourceLocation, operand);
 	}
 

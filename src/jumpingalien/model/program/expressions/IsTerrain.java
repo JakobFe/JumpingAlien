@@ -5,7 +5,7 @@ import jumpingalien.part3.programs.SourceLocation;
 
 public class IsTerrain extends UnaryOperator {
 
-	protected IsTerrain(SourceLocation sourceLocation, Expression terrain) {
+	public IsTerrain(SourceLocation sourceLocation, Expression terrain) {
 		super(sourceLocation, terrain); 
 	}
 

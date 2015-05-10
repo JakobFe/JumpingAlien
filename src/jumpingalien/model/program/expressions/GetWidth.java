@@ -5,7 +5,7 @@ import jumpingalien.part3.programs.SourceLocation;
 
 public class GetWidth extends UnaryOperator {
 
-	protected GetWidth(SourceLocation sourceLocation, Expression operand) {
+	public GetWidth(SourceLocation sourceLocation, Expression operand) {
 		super(sourceLocation, operand);
 	}
 

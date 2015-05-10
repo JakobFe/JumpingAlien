@@ -4,7 +4,7 @@ import jumpingalien.part3.programs.SourceLocation;
 
 public class Division extends BinaryOperator {
 
-	protected Division(SourceLocation sourceLocation,
+	public Division(SourceLocation sourceLocation,
 			Expression leftOperand, Expression rightOperand) {
 		super(sourceLocation, leftOperand, rightOperand);
 	}

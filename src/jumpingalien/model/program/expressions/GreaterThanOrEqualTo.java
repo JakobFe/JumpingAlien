@@ -4,7 +4,7 @@ import jumpingalien.part3.programs.SourceLocation;
 
 public class GreaterThanOrEqualTo extends BinaryOperator {
 
-	protected GreaterThanOrEqualTo(SourceLocation sourceLocation, Expression leftOperand,
+	public GreaterThanOrEqualTo(SourceLocation sourceLocation, Expression leftOperand,
 			Expression rightOperand) {
 		super(sourceLocation, leftOperand, rightOperand);
 	}

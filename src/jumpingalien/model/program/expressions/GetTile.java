@@ -6,7 +6,7 @@ import jumpingalien.part3.programs.SourceLocation;
 
 public class GetTile extends BinaryOperator {
 
-	protected GetTile(SourceLocation sourceLocation, Expression leftOperand,
+	public GetTile(SourceLocation sourceLocation, Expression leftOperand,
 			Expression rightOperand,Expression self) {
 		super(sourceLocation, leftOperand, rightOperand);
 		this.self = self;

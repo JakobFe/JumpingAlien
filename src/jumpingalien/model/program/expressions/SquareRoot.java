@@ -4,7 +4,7 @@ import jumpingalien.part3.programs.SourceLocation;
 
 public class SquareRoot extends UnaryOperator{
 	
-	protected SquareRoot(SourceLocation sourceLocation, Expression operand){
+	public SquareRoot(SourceLocation sourceLocation, Expression operand){
 		super(sourceLocation, operand);
 	}
 	

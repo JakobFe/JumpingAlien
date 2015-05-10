@@ -6,7 +6,7 @@ import jumpingalien.part3.programs.SourceLocation;
 public class IsMoving extends UnaryOperator {
 
 	@SuppressWarnings("unchecked")
-	protected IsMoving(SourceLocation sourceLocation, Expression operand,
+	public IsMoving(SourceLocation sourceLocation, Expression operand,
 			Expression direction) {
 		super(sourceLocation, operand);
 		this.direction = 

@@ -9,7 +9,7 @@ import jumpingalien.part3.programs.SourceLocation;
 
 public class SearchObject extends UnaryOperator {
 
-	protected SearchObject(SourceLocation sourceLocation, Expression direction, Expression self) {
+	public SearchObject(SourceLocation sourceLocation, Expression direction, Expression self) {
 		super(sourceLocation, direction);
 		this.self = self;
 	}

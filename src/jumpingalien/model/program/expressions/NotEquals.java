@@ -4,7 +4,7 @@ import jumpingalien.part3.programs.SourceLocation;
 
 public class NotEquals extends BinaryOperator {
 
-	protected NotEquals(SourceLocation sourceLocation, Expression leftOperand,
+	public NotEquals(SourceLocation sourceLocation, Expression leftOperand,
 			Expression rightOperand) {
 		super(sourceLocation, leftOperand, rightOperand);
 	}
