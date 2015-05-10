@@ -65,10 +65,10 @@ public class SearchObjectTest {
 				(loc,jumpingalien.part3.programs.IProgramFactory.Direction.LEFT)), 
 				new Constant<GameObject>(loc,alien));
 		Object result = seeker.outcome();
-		System.out.println("Test search the slime to the left of alien: ");
-		System.out.println(alien);
-		System.out.println(result);
-		System.out.println();
+//		System.out.println("Test search the slime to the left of alien: ");
+//		System.out.println(alien);
+//		System.out.println(result);
+//		System.out.println();
 		assertTrue(result == theSlime);
 	}
 	
@@ -80,10 +80,10 @@ public class SearchObjectTest {
 				(loc,jumpingalien.part3.programs.IProgramFactory.Direction.RIGHT)), 
 				new Constant<GameObject>(loc,alien));
 		Object result = seeker.outcome();
-		System.out.println("Test search the shark to the right of alien: ");
-		System.out.println(alien);
-		System.out.println(result);
-		System.out.println();
+//		System.out.println("Test search the shark to the right of alien: ");
+//		System.out.println(alien);
+//		System.out.println(result);
+//		System.out.println();
 		assertTrue(result == theShark);
 	}
 	
@@ -95,10 +95,10 @@ public class SearchObjectTest {
 				(loc,jumpingalien.part3.programs.IProgramFactory.Direction.DOWN)), 
 				new Constant<GameObject>(loc,theShark));
 		Object result = seeker.outcome();
-		System.out.println("Test search the ground below Shark: ");
-		System.out.println(theShark);
-		System.out.println(result);
-		System.out.println();
+//		System.out.println("Test search the ground below Shark: ");
+//		System.out.println(theShark);
+//		System.out.println(result);
+//		System.out.println();
 		assertTrue(result == testWorld.getTileAtPos(802, 2));
 	}
 	
@@ -109,12 +109,21 @@ public class SearchObjectTest {
 				(loc,jumpingalien.part3.programs.IProgramFactory.Direction.UP)), 
 				new Constant<GameObject>(loc,theSlime));
 		Object result = seeker.outcome();
-		System.out.println("Test search the plant above Slime: ");
-		System.out.println(theSlime);
-		System.out.println(result);
-		System.out.println();
+//		System.out.println("Test search the plant above Slime: ");
+//		System.out.println(theSlime);
+//		System.out.println(result);
+//		System.out.println();
 		assertTrue(result == thePlant);
 	}
+	
+	@Test
+	public void testnothingFound() {
+		SearchObject seeker = new SearchObject(loc, 
+				(new Constant<jumpingalien.part3.programs.IProgramFactory.Direction>
+				(loc,jumpingalien.part3.programs.IProgramFactory.Direction.LEFT)), 
+				new Constant<GameObject>(loc,theSlime));
+		assertTrue(seeker.outcome() == null);
+		}
 	
 
 }
