@@ -1,19 +1,21 @@
 package jumpingalien.part3.facade;
 
-import jumpingalien.model.exceptions.IllegalXPositionException;
-import jumpingalien.model.exceptions.IllegalYPositionException;
-import jumpingalien.model.game.Buzam;
-import jumpingalien.model.game.Mazub;
-import jumpingalien.model.game.Plant;
-import jumpingalien.model.game.Position;
-import jumpingalien.model.game.School;
-import jumpingalien.model.game.Shark;
-import jumpingalien.model.game.Slime;
-import jumpingalien.model.game.World;
+import java.util.Optional;
+
+import jumpingalien.model.exceptions.*;
+import jumpingalien.model.game.*;
+import jumpingalien.model.program.ProgramFactory;
+import jumpingalien.model.program.expressions.Expression;
 import jumpingalien.model.program.programs.Program;
+import jumpingalien.model.program.statements.Statement;
+import jumpingalien.model.program.types.Type;
+import jumpingalien.part3.programs.IProgramFactory;
 import jumpingalien.part3.programs.ParseOutcome;
+import jumpingalien.part3.programs.ProgramParser;
 import jumpingalien.util.ModelException;
 import jumpingalien.util.Sprite;
+import static jumpingalien.tests.util.TestUtils.doubleArray;
+import static jumpingalien.tests.util.TestUtils.intArray;
 
 public class Facade extends jumpingalien.part2.facade.Facade implements IFacadePart3{
 
@@ -62,8 +64,15 @@ public class Facade extends jumpingalien.part2.facade.Facade implements IFacadeP
 
 	@Override
 	public ParseOutcome<?> parse(String text) {
-		// TODO Auto-generated method stub
-		return null;
+		IProgramFactory<Expression, Statement, Type, Program> theFactory = 
+				new ProgramFactory();
+		ProgramParser<Expression, Statement, Type, Program> theParser = 
+				new ProgramParser<>(theFactory);
+		Optional<Program> parseResult = theParser.parseString(text);
+		if(parseResult.isPresent())
+			return ParseOutcome.success(parseResult.get());
+		else
+			return ParseOutcome.failure(theParser.getErrors());
 	}
 
 	@Override
@@ -74,44 +83,39 @@ public class Facade extends jumpingalien.part2.facade.Facade implements IFacadeP
 
 	@Override
 	public void addBuzam(World world, Buzam buzam) {
-		// TODO Auto-generated method stub
+		world.setBuzam(buzam);
 		
 	}
 
 	@Override
 	public int[] getLocation(Buzam alien) {
-		// TODO Auto-generated method stub
-		return null;
+		return alien.getPosition().toIntArray();
 	}
 
 	@Override
 	public double[] getVelocity(Buzam alien) {
-		// TODO Auto-generated method stub
-		return null;
+		return doubleArray(alien.getHorVelocity(),alien.getVertVelocity());
 	}
 
 	@Override
 	public double[] getAcceleration(Buzam alien) {
-		// TODO Auto-generated method stub
-		return null;
+		return doubleArray(alien.getHorAcceleration(),alien.getVertAcceleration());
 	}
 
 	@Override
 	public int[] getSize(Buzam alien) {
-		// TODO Auto-generated method stub
-		return null;
+		return intArray(alien.getWidth(),alien.getHeight());
 	}
 
 	@Override
 	public Sprite getCurrentSprite(Buzam alien) {
-		// TODO Auto-generated method stub
-		return null;
+		alien.updateSpriteIndex();
+		return alien.getCurrentSprite();
 	}
 
 	@Override
 	public int getNbHitPoints(Buzam alien) {
-		// TODO Auto-generated method stub
-		return 0;
+		return alien.getHitPoints();
 	}
 
 }
