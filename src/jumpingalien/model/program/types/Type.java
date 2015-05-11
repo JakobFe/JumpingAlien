@@ -1,5 +1,7 @@
 package jumpingalien.model.program.types;
 
-public class Type {
 
-}
+public enum Type {
+	DOUBLE,BOOLEAN,OBJECT,DIRECTION;
+	
+	}
