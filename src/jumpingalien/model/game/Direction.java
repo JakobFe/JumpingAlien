@@ -1,5 +1,7 @@
 package jumpingalien.model.game;
 
+import jumpingalien.model.program.expressions.Constant;
+
 /**
  * An enumeration involving direction.
  * 
@@ -32,5 +34,22 @@ public enum Direction {
 	 * A variable storing the factor belonging to this direction.
 	 */
 	private final int factor;
+	
+	public static jumpingalien.model.game.Direction convertDirection(
+			Constant<jumpingalien.part3.programs.IProgramFactory.Direction> dir)
+			throws IllegalArgumentException{
+		// TO DO
+		if (dir.outcome() == jumpingalien.part3.programs.IProgramFactory.Direction.LEFT)
+			return jumpingalien.model.game.Direction.LEFT;
+		else if (dir.outcome() == jumpingalien.part3.programs.IProgramFactory.Direction.RIGHT)
+			return jumpingalien.model.game.Direction.RIGHT;
+		else if (dir.outcome() == jumpingalien.part3.programs.IProgramFactory.Direction.DOWN)
+			return jumpingalien.model.game.Direction.DOWN;
+		else if (dir.outcome() == jumpingalien.part3.programs.IProgramFactory.Direction.UP)
+			return jumpingalien.model.game.Direction.UP;
+		else
+			throw new IllegalArgumentException();
+	}
+
 
 }
