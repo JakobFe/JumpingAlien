@@ -394,26 +394,25 @@ public class ProgramFactory implements IProgramFactory<Expression,Statement,Type
 
 	@Override
 	public Type getDoubleType() {
-		// TODO Auto-generated method stub
-		return null;
+		return Type.DOUBLE;
 	}
 
 	@Override
 	public Type getBoolType() {
 		// TODO Auto-generated method stub
-		return null;
+		return Type.BOOLEAN;
 	}
 
 	@Override
 	public Type getGameObjectType() {
 		// TODO Auto-generated method stub
-		return null;
+		return Type.OBJECT;
 	}
 
 	@Override
 	public Type getDirectionType() {
 		// TODO Auto-generated method stub
-		return null;
+		return Type.DIRECTION;
 	}
 
 	@Override
