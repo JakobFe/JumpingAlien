@@ -27,5 +27,15 @@ public class Variable extends Expression {
 	public Object outcome() {
 		return null;
 	}
+	
+	
+	public Expression getValue() {
+		return value;
+	}
 
+	public void setValue(Expression value) {
+		this.value = value;
+	}
+
+	private Expression value;
 }
