@@ -2,7 +2,6 @@ package jumpingalien.part3.tests;
 
 import static org.junit.Assert.*;
 import static org.junit.Assume.*;
-import jumpingalien.model.program.*;
 import jumpingalien.model.program.programs.Program;
 import jumpingalien.part3.facade.Facade;
 import jumpingalien.part3.facade.IFacadePart3;

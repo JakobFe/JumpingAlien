@@ -1,7 +1,5 @@
 package jumpingalien.model.game;
 
-import static jumpingalien.tests.util.TestUtils.doubleArray;
-
 import java.util.HashSet;
 
 import jumpingalien.model.exceptions.*;

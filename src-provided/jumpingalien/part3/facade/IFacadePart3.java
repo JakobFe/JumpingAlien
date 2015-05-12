@@ -1,6 +1,5 @@
 package jumpingalien.part3.facade;
 
-import jumpingalien.model.program.*;
 import jumpingalien.model.program.programs.Program;
 import jumpingalien.model.game.*;
 import jumpingalien.part1.facade.IFacade;

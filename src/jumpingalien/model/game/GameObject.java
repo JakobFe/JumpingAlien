@@ -1,8 +1,5 @@
 package jumpingalien.model.game;
 
-
-import static jumpingalien.tests.util.TestUtils.doubleArray;
-
 import java.util.HashSet;
 
 import be.kuleuven.cs.som.annotate.*;

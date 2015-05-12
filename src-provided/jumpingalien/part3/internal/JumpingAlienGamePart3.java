@@ -19,7 +19,6 @@ import jumpingalien.common.game.JumpingAlienGame;
 import jumpingalien.common.game.WorldInfoProvider;
 import jumpingalien.common.sprites.ImageSprite;
 import jumpingalien.common.sprites.JumpingAlienSprites;
-import jumpingalien.model.program.*;
 import jumpingalien.model.program.programs.Program;
 import jumpingalien.model.game.*;
 import jumpingalien.part2.internal.AlienInfoProvider2;

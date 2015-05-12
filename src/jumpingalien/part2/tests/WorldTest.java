@@ -3,7 +3,6 @@ package jumpingalien.part2.tests;
 import static jumpingalien.tests.util.TestUtils.intArray;
 import static jumpingalien.tests.util.TestUtils.spriteArrayForSize;
 import static org.junit.Assert.*;
-import jumpingalien.model.*;
 import jumpingalien.model.game.Direction;
 import jumpingalien.model.game.Mazub;
 import jumpingalien.model.game.Position;
