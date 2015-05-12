@@ -9,7 +9,10 @@ import jumpingalien.model.program.expressions.*;
 import jumpingalien.model.program.programs.Program;
 import jumpingalien.model.program.statements.Assignment;
 import jumpingalien.model.program.statements.ComposedStatement;
+import jumpingalien.model.program.statements.IfStatement;
+import jumpingalien.model.program.statements.Print;
 import jumpingalien.model.program.statements.Statement;
+import jumpingalien.model.program.statements.While;
 import jumpingalien.model.program.types.Type;
 import jumpingalien.part3.programs.IProgramFactory;
 import jumpingalien.part3.programs.SourceLocation;
@@ -45,7 +48,7 @@ public class ProgramFactory implements IProgramFactory<Expression,Statement,Type
 
 	@Override
 	public Expression createSelf(SourceLocation sourceLocation) {
-		return new Constant<Object>(sourceLocation, this);
+		return new Self(sourceLocation);
 	}
 	
 	@Override
@@ -174,13 +177,13 @@ public class ProgramFactory implements IProgramFactory<Expression,Statement,Type
 	@Override
 	public Expression createGetTile(Expression x, Expression y,
 			SourceLocation sourceLocation) {
-		return new GetTile(sourceLocation,x,y,createSelf(sourceLocation));
+		return new GetTile(sourceLocation,x,y);
 	}
 
 	@Override
 	public Expression createSearchObject(Expression direction,
 			SourceLocation sourceLocation) {
-		return new SearchObject(sourceLocation,direction,createSelf(sourceLocation));
+		return new SearchObject(sourceLocation,direction);
 	}
 
 	@Override
@@ -269,8 +272,7 @@ public class ProgramFactory implements IProgramFactory<Expression,Statement,Type
 	@Override
 	public Statement createWhile(Expression condition, Statement body,
 			SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		return new While(condition, body, sourceLocation);
 	}
 
 	@Override
@@ -294,14 +296,12 @@ public class ProgramFactory implements IProgramFactory<Expression,Statement,Type
 	@Override
 	public Statement createIf(Expression condition, Statement ifBody,
 			Statement elseBody, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		return new IfStatement(condition, ifBody, elseBody, sourceLocation);
 	}
 
 	@Override
 	public Statement createPrint(Expression value, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		return new Print(value, sourceLocation);
 	}
 
 	@Override

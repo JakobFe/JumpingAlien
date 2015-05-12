@@ -4,25 +4,30 @@ package jumpingalien.model.program.expressions;
 import jumpingalien.model.game.GameObject;
 import jumpingalien.model.game.Tile;
 import jumpingalien.model.game.World;
+import jumpingalien.model.program.programs.Program;
 import jumpingalien.part3.programs.SourceLocation;
 
 public class SearchObject extends UnaryOperator {
 
-	public SearchObject(SourceLocation sourceLocation, Expression direction, Expression self) {
+	public SearchObject(SourceLocation sourceLocation, Expression direction) {
 		super(sourceLocation, direction);
-		this.self = self;
 	}
 
-	public Expression getSelf() {
-		return self;
+	public Program getProgram() {
+		return program;
 	}
 
-	private final Expression self;
+	public void setProgram(Program program) {
+		this.program = program;
+	}
+
+	private Program program;
+
 	
 	@SuppressWarnings("unchecked")
 	@Override
 	public Object outcome() throws IllegalArgumentException{
-		GameObject thisObject = ((Constant<GameObject>)getSelf()).outcome();
+		GameObject thisObject = getProgram().getGameObject();
 		Constant<jumpingalien.part3.programs.IProgramFactory.Direction> givenDirection =
 				(Constant<jumpingalien.part3.programs.IProgramFactory.Direction>)getOperand();
 		jumpingalien.model.game.Direction thisDirection = 

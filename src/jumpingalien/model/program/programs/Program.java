@@ -2,6 +2,7 @@ package jumpingalien.model.program.programs;
 
 import java.util.Map;
 
+import jumpingalien.model.game.GameObject;
 import jumpingalien.model.program.expressions.Variable;
 import jumpingalien.model.program.statements.Statement;
 
@@ -11,6 +12,7 @@ public class Program {
 			Map<String, Variable> globalVariables){
 		this.mainStatement = mainStatement;
 		this.globalVariables = globalVariables;
+		mainStatement.setProgram(this);
 	}
 	
 	public Statement getMainStatement() {
@@ -19,10 +21,23 @@ public class Program {
 
 	private final Statement mainStatement;
 	
+	public boolean hasAsStatement(Statement statement){
+		return (mainStatement.hasAsSubStatement(statement));
+	}
+	
 	public Map<String, Variable> getGlobalVariables() {
 		return globalVariables;
 	}
 
 	private final Map<String, Variable> globalVariables;
-	
+
+	public GameObject getGameObject() {
+		return gameObject;
+	}
+
+	public void setGameObject(GameObject gameObject) {
+		this.gameObject = gameObject;
+	}
+
+	private GameObject gameObject = null;
 }

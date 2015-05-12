@@ -37,7 +37,9 @@ public class Assignment extends Statement {
 	private Expression value;
 	
 	public void execute(){
-		
+		if(getProgram() != null){
+			getProgram().getGlobalVariables().get(getName()).setValue(getValue());
+		}
 	}
 	
 }

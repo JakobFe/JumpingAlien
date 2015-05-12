@@ -1,5 +1,6 @@
 package jumpingalien.model.program.statements;
 
+import jumpingalien.model.program.programs.Program;
 import jumpingalien.part3.programs.SourceLocation;
 
 public abstract class Statement {
@@ -12,10 +13,28 @@ public abstract class Statement {
 		sourceLocation = null;
 	}
 	
+	// opm: doc: je moet een niet deterministische postconditie gebruiken (LISKOV)
+	public boolean hasAsSubStatement(Statement other){
+		return other == this;
+	}
+	
 	public SourceLocation getSourceLocation() {
 		return sourceLocation;
 	}
 
 	private final SourceLocation sourceLocation;
+	
+	public Program getProgram() {
+		return program;
+	}
+
+	public void setProgram(Program program) {
+		assert program.hasAsStatement(this);
+		this.program = program;
+	}
+
+	private Program program = null;
+	
+	public abstract void execute();
 
 }
