@@ -1071,6 +1071,7 @@ public class World {
 		result.addAll(allPlants);
 		result.addAll(allSlimes);
 		result.add(getMazub());
+		result.add(getBuzam());
 		return result;
 	}
 	
@@ -1121,6 +1122,7 @@ public class World {
 		result.addAll(allSharks);
 		result.addAll(allSlimes);
 		result.add(getMazub());
+		result.add(getBuzam());
 		return result;
 	}
 	
@@ -1194,6 +1196,7 @@ public class World {
 			updateWindowPos();
 		}
 		if (getBuzam() != null){
+			System.out.println(getBuzam().getHitPoints());
 			getBuzam().advanceTime(timeDuration);
 			updateWindowPos();
 		}

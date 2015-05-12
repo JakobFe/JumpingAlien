@@ -1,5 +1,5 @@
 package jumpingalien.model.exceptions;
-import jumpingalien.model.game.Mazub;
+import jumpingalien.model.game.Alien;
 import be.kuleuven.cs.som.annotate.*;
 
 /**
@@ -9,7 +9,7 @@ import be.kuleuven.cs.som.annotate.*;
  */
 public class IllegalJumpInvokeException extends RuntimeException {
 	
-	public IllegalJumpInvokeException(Mazub character){
+	public IllegalJumpInvokeException(Alien character){
 		this.character = character;
 	}
 
@@ -17,7 +17,7 @@ public class IllegalJumpInvokeException extends RuntimeException {
 	 * Return the Mazub character for this illegal jumping invoke exception.
 	 */
 	@Basic@Immutable
-	public Mazub getCharacter(){
+	public Alien getCharacter(){
 		return this.character;
 	}
 	
@@ -25,7 +25,7 @@ public class IllegalJumpInvokeException extends RuntimeException {
 	 * A variable registering the Mazub character involved in this 
 	 * illegal jumping invoke exception.
 	 */
-	private final Mazub character;
+	private final Alien character;
 
 	/**
 	 * A variable to explicitly define a version number for this class

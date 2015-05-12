@@ -2,7 +2,7 @@ package jumpingalien.model.game;
 
 import jumpingalien.util.Sprite;
 
-public class Buzam extends Mazub{
+public class Buzam extends Alien{
 
 	public Buzam(Position position, Sprite[] sprites) 
 			throws IllegalArgumentException{
@@ -19,6 +19,7 @@ public class Buzam extends Mazub{
 		return getWorld() == null || getWorld().getBuzam() == this;
 	}
 	
+	@Override
 	protected void updateHitPoints(){
 		Mazub alien = getWorld().getMazub();
 		boolean isHurt = false;
@@ -90,6 +91,8 @@ public class Buzam extends Mazub{
 		}	
 		else if(((other instanceof Shark) || (other instanceof Slime)) && !((Character) other).isImmune()){
 			other.subtractHp(50);
+			if(other instanceof Slime)
+				((Slime)other).getSchool().reduceHpAll((Slime)other);
 			((Character)other).getImmuneTimer().reset();
 			if (other.isDead())
 				other.getHpTimer().reset();
@@ -106,5 +109,10 @@ public class Buzam extends Mazub{
 		getWorld().setBuzam(null);
 		setWorld(null);
 	}
-
+	
+	@Override
+	public String toString(){
+		return "Buzam at position " + getPosition().toString();
+	}
+	
 }
