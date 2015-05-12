@@ -1,11 +1,14 @@
 package jumpingalien.model.program;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import jumpingalien.model.game.*;
 import jumpingalien.model.program.expressions.*;
 import jumpingalien.model.program.programs.Program;
+import jumpingalien.model.program.statements.Assignment;
+import jumpingalien.model.program.statements.ComposedStatement;
 import jumpingalien.model.program.statements.Statement;
 import jumpingalien.model.program.types.Type;
 import jumpingalien.part3.programs.IProgramFactory;
@@ -260,8 +263,7 @@ public class ProgramFactory implements IProgramFactory<Expression,Statement,Type
 	@Override
 	public Statement createAssignment(String variableName, Type variableType,
 			Expression value, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		return new Assignment(variableName, variableType, value, sourceLocation);
 	}
 
 	@Override
@@ -356,8 +358,7 @@ public class ProgramFactory implements IProgramFactory<Expression,Statement,Type
 	@Override
 	public Statement createSequence(List<Statement> statements,
 			SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		return new ComposedStatement(sourceLocation, statements);
 	}
 
 	@Override
@@ -386,7 +387,10 @@ public class ProgramFactory implements IProgramFactory<Expression,Statement,Type
 	@Override
 	public Program createProgram(Statement mainStatement,
 			Map<String, Type> globalVariables) {
-		// TODO Auto-generated method stub
-		return null;
+		Map<String, Variable> assignedVariables = new HashMap<String, Variable>();
+		for (String name: globalVariables.keySet()){
+			assignedVariables.put(name, new Variable(null, name, globalVariables.get(name)));
+		}
+		return new Program(mainStatement, assignedVariables);
 	}
 }
