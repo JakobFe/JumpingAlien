@@ -611,7 +611,7 @@ public class World {
 	 * 			The Buzam to set
 	 * @effect	...
 	 * 			| if (getBuzam() != null)
-	 *			|	then getBuzam().setWorld(null), getAllGameObjects().remove(getBuzam())
+	 *			|	then getBuzam().setWorld(null), getAllGameObjects().remove(get())
 	 * @post	...
 	 * 			| if(canHaveAsBuzam(alien))
 	 *			|	then new.getBuzam() = alien
@@ -623,6 +623,7 @@ public class World {
 		if (getBuzam() != null){
 			getBuzam().setWorld(null);
 			getAllGameObjects().remove(getBuzam());
+			getAllCharacters().remove(getBuzam());
 		}
 		if(canHaveAsBuzam(alien))
 			this.buzam = alien;
@@ -1196,9 +1197,7 @@ public class World {
 			updateWindowPos();
 		}
 		if (getBuzam() != null){
-			System.out.println(getBuzam().getHitPoints());
 			getBuzam().advanceTime(timeDuration);
-			updateWindowPos();
 		}
 		for(Plant plant: getAllUnterminatedPlants()){
 			if(!plant.isTerminated())
