@@ -722,7 +722,7 @@ public abstract class Character extends GameObject{
 	 * 
 	 */
 	@Override
-	protected void endMovement(Direction direction){
+	public void endMovement(Direction direction){
 		assert (direction != Direction.NULL);
 		if (isMoving(direction)){
 			if (direction == Direction.LEFT || direction == Direction.RIGHT){
