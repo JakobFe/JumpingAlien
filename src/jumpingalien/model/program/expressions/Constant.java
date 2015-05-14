@@ -22,6 +22,7 @@ public class Constant<T> extends Expression {
 	
 	@Override
 	public String toString() {
-		return "Expression: Constant with value " + getValue().toString() + ".";
+		return "Expression: Constant with value " + getValue().toString() + 
+				" at source location " + getSourceLocation() + ".";
 	}
 }

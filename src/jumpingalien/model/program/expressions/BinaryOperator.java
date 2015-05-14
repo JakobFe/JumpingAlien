@@ -29,5 +29,12 @@ public abstract class BinaryOperator extends Operator{
 	public final int getNbOperands() {
 		return 2;
 	}
+	
+	@Override
+	public String toString() {
+		return "Expression: Binary Operator: " + getLeftOperand().toString() + 
+				" " + getOperatorSymbol() + " " + getRightOperand().toString() + 
+				" at source location " + getSourceLocation() + ".";
+	}
 
 }
