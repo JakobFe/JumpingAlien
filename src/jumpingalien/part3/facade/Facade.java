@@ -37,29 +37,25 @@ public class Facade extends jumpingalien.part2.facade.Facade implements IFacadeP
 	@Override
 	public Buzam createBuzamWithProgram(int pixelLeftX, int pixelBottomY,
 			Sprite[] sprites, Program program) {
-		// TODO Auto-generated method stub
-		return createBuzam(pixelLeftX, pixelBottomY, sprites);
+		return new Buzam (new Position(pixelLeftX, pixelBottomY), sprites,program);
 	}
 
 	@Override
 	public Plant createPlantWithProgram(int x, int y, Sprite[] sprites,
 			Program program) {
-		// TODO Auto-generated method stub
-		return createPlant(x, y, sprites);
+		return new Plant(new Position(x, y), sprites,program);
 	}
 
 	@Override
 	public Shark createSharkWithProgram(int x, int y, Sprite[] sprites,
 			Program program) {
-		// TODO Auto-generated method stub
-		return createShark(x, y, sprites);
+		return new Shark(new Position(x, y), sprites,program);
 	}
 
 	@Override
 	public Slime createSlimeWithProgram(int x, int y, Sprite[] sprites,
 			School school, Program program) {
-		// TODO Auto-generated method stub
-		return createSlime(x, y, sprites, school);
+		return new Slime(new Position(x, y), sprites, school,program);
 	}
 
 	@Override
@@ -84,7 +80,6 @@ public class Facade extends jumpingalien.part2.facade.Facade implements IFacadeP
 	@Override
 	public void addBuzam(World world, Buzam buzam) {
 		world.setBuzam(buzam);
-		
 	}
 
 	@Override
