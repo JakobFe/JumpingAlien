@@ -7,14 +7,7 @@ import java.util.Map;
 import jumpingalien.model.game.*;
 import jumpingalien.model.program.expressions.*;
 import jumpingalien.model.program.programs.Program;
-import jumpingalien.model.program.statements.Assignment;
-import jumpingalien.model.program.statements.ComposedStatement;
-import jumpingalien.model.program.statements.EndMovement;
-import jumpingalien.model.program.statements.IfStatement;
-import jumpingalien.model.program.statements.Print;
-import jumpingalien.model.program.statements.StartMovement;
-import jumpingalien.model.program.statements.Statement;
-import jumpingalien.model.program.statements.While;
+import jumpingalien.model.program.statements.*;
 import jumpingalien.model.program.types.Type;
 import jumpingalien.part3.programs.IProgramFactory;
 import jumpingalien.part3.programs.SourceLocation;
@@ -355,7 +348,7 @@ public class ProgramFactory implements IProgramFactory<Expression,Statement,Type
 	@Override
 	public Statement createSequence(List<Statement> statements,
 			SourceLocation sourceLocation) {
-		return new ComposedStatement(sourceLocation, statements);
+		return new SequenceStatement(sourceLocation, statements);
 	}
 
 	@Override

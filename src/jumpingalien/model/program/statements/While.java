@@ -1,5 +1,7 @@
 package jumpingalien.model.program.statements;
 
+import java.util.NoSuchElementException;
+
 import jumpingalien.model.program.expressions.Expression;
 import jumpingalien.part3.programs.SourceLocation;
 
@@ -24,10 +26,54 @@ public class While extends SingleStatement {
 
 	private final Statement body;
 	
-	// Niet vergeten rekening te houden met het tijdsaspect.
 	public void execute(){
-		while((Boolean)getCondition().outcome()){
-			getBody().execute();
+		if((Boolean)getCondition().outcome()){
+			iterator().setIndex(1);
 		}
+		else
+			iterator().setIndex(2);
 	}
+	
+	@Override
+	public StatementIterator<Statement> iterator() {
+		return new StatementIterator<Statement>(){
+			
+			@Override
+			public Statement next() throws NoSuchElementException{
+				if(getIndex() == 0)
+					return While.this;
+				else if(getIndex() == 1){
+					if(getBody().iterator().hasNext())
+						return getBody().iterator().next();
+					else
+						setIndex(0);
+				}
+				return null;
+			}
+			
+			@Override
+			public boolean hasNext() {
+				return getIndex() < 2;
+			}
+			
+			@Override
+			public void restart() {
+				setIndex(0);
+				getBody().iterator().restart();
+			}
+			
+			@Override
+			public void setIndex(int index) {
+				this.index = index;
+			}
+			
+			@Override
+			public int getIndex() {
+				return this.index;
+			}
+			
+			private int index = 0;
+		};
+	}
+
 }

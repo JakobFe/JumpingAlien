@@ -8,5 +8,5 @@ public interface StatementIterator<T> extends Iterator<T> {
 	
 	int getIndex();
 	
-	void incrementIndex();
+	void setIndex(int index);
 }

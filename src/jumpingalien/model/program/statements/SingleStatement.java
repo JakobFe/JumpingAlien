@@ -30,7 +30,7 @@ public abstract class SingleStatement extends Statement {
 			}
 			
 			public void restart(){
-				this.index = 0;
+				setIndex(0);
 			}
 			
 			@Override
@@ -38,12 +38,16 @@ public abstract class SingleStatement extends Statement {
 				return index;
 			}
 			
-			@Override
 			public void incrementIndex() {
-				this.index = getIndex() + 1;
+				setIndex(getIndex() + 1);
 			}
 			
 			private int index;
+
+			@Override
+			public void setIndex(int index) {
+				this.index = index;
+			}
 		};
 	}
 }
