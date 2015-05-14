@@ -841,6 +841,8 @@ public abstract class GameObject {
 	 */
 	public abstract void advanceTime(double timeDuration) throws IllegalTimeIntervalException;
 
+	public abstract void startMove(Direction direction);
+	
 	/**
 	 * A method to check whether the given time interval is a valid
 	 * time interval to simulate the movement of a game object.

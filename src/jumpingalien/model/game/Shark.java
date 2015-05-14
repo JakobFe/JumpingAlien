@@ -337,7 +337,13 @@ public class Shark extends Character{
 		if(!canJump() || !isMoving(Direction.UP))
 			riseOrDive();
 	}
-
+	
+	@Override
+	public void startMove(Direction direction) {
+		// TODO Auto-generated method stub
+		
+	}
+	
 	/**
 	 * A method to start a rising or diving activity.
 	 * 

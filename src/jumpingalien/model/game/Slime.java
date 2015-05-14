@@ -248,6 +248,12 @@ public class Slime extends Character{
 		setPeriodDuration(randomPeriodDuration());
 	}
 	
+	@Override
+	public void startMove(Direction direction) {
+		// TODO Auto-generated method stub
+		
+	}
+	
 	/**
 	 * A method to end a movement period.
 	 * 

@@ -139,6 +139,11 @@ public class Plant extends GameObject {
 		updateTimers(timeDuration);
 	}
 	
+	@Override
+	public void startMove(Direction direction) {
+		
+	}
+	
 	/**
 	 * A method to update the movements of this game object.
 	 * As an effect of this method, certain movements may be started.
