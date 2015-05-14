@@ -8,15 +8,20 @@ import jumpingalien.model.program.expressions.*;
 import jumpingalien.part3.programs.SourceLocation;
 
 public class Experiment {
-	SourceLocation loc = new SourceLocation(2, 3);
+	public static void main(String[] args) {
+		SourceLocation loc = new SourceLocation(2, 3);
 
-	ComposedStatement stat = new IfStatement(new Constant<Boolean>(loc,true),
-			new Print(new Constant<Double>(loc,8.0), loc), null, loc);
-	
-	List<Statement> substat = stat.getSubStatements();
-	
-	Stream<Statement> filtered = substat.stream().filter(s -> s != null);
-	
-	List<Statement> list = filtered.collect(Collectors.toList());
-
+		ComposedStatement stat = new IfStatement(new Constant<Boolean>(loc,true),
+				new Print(new Constant<Double>(loc,8.0), loc), null, loc);
+		
+		List<Statement> substat = stat.getSubStatements();
+		
+		System.out.println(substat.size());
+		
+		Stream<Statement> filtered = substat.stream().filter(s -> s != null);
+		
+		List<Statement> list = filtered.collect(Collectors.toList());
+		
+		System.out.println(list.size());
+	}	
 }

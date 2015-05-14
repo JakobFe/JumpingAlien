@@ -1,6 +1,5 @@
 package jumpingalien.model.program.statements;
 
-import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import jumpingalien.part3.programs.SourceLocation;
@@ -12,18 +11,18 @@ public class SingleStatement extends Statement {
 	}
 
 	@Override
-	public Iterator<Statement> iterator() {
-		return new Iterator<Statement>(){
+	public StatementIterator<Statement> iterator() {
+		return new StatementIterator<Statement>(){
 
 			@Override
 			public boolean hasNext() {
-				return !alreadyExecuted;
+				return getIndex() == 0;
 			}
 
 			@Override
 			public Statement next() throws NoSuchElementException{
 				if(hasNext()){
-					alreadyExecuted = true;
+					incrementIndex();
 					return SingleStatement.this;
 				}
 				else
@@ -31,11 +30,20 @@ public class SingleStatement extends Statement {
 			}
 			
 			public void restart(){
-				alreadyExecuted = false;
+				this.index = 0;
 			}
 			
-			private boolean alreadyExecuted;
+			@Override
+			public int getIndex() {
+				return index;
+			}
 			
+			@Override
+			public void incrementIndex() {
+				this.index = getIndex() + 1;
+			}
+			
+			private int index;
 		};
 	}
 

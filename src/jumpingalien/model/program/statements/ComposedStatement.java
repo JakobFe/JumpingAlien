@@ -1,9 +1,10 @@
 package jumpingalien.model.program.statements;
 
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import jumpingalien.model.program.programs.Program;
 import jumpingalien.part3.programs.SourceLocation;
@@ -12,8 +13,9 @@ public class ComposedStatement extends Statement {
 	
 	public ComposedStatement(SourceLocation sourceLocation, List<Statement> subStatements){
 		super(sourceLocation);
-		
-		this.subStatements = subStatements;
+		Stream<Statement> filteredStream = subStatements.stream().filter(s -> s != null);
+		List<Statement> filteredList = filteredStream.collect(Collectors.toList());
+		this.subStatements = filteredList;
 	}
 	
 	public ComposedStatement(SourceLocation sourceLocation, Statement...subStatements){
@@ -73,8 +75,8 @@ public class ComposedStatement extends Statement {
 	}
 
 	@Override
-	public Iterator<Statement> iterator() {
-		return new Iterator<Statement>(){
+	public StatementIterator<Statement> iterator() {
+		return new StatementIterator<Statement>(){
 
 			@Override
 			public boolean hasNext() {
@@ -96,6 +98,9 @@ public class ComposedStatement extends Statement {
 			
 			public void restart(){
 				this.index = 0;
+				for(Statement substat: getSubStatements()){
+					substat.iterator().restart();
+				}
 			}
 			
 			public int getIndex() {
