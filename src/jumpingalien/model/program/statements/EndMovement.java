@@ -5,7 +5,7 @@ import jumpingalien.model.program.expressions.Constant;
 import jumpingalien.model.program.expressions.Expression;
 import jumpingalien.part3.programs.SourceLocation;
 
-public class EndMovement extends Statement {
+public class EndMovement extends SingleStatement {
 
 	@SuppressWarnings("unchecked")
 	public EndMovement(SourceLocation sourceLocation, 

@@ -40,4 +40,16 @@ public class Program {
 	}
 
 	private GameObject gameObject = null;
+	
+	public void execute(double timeDuration){
+		double td = timeDuration;
+		while(td > 0){
+			if(getMainStatement().iterator().hasNext()){
+				getMainStatement().iterator().next().execute();
+				td -= 0.001;
+			}
+			else
+				getMainStatement().iterator().restart();
+		}
+	}
 }

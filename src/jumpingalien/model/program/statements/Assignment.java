@@ -4,7 +4,7 @@ import jumpingalien.model.program.expressions.Expression;
 import jumpingalien.model.program.types.Type;
 import jumpingalien.part3.programs.SourceLocation;
 
-public class Assignment extends Statement {
+public class Assignment extends SingleStatement {
 	
 	public Assignment(String variableName, Type variableType,
 			Expression value, SourceLocation sourceLocation){

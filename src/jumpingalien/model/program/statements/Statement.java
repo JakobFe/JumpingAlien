@@ -1,5 +1,7 @@
 package jumpingalien.model.program.statements;
 
+import java.util.Iterator;
+
 import jumpingalien.model.program.programs.Program;
 import jumpingalien.part3.programs.SourceLocation;
 
@@ -34,6 +36,8 @@ public abstract class Statement {
 	}
 
 	private Program program = null;
+	
+	public abstract Iterator<Statement> iterator();
 	
 	public abstract void execute();
 

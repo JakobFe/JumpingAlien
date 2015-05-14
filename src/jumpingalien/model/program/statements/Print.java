@@ -3,7 +3,7 @@ package jumpingalien.model.program.statements;
 import jumpingalien.model.program.expressions.Expression;
 import jumpingalien.part3.programs.SourceLocation;
 
-public class Print extends Statement {
+public class Print extends SingleStatement {
 
 	public Print(Expression value, SourceLocation sourceLocation) {
 		super(sourceLocation);

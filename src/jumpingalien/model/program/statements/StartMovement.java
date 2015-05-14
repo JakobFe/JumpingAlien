@@ -5,7 +5,7 @@ import jumpingalien.model.program.expressions.Constant;
 import jumpingalien.model.program.expressions.Expression;
 import jumpingalien.part3.programs.SourceLocation;
 
-public class StartMovement extends Statement {
+public class StartMovement extends SingleStatement {
 
 	
 	@SuppressWarnings("unchecked")

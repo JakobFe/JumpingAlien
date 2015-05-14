@@ -3,7 +3,7 @@ package jumpingalien.model.program.statements;
 import jumpingalien.model.program.expressions.Expression;
 import jumpingalien.part3.programs.SourceLocation;
 
-public class While extends Statement {
+public class While extends SingleStatement {
 	
 	public While(Expression condition, Statement body,
 			SourceLocation sourceLocation){
