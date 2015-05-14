@@ -39,5 +39,11 @@ public class StartMovement extends SingleStatement {
 				((Alien) self).startDuck();
 		}	
 	}
+	
+	@Override
+	public String toString() {
+		return "Statement: Start movement in direction " + getDirection() + 
+				"\n" + "at sourcelocation " + getSourceLocation().toString() + ".";
+	}
 
 }

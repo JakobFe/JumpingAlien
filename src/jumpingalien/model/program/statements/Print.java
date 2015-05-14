@@ -20,5 +20,10 @@ public class Print extends SingleStatement {
 	public void execute() {
 		System.out.println(getValue());
 	}
-
+	
+	@Override
+	public String toString() {
+		return "Statement: Print of value " + "\n\t"+ getValue().toString() + "\n" + 
+				"at source location " + getSourceLocation().toString() + ".";
+	}
 }

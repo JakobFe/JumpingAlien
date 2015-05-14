@@ -65,4 +65,9 @@ public class Wait extends SingleStatement {
 		};
 	}
 
+	@Override
+	public String toString() {
+		return "Statement: Wait for " + String.valueOf(getNbOfSkips()*0.001) + 
+				" seconds at source location " + getSourceLocation().toString() + ".";
+	}
 }

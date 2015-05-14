@@ -39,6 +39,11 @@ public class EndMovement extends SingleStatement {
 			}
 		}	
 	}
-
+	
+	@Override
+	public String toString() {
+		return "Statement: End movement in direction " + getDirection() + 
+				"\n" + "at sourcelocation " + getSourceLocation().toString() + ".";
+	}
 }
 

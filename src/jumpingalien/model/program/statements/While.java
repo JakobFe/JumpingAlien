@@ -76,4 +76,11 @@ public class While extends SingleStatement {
 		};
 	}
 
+	@Override
+	public String toString() {
+		return "Statement: while (" + getCondition().toString() + "do" + "\n\t" +
+				getBody().toString() + "\n" + "at source location " +
+				getSourceLocation().toString() + ".";
+	}
+	
 }

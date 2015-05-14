@@ -62,4 +62,14 @@ public class SequenceStatement extends ComposedStatement {
 	@Override
 	public void execute() {}
 
+	@Override
+	public String toString() {
+		String subStatements = "";
+		for(Statement subStat: getSubStatements()){
+			subStatements += ("\n\t" + subStat.toString() + "\n");
+		}
+		return "Statement: Sequence:" + "\n" + subStatements + "\n\n" +
+				"at source location " + getSourceLocation().toString() + ".";
+	}
+	
 }

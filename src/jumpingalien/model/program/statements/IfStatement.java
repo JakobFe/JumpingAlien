@@ -13,6 +13,14 @@ public class IfStatement extends ComposedStatement {
 		this.condition = condition;
 	}
 	
+	public Statement  getIfBody(){
+		return getSubStatementAt(0);
+	}
+	
+	public Statement getElseBody(){
+		return getSubStatementAt(1);
+	}
+	
 	public Expression getCondition() {
 		return condition;
 	}
@@ -80,6 +88,13 @@ public class IfStatement extends ComposedStatement {
 			
 			private int index;
 		};
+	}
+	
+	@Override
+	public String toString() {
+		return "Statement: if (" + getCondition().toString() + ")\n"+ "then " + "\n\t" + 
+				getIfBody() + "\n" + "else\n\t" + getElseBody().toString() + "\n" + 
+				"at source location " + getSourceLocation().toString() + ".";
 	}
 
 }

@@ -55,4 +55,17 @@ public class Program {
 				getMainStatement().iterator().restart();
 		}
 	}
+	
+	@Override
+	public String toString() {
+		String listOfVariables = "\n";
+		for(String variable: globalVariables.keySet()){
+			listOfVariables += ("\t" + variable + ", " + "\n");
+		}
+		if(globalVariables.size() == 0)
+			listOfVariables += "none ";
+		return "Program with global variables: " + 
+				listOfVariables + "and main statement: " + "\n" + 
+				getMainStatement().toString() + ".";
+	}
 }
