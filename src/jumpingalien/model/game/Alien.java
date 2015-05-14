@@ -7,7 +7,7 @@ import jumpingalien.model.exceptions.*;
 import jumpingalien.util.Sprite;
 import static jumpingalien.tests.util.TestUtils.doubleArray;
 
-public abstract class Alien extends Character {
+public abstract class Alien extends Character implements jumpInterface{
 		
 	/**
 	 * Initialize this new Mazub with given position, 
@@ -305,8 +305,6 @@ public abstract class Alien extends Character {
 		if (getVertDirection() == Direction.UP)
 			setVertVelocity(0);
 	}
-	
-	
 	
 	/**
 	 * Returns the current ducking state of this Mazub.

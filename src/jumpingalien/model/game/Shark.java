@@ -12,7 +12,7 @@ import static jumpingalien.tests.util.TestUtils.doubleArray;
  * @author 	Jakob Festraets, Vincent Kemps
  * @version	1.0
  */
-public class Shark extends Character{
+public class Shark extends Character implements jumpInterface{
 	
 	/**
 	 * Initialize this new shark with a given position, given sprites the initial
@@ -434,13 +434,25 @@ public class Shark extends Character{
 	 * 			| setVertVelocity(INIT_VERT_VELOCITY),
 	 * 			| setVertAcceleration(getMaxVertAcceleration())
 	 */
-	private void startJump() {
+	public void startJump() {
 		assert canJump();
 		setPeriodCounter(0);
 		setVertVelocity(INIT_VERT_VELOCITY);
 		setVertAcceleration(getMaxVertAcceleration());
 	}
 	
+	/**
+	 * Method to end the jumping movement of the Mazub.
+	 * 
+	 * @effect	if the Mazub is still moving up, the vertical velocity is set to zero.
+	 * 			| if (getVertDirection() == Direction.UP)
+	 *			|	setVertVelocity(0)
+	 */
+	public void endJump(){
+		if ((getVertDirection() == Direction.UP) && !isRising())
+			setVertVelocity(0);
+	}
+
 	/**
 	 * A method to end a moving period of this shark.
 	 * 
