@@ -7,7 +7,7 @@ import java.util.stream.Stream;
 import jumpingalien.model.program.expressions.*;
 import jumpingalien.part3.programs.SourceLocation;
 
-public class Experiment {
+public class StatementExperiment {
 	public static void main(String[] args) {
 		SourceLocation loc = new SourceLocation(2, 3);
 
@@ -23,5 +23,8 @@ public class Experiment {
 		List<Statement> list = filtered.collect(Collectors.toList());
 		
 		System.out.println(list.size());
+		System.out.println();
+		
+		
 	}	
 }

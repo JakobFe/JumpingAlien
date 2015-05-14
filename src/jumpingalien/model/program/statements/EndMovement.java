@@ -25,17 +25,19 @@ public class EndMovement extends SingleStatement {
 	public void execute() {
 		if(getProgram() != null){
 			GameObject self = getProgram().getGameObject();
-			if(getDirection() == jumpingalien.model.game.Direction.LEFT)
-				self.endMovement(getDirection());
-			else if(getDirection() == jumpingalien.model.game.Direction.RIGHT)
-				self.endMovement(getDirection());
-			else if(getDirection() == jumpingalien.model.game.Direction.UP &&
-					(self instanceof Shark ||
-					 self instanceof Alien))
-				((JumpInterface) self).endJump();
-			else if(getDirection() == jumpingalien.model.game.Direction.DOWN &&
-					(self instanceof Alien))
-				((Alien) self).endDuck();
+			if(self != null){
+				if(getDirection() == jumpingalien.model.game.Direction.LEFT)
+					self.endMovement(getDirection());
+				else if(getDirection() == jumpingalien.model.game.Direction.RIGHT)
+					self.endMovement(getDirection());
+				else if(getDirection() == jumpingalien.model.game.Direction.UP &&
+						(self instanceof Shark ||
+						 self instanceof Alien))
+					((JumpInterface) self).endJump();
+				else if(getDirection() == jumpingalien.model.game.Direction.DOWN &&
+						(self instanceof Alien))
+					((Alien) self).endDuck();
+			}
 		}	
 	}
 

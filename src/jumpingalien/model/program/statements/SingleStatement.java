@@ -4,7 +4,7 @@ import java.util.NoSuchElementException;
 
 import jumpingalien.part3.programs.SourceLocation;
 
-public class SingleStatement extends Statement {
+public abstract class SingleStatement extends Statement {
 	
 	public SingleStatement(SourceLocation sourceLocation) {
 		super(sourceLocation);
@@ -20,7 +20,7 @@ public class SingleStatement extends Statement {
 			}
 
 			@Override
-			public Statement next() throws NoSuchElementException{
+			public SingleStatement next() throws NoSuchElementException{
 				if(hasNext()){
 					incrementIndex();
 					return SingleStatement.this;
@@ -46,11 +46,4 @@ public class SingleStatement extends Statement {
 			private int index;
 		};
 	}
-
-	@Override
-	public void execute() {
-		// TODO Auto-generated method stub
-
-	}
-
 }

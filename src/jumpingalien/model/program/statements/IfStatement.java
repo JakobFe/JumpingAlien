@@ -19,6 +19,7 @@ public class IfStatement extends ComposedStatement {
 
 	@Override
 	public void execute() {
+		// moet nog rekening houden met de 0.001s van de conditie.
 		if((Boolean)getCondition().outcome()){
 			getSubStatementAt(0).execute();
 		}

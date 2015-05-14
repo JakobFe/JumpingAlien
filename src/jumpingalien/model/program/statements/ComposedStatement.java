@@ -84,15 +84,15 @@ public class ComposedStatement extends Statement {
 			}
 
 			@Override
-			public Statement next() throws NoSuchElementException{
+			public SingleStatement next() throws NoSuchElementException{
 				if(!hasNext())
 					throw new NoSuchElementException();
 				else if(getSubStatementAt(index).iterator().hasNext()){			
-					return getSubStatementAt(index).iterator().next();
+					return (SingleStatement)getSubStatementAt(index).iterator().next();
 				}
 				else{
 					incrementIndex();
-					return getSubStatementAt(index).iterator().next();
+					return (SingleStatement)getSubStatementAt(index).iterator().next();
 				}
 			}
 			
@@ -117,9 +117,5 @@ public class ComposedStatement extends Statement {
 	}
 
 	@Override
-	public void execute(){
-		for(Statement subStatement: subStatements){
-			subStatement.execute();
-		}
-	}
+	public void execute(){}
 }
