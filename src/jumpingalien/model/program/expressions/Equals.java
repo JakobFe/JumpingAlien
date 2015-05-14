@@ -18,5 +18,5 @@ public class Equals extends BinaryOperator {
 	public String getOperatorSymbol() {
 		return "==";
 	}
-
+	
 }

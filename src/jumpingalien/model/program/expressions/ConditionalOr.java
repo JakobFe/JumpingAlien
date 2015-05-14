@@ -20,5 +20,5 @@ public class ConditionalOr extends BinaryOperator {
 	public String getOperatorSymbol() {
 		return "||";
 	}
-
+	
 }

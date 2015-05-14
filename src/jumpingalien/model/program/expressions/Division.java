@@ -20,5 +20,5 @@ public class Division extends BinaryOperator {
 		return ((Constant<Double>) getLeftOperand()).outcome() / 
 				((Constant<Double>)getRightOperand()).outcome();
 	}
-
+	
 }

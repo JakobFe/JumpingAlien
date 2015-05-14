@@ -19,5 +19,4 @@ public class ConditionalAnd extends BinaryOperator {
 	public String getOperatorSymbol() {
 		return "&&";
 	}
-
 }

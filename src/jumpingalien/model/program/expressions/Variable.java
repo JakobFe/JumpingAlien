@@ -25,7 +25,7 @@ public class Variable extends Expression {
 	
 	@Override
 	public Object outcome() {
-		return null;
+		return getValue();
 	}
 	
 	
@@ -38,4 +38,10 @@ public class Variable extends Expression {
 	}
 
 	private Expression value;
+	
+	@Override
+	public String toString() {
+		return "Variable " + getName() + " of type " + getType() + " with value " + 
+				String.valueOf(getValue()) + " at sourcelocation " + getSourceLocation();
+	}
 }

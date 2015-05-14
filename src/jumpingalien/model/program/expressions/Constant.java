@@ -19,5 +19,9 @@ public class Constant<T> extends Expression {
 	public T outcome() {
 		return getValue();
 	}
-
+	
+	@Override
+	public String toString() {
+		return "Expression: Constant with value " + getValue().toString() + ".";
+	}
 }
