@@ -45,8 +45,11 @@ public class Program {
 		double td = timeDuration;
 		while(td > 0){
 			if(getMainStatement().iterator().hasNext()){
-				getMainStatement().iterator().next().execute();
-				td -= 0.001;
+				Statement nextStatement = getMainStatement().iterator().next();
+				if(nextStatement != null){
+					td -= 0.001;
+					nextStatement.execute();
+				}
 			}
 			else
 				getMainStatement().iterator().restart();
