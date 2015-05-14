@@ -560,6 +560,10 @@ public abstract class GameObject {
 		return program;
 	}
 	
+	public boolean hasProgram(){
+		return getProgram() != null;
+	}
+	
 	protected abstract boolean canHaveProgram();
 
 	public void setProgram(Program program) {

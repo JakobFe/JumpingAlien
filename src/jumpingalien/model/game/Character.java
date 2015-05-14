@@ -3,6 +3,7 @@ package jumpingalien.model.game;
 import java.util.HashSet;
 
 import jumpingalien.model.exceptions.*;
+import jumpingalien.model.program.programs.Program;
 import jumpingalien.util.Sprite;
 import be.kuleuven.cs.som.annotate.*;
 
@@ -54,7 +55,7 @@ public abstract class Character extends GameObject{
 	protected Character(Position position, double initHorVelocity, 
 			double maxHorVelocity, Sprite[] sprites, int hitPoints) 
 			throws IllegalArgumentException{
-		super(position,initHorVelocity,maxHorVelocity,sprites,hitPoints);
+		super(position,initHorVelocity,maxHorVelocity,sprites,hitPoints,null);
 	}
 	
 	/**
@@ -82,8 +83,21 @@ public abstract class Character extends GameObject{
 	@Raw
 	protected Character(Position position, double initHorVelocity, double maxHorVelocity, Sprite[] sprites) 
 			throws IllegalXPositionException,IllegalYPositionException{
-		this(position,initHorVelocity,maxHorVelocity,sprites,100);
+		this(position,initHorVelocity,maxHorVelocity,sprites,100,null);
 	}
+	
+	protected Character(Position position, double initHorVelocity, 
+			double maxHorVelocity, Sprite[] sprites, int hitPoints, Program program) 
+			throws IllegalArgumentException{
+		super(position,initHorVelocity,maxHorVelocity,sprites,hitPoints,program);
+	}
+
+	protected Character(Position position, double initHorVelocity, 
+			double maxHorVelocity, Sprite[] sprites, Program program) 
+			throws IllegalArgumentException{
+		super(position,initHorVelocity,maxHorVelocity,sprites,100,program);
+	}
+
 	
 	/**
 	 * Checks whether the given horizontal acceleration is valid.
@@ -272,7 +286,10 @@ public abstract class Character extends GameObject{
 	public void advanceTime(double timeDuration) throws IllegalTimeIntervalException{
 		if (!isValidTimeInterval(timeDuration))
 			throw new IllegalTimeIntervalException(this);
-		updateMovement();
+		if(hasProgram())
+			getProgram().execute(timeDuration);
+		else
+			updateMovement();
 		double td = getTimeToMoveOnePixel(timeDuration);
 		double timeLeft = timeDuration;
 		while (timeLeft>td){

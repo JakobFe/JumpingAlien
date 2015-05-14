@@ -199,4 +199,9 @@ public class Mazub extends Alien{
 	public String toString(){
 		return "Mazub at position " + getPosition().toString();
 	}
+
+	@Override
+	protected boolean canHaveProgram() {
+		return false;
+	}
 }

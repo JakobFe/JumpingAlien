@@ -8,6 +8,7 @@ import java.util.Random;
 import jumpingalien.model.exceptions.IllegalTimeIntervalException;
 import jumpingalien.model.exceptions.IllegalXPositionException;
 import jumpingalien.model.exceptions.IllegalYPositionException;
+import jumpingalien.model.program.programs.Program;
 import jumpingalien.util.Sprite;
 import be.kuleuven.cs.som.annotate.Basic;
 import be.kuleuven.cs.som.annotate.Immutable;
@@ -43,10 +44,15 @@ public class Slime extends Character{
 	 * 			| school.addSlime(this)
 	 */
 	public Slime(Position position, Sprite[] sprites, School school){
-		super(position,0,SLIME_VELOCITY,sprites);
+		super(position,0,SLIME_VELOCITY,sprites,null);
 		school.addSlime(this);
 	}
-	
+
+	public Slime(Position position, Sprite[] sprites, School school, Program program){
+		super(position,0,SLIME_VELOCITY,sprites,program);
+		school.addSlime(this);
+	}
+
 	/**
 	 * A method to set the horizontal direction of this slime randomly
 	 * to the left or to the right.
@@ -619,5 +625,10 @@ public class Slime extends Character{
 		super.terminate();
 		getWorld().removeAsSlime(this);
 		setWorld(null);
+	}
+
+	@Override
+	protected boolean canHaveProgram() {
+		return true;
 	}
 }

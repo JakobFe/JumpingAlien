@@ -1,15 +1,22 @@
 package jumpingalien.model.game;
 
+import jumpingalien.model.program.programs.Program;
 import jumpingalien.util.Sprite;
 
 public class Buzam extends Alien{
 
 	public Buzam(Position position, Sprite[] sprites) 
 			throws IllegalArgumentException{
-		super(position,sprites);
+		super(position,sprites,null);
 		setHitPoints(500);
 	}
 
+	public Buzam(Position position, Sprite[] sprites, Program program) 
+			throws IllegalArgumentException{
+		super(position,sprites,program);
+		setHitPoints(500);
+	}
+	
 	public boolean canBeAddedTo(World world){
 		return super.canBeAddedTo(world) && (world == null || world.getBuzam() == this);
 	}
@@ -113,6 +120,11 @@ public class Buzam extends Alien{
 	@Override
 	public String toString(){
 		return "Buzam at position " + getPosition().toString();
+	}
+
+	@Override
+	protected boolean canHaveProgram() {
+		return true;
 	}
 	
 }

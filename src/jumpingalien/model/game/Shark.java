@@ -3,6 +3,7 @@ package jumpingalien.model.game;
 import java.util.HashSet;
 import java.util.Random;
 
+import jumpingalien.model.program.programs.Program;
 import jumpingalien.util.Sprite;
 import static jumpingalien.tests.util.TestUtils.doubleArray;
 
@@ -28,7 +29,12 @@ public class Shark extends Character implements JumpInterface{
 	 */
 	public Shark(Position position,Sprite[] sprites) 
 			throws IllegalArgumentException {
-		super(position,SHARK_INIT_VEL,SHARK_MAX_VEL,sprites,SHARK_HP);
+		super(position,SHARK_INIT_VEL,SHARK_MAX_VEL,sprites,SHARK_HP,null);
+	}
+	
+	public Shark(Position position,Sprite[] sprites, Program program) 
+			throws IllegalArgumentException {
+		super(position,SHARK_INIT_VEL,SHARK_MAX_VEL,sprites,SHARK_HP,program);
 	}
 	
 	/**
@@ -789,6 +795,11 @@ public class Shark extends Character implements JumpInterface{
 		super.terminate();
 		getWorld().removeAsShark(this);
 		setWorld(null);
+	}
+
+	@Override
+	protected boolean canHaveProgram() {
+		return true;
 	}
 	
 }
