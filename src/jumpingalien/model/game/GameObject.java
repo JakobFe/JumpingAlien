@@ -66,6 +66,54 @@ public abstract class GameObject {
 	 */
 	@Raw@Model
 	protected GameObject(Position position, double initHorVelocity, double maxHorVelocity, Sprite[] sprites,
+			int hitPoints, Program program) throws IllegalArgumentException{
+		assert isValidInitHorVelocity(initHorVelocity);
+		assert canHaveAsMaxHorVelocity(maxHorVelocity,initHorVelocity);
+		if(!isValidPosition(position,null))
+			throw new IllegalArgumentException("Invalid position!");
+		setPosition(position);
+		setHitPoints(hitPoints);
+		this.initHorVelocity = initHorVelocity;
+		setMaxHorVelocity(maxHorVelocity);
+		this.sprites = sprites;
+		this.program = program;
+	}
+	
+	/**
+	 * Initialize this new game object with given position, 
+	 * given initial horizontal velocity, given maximum horizontal velocity,
+	 * given sprites, given number of hit points and no world.
+	 * 
+	 * @param 	position
+	 * 			The start position for this game object.
+	 * @param 	initHorVelocity
+	 * 			Initial horizontal velocity for this game object.
+	 * @param 	maxHorVelocity
+	 * 			Maximum horizontal velocity for this game object.
+	 * @param	sprites
+	 * 			An array containing the different sprites for this game object.
+	 * @param	hitPoints
+	 * 			The hit points for this new game object. 
+	 * @pre		The initial horizontal velocity must be valid.
+	 * 			| isValidInitHorVelocity(initHorVelocity)
+	 * @pre		The maximum horizontal velocity must be valid.
+	 * 			| canHaveAsMaxHorVelocity(maxHorVelocity,initHorVelocity)
+	 * @post	If the given number of hit points is valid, the new game object
+	 * 			has this number as its hit points.
+	 * 			| if(isValidHitPoints(hitPoints)
+	 * 			|	then new.getHitPoints() == hitPoints
+	 * @post	This new game object has the given sprites as its sprites.
+	 * 			| new.getAllSprites() == sprites
+	 * @post	This game object is initialized with position (x,y).
+	 * 			| new.getPosition() == position
+	 * @post	This game object has no world.
+	 * 			| new.getWorld() == null
+	 * @throws	IllegalArgumentException
+	 * 			This game object can not have the given position as its position.
+	 * 			| !isValidPosition(position,null)
+	 */
+	@Raw@Model
+	protected GameObject(Position position, double initHorVelocity, double maxHorVelocity, Sprite[] sprites,
 			int hitPoints) throws IllegalArgumentException{
 		assert isValidInitHorVelocity(initHorVelocity);
 		assert canHaveAsMaxHorVelocity(maxHorVelocity,initHorVelocity);
@@ -76,6 +124,13 @@ public abstract class GameObject {
 		this.initHorVelocity = initHorVelocity;
 		setMaxHorVelocity(maxHorVelocity);
 		this.sprites = sprites;
+		this.program = null;
+	}
+	
+	@Raw@Model
+	protected GameObject(Position position, double initHorVelocity, Sprite[] sprites,
+			int hitPoints,Program program) throws IllegalArgumentException{
+		this(position,initHorVelocity,initHorVelocity,sprites,hitPoints,program);
 	}
 	
 	/**
@@ -561,13 +616,8 @@ public abstract class GameObject {
 	}
 	
 	protected abstract boolean canHaveProgram();
-
-	public void setProgram(Program program) {
-		assert canHaveProgram();
-		this.program = program;
-	}
 	
-	private Program program;
+	private final Program program;
 
 	/**
 	 * Returns the current horizontal direction of this game object.
