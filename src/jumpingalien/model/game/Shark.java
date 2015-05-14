@@ -12,7 +12,7 @@ import static jumpingalien.tests.util.TestUtils.doubleArray;
  * @author 	Jakob Festraets, Vincent Kemps
  * @version	1.0
  */
-public class Shark extends Character implements jumpInterface{
+public class Shark extends Character implements JumpInterface{
 	
 	/**
 	 * Initialize this new shark with a given position, given sprites the initial

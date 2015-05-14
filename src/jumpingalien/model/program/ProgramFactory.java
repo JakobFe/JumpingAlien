@@ -9,8 +9,10 @@ import jumpingalien.model.program.expressions.*;
 import jumpingalien.model.program.programs.Program;
 import jumpingalien.model.program.statements.Assignment;
 import jumpingalien.model.program.statements.ComposedStatement;
+import jumpingalien.model.program.statements.EndMovement;
 import jumpingalien.model.program.statements.IfStatement;
 import jumpingalien.model.program.statements.Print;
+import jumpingalien.model.program.statements.StartMovement;
 import jumpingalien.model.program.statements.Statement;
 import jumpingalien.model.program.statements.While;
 import jumpingalien.model.program.types.Type;
@@ -304,42 +306,37 @@ public class ProgramFactory implements IProgramFactory<Expression,Statement,Type
 		return new Print(value, sourceLocation);
 	}
 
+	
 	@Override
 	public Statement createStartRun(Expression direction,
 			SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		return new StartMovement(sourceLocation,direction);
 	}
 
 	@Override
 	public Statement createStopRun(Expression direction,
 			SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		return new EndMovement(sourceLocation,direction);
 	}
 
 	@Override
 	public Statement createStartJump(SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		return new StartMovement(sourceLocation, createDirectionConstant(Direction.UP, sourceLocation));
 	}
 
 	@Override
 	public Statement createStopJump(SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		return new EndMovement(sourceLocation, createDirectionConstant(Direction.UP, sourceLocation));
 	}
 
 	@Override
 	public Statement createStartDuck(SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		return new StartMovement(sourceLocation,createDirectionConstant(Direction.DOWN, sourceLocation));
 	}
 
 	@Override
 	public Statement createStopDuck(SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		return new EndMovement(sourceLocation,createDirectionConstant(Direction.DOWN, sourceLocation));
 	}
 
 	@Override
@@ -368,19 +365,16 @@ public class ProgramFactory implements IProgramFactory<Expression,Statement,Type
 
 	@Override
 	public Type getBoolType() {
-		// TODO Auto-generated method stub
 		return Type.BOOLEAN;
 	}
 
 	@Override
 	public Type getGameObjectType() {
-		// TODO Auto-generated method stub
 		return Type.OBJECT;
 	}
 
 	@Override
 	public Type getDirectionType() {
-		// TODO Auto-generated method stub
 		return Type.DIRECTION;
 	}
 

@@ -7,7 +7,7 @@ import jumpingalien.model.exceptions.*;
 import jumpingalien.util.Sprite;
 import static jumpingalien.tests.util.TestUtils.doubleArray;
 
-public abstract class Alien extends Character implements jumpInterface{
+public abstract class Alien extends Character implements JumpInterface{
 		
 	/**
 	 * Initialize this new Mazub with given position, 

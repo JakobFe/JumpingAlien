@@ -1,6 +1,6 @@
 package jumpingalien.model.game;
 
-public interface jumpInterface {
+public interface JumpInterface {
 	
 	void startJump();
 	void endJump();

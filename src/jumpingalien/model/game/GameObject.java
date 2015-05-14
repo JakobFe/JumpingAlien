@@ -835,7 +835,7 @@ public abstract class GameObject {
 	 * 			|	then new.getHorVelocity() == 0 && new.getHorDirection() == Direction.NULL &&
 	 * 			|		 new.getSpritesTimer().getTimeSum() == 0
 	 */
-	protected void endMovement(Direction direction){
+	public void endMovement(Direction direction){
 		assert (direction != Direction.NULL);
 		if ((direction == Direction.LEFT || direction == Direction.RIGHT) &&
 			 isMoving(direction)){
