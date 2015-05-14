@@ -749,6 +749,52 @@ public abstract class GameObject {
 	private double horVelocity = 0;
 	
 	/**
+	 * Return the maximum horizontal acceleration of the character.
+	 */
+	@Basic @Model
+	protected double getMaxHorAcceleration(){
+		return maxHorAcceleration;
+	}
+	
+	/**
+	 * A variable storing the maximum horizontal acceleration for this character.
+	 */
+	private double maxHorAcceleration;
+
+	/**
+	 * Return the current horizontal acceleration of this character.
+	 */
+	@Basic
+	public double getHorAcceleration() {
+		return horAcceleration;
+	}
+	
+	protected abstract boolean canHaveAsHorAcceleration(double horAcceleration);
+	
+	/**
+	 * Sets the horizontal acceleration to the given value.
+	 * 
+	 * @param 	horAcceleration 
+	 * 			The horAcceleration to set.
+	 * @post	If the given value is valid, the horizontal acceleration is set to the given
+	 * 			value.
+	 * 			| if (canHaveAsHorAcceleration(horAcceleration))
+	 * 			|	then new.getHorAcceleration() = horAcceleration
+	 */
+	@Model
+	protected void setHorAcceleration(double horAcceleration) {
+		if (canHaveAsHorAcceleration(horAcceleration))
+			this.horAcceleration = horAcceleration;			
+	}
+
+	/**
+	 * A variable storing the current horizontal acceleration.
+	 * This variable will always store a positive number of type double, 
+	 * or it will store zero.
+	 */
+	private double horAcceleration = 0;
+
+	/**
 	 * Checks whether the game object is moving in horizontal direction.
 	 * 
 	 * @return	True if and only if the game object is moving to the left or to the right.
@@ -841,7 +887,13 @@ public abstract class GameObject {
 	 */
 	public abstract void advanceTime(double timeDuration) throws IllegalTimeIntervalException;
 
-	public abstract void startMove(Direction direction);
+	public void startMove(Direction direction) {
+		assert ((direction == Direction.LEFT) || (direction == Direction.RIGHT));
+		assert !isDead();
+		setHorVelocity(getInitHorVelocity());
+		setHorDirection(direction);
+		setHorAcceleration(getMaxHorAcceleration());
+	}
 	
 	/**
 	 * A method to check whether the given time interval is a valid

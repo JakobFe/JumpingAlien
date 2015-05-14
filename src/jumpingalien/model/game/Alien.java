@@ -221,6 +221,7 @@ public abstract class Alien extends Character {
 	 * @effect	The timer is reset to zero.
 	 * 			| getSpritesTimer().reset()
 	 */
+	@Override
 	public void startMove(Direction direction){
 		assert ((direction == Direction.LEFT) || (direction == Direction.RIGHT));
 		assert !isDead();

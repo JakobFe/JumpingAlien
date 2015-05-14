@@ -250,8 +250,11 @@ public class Slime extends Character{
 	
 	@Override
 	public void startMove(Direction direction) {
-		// TODO Auto-generated method stub
-		
+		assert ((direction == Direction.LEFT) || (direction == Direction.RIGHT));
+		assert !isDead();
+		setHorVelocity(getInitHorVelocity());
+		setHorDirection(direction);
+		setHorAcceleration(getMaxHorAcceleration());
 	}
 	
 	/**

@@ -84,27 +84,6 @@ public abstract class Character extends GameObject{
 			throws IllegalXPositionException,IllegalYPositionException{
 		this(position,initHorVelocity,maxHorVelocity,sprites,100);
 	}
-
-	/**
-	 * Return the maximum horizontal acceleration of the character.
-	 */
-	@Basic @Model
-	protected double getMaxHorAcceleration(){
-		return maxHorAcceleration;
-	}
-	
-	/**
-	 * A variable storing the maximum horizontal acceleration for this character.
-	 */
-	private double maxHorAcceleration;
-	
-	/**
-	 * Return the current horizontal acceleration of this character.
-	 */
-	@Basic
-	public double getHorAcceleration() {
-		return horAcceleration;
-	}
 	
 	/**
 	 * Checks whether the given horizontal acceleration is valid.
@@ -120,29 +99,6 @@ public abstract class Character extends GameObject{
 	protected boolean canHaveAsHorAcceleration(double horAcceleration){
 		return ((horAcceleration >= 0) && (horAcceleration <= getMaxHorAcceleration()));
 	}
-
-	/**
-	 * Sets the horizontal acceleration to the given value.
-	 * 
-	 * @param 	horAcceleration 
-	 * 			The horAcceleration to set.
-	 * @post	If the given value is valid, the horizontal acceleration is set to the given
-	 * 			value.
-	 * 			| if (canHaveAsHorAcceleration(horAcceleration))
-	 * 			|	then new.getHorAcceleration() = horAcceleration
-	 */
-	@Model
-	protected void setHorAcceleration(double horAcceleration) {
-		if (canHaveAsHorAcceleration(horAcceleration))
-			this.horAcceleration = horAcceleration;			
-	}
-
-	/**
-	 * A variable storing the current horizontal acceleration.
-	 * This variable will always store a positive number of type double, 
-	 * or it will store zero.
-	 */
-	private double horAcceleration = 0;
 	
 	/**
 	 * Returns the current vertical direction of this character.

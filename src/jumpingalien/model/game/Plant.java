@@ -98,6 +98,20 @@ public class Plant extends GameObject {
 	private Direction lastDirection;
 	
 	/**
+	 * Checks whether the given horizontal acceleration is valid.
+	 * 
+	 * @param 	horAcceleration
+	 * 			Horizontal acceleration to check.
+	 * @return	True if and only if the given value lies between
+	 * 			zero and the maximum horizontal acceleration.
+	 * 			| result == (horAcceleration == 0)
+	 */
+	@Model
+	protected boolean canHaveAsHorAcceleration(double horAcceleration){
+		return (horAcceleration == 0);
+	}
+	
+	/**
 	 * A method to check whether the given world is a valid world for this plant.
 	 * 
 	 * @return	...
@@ -141,7 +155,11 @@ public class Plant extends GameObject {
 	
 	@Override
 	public void startMove(Direction direction) {
-		
+		assert ((direction == Direction.LEFT) || (direction == Direction.RIGHT));
+		assert !isDead();
+		setHorVelocity(getInitHorVelocity());
+		setHorDirection(direction);
+		setHorAcceleration(getMaxHorAcceleration());
 	}
 	
 	/**
