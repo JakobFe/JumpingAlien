@@ -1,19 +1,17 @@
 package jumpingalien.model.program.statements;
 
 import jumpingalien.model.game.*;
-import jumpingalien.model.program.expressions.Constant;
+import jumpingalien.model.program.expressions.Variable;
 import jumpingalien.model.program.expressions.Expression;
 import jumpingalien.part3.programs.SourceLocation;
 
 public class StartMovement extends SingleStatement {
 
-	
-	@SuppressWarnings("unchecked")
 	public StartMovement(SourceLocation sourceLocation, 
 			Expression dir){
 		super(sourceLocation);
 		this.direction = jumpingalien.model.game.Direction.convertDirection(
-				(Constant<jumpingalien.part3.programs.IProgramFactory.Direction>)dir);
+				((Variable)dir));
 	}
 	
 	
