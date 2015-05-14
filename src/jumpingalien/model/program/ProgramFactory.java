@@ -335,14 +335,12 @@ public class ProgramFactory implements IProgramFactory<Expression,Statement,Type
 	@Override
 	public Statement createWait(Expression duration,
 			SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		return new Wait(sourceLocation, duration);
 	}
 
 	@Override
 	public Statement createSkip(SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		return new Skip(sourceLocation);
 	}
 
 	@Override

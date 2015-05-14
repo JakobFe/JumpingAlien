@@ -4,6 +4,7 @@ import java.util.HashSet;
 
 import be.kuleuven.cs.som.annotate.*;
 import jumpingalien.model.exceptions.*;
+import jumpingalien.model.program.programs.Program;
 import jumpingalien.util.Sprite;
 
 /**
@@ -555,6 +556,19 @@ public abstract class GameObject {
 	 */
 	private World world = null;
 	
+	public Program getProgram() {
+		return program;
+	}
+	
+	protected abstract boolean canHaveProgram();
+
+	public void setProgram(Program program) {
+		assert canHaveProgram();
+		this.program = program;
+	}
+	
+	private Program program;
+
 	/**
 	 * Returns the current horizontal direction of this game object.
 	 */
