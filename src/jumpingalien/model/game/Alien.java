@@ -4,6 +4,7 @@ import java.util.HashSet;
 
 import be.kuleuven.cs.som.annotate.*;
 import jumpingalien.model.exceptions.*;
+import jumpingalien.model.program.programs.Program;
 import jumpingalien.util.Sprite;
 import static jumpingalien.tests.util.TestUtils.doubleArray;
 
@@ -43,7 +44,7 @@ public abstract class Alien extends Character implements JumpInterface{
 	@Raw
 	public Alien(Position position, double initHorVelocity, double maxHorVelocity, Sprite[] sprites) 
 			throws IllegalArgumentException{
-		super(position,initHorVelocity,maxHorVelocity,sprites);
+		super(position,initHorVelocity,maxHorVelocity,sprites,null);
 		assert isValidArrayOfSprites(sprites);
 		this.maxHorVelocityRunning = maxHorVelocity;
 		this.numberOfWalkingSprites = (sprites.length - 10)/2;
@@ -68,7 +69,21 @@ public abstract class Alien extends Character implements JumpInterface{
 	@Raw
 	public Alien(Position position, Sprite[] sprites) 
 			throws IllegalXPositionException, IllegalYPositionException{
-		this(position,1,3,sprites);
+		this(position,1,3,sprites,null);
+	}
+
+	public Alien(Position position, double initHorVelocity, double maxHorVelocity,
+			Sprite[] sprites, Program program) 
+			throws IllegalArgumentException{
+		super(position,initHorVelocity,maxHorVelocity,sprites,program);
+		assert isValidArrayOfSprites(sprites);
+		this.maxHorVelocityRunning = maxHorVelocity;
+		this.numberOfWalkingSprites = (sprites.length - 10)/2;
+	}
+
+	public Alien(Position position, Sprite[] sprites, Program program) 
+			throws IllegalXPositionException, IllegalYPositionException{
+		this(position,1,3,sprites,program);
 	}
 	
 	/**
