@@ -1,6 +1,7 @@
 package jumpingalien.model.game;
 
 import jumpingalien.model.exceptions.*;
+import jumpingalien.model.program.programs.Program;
 import static jumpingalien.tests.util.TestUtils.doubleArray;
 import jumpingalien.util.Sprite;
 
@@ -16,6 +17,28 @@ import be.kuleuven.cs.som.annotate.*;
  * @version 1.0
  */
 public class Plant extends GameObject {
+	
+	/**
+	 * Create a new plant with given x position, given y position and given sprites.
+	 * 
+	 * @param	position
+	 * 			The initial position for this plant.
+	 * @param 	sprites
+	 * 			The sprites for this plant.
+	 * @effect	...
+	 * 			| super(position,PLANT_VELOCITY,sprites,1)
+	 * @effect	...
+	 * 			| setHorVelocity(getInitHorVelocity())
+	 * @effect	...
+	 * 			| setRandomDirection()
+	 */
+	@Raw
+	public Plant(Position position, Sprite[] sprites, Program program) 
+			throws IllegalXPositionException,IllegalYPositionException{
+		super(position,PLANT_VELOCITY,sprites,1,program);
+		setHorVelocity(PLANT_VELOCITY);
+		setRandomDirection();
+	}
 	
 	/**
 	 * Create a new plant with given x position, given y position and given sprites.
@@ -136,6 +159,11 @@ public class Plant extends GameObject {
 		return (getWorld() == null) || (getWorld().hasAsPlant(this));
 	}
 	
+	@Override
+	protected boolean canHaveProgram() {
+		return true;
+	}
+	
 	/**
 	 * Method to update the position and velocity of this game object based on the current position,
 	 * velocity and a given time duration in seconds.
@@ -145,7 +173,10 @@ public class Plant extends GameObject {
 	IllegalYPositionException,IllegalTimeIntervalException{
 		if (!isValidTimeInterval(timeDuration))
 			throw new IllegalTimeIntervalException(this);
-		updateMovement();
+		if(hasProgram())
+			getProgram().execute(timeDuration);
+		else
+			updateMovement();
 		double td = getTimeToMoveOnePixel(timeDuration);
 		for (int index = 0; index < timeDuration/td; index++)
 			updatePosition(td);
