@@ -10,7 +10,7 @@ else
 fi
 print x;
 skip;
-wait(0.1);
+wait(0.002);
 while true do
 	x:= x + 1.0;
 	y:= y - 2.0;
