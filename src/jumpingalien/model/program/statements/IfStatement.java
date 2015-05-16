@@ -31,12 +31,14 @@ public class IfStatement extends ComposedStatement {
 	public void execute() {
 		// moet nog rekening houden met de 0.001s van de conditie.
 		if((Boolean)getCondition().outcome()){
-			iterator().setIndex(1);
+			thisIterator.setIndex(1);
 		}
 		else{
-			iterator().setIndex(2);
+			thisIterator.setIndex(2);
 		}
 	}
+	
+	private final StatementIterator<Statement> thisIterator = iterator();
 
 	@Override
 	public StatementIterator<Statement> iterator() {
@@ -47,18 +49,19 @@ public class IfStatement extends ComposedStatement {
 				if(!hasNext())
 					throw new NoSuchElementException();
 				else{
-					if(getIndex() == 0){
+					if(thisIterator.getIndex() == 0){
 						return IfStatement.this;
 					}
-					else if(getIndex() == 1){
-						if(getSubStatementAt(0).iterator().hasNext())
-							return getSubStatementAt(0).iterator().next();
+					else if(thisIterator.getIndex() == 1){
+						if(ifIter.hasNext()){
+							return ifIter.next();
+						}
 						else
 							setIndex(3);
 					}
-					else if((getIndex() == 2) && (getNbOfSubStatements() == 2)){
-						if(getSubStatementAt(1).iterator().hasNext())
-							return getSubStatementAt(1).iterator().next();
+					else if((thisIterator.getIndex() == 2) && (getNbOfSubStatements() == 2)){
+						if(elseIter.hasNext())
+							return elseIter.next();
 						else
 							setIndex(3);
 					}
@@ -74,6 +77,8 @@ public class IfStatement extends ComposedStatement {
 			@Override
 			public void restart() {
 				setIndex(0);
+				ifIter.restart();
+				elseIter.restart();
 			}
 			
 			@Override
@@ -87,6 +92,11 @@ public class IfStatement extends ComposedStatement {
 			}
 			
 			private int index;
+			
+			private final StatementIterator<Statement> ifIter = getIfBody().iterator(); 
+			
+			private final StatementIterator<Statement> elseIter = getElseBody().iterator(); 
+
 		};
 	}
 	
