@@ -3,6 +3,7 @@ package jumpingalien.model.program.statements;
 import java.util.NoSuchElementException;
 
 import jumpingalien.model.program.expressions.Expression;
+import jumpingalien.model.program.programs.Program;
 import jumpingalien.part3.programs.SourceLocation;
 
 public class While extends SingleStatement {
@@ -25,6 +26,12 @@ public class While extends SingleStatement {
 	}
 
 	private final Statement body;
+	
+	@Override
+	public void setProgram(Program program) {
+		super.setProgram(program);
+		getBody().setProgram(program);
+	}
 	
 	public void execute(){
 		if((Boolean)getCondition().outcome()){
