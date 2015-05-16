@@ -24,5 +24,4 @@ public class Addition extends BinaryOperator {
 		return ((Constant<Double>) getLeftOperand()).outcome() + 
 				((Constant<Double>)getRightOperand()).outcome();
 	}
-
 }

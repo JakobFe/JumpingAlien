@@ -1,18 +1,17 @@
 package jumpingalien.model.program.statements;
 
 import jumpingalien.model.game.*;
-import jumpingalien.model.program.expressions.Constant;
+import jumpingalien.model.program.expressions.Variable;
 import jumpingalien.model.program.expressions.Expression;
 import jumpingalien.part3.programs.SourceLocation;
 
 public class EndMovement extends SingleStatement {
 
-	@SuppressWarnings("unchecked")
 	public EndMovement(SourceLocation sourceLocation, 
 			Expression dir){
 		super(sourceLocation);
 		this.direction = jumpingalien.model.game.Direction.convertDirection(
-				(Constant<jumpingalien.part3.programs.IProgramFactory.Direction>)dir);
+				(Variable)dir);
 	}
 
 	public jumpingalien.model.game.Direction getDirection() {
@@ -40,6 +39,11 @@ public class EndMovement extends SingleStatement {
 			}
 		}	
 	}
-
+	
+	@Override
+	public String toString() {
+		return "Statement: End movement in direction " + getDirection() + 
+				"\n" + "at sourcelocation " + getSourceLocation().toString() + ".";
+	}
 }
 

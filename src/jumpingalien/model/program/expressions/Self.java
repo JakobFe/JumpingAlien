@@ -26,5 +26,11 @@ public class Self extends Expression {
 		else
 			return null;
 	}
+	
+	@Override
+	public String toString() {
+		return "Expression: self connected to program " + getProgram().toString() +
+				" at source location " + getSourceLocation() + ".";
+	}
 
 }

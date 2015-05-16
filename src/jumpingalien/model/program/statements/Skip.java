@@ -11,6 +11,10 @@ public class Skip extends SingleStatement {
 	@Override
 	public void execute() {}
 	
-	
+	@Override
+	public String toString() {
+		return "Statement: Skip at source location " + 
+				getSourceLocation().toString() + ".";
+	}
 
 }

@@ -18,5 +18,5 @@ public class GetHeight extends UnaryOperator {
 	public Integer outcome() {
 		return ((GameObject) getOperand().outcome()).getHeight();
 	}
-
+	
 }

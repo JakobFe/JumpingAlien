@@ -22,4 +22,11 @@ public abstract class UnaryOperator extends Operator{
 		return 1;
 	}
 
+	@Override
+	public String toString() {
+		return "Expression: Unary Operator: " + getOperatorSymbol() + " " +
+				getOperand().toString() +
+				" at source location " + getSourceLocation() + ".";
+	}
+	
 }

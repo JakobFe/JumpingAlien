@@ -42,4 +42,12 @@ public class Assignment extends SingleStatement {
 		}
 	}
 	
+	@Override
+	public String toString() {
+		return "Statement: Assignement of variable " + getName() + 
+				" of type " + getType().toString() + " to the value \n \t" +
+				getValue().toString() +  "\n \t" + "at source location " + 
+				getSourceLocation().toString() + ".";
+	}
+	
 }
