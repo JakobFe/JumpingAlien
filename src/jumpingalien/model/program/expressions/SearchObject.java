@@ -24,12 +24,10 @@ public class SearchObject extends UnaryOperator {
 	private Program program;
 
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public Object outcome() throws IllegalArgumentException{
 		GameObject thisObject = getProgram().getGameObject();
-		Constant<jumpingalien.part3.programs.IProgramFactory.Direction> givenDirection =
-				(Constant<jumpingalien.part3.programs.IProgramFactory.Direction>)getOperand();
+		Variable givenDirection = (Variable)getOperand();
 		jumpingalien.model.game.Direction thisDirection = 
 				jumpingalien.model.game.Direction.convertDirection(givenDirection);
 		World thisWorld = thisObject.getWorld();

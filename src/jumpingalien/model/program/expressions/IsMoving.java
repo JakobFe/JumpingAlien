@@ -5,19 +5,18 @@ import jumpingalien.part3.programs.SourceLocation;
 
 public class IsMoving extends UnaryOperator {
 
-	@SuppressWarnings("unchecked")
 	public IsMoving(SourceLocation sourceLocation, Expression operand,
 			Expression direction) {
 		super(sourceLocation, operand);
 		this.direction = 
-		(Constant<jumpingalien.part3.programs.IProgramFactory.Direction>)direction;
+		(Variable)direction;
 	}
 
-	public Constant<jumpingalien.part3.programs.IProgramFactory.Direction> getDirection() {
+	public Variable getDirection() {
 		return direction;
 	}
 	
-	private final Constant<jumpingalien.part3.programs.IProgramFactory.Direction>  direction;
+	private final Variable direction;
 	
 	@Override
 	public String getOperatorSymbol() {
