@@ -77,7 +77,7 @@ public class Wait extends SingleStatement {
 
 	@Override
 	public String toString() {
-		return "Statement: Wait for " + getDuration().toString() + 
+		return "Statement: Wait for " + getDuration().outcome() + 
 				" seconds at source location " + getSourceLocation().toString() + ".";
 	}
 }

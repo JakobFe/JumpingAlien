@@ -7,4 +7,8 @@ public class ObjectOfWorld extends Type{
 		return null;
 	}
 	
+	@Override
+	public String toString() {
+		return "Types.ObjectOfWorld";
+	}
 }

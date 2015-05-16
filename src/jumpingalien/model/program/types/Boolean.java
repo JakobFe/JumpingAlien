@@ -16,4 +16,8 @@ public class Boolean extends Type {
 	
 	private final boolean value;
 	
+	@Override
+	public String toString() {
+		return "Types.Boolean";
+	}
 }

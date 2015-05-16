@@ -17,4 +17,10 @@ public class GameDirection extends Type {
 	}
 	
 	private final Direction value;
+	
+	@Override
+	public String toString() {
+		return "Types.GameDirection";
+	}
+	
 }

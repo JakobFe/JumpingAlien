@@ -15,4 +15,9 @@ public class Double extends Type {
 	}
 	
 	private final double value;
+	
+	@Override
+	public String toString() {
+		return "Types.Double";
+	}
 }

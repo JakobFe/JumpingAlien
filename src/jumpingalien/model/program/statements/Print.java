@@ -23,7 +23,7 @@ public class Print extends SingleStatement {
 	
 	@Override
 	public String toString() {
-		return "Statement: Print of value " + "\n\t"+ getValue().toString() + "\n" + 
+		return "Statement: Print of value " + "\n\t"+ getValue().outcome().toString() + "\n" + 
 				"at source location " + getSourceLocation().toString() + ".";
 	}
 }
