@@ -28,10 +28,10 @@ public class While extends SingleStatement {
 	
 	public void execute(){
 		if((Boolean)getCondition().outcome()){
-			iterator().setIndex(1);
+			getThisIterator().setIndex(1);
 		}
 		else
-			iterator().setIndex(2);
+			getThisIterator().setIndex(2);
 	}
 	
 	@Override
@@ -39,12 +39,19 @@ public class While extends SingleStatement {
 		return new StatementIterator<Statement>(){
 			
 			@Override
+			public boolean hasNext() {
+				return (!subIteratorsInitialized || getIndex() < 2);
+			}
+			
+			@Override
 			public Statement next() throws NoSuchElementException{
+				if(!subIteratorsInitialized)
+					initialiseSubIterators();
 				if(getIndex() == 0)
 					return While.this;
 				else if(getIndex() == 1){
-					if(getBody().iterator().hasNext())
-						return getBody().iterator().next();
+					if(bodyIterator.hasNext())
+						return bodyIterator.next();
 					else
 						setIndex(0);
 				}
@@ -52,14 +59,9 @@ public class While extends SingleStatement {
 			}
 			
 			@Override
-			public boolean hasNext() {
-				return getIndex() < 2;
-			}
-			
-			@Override
 			public void restart() {
 				setIndex(0);
-				getBody().iterator().restart();
+				bodyIterator.restart();
 			}
 			
 			@Override
@@ -73,6 +75,16 @@ public class While extends SingleStatement {
 			}
 			
 			private int index = 0;
+			
+			private void initialiseSubIterators(){
+				subIteratorsInitialized = true;
+				bodyIterator = getBody().iterator();
+
+			}
+			
+			private StatementIterator<Statement> bodyIterator;
+			
+			private boolean subIteratorsInitialized = false;
 		};
 	}
 

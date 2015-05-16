@@ -19,11 +19,7 @@ public class SequenceStatement extends ComposedStatement {
 
 			@Override
 			public boolean hasNext() {
-				//return (getSubStatementAt(getNbOfSubStatements()-1).iterator().hasNext());
-				if(!subIteratorsInitialized)
-					return true;
-				else
-					return getIteratorAt(getNbOfSubStatements()-1).hasNext();
+				return(!subIteratorsInitialized || getIteratorAt(getNbOfSubStatements()-1).hasNext());
 			}
 
 			@Override
