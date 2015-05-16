@@ -18,11 +18,12 @@ public class Subtraction extends BinaryOperator {
 		return "-";
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public Number outcome() {
-		return ((Constant<Double>) getLeftOperand()).outcome() - 
-				((Constant<Double>)getRightOperand()).outcome();
+		//return ((Constant<Double>) getLeftOperand()).outcome() - 
+		//		((Constant<Double>)getRightOperand()).outcome();
+		return ((Double) getLeftOperand().outcome()) - 
+				   ((Double) getRightOperand().outcome());
 	}
 
 }

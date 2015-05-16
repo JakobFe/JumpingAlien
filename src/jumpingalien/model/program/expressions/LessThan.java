@@ -11,8 +11,6 @@ public class LessThan extends BinaryOperator {
 
 	@Override
 	public Boolean outcome() {
-		System.out.println(getLeftOperand());
-		System.out.println(getRightOperand());
 		return (Double)getLeftOperand().outcome() < (Double)getRightOperand().outcome();
 	}
 
