@@ -6,6 +6,7 @@ import jumpingalien.part3.programs.SourceLocation;
 public abstract class Statement {
 	
 	protected Statement(SourceLocation sourceLocation){
+		System.out.println("STATEMENT CONSTRUCTOR");
 		this.sourceLocation = sourceLocation;
 	}
 	
@@ -38,5 +39,17 @@ public abstract class Statement {
 	public abstract StatementIterator<Statement> iterator();
 	
 	public abstract void execute();
+	
+	public StatementIterator<Statement> getThisIterator() {
+		if(thisIterator == null){
+			thisIterator = iterator();
+			return thisIterator;
+		}
+		else
+			return thisIterator;
+	}
+
+	private StatementIterator<Statement> thisIterator = null;
+
 
 }
