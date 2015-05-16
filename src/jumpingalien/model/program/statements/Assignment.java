@@ -37,20 +37,9 @@ public class Assignment extends SingleStatement {
 	private Expression value;
 	
 	public void execute(){
-		System.out.println("\n\n\n\n\n\n\nEXECUTE ASSIGNEMENT:");
 		if(getProgram() != null){
-			System.out.println("BEFORE");
-			System.out.println(getProgram().getGlobalVariables().get(getName()));
-			System.out.println(getProgram().getGlobalVariables().get(getName()).getValue());
-			
 			getProgram().getGlobalVariables().get(getName()).setValue(getValue().outcome());
-			
-			System.out.println("AFTER");
-			System.out.println(getProgram().getGlobalVariables().get(getName()));
-			System.out.println(getProgram().getGlobalVariables().get(getName()).getValue());
-			System.out.println();
 		}
-		System.out.println("\n\n\n\n\n");
 	}
 	
 	@Override

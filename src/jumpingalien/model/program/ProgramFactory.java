@@ -17,7 +17,7 @@ public class ProgramFactory implements IProgramFactory<Expression,Statement,Type
 	@Override
 	public Expression createReadVariable(String variableName,
 			Type variableType, SourceLocation sourceLocation) throws SecurityException {
-		return new Variable(sourceLocation, variableName, variableType);
+		return new ReadVariable(sourceLocation, variableName, variableType);
 	}
 
 	@Override
@@ -372,11 +372,17 @@ public class ProgramFactory implements IProgramFactory<Expression,Statement,Type
 	@Override
 	public Program createProgram(Statement mainStatement,
 			Map<String, Type> globalVariables) {
-		System.out.println(globalVariables);
-		Map<String, Variable> assignedVariables = new HashMap<String, Variable>();
+		Map<String, Variable> declaredVariables = new HashMap<String, Variable>();
+		
 		for (String name: globalVariables.keySet()){
-			assignedVariables.put(name, new Variable(new SourceLocation(99, 108), name, globalVariables.get(name)));
+			declaredVariables.put(name, new Variable(new SourceLocation(0, 0), name,
+											globalVariables.get(name)));
 		}
-		return new Program(mainStatement, assignedVariables);
+		System.out.println("Declared variables:");
+		for(String name: declaredVariables.keySet()){
+			System.out.println(declaredVariables.get(name));
+		}
+		System.out.println("\n");
+		return new Program(mainStatement, declaredVariables);
 	}
 }
