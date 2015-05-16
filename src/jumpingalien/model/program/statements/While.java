@@ -37,8 +37,9 @@ public class While extends SingleStatement {
 		if((Boolean)getCondition().outcome()){
 			getThisIterator().setIndex(1);
 		}
-		else
+		else{
 			getThisIterator().setIndex(2);
+		}
 	}
 	
 	@Override
@@ -47,7 +48,7 @@ public class While extends SingleStatement {
 			
 			@Override
 			public boolean hasNext() {
-				return (!subIteratorsInitialized || getIndex() < 2);
+				return (!subIteratorsInitialized || getThisIterator().getIndex() < 2);
 			}
 			
 			@Override
