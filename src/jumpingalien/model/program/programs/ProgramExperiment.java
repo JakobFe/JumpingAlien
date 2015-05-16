@@ -1,5 +1,6 @@
 package jumpingalien.model.program.programs;
 
+import java.util.Iterator;
 import java.util.Optional;
 
 import jumpingalien.model.program.ProgramFactory;
@@ -28,7 +29,14 @@ public class ProgramExperiment {
 				System.out.println();
 				throw new IllegalArgumentException();
 			}
-			System.out.println(theProgram);
+			//System.out.println(theProgram);
+			Statement main = theProgram.getMainStatement();
+			Iterator<Statement> mainIterator = main.iterator();
+			System.out.println(mainIterator.hasNext());
+			System.out.println(mainIterator.next());
+			System.out.println(mainIterator.hasNext());
+			System.out.println(mainIterator.next());
+			
 		}
 		catch(Exception exc){
 			System.out.println("Experiment aborted due to a parsing failure.");
