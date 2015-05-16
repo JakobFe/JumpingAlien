@@ -12,6 +12,7 @@ else
 fi
 
 print x;
+print y;
 
 skip;
 
@@ -20,4 +21,6 @@ wait(0.002);
 while (x < 10.0) do
 	x:= x + 1.0;
 	y:= y - 2.0;
+	print x;
+	print y;
 done

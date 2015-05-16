@@ -61,7 +61,8 @@ public abstract class ComposedStatement extends Statement {
 		}
 		super.setProgram(program);
 		for(Statement subStatement: subStatements){
-			subStatement.setProgram(program);
+			if(subStatement != null)
+				subStatement.setProgram(program);
 		}
 	}
 }
