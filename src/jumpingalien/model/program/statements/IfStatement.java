@@ -1,7 +1,5 @@
 package jumpingalien.model.program.statements;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.NoSuchElementException;
 
 import jumpingalien.model.program.expressions.Expression;
@@ -64,14 +62,14 @@ public class IfStatement extends ComposedStatement {
 							return ifIter.next();
 						}
 						else{
-							setIndex(3);
+							getThisIterator().setIndex(3);
 						}
 					}
 					else if((getThisIterator().getIndex() == 2) && (getNbOfSubStatements() == 2)){
 						if(elseIter.hasNext())
 							return elseIter.next();
 						else
-							setIndex(3);
+							getThisIterator().setIndex(3);
 					}
 					return null;
 				}
@@ -79,7 +77,13 @@ public class IfStatement extends ComposedStatement {
 			
 			@Override
 			public boolean hasNext() {
-				return (!subIteratorsInitialized || getIndex() <= 2);
+				if (!subIteratorsInitialized || getThisIterator().getIndex() == 0)
+					return true;
+				else if(getThisIterator().getIndex() == 1)
+					return ifIter.hasNext();
+				else if(getThisIterator().getIndex() == 2 && getElseBody() != null)
+					return elseIter.hasNext();
+				else return false;
 			}
 			
 			@Override
