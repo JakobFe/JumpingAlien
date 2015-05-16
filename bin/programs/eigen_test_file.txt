@@ -17,7 +17,7 @@ skip;
 
 wait(0.002);
 
-while true do
+while (x < 10.0) do
 	x:= x + 1.0;
 	y:= y - 2.0;
 done
