@@ -1,5 +1,6 @@
 package jumpingalien.model.program.statements;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -18,26 +19,32 @@ public class SequenceStatement extends ComposedStatement {
 
 			@Override
 			public boolean hasNext() {
-				return (getSubStatementAt(getNbOfSubStatements()-1).iterator().hasNext());
+				//return (getSubStatementAt(getNbOfSubStatements()-1).iterator().hasNext());
+				if(!subIteratorsInitialized)
+					return true;
+				else
+					return getIteratorAt(getNbOfSubStatements()-1).hasNext();
 			}
 
 			@Override
-			public SingleStatement next() throws NoSuchElementException{
+			public Statement next() throws NoSuchElementException{
+				if(!subIteratorsInitialized)
+					initialiseSubIterators();
 				if(!hasNext())
 					throw new NoSuchElementException();
-				else if(getSubStatementAt(index).iterator().hasNext()){			
-					return (SingleStatement)getSubStatementAt(index).iterator().next();
+				else if(getIteratorAt(index).hasNext()){
+					return (Statement)getIteratorAt(index).next();
 				}
 				else{
 					incrementIndex();
-					return (SingleStatement)getSubStatementAt(index).iterator().next();
+					return (Statement)getIteratorAt(index).next();
 				}
 			}
 			
 			public void restart(){
 				setIndex(0);
-				for(Statement substat: getSubStatements()){
-					substat.iterator().restart();
+				for(StatementIterator<Statement> subIter: subIterators){
+					subIter.restart();
 				}
 			}
 			
@@ -56,6 +63,22 @@ public class SequenceStatement extends ComposedStatement {
 				this.index = index;
 			}
 			
+			private void initialiseSubIterators(){
+				subIteratorsInitialized = true;
+				for(Statement substat: getSubStatements()){
+					subIterators.add(substat.iterator());
+				}
+
+			}
+			
+			private StatementIterator<Statement> getIteratorAt(int index){
+				return subIterators.get(index);
+			}
+			
+			private final List<StatementIterator<Statement>> subIterators = 
+					new ArrayList<StatementIterator<Statement>>() ;
+			
+			private boolean subIteratorsInitialized = false;
 		};
 	}
 
