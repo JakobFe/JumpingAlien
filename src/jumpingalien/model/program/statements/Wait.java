@@ -2,26 +2,36 @@ package jumpingalien.model.program.statements;
 
 import java.util.NoSuchElementException;
 
-import jumpingalien.model.program.expressions.Constant;
 import jumpingalien.model.program.expressions.Expression;
 import jumpingalien.part3.programs.SourceLocation;
 
 public class Wait extends SingleStatement {
 
-	@SuppressWarnings("unchecked")
 	public Wait(SourceLocation sourceLocation, Expression duration) {
 		super(sourceLocation);
-		this.nbOfSkips = (int) Math.floor((((Constant<Double>) duration).outcome())/0.001);
+		this.duration = duration;
 	}
+	
+	public Expression getDuration() {
+		return duration;
+	}
+
+	private final Expression duration;
 	
 	public double getNbOfSkips() {
 		return nbOfSkips;
 	}
 
-	private final int nbOfSkips;
+	public void setNbOfSkips(int nbOfSkips) {
+		this.nbOfSkips = nbOfSkips;
+	}
+
+	private int nbOfSkips;
 	
 	@Override
-	public void execute() {}
+	public void execute() {
+		setNbOfSkips((int) Math.floor(((Double)getDuration().outcome())/0.001));
+	}
 	
 	@Override
 	public StatementIterator<Statement> iterator() {

@@ -1,6 +1,6 @@
 package jumpingalien.model.game;
 
-import jumpingalien.model.program.expressions.Variable;
+import jumpingalien.model.program.expressions.Expression;
 
 /**
  * An enumeration involving direction.
@@ -36,7 +36,7 @@ public enum Direction {
 	private final int factor;
 	
 	public static jumpingalien.model.game.Direction convertDirection(
-			Variable dir)
+			Expression dir)
 			throws IllegalArgumentException{
 		// TO DO
 		if (dir.outcome() == jumpingalien.part3.programs.IProgramFactory.Direction.LEFT)
