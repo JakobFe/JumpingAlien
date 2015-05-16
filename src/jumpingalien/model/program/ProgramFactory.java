@@ -291,7 +291,6 @@ public class ProgramFactory implements IProgramFactory<Expression,Statement,Type
 	@Override
 	public Statement createIf(Expression condition, Statement ifBody,
 			Statement elseBody, SourceLocation sourceLocation) {
-		System.out.println("PROGRAMFACTORY CREATE IF");
 		return new IfStatement(condition, ifBody, elseBody, sourceLocation);
 	}
 

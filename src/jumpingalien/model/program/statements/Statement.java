@@ -6,7 +6,6 @@ import jumpingalien.part3.programs.SourceLocation;
 public abstract class Statement {
 	
 	protected Statement(SourceLocation sourceLocation){
-		System.out.println("STATEMENT CONSTRUCTOR");
 		this.sourceLocation = sourceLocation;
 	}
 	

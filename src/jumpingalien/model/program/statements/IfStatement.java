@@ -1,5 +1,7 @@
 package jumpingalien.model.program.statements;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 import jumpingalien.model.program.expressions.Expression;
@@ -11,17 +13,19 @@ public class IfStatement extends ComposedStatement {
 			Statement elseBody, SourceLocation sourceLocation) {
 		super(sourceLocation, ifBody, elseBody);
 		this.condition = condition;
-		System.out.println("IF CONSTRUCTOR COMPLETED");
 	}
 	
 	public Statement getIfBody(){
-		System.out.println("GETIFBODY");
-		System.out.println(getSubStatements());
 		return getSubStatementAt(0);
 	}
 	
 	public Statement getElseBody(){
-		return getSubStatementAt(1);
+		try{
+			return getSubStatementAt(1);
+		}
+		catch(Exception e){
+			return null;
+		}
 	}
 	
 	public Expression getCondition() {
@@ -47,20 +51,23 @@ public class IfStatement extends ComposedStatement {
 			
 			@Override
 			public Statement next() throws NoSuchElementException{
+				if(!subIteratorsInitialized)
+					initialiseSubIterators();
 				if(!hasNext())
 					throw new NoSuchElementException();
 				else{
-					if(getIndex() == 0){
+					if(getThisIterator().getIndex() == 0){
 						return IfStatement.this;
 					}
-					else if(getIndex() == 1){
-						if(hasNext()){
+					else if(getThisIterator().getIndex() == 1){
+						if(ifIter.hasNext()){
 							return ifIter.next();
 						}
-						else
+						else{
 							setIndex(3);
+						}
 					}
-					else if((getIndex() == 2) && (getNbOfSubStatements() == 2)){
+					else if((getThisIterator().getIndex() == 2) && (getNbOfSubStatements() == 2)){
 						if(elseIter.hasNext())
 							return elseIter.next();
 						else
@@ -72,7 +79,7 @@ public class IfStatement extends ComposedStatement {
 			
 			@Override
 			public boolean hasNext() {
-				return (getIndex() <= 2);
+				return (!subIteratorsInitialized || getIndex() <= 2);
 			}
 			
 			@Override
@@ -94,9 +101,18 @@ public class IfStatement extends ComposedStatement {
 			
 			private int index;
 			
-			private final StatementIterator<Statement> ifIter = getIfBody().iterator(); 
+			private void initialiseSubIterators(){
+				subIteratorsInitialized = true;
+				ifIter = getIfBody().iterator();
+				if(getElseBody() != null)
+					elseIter = getElseBody().iterator();
+			}
 			
-			private final StatementIterator<Statement> elseIter = getElseBody().iterator(); 
+			private boolean subIteratorsInitialized = false;
+			
+			private StatementIterator<Statement> ifIter; 
+			
+			private StatementIterator<Statement> elseIter;
 
 		};
 	}

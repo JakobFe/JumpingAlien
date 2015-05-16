@@ -49,7 +49,7 @@ public class Wait extends SingleStatement {
 			
 			@Override
 			public boolean hasNext() {
-				return getIndex() < getNbOfSkips();
+				return ((getNbOfSkips() == 0) || (getIndex() < getNbOfSkips()));
 			}
 			
 			@Override
@@ -77,7 +77,7 @@ public class Wait extends SingleStatement {
 
 	@Override
 	public String toString() {
-		return "Statement: Wait for " + String.valueOf(getNbOfSkips()*0.001) + 
+		return "Statement: Wait for " + getDuration().toString() + 
 				" seconds at source location " + getSourceLocation().toString() + ".";
 	}
 }

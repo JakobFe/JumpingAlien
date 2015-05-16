@@ -34,7 +34,7 @@ public class ProgramExperiment {
 			StatementIterator<Statement> iter = main.iterator();
 			
 			Statement theNext;
-			for(int i=0;i<10;i++){
+			for(int i=0;i<20;i++){
 				System.out.println("\n\nNEXT STATEMENT:");
 				theNext = iter.next();
 				System.out.println(theNext);
@@ -44,6 +44,8 @@ public class ProgramExperiment {
 			
 		}
 		catch(Exception exc){
+			System.out.println(exc);
+			exc.printStackTrace();
 			System.out.println("Experiment aborted due to a parsing failure.");
 		}
 	}

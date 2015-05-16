@@ -47,20 +47,22 @@ public class While extends SingleStatement {
 			public Statement next() throws NoSuchElementException{
 				if(!subIteratorsInitialized)
 					initialiseSubIterators();
-				if(getIndex() == 0)
+				if(getThisIterator().getIndex() == 0)
 					return While.this;
-				else if(getIndex() == 1){
+				else if(getThisIterator().getIndex() == 1){
 					if(bodyIterator.hasNext())
 						return bodyIterator.next();
-					else
-						setIndex(0);
+					else{
+						restart();
+						return this.next();
+					}
 				}
 				return null;
 			}
 			
 			@Override
 			public void restart() {
-				setIndex(0);
+				getThisIterator().setIndex(0);
 				bodyIterator.restart();
 			}
 			
