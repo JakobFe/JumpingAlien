@@ -32,8 +32,10 @@ public class ProgramExperiment {
 			//Statement main = theProgram.getMainStatement();
 			//StatementIterator<Statement> iter = main.iterator();
 			//Statement theNext;
-			for(int i=0;i<20;i++){
-				System.out.println("\n\nNEXT STATEMENT:");
+			for(int i=0;i<40;i++){
+				//System.out.print("NEXT STATEMENT: ");
+				//System.out.print(" current index: ");
+				//System.out.println(i);
 				//theNext = iter.next();
 				//System.out.println(theNext);
 				//if(theNext != null)

@@ -1,17 +1,20 @@
 package jumpingalien.model.program.programs;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import jumpingalien.model.game.GameObject;
 import jumpingalien.model.program.expressions.Variable;
 import jumpingalien.model.program.statements.Statement;
+import jumpingalien.model.program.types.Type;
+import jumpingalien.part3.programs.SourceLocation;
 
 public class Program {
 	
 	public Program(Statement mainStatement,
-			Map<String, Variable> globalVariables){
+			Map<String,Type> declaredVariables){
 		this.mainStatement = mainStatement;
-		this.globalVariables = globalVariables;
+		initialiseGlobalVariables(declaredVariables);
 		mainStatement.setProgram(this);
 	}
 	
@@ -25,11 +28,30 @@ public class Program {
 		return (mainStatement.hasAsSubStatement(statement));
 	}
 	
+	private void initialiseGlobalVariables(Map<String,Type> declaredVariables){
+		this.globalVariables.clear();
+		
+		SourceLocation loc = new SourceLocation(0, 0);
+		for (String name: declaredVariables.keySet()){
+			globalVariables.put(name, new Variable(loc,name,
+											declaredVariables.get(name)));
+		}
+	}
+	
+	private void resetVariables(){
+		Type currType;
+		SourceLocation loc = new SourceLocation(0, 0);
+		for(String name: globalVariables.keySet()){
+			currType = globalVariables.get(name).getType();
+			globalVariables.put(name, new Variable(loc, name, currType));
+		}
+	}
+	
 	public Map<String, Variable> getGlobalVariables() {
 		return globalVariables;
 	}
 
-	private final Map<String, Variable> globalVariables;
+	private final Map<String, Variable> globalVariables = new HashMap<String,Variable>();
 
 	public GameObject getGameObject() {
 		return gameObject;
@@ -52,8 +74,11 @@ public class Program {
 					nextStatement.execute();
 				}
 			}
-			else
+			else{
+				System.out.println("End Of Program");
+				resetVariables();
 				getMainStatement().getThisIterator().restart();
+			}
 		}
 	}
 	

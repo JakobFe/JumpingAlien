@@ -1,6 +1,5 @@
 package jumpingalien.model.program;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -372,17 +371,6 @@ public class ProgramFactory implements IProgramFactory<Expression,Statement,Type
 	@Override
 	public Program createProgram(Statement mainStatement,
 			Map<String, Type> globalVariables) {
-		Map<String, Variable> declaredVariables = new HashMap<String, Variable>();
-		
-		for (String name: globalVariables.keySet()){
-			declaredVariables.put(name, new Variable(new SourceLocation(0, 0), name,
-											globalVariables.get(name)));
-		}
-		System.out.println("Declared variables:");
-		for(String name: declaredVariables.keySet()){
-			System.out.println(declaredVariables.get(name));
-		}
-		System.out.println("\n");
-		return new Program(mainStatement, declaredVariables);
+		return new Program(mainStatement, globalVariables);
 	}
 }
