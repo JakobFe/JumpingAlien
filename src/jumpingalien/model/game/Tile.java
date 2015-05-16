@@ -1,5 +1,6 @@
 package jumpingalien.model.game;
 
+import jumpingalien.model.program.types.ObjectOfWorld;
 import be.kuleuven.cs.som.annotate.*;
 
 /**
@@ -17,7 +18,7 @@ import be.kuleuven.cs.som.annotate.*;
  * 			| isValidYPosition(getYPosition())
  *
  */
-public class Tile {
+public class Tile extends ObjectOfWorld{
 	
 	/**
 	 * Initialize this tile with given x and y position, given world,

@@ -9,6 +9,7 @@ public class Variable extends Expression {
 		super(sourceLocation);
 		this.name = name;
 		this.type = type;
+		this.value = type.getValue();
 	}
 	
 	public String getName() {
@@ -28,16 +29,15 @@ public class Variable extends Expression {
 		return getValue();
 	}
 	
-	
-	public Expression getValue() {
+	public Object getValue() {
 		return value;
 	}
 
-	public void setValue(Expression value) {
+	public void setValue(Object value) {
 		this.value = value;
 	}
 
-	private Expression value;
+	private Object value;
 	
 	@Override
 	public String toString() {

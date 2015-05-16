@@ -18,7 +18,7 @@ public class Print extends SingleStatement {
 	
 	@Override
 	public void execute() {
-		System.out.println(getValue());
+		System.out.println(getValue().outcome());
 	}
 	
 	@Override

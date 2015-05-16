@@ -5,6 +5,7 @@ import java.util.HashSet;
 import be.kuleuven.cs.som.annotate.*;
 import jumpingalien.model.exceptions.*;
 import jumpingalien.model.program.programs.Program;
+import jumpingalien.model.program.types.ObjectOfWorld;
 import jumpingalien.util.Sprite;
 
 /**
@@ -29,7 +30,7 @@ import jumpingalien.util.Sprite;
  * @version	1.1
  * 
  */
-public abstract class GameObject {
+public abstract class GameObject extends ObjectOfWorld{
 	
 	/**
 	 * Initialize this new game object with given position, 
