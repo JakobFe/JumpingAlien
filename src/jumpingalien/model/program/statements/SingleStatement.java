@@ -9,7 +9,7 @@ public abstract class SingleStatement extends Statement {
 	public SingleStatement(SourceLocation sourceLocation) {
 		super(sourceLocation);
 	}
-
+	
 	@Override
 	public StatementIterator<Statement> iterator() {
 		return new StatementIterator<Statement>(){

@@ -12,6 +12,7 @@ public abstract class ComposedStatement extends Statement {
 	
 	public ComposedStatement(SourceLocation sourceLocation, List<Statement> subStatements){
 		super(sourceLocation);
+		System.out.println("FIRST CONSTRUCTOR");
 		Stream<Statement> filteredStream = subStatements.stream().filter(s -> s != null);
 		List<Statement> filteredList = filteredStream.collect(Collectors.toList());
 		this.subStatements = filteredList;
@@ -19,6 +20,7 @@ public abstract class ComposedStatement extends Statement {
 	
 	public ComposedStatement(SourceLocation sourceLocation, Statement...subStatements){
 		super(sourceLocation);
+		System.out.println("SECOND CONSTRUCTOR");
 		this.subStatements = Arrays.asList(subStatements);
 	}
 	
@@ -45,7 +47,8 @@ public abstract class ComposedStatement extends Statement {
 	}
 	
 	public Statement getSubStatementAt(int index) throws IndexOutOfBoundsException{
-		if((index >= getSubStatements().size()))
+		System.out.println("GET SUBSTATEMENT AT");
+		if((index >= getSubStatements().size()) || index<0)
 			throw new IndexOutOfBoundsException();
 		else
 			return getSubStatements().get(index);
