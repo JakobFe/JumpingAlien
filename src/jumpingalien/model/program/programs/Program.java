@@ -44,15 +44,15 @@ public class Program {
 	public void execute(double timeDuration){
 		double td = timeDuration;
 		while(td > 0){
-			if(getMainStatement().iterator().hasNext()){
-				Statement nextStatement = getMainStatement().iterator().next();
+			if(getMainStatement().getThisIterator().hasNext()){
+				Statement nextStatement = getMainStatement().getThisIterator().next();
 				if(nextStatement != null){
 					td -= 0.001;
 					nextStatement.execute();
 				}
 			}
 			else
-				getMainStatement().iterator().restart();
+				getMainStatement().getThisIterator().restart();
 		}
 	}
 	
