@@ -2,6 +2,13 @@ package jumpingalien.model.program.expressions;
 
 import jumpingalien.part3.programs.SourceLocation;
 import jumpingalien.model.game.*;
+import jumpingalien.model.program.expressions.binaryexpression.Addition;
+import jumpingalien.model.program.expressions.binaryexpression.ConditionalAnd;
+import jumpingalien.model.program.expressions.binaryexpression.ConditionalOr;
+import jumpingalien.model.program.expressions.binaryexpression.Division;
+import jumpingalien.model.program.expressions.binaryexpression.Multiplication;
+import jumpingalien.model.program.expressions.binaryexpression.Subtraction;
+import jumpingalien.model.program.expressions.unaryexpression.SquareRoot;
 import static jumpingalien.tests.util.TestUtils.spriteArrayForSize;
 
 public class Experiment {
