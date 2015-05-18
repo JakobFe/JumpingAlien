@@ -1,6 +1,5 @@
 package jumpingalien.model.program.expressions.binaryexpression;
 
-import jumpingalien.model.program.expressions.Constant;
 import jumpingalien.model.program.expressions.Expression;
 import jumpingalien.part3.programs.SourceLocation;
 
@@ -16,11 +15,13 @@ public class Multiplication extends BinaryOperator {
 		return "*";
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public Number outcome() {
-		return ((Constant<Double>) getLeftOperand()).outcome() * 
-				((Constant<Double>)getRightOperand()).outcome();
+		Number leftOutcome = (Number)getLeftOperand().outcome();
+		Number rightOutcome = (Number)getRightOperand().outcome();
+		leftOutcome = convertIntegerToDouble(leftOutcome);
+		rightOutcome = convertIntegerToDouble(rightOutcome);
+		return ((Double) leftOutcome) * ((Double) rightOutcome);
 	}
 
 
