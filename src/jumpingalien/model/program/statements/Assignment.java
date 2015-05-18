@@ -1,6 +1,7 @@
 package jumpingalien.model.program.statements;
 
 import jumpingalien.model.program.expressions.Expression;
+import jumpingalien.model.program.programs.Program;
 import jumpingalien.model.program.types.Type;
 import jumpingalien.part3.programs.SourceLocation;
 
@@ -35,6 +36,12 @@ public class Assignment extends SingleStatement {
 	}
 
 	private Expression value;
+	
+	@Override
+	public void setProgram(Program program) {
+		super.setProgram(program);
+		getValue().setProgram(program);
+	}
 	
 	public void execute(){
 		if(getProgram() != null){
