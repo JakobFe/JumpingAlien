@@ -19,7 +19,7 @@ import jumpingalien.util.Sprite;
  * @invar 	The maximum horizontal velocity of this game object must be valid.
  * 			| canHaveAsMaxHorVelocity(getMaxHorVelocity())
  * @invar	The hit points of this game object must be a valid number of hit points.
- * 			| isValidHitPoints(hitPoints)
+ * 			| isValidHitPoFints(hitPoints)
  * @invar	This game object must have a proper world.
  * 			| hasProperWorld()
  * @invar	The position belonging to this game object must be a valid position
@@ -78,6 +78,7 @@ public abstract class GameObject extends ObjectOfWorld{
 		setMaxHorVelocity(maxHorVelocity);
 		this.sprites = sprites;
 		this.program = program;
+		program.setGameObject(this);
 	}
 	
 	/**
