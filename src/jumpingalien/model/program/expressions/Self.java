@@ -1,6 +1,5 @@
 package jumpingalien.model.program.expressions;
 
-import jumpingalien.model.program.programs.Program;
 import jumpingalien.part3.programs.SourceLocation;
 
 public class Self extends Expression {
@@ -8,16 +7,6 @@ public class Self extends Expression {
 	public Self(SourceLocation sourceLocation){
 		super(sourceLocation);
 	}
-	
-	public Program getProgram() {
-		return program;
-	}
-
-	public void setProgram(Program program) {
-		this.program = program;
-	}
-
-	private Program program;
 	
 	@Override
 	public Object outcome() {

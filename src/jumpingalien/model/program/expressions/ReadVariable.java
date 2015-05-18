@@ -1,6 +1,5 @@
 package jumpingalien.model.program.expressions;
 
-import jumpingalien.model.program.programs.Program;
 import jumpingalien.model.program.types.Type;
 import jumpingalien.part3.programs.SourceLocation;
 
@@ -23,18 +22,7 @@ public class ReadVariable extends Expression {
 	}
 
 	private final Type type;
-	
-	public Program getProgram() {
-		return program;
-	}
-
-	public void setProgram(Program program) {
-		this.program = program;
-	}
-
-	private Program program;
-
-	
+		
 	@Override
 	public Object outcome() {
 		if(getProgram() != null)

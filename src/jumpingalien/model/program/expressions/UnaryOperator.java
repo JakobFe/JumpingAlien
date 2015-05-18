@@ -1,5 +1,6 @@
 package jumpingalien.model.program.expressions;
 
+import jumpingalien.model.program.programs.Program;
 import jumpingalien.part3.programs.SourceLocation;
 import be.kuleuven.cs.som.annotate.Basic;
 
@@ -20,6 +21,12 @@ public abstract class UnaryOperator extends Operator{
 	@Basic
 	public final int getNbOperands() {
 		return 1;
+	}
+	
+	@Override
+	public void setProgram(Program program) {
+		super.setProgram(program);
+		getOperand().setProgram(program);
 	}
 
 	@Override

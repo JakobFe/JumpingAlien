@@ -1,5 +1,6 @@
 package jumpingalien.model.program.expressions;
 
+import jumpingalien.model.program.programs.Program;
 import jumpingalien.part3.programs.SourceLocation;
 import be.kuleuven.cs.som.annotate.Basic;
 
@@ -35,6 +36,13 @@ public abstract class BinaryOperator extends Operator{
 		return "Expression: Binary Operator: " + getLeftOperand().toString() + 
 				" " + getOperatorSymbol() + " " + getRightOperand().toString() + 
 				" at source location " + getSourceLocation() + ".";
+	}
+	
+	@Override
+	public void setProgram(Program program) {
+		super.setProgram(program);
+		getLeftOperand().setProgram(program);
+		getRightOperand().setProgram(program);
 	}
 
 }
