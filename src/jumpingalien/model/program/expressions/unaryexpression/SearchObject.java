@@ -5,7 +5,6 @@ import jumpingalien.model.game.GameObject;
 import jumpingalien.model.game.Tile;
 import jumpingalien.model.game.World;
 import jumpingalien.model.program.expressions.Expression;
-import jumpingalien.model.program.expressions.UnaryOperator;
 import jumpingalien.model.program.expressions.Variable;
 import jumpingalien.part3.programs.SourceLocation;
 

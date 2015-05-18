@@ -70,6 +70,7 @@ public abstract class GameObject extends ObjectOfWorld{
 			int hitPoints, Program program) throws IllegalArgumentException{
 		assert isValidInitHorVelocity(initHorVelocity);
 		assert canHaveAsMaxHorVelocity(maxHorVelocity,initHorVelocity);
+		assert (program == null || canHaveProgram());
 		if(!isValidPosition(position,null))
 			throw new IllegalArgumentException("Invalid position!");
 		setPosition(position);
@@ -78,7 +79,8 @@ public abstract class GameObject extends ObjectOfWorld{
 		setMaxHorVelocity(maxHorVelocity);
 		this.sprites = sprites;
 		this.program = program;
-		program.setGameObject(this);
+		if(program != null)
+			program.setGameObject(this);
 	}
 	
 	/**

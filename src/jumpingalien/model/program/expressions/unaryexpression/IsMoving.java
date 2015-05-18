@@ -2,8 +2,6 @@ package jumpingalien.model.program.expressions.unaryexpression;
 
 import jumpingalien.model.game.GameObject;
 import jumpingalien.model.program.expressions.Expression;
-import jumpingalien.model.program.expressions.UnaryOperator;
-import jumpingalien.model.program.expressions.Variable;
 import jumpingalien.part3.programs.SourceLocation;
 
 public class IsMoving extends UnaryOperator {
@@ -11,15 +9,14 @@ public class IsMoving extends UnaryOperator {
 	public IsMoving(SourceLocation sourceLocation, Expression operand,
 			Expression direction) {
 		super(sourceLocation, operand);
-		this.direction = 
-		(Variable)direction;
+		this.direction = direction;
 	}
 
-	public Variable getDirection() {
+	public Expression getDirection() {
 		return direction;
 	}
 	
-	private final Variable direction;
+	private final Expression direction;
 	
 	@Override
 	public String getOperatorSymbol() {

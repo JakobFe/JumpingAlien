@@ -1,5 +1,7 @@
-package jumpingalien.model.program.expressions;
+package jumpingalien.model.program.expressions.unaryexpression;
 
+import jumpingalien.model.program.expressions.Expression;
+import jumpingalien.model.program.expressions.Operator;
 import jumpingalien.model.program.programs.Program;
 import jumpingalien.part3.programs.SourceLocation;
 import be.kuleuven.cs.som.annotate.Basic;

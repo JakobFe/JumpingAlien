@@ -4,7 +4,6 @@ import java.util.Random;
 
 import jumpingalien.model.program.expressions.Constant;
 import jumpingalien.model.program.expressions.Expression;
-import jumpingalien.model.program.expressions.UnaryOperator;
 import jumpingalien.part3.programs.SourceLocation;
 
 public class RandomDouble extends UnaryOperator {

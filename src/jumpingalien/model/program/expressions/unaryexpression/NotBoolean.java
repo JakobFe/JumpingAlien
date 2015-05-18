@@ -1,7 +1,6 @@
 package jumpingalien.model.program.expressions.unaryexpression;
 
 import jumpingalien.model.program.expressions.Expression;
-import jumpingalien.model.program.expressions.UnaryOperator;
 import jumpingalien.part3.programs.SourceLocation;
 
 public class NotBoolean extends UnaryOperator {

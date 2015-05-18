@@ -97,7 +97,8 @@ public class IfStatement extends ComposedStatement {
 			public void restart() {
 				setIndex(0);
 				ifIter.restart();
-				elseIter.restart();
+				if(elseIter != null)
+					elseIter.restart();
 			}
 			
 			@Override
