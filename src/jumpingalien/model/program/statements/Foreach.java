@@ -1,9 +1,9 @@
 package jumpingalien.model.program.statements;
 
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import jumpingalien.model.game.World;
@@ -43,6 +43,17 @@ public class Foreach extends SingleStatement {
 	}
 	
 	private final Kind variableKind;
+	
+	private void assign(ObjectOfWorld theObject) {
+		assert (getProgram() != null);
+		Assignment assignment = 
+				new Assignment(getVariableName(), 
+								new ObjectOfWorld(),
+								new Constant<ObjectOfWorld>(getSourceLocation(),theObject),
+								getSourceLocation());
+		assignment.setProgram(getProgram());
+		assignment.execute();
+	}
 
 	public Expression getRestriction() {
 		return restriction;
@@ -52,13 +63,7 @@ public class Foreach extends SingleStatement {
 		assert (getProgram() != null);
 		if(getRestriction() != null)
 			return true;
-		Assignment assignment = 
-				new Assignment(getVariableName(), 
-								new ObjectOfWorld(),
-								new Constant<ObjectOfWorld>(getSourceLocation(),theObject),
-								getSourceLocation());
-		assignment.setProgram(getProgram());
-		assignment.execute();
+		assign(theObject);
 		return (Boolean)getRestriction().outcome();
 	}
 	
@@ -72,13 +77,7 @@ public class Foreach extends SingleStatement {
 		assert (getProgram() != null);
 		if(getSortingExpression() == null)
 			return 0;
-		Assignment assignment = 
-				new Assignment(getVariableName(), 
-								new ObjectOfWorld(),
-								new Constant<ObjectOfWorld>(getSourceLocation(),theObject),
-								getSourceLocation());
-		assignment.setProgram(getProgram());
-		assignment.execute();
+		assign(theObject);
 		return (Double)getSortingExpression().outcome();
 	}
 	
@@ -109,11 +108,51 @@ public class Foreach extends SingleStatement {
 	public List<ObjectOfWorld> getVariables() {
 		return variables;
 	}
+	
+	public ObjectOfWorld getVariableAt(int index){
+		return variables.get(index);
+	}
 
+	// moet nog uitgebreid getests worden!!!
 	public void setVariables() {
 		assert(getProgram() != null);
 		assert(getProgram().getGameObject() != null);
 		assert(getProgram().getGameObject().getWorld() != null);
+		
+		HashSet<ObjectOfWorld> set = convertKind();
+		Stream<ObjectOfWorld> filteredStream = set.stream().filter(s -> checkRestriction(s));
+		Stream<ObjectOfWorld> sortedStream = filteredStream;
+//		Comparator<ObjectOfWorld> c = null;
+		if(getSortDirection() == SortDirection.ASCENDING){
+			sortedStream = filteredStream.sorted((o1,o2) -> 
+							Double.compare(getSortValue(o1), getSortValue(o2)));
+			
+//			c = new Comparator<ObjectOfWorld>() {
+//
+//				@Override
+//				public int compare(ObjectOfWorld o1, ObjectOfWorld o2) {
+//					return Double.compare(getSortValue(o1), getSortValue(o2));
+//				}
+//	
+//			};
+		}
+		else if(getSortDirection() == SortDirection.DESCENDING){
+			sortedStream = filteredStream.sorted((o1,o2) -> 
+							Double.compare(getSortValue(o2), getSortValue(o1)));
+//			c = new Comparator<ObjectOfWorld>() {
+//
+//				@Override
+//				public int compare(ObjectOfWorld o1, ObjectOfWorld o2) {
+//					return Double.compare(getSortValue(o2), getSortValue(o1));
+//				}
+//	
+//			};
+		}
+//		sortedStream = filteredStream.sorted(c);
+		this.variables = sortedStream.collect(Collectors.toList());
+	}
+
+	private HashSet<ObjectOfWorld> convertKind() {
 		World world = getProgram().getGameObject().getWorld();
 		HashSet<ObjectOfWorld> set = new HashSet<ObjectOfWorld>();
 		if(getVariableKind() == Kind.MAZUB){
@@ -138,26 +177,16 @@ public class Foreach extends SingleStatement {
 			set.addAll(world.getAllGameObjects());
 			set.addAll(world.getAllTiles());
 		}
-		Stream<ObjectOfWorld> filteredStream = set.stream().filter(s -> checkRestriction(s));
-		Stream<ObjectOfWorld> sortedStream;
-		if(getSortDirection() == SortDirection.ASCENDING){
-			Comparator c = new Comparator<ObjectOfWorld>() {
-
-				@Override
-				public int compare(ObjectOfWorld o1, ObjectOfWorld o2) {
-					return Double.compare(getSortValue(o1), getSortValue(o2));
-				}
-				
-			};
-		}
+		return set;
 	}
 
-	public List<ObjectOfWorld> variables;
+	private List<ObjectOfWorld> variables;
 	
 	@Override
 	public void execute() {
 		if(getProgram() != null){
-			getProgram().getGameObject().getWorld();
+			setVariables();
+			getThisIterator().setIndex(1);
 		}
 			
 	}
@@ -168,22 +197,36 @@ public class Foreach extends SingleStatement {
 			
 			@Override
 			public boolean hasNext() {
-				return (!subIteratorsInitialized || getThisIterator().getIndex() < 2);
+				return (!subIteratorsInitialized || 
+						getThisIterator().getIndex()<2);
 			}
 			
 			@Override
 			public Statement next() throws NoSuchElementException{
+				if(!hasNext())
+					throw new NoSuchElementException();
 				if(!subIteratorsInitialized)
 					initialiseSubIterators();
 				if(getThisIterator().getIndex() == 0)
 					return Foreach.this;
 				else if(getThisIterator().getIndex() == 1){
+					if(!bodyStarted){
+						assign(getVariableAt(getVariableIndex()));
+						bodyStarted = true;
+					}
 					if(bodyIterator.hasNext())
 						return bodyIterator.next();
-					else{
-						restart();
+					else if(getVariableIndex() < (getVariables().size()-1)){
+						bodyIterator.restart();
+						bodyStarted = false;
+						incrementVariableIndex();
 						return this.next();
 					}
+					else{
+						getThisIterator().setIndex(2);
+						assign(null);
+					}
+					
 				}
 				return null;
 			}
@@ -192,16 +235,19 @@ public class Foreach extends SingleStatement {
 			public void restart() {
 				getThisIterator().setIndex(0);
 				bodyIterator.restart();
-			}
-			
-			@Override
-			public void setIndex(int index) {
-				this.index = index;
+				bodyStarted = false;
+				setVariableIndex(0);
+				assign(null);
 			}
 			
 			@Override
 			public int getIndex() {
 				return this.index;
+			}
+			
+			@Override
+			public void setIndex(int index) {
+				this.index = index;
 			}
 			
 			private int index = 0;
@@ -215,6 +261,22 @@ public class Foreach extends SingleStatement {
 			private StatementIterator<Statement> bodyIterator;
 			
 			private boolean subIteratorsInitialized = false;
+			
+			public int getVariableIndex() {
+				return variableIndex;
+			}
+			
+			public void incrementVariableIndex(){
+				setVariableIndex(getVariableIndex() + 1);
+			}
+			
+			public void setVariableIndex(int variableIndex) {
+				this.variableIndex = variableIndex;
+			}
+
+			private int variableIndex = 0;
+			
+			private boolean bodyStarted = false;
 		};
 	}
 

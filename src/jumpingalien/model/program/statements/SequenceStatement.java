@@ -37,6 +37,7 @@ public class SequenceStatement extends ComposedStatement {
 				}
 			}
 			
+			@Override
 			public void restart(){
 				setIndex(0);
 				for(StatementIterator<Statement> subIter: subIterators){
@@ -44,6 +45,7 @@ public class SequenceStatement extends ComposedStatement {
 				}
 			}
 			
+			@Override
 			public int getIndex() {
 				return index;
 			}
