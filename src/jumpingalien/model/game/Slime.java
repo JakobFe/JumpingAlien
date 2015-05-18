@@ -601,9 +601,10 @@ public class Slime extends Character{
 	 */
 	@Override
 	public String toString(){
-		return String.valueOf(getHitPoints()) + " - " + getSchool().toString();
+		//return String.valueOf(getHitPoints()) + " - " + getSchool().toString();
 		//return "Slime at " + getPosition().toString() + " with" +
 		//String.valueOf(getHitPoints())  + "hit points.";
+		return String.valueOf(getProgram() != null);
 	}
 	
 	/**

@@ -426,7 +426,8 @@ public class Plant extends GameObject {
 	 */
 	@Override
 	public String toString(){
-		return "Plant at " + getPosition().toString() +  " with" +
-							String.valueOf(getHitPoints()) + "hit points.";
+		//return "Plant at " + getPosition().toString() +  " with" +
+		//					String.valueOf(getHitPoints()) + "hit points.";
+		return String.valueOf(getProgram() != null);
 	}
 }
