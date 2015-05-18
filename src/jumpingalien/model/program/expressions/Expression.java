@@ -1,5 +1,6 @@
 package jumpingalien.model.program.expressions;
 
+import jumpingalien.model.program.programs.Program;
 import jumpingalien.part3.programs.SourceLocation;
 
 public abstract class Expression {
@@ -26,5 +27,16 @@ public abstract class Expression {
 	}
 
 	private final SourceLocation sourceLocation;
+	
+	public Program getProgram() {
+		return program;
+	}
+
+	public void setProgram(Program program) {
+		this.program = program;
+	}
+
+	private Program program;
+
 
 }

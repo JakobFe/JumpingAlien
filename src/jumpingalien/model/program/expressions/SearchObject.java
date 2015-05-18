@@ -4,7 +4,6 @@ package jumpingalien.model.program.expressions;
 import jumpingalien.model.game.GameObject;
 import jumpingalien.model.game.Tile;
 import jumpingalien.model.game.World;
-import jumpingalien.model.program.programs.Program;
 import jumpingalien.part3.programs.SourceLocation;
 
 public class SearchObject extends UnaryOperator {
@@ -12,17 +11,6 @@ public class SearchObject extends UnaryOperator {
 	public SearchObject(SourceLocation sourceLocation, Expression direction) {
 		super(sourceLocation, direction);
 	}
-
-	public Program getProgram() {
-		return program;
-	}
-
-	public void setProgram(Program program) {
-		this.program = program;
-	}
-
-	private Program program;
-
 	
 	@Override
 	public Object outcome() throws IllegalArgumentException{
