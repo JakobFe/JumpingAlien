@@ -3,6 +3,7 @@ package jumpingalien.model.program.statements;
 import java.util.NoSuchElementException;
 
 import jumpingalien.model.program.expressions.Expression;
+import jumpingalien.model.program.programs.Program;
 import jumpingalien.part3.programs.SourceLocation;
 
 public class Wait extends SingleStatement {
@@ -17,6 +18,12 @@ public class Wait extends SingleStatement {
 	}
 
 	private final Expression duration;
+	
+	@Override
+	public void setProgram(Program program) {
+		super.setProgram(program);
+		getDuration().setProgram(program);
+	}
 	
 	public double getNbOfSkips() {
 		return nbOfSkips;

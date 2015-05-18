@@ -1,6 +1,7 @@
 package jumpingalien.model.program.statements;
 
 import jumpingalien.model.program.expressions.Expression;
+import jumpingalien.model.program.programs.Program;
 import jumpingalien.part3.programs.SourceLocation;
 
 public class Print extends SingleStatement {
@@ -15,6 +16,12 @@ public class Print extends SingleStatement {
 	}
 
 	private final Expression value;
+	
+	@Override
+	public void setProgram(Program program) {
+		super.setProgram(program);
+		getValue().setProgram(program);
+	}
 	
 	@Override
 	public void execute() {

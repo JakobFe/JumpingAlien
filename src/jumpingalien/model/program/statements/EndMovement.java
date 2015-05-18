@@ -2,6 +2,7 @@ package jumpingalien.model.program.statements;
 
 import jumpingalien.model.game.*;
 import jumpingalien.model.program.expressions.Expression;
+import jumpingalien.model.program.programs.Program;
 import jumpingalien.part3.programs.SourceLocation;
 
 public class EndMovement extends SingleStatement {
@@ -17,6 +18,12 @@ public class EndMovement extends SingleStatement {
 	}
 
 	private final Expression direction;
+	
+	@Override
+	public void setProgram(Program program) {
+		super.setProgram(program);
+		getDirection().setProgram(program);
+	}
 	
 	@Override
 	public void execute() {

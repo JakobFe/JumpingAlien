@@ -31,6 +31,7 @@ public class While extends SingleStatement {
 	public void setProgram(Program program) {
 		super.setProgram(program);
 		getBody().setProgram(program);
+		getCondition().setProgram(program);
 	}
 	
 	public void execute(){

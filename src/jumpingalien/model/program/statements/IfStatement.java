@@ -3,6 +3,7 @@ package jumpingalien.model.program.statements;
 import java.util.NoSuchElementException;
 
 import jumpingalien.model.program.expressions.Expression;
+import jumpingalien.model.program.programs.Program;
 import jumpingalien.part3.programs.SourceLocation;
 
 public class IfStatement extends ComposedStatement {
@@ -31,6 +32,12 @@ public class IfStatement extends ComposedStatement {
 	}
 
 	private final Expression condition;
+	
+	@Override
+	public void setProgram(Program program) {
+		super.setProgram(program);
+		getCondition().setProgram(program);
+	}
 
 	@Override
 	public void execute() {
