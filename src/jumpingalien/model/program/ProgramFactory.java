@@ -307,8 +307,8 @@ public class ProgramFactory implements IProgramFactory<Expression,Statement,Type
 			Expression sort,
 			jumpingalien.part3.programs.IProgramFactory.SortDirection sortDirection,
 			Statement body, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		return new Foreach(variableName, variableKind, where, sort, sortDirection,
+							body, sourceLocation);
 	}
 
 	@Override
