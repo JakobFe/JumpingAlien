@@ -46,5 +46,15 @@ public abstract class BinaryOperator extends Operator{
 		getLeftOperand().setProgram(program);
 		getRightOperand().setProgram(program);
 	}
+	
+	public static Double convertIntegerToDouble(Number number)
+			throws IllegalArgumentException{
+		if(number instanceof Integer)
+			return new Double((Integer)number);
+		else if(number instanceof Double)
+			return (Double)number;
+		else
+			throw new IllegalArgumentException();
+	}
 
 }

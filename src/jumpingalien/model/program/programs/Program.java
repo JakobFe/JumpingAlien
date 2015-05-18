@@ -69,7 +69,7 @@ public class Program {
 				Statement nextStatement = getMainStatement().getThisIterator().next();
 				if(nextStatement != null){
 					td -= 0.001;
-					//System.out.println(nextStatement);
+					System.out.println(nextStatement.getSourceLocation());
 					nextStatement.execute();
 				}
 			}

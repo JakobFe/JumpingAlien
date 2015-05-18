@@ -1,6 +1,6 @@
 package jumpingalien.model.program.expressions.unaryexpression;
 
-import jumpingalien.model.game.Terrain;
+import jumpingalien.model.game.Tile;
 import jumpingalien.model.program.expressions.Expression;
 import jumpingalien.part3.programs.SourceLocation;
 
@@ -17,7 +17,7 @@ public class IsPassable extends UnaryOperator {
 
 	@Override
 	public Object outcome() {
-		return ((Terrain) getOperand().outcome()).isPassable();
+		return ((Tile) getOperand().outcome()).getGeoFeature().isPassable();
 	}
 
 }

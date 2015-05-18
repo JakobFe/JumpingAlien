@@ -1,11 +1,8 @@
-package jumpingalien.model.program.expressions.unaryexpression;
+package jumpingalien.model.program.expressions.binaryexpression;
 
 import jumpingalien.model.game.GameObject;
 import jumpingalien.model.game.Tile;
-import jumpingalien.model.program.expressions.Constant;
 import jumpingalien.model.program.expressions.Expression;
-import jumpingalien.model.program.expressions.binaryexpression.BinaryOperator;
-import jumpingalien.model.program.programs.Program;
 import jumpingalien.part3.programs.SourceLocation;
 
 public class GetTile extends BinaryOperator {
@@ -15,28 +12,16 @@ public class GetTile extends BinaryOperator {
 		super(sourceLocation, leftOperand, rightOperand);
 	}
 	
-	public Program getProgram() {
-		return program;
-	}
-
-	public void setProgram(Program program) {
-		this.program = program;
-	}
-
-	private Program program;
-
-	
 	@Override
 	public String getOperatorSymbol() {
 		return "gettile";
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public Tile outcome() {
 		GameObject thisObject = getProgram().getGameObject();
-		int xPos = (int) Math.floor(((Constant<Double>) getLeftOperand()).outcome());
-		int yPos = (int) Math.floor(((Constant<Double>) getRightOperand()).outcome());
+		int xPos = (int) Math.floor((Double)(getLeftOperand()).outcome());
+		int yPos = (int) Math.floor((Double)(getRightOperand()).outcome());
 		return thisObject.getWorld().getTileAtPos(xPos, yPos);
 	}
 	

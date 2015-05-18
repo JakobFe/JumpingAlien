@@ -23,7 +23,10 @@ public class Addition extends BinaryOperator {
 	public Number outcome() {
 		//return ((Constant<Double>) getLeftOperand()).outcome() + 
 		//		((Constant<Double>)getRightOperand()).outcome();
-		return ((Double) getLeftOperand().outcome()) + 
-			   ((Double) getRightOperand().outcome());
+		Number leftOutcome = (Number)getLeftOperand().outcome();
+		Number rightOutcome = (Number)getRightOperand().outcome();
+		leftOutcome = convertIntegerToDouble(leftOutcome);
+		rightOutcome = convertIntegerToDouble(rightOutcome);
+		return ((Double) leftOutcome) + ((Double) rightOutcome);
 	}
 }

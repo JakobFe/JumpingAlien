@@ -10,8 +10,9 @@ public class Self extends Expression {
 	
 	@Override
 	public Object outcome() {
-		if(getProgram() != null)
+		if(getProgram() != null){
 			return getProgram().getGameObject();
+		}	
 		else
 			return null;
 	}
