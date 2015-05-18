@@ -360,6 +360,11 @@ public class World {
 	public HashSet<Tile> getImpassableTiles() {
 		return impassableTiles;
 	}
+	
+	// nodig in foreach
+	public HashSet<Tile> getAllTiles(){
+		return getTilesIn(0, 0, getWorldWidth()-1, getWorldHeight()-1);
+	}
 
 	/**
 	 * Checks whether a tile is passable or not.
