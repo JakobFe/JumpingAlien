@@ -12,7 +12,7 @@ public class Equals extends BinaryOperator {
 
 	@Override
 	public Boolean outcome() {
-		return getLeftOperand().equals(getRightOperand());
+		return getLeftOperand().outcome() == getRightOperand().outcome();
 	}
 
 	@Override

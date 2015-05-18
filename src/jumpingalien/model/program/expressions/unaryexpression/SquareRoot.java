@@ -1,6 +1,5 @@
 package jumpingalien.model.program.expressions.unaryexpression;
 
-import jumpingalien.model.program.expressions.Constant;
 import jumpingalien.model.program.expressions.Expression;
 import jumpingalien.part3.programs.SourceLocation;
 
@@ -15,10 +14,9 @@ public class SquareRoot extends UnaryOperator{
 		return "sqrt";
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public Number outcome() {
-		return Math.sqrt(((Constant<Double>) getOperand()).outcome());
+		return Math.sqrt((Double)(getOperand()).outcome());
 	}
 
 }

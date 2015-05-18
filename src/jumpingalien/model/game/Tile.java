@@ -268,8 +268,9 @@ public class Tile extends ObjectOfWorld{
 	 */
 	@Override
 	public String toString(){
-		return "Tile at tile position " + String.valueOf(getTileXPos()) + "," 
-				+ String.valueOf(getTileYPos()) + 
-				" in " + getWorld().toString();
+//		return "Tile at tile position " + String.valueOf(getTileXPos()) + "," 
+//				+ String.valueOf(getTileYPos()) + 
+//				" in " + getWorld().toString();
+		return "Tile";
 	}
 }

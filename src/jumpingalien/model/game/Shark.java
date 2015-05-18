@@ -774,7 +774,8 @@ public class Shark extends Character implements JumpInterface{
 		//return "Shark at " + getPosition().toString() + " with" +
 		//		String.valueOf(getHitPoints())  + "hit points.";
 		//return getVertVelocity() + "";
-		return String.valueOf(getProgram() != null);
+		//return String.valueOf(getProgram() != null);
+		return "Shark";
 	}
 	
 	/**

@@ -604,7 +604,8 @@ public class Slime extends Character{
 		//return String.valueOf(getHitPoints()) + " - " + getSchool().toString();
 		//return "Slime at " + getPosition().toString() + " with" +
 		//String.valueOf(getHitPoints())  + "hit points.";
-		return String.valueOf(getProgram() != null);
+		//return String.valueOf(getProgram() != null);
+		return "Slime";
 	}
 	
 	/**

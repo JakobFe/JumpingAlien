@@ -197,7 +197,8 @@ public class Mazub extends Alien{
 	 */
 	@Override
 	public String toString(){
-		return "Mazub at position " + getPosition().toString();
+		//return "Mazub at position " + getPosition().toString();
+		return "Mazub";
 	}
 
 	@Override

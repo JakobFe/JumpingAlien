@@ -56,19 +56,22 @@ public class Facade extends jumpingalien.part2.facade.Facade implements IFacadeP
 	@Override
 	public Plant createPlantWithProgram(int x, int y, Sprite[] sprites,
 			Program program) {
-		return new Plant(new Position(x, y), sprites,program);
+		//return new Plant(new Position(x, y), sprites,program);
+		return createPlant(x, y, sprites);
 	}
 
 	@Override
 	public Shark createSharkWithProgram(int x, int y, Sprite[] sprites,
 			Program program) {
-		return new Shark(new Position(x, y), sprites,program);
+		//return new Shark(new Position(x, y), sprites,program);
+		return createShark(x, y, sprites);
 	}
 
 	@Override
 	public Slime createSlimeWithProgram(int x, int y, Sprite[] sprites,
 			School school, Program program) {
-		return new Slime(new Position(x, y), sprites, school,program);
+		//return new Slime(new Position(x, y), sprites, school,program);
+		return createSlime(x, y, sprites, school);
 	}
 
 	@Override

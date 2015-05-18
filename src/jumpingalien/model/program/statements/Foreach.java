@@ -61,7 +61,7 @@ public class Foreach extends SingleStatement {
 	
 	private boolean checkRestriction(ObjectOfWorld theObject){
 		assert (getProgram() != null);
-		if(getRestriction() != null)
+		if(getRestriction() == null)
 			return true;
 		assign(theObject);
 		return (Boolean)getRestriction().outcome();
@@ -120,7 +120,7 @@ public class Foreach extends SingleStatement {
 		assert(getProgram().getGameObject().getWorld() != null);
 		
 		HashSet<ObjectOfWorld> set = convertKind();
-		Stream<ObjectOfWorld> filteredStream = set.stream().filter(s -> checkRestriction(s));
+		Stream<ObjectOfWorld> filteredStream = set.stream().filter(s -> checkRestriction(s));		
 		Stream<ObjectOfWorld> sortedStream = filteredStream;
 //		Comparator<ObjectOfWorld> c = null;
 		if(getSortDirection() == SortDirection.ASCENDING){
