@@ -37,7 +37,8 @@ public class Facade extends jumpingalien.part2.facade.Facade implements IFacadeP
 	@Override
 	public Buzam createBuzamWithProgram(int pixelLeftX, int pixelBottomY,
 			Sprite[] sprites, Program program) {
-		return new Buzam (new Position(pixelLeftX, pixelBottomY), sprites,program);
+		//return new Buzam (new Position(pixelLeftX, pixelBottomY), sprites,program);
+		return createBuzam(pixelLeftX, pixelBottomY, sprites);
 	}
 
 	@Override
