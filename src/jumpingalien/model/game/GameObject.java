@@ -1,5 +1,6 @@
 package jumpingalien.model.game;
 
+
 import java.util.HashSet;
 
 import be.kuleuven.cs.som.annotate.*;
@@ -7,6 +8,7 @@ import jumpingalien.model.exceptions.*;
 import jumpingalien.model.program.programs.Program;
 import jumpingalien.model.program.types.ObjectOfWorld;
 import jumpingalien.util.Sprite;
+import static jumpingalien.tests.util.TestUtils.doubleArray;
 
 /**
  * A class concerning game objects with a position, a horizontal velocity,
@@ -1152,7 +1154,7 @@ public abstract class GameObject extends ObjectOfWorld{
 	 * 			We are aware of this problem and we will solve it by defensive programming
 	 * 			before we hand in the final solution. 
 	 */
-	protected abstract void updatePositionTileCollision(double[] newPos);
+	protected abstract double[] updatePositionTileCollision(double[] newPos);
 	
 	/**
 	 * A method that receives a position in the form of a double array 
@@ -1185,7 +1187,7 @@ public abstract class GameObject extends ObjectOfWorld{
 	 * 			We are aware of this problem and we will solve it by defensive programming
 	 * 			before we hand in the final solution. 
 	 */
-	protected void setPositionAfterCollision(double[] newPos, HashSet<GameObject> collection){
+	protected double[] getPositionAfterCollision(double[] newPos, HashSet<GameObject> collection){
 		assert newPos.length == 2;
 		double newXPos = newPos[0];
 		double newYPos = newPos[1];
@@ -1226,8 +1228,7 @@ public abstract class GameObject extends ObjectOfWorld{
 				}
 			}
 		}
-		getPosition().terminate();
-		setPosition(new Position(newXPos,newYPos,getWorld()));
+		return doubleArray(newXPos,newYPos);
 	}
 	
 	/**
@@ -1250,8 +1251,8 @@ public abstract class GameObject extends ObjectOfWorld{
 	 * 			We are aware of this problem and we will solve it by defensive programming
 	 * 			before we hand in the final solution.  
 	 */
-	protected void updatePositionObjectCollision(double[] newPos){
-		setPositionAfterCollision(newPos, getBlockingObjects());
+	protected double[] updatePositionObjectCollision(double[] newPos){
+		return getPositionAfterCollision(newPos, getBlockingObjects());
 	}
 	
 	/**
