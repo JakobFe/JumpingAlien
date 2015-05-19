@@ -316,9 +316,10 @@ public abstract class Alien extends Character implements JumpInterface{
 	 * 			| if (getVertDirection() == Direction.UP)
 	 *			|	setVertVelocity(0)
 	 */
-	public void endJump(){
-		if (getVertDirection() == Direction.UP)
-			setVertVelocity(0);
+	public void endJump() throws IllegalStateException{
+		if (getVertDirection() != Direction.UP)
+			throw new IllegalStateException("This alien is not jumping!");
+		setVertVelocity(0);
 	}
 	
 	/**

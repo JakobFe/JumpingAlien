@@ -77,7 +77,12 @@ public class Facade implements IFacadePart2 {
 
 	@Override
 	public void endJump(Mazub alien) {
-		alien.endJump();
+		try{
+			alien.endJump();
+		}
+		catch(IllegalStateException e){
+			new ModelException("Can not end jumping!");
+		}
 	}
 
 	@Override

@@ -1077,7 +1077,8 @@ public class World {
 		result.addAll(allPlants);
 		result.addAll(allSlimes);
 		result.add(getMazub());
-		result.add(getBuzam());
+		if(getBuzam() != null)
+			result.add(getBuzam());
 		return result;
 	}
 	
@@ -1128,7 +1129,8 @@ public class World {
 		result.addAll(allSharks);
 		result.addAll(allSlimes);
 		result.add(getMazub());
-		result.add(getBuzam());
+		if(getBuzam() != null)
+			result.add(getBuzam());
 		return result;
 	}
 	
@@ -1202,7 +1204,10 @@ public class World {
 			updateWindowPos();
 		}
 		if (getBuzam() != null){
+			try{
 			getBuzam().advanceTime(timeDuration);
+			}
+			catch(IllegalJumpInvokeException | IllegalStateException e){}
 		}
 		for(Plant plant: getAllUnterminatedPlants()){
 			if(!plant.isTerminated())
