@@ -8,6 +8,7 @@ public class Break extends SingleStatement {
 		super(sourceLocation);
 	}
 	
+	@SuppressWarnings("unused")
 	@Override
 	public void execute() {
 		if(getProgram() != null){

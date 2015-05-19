@@ -1,9 +1,9 @@
 package jumpingalien.part3.tests;
-/**
+
 import static org.junit.Assert.*;
 import jumpingalien.model.game.*;
 import jumpingalien.model.program.expressions.Constant;
-import jumpingalien.model.program.expressions.SearchObject;
+import jumpingalien.model.program.expressions.unaryexpression.SearchObject;
 import jumpingalien.part3.programs.SourceLocation;
 
 import org.junit.Before;
@@ -127,4 +127,4 @@ public class SearchObjectTest {
 	
 
 }
-*/
+
