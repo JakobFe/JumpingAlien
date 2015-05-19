@@ -1,5 +1,14 @@
 package jumpingalien.tests.util;
 
+import java.util.Optional;
+
+import jumpingalien.model.program.ProgramFactory;
+import jumpingalien.model.program.expressions.Expression;
+import jumpingalien.model.program.programs.Program;
+import jumpingalien.model.program.statements.Statement;
+import jumpingalien.model.program.types.Type;
+import jumpingalien.part3.programs.IProgramFactory;
+import jumpingalien.part3.programs.ProgramParser;
 import jumpingalien.util.Sprite;
 
 public class TestUtils {
@@ -73,4 +82,20 @@ public class TestUtils {
 		}
 		return result;
 	}
+	
+	/////////////////////////////////////////////////////////////////////////////////////
+	
+	// Parse a program that is correctly written.
+	public static Program parseProgram(String text){
+		IProgramFactory<Expression, Statement, Type, Program> theFactory = 
+				new ProgramFactory();
+		ProgramParser<Expression, Statement, Type, Program> theParser = 
+				new ProgramParser<>(theFactory);
+		Optional<Program> parseResult = theParser.parseString(text);
+		if(parseResult.isPresent())
+			return parseResult.get();
+		else
+			return null;
+		}
+	
 }

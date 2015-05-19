@@ -1,16 +1,15 @@
 package jumpingalien.part3.tests;
 
 import static org.junit.Assert.*;
+
 import jumpingalien.model.game.*;
-import jumpingalien.model.program.expressions.Constant;
 import jumpingalien.model.program.expressions.unaryexpression.SearchObject;
-import jumpingalien.part3.programs.SourceLocation;
+import jumpingalien.model.program.programs.Program;
+import jumpingalien.model.program.statements.*;
+import static jumpingalien.tests.util.TestUtils.*;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import static jumpingalien.tests.util.TestUtils.spriteArrayForSize;
-
 
 public class SearchObjectTest {
 
@@ -18,8 +17,6 @@ public class SearchObjectTest {
 	public void setUp() throws Exception {
 		testWorld = new World(25, 40, 20, 1000, 1000, 0, 0);
 		
-		// Generate an alien on top of a solid tile
-		alien = new Mazub(new Position(500,250), spriteArrayForSize(10, 10));
 		testWorld.getTileAtPos(500,240).setGeoFeature(Terrain.GROUND);
 		
 		// Generate a Slime on top of a solid tile
@@ -43,36 +40,32 @@ public class SearchObjectTest {
 		
 		// Add the game objects to the world.
 		testWorld.addAsPlant(thePlant);
-		testWorld.setMazub(alien);
 		testWorld.addAsShark(theShark);
 		testWorld.addAsSlime(theSlime);
-		
-		// Create a source location
-		loc = new SourceLocation(2, 3);
 	}
 	
 	private World testWorld;
-	private Mazub alien;
 	private Slime theSlime;
 	private Shark theShark;
 	private Plant thePlant;
-	private SourceLocation loc;
 
 	@Test
 	public void testSearchTheSlimeToTheLeftOfAlien() {
-		SearchObject seeker = new SearchObject(loc, 
-				(new Constant<jumpingalien.part3.programs.IProgramFactory.Direction>
-				(loc,jumpingalien.part3.programs.IProgramFactory.Direction.LEFT)), 
-				new Constant<GameObject>(loc,alien));
+		// Initialise the program
+		Program theProgram = parseProgram("object o; if true then o:= searchobj left; fi");
+		// Generate an alien on top of a solid tile
+		Buzam alien = new Buzam(new Position(500,250), spriteArrayForSize(10, 10),theProgram);
+		testWorld.setBuzam(alien);
+		
+		Statement temp = ((IfStatement) theProgram.getMainStatement()).getIfBody();
+		Assignment ifBody = (Assignment)temp;
+		SearchObject seeker = (SearchObject) ifBody.getValue();
 		Object result = seeker.outcome();
-//		System.out.println("Test search the slime to the left of alien: ");
-//		System.out.println(alien);
-//		System.out.println(result);
-//		System.out.println();
 		assertTrue(result == theSlime);
 	}
 	
 	
+	/**
 	@Test
 	public void testSearchTheSharkToTheRightOfAlien() {
 		SearchObject seeker = new SearchObject(loc, 
@@ -125,6 +118,6 @@ public class SearchObjectTest {
 		assertTrue(seeker.outcome() == null);
 		}
 	
-
+	*/
 }
 

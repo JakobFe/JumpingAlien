@@ -4,8 +4,7 @@ package jumpingalien.model.program.expressions.unaryexpression;
 import jumpingalien.model.game.GameObject;
 import jumpingalien.model.game.Tile;
 import jumpingalien.model.game.World;
-import jumpingalien.model.program.expressions.Expression;
-import jumpingalien.model.program.expressions.Variable;
+import jumpingalien.model.program.expressions.*;
 import jumpingalien.part3.programs.SourceLocation;
 
 public class SearchObject extends UnaryOperator {
@@ -17,7 +16,7 @@ public class SearchObject extends UnaryOperator {
 	@Override
 	public Object outcome() throws IllegalArgumentException{
 		GameObject thisObject = getProgram().getGameObject();
-		Variable givenDirection = (Variable)getOperand();
+		Expression givenDirection = getOperand();
 		jumpingalien.model.game.Direction thisDirection = 
 				jumpingalien.model.game.Direction.convertDirection(givenDirection);
 		World thisWorld = thisObject.getWorld();
