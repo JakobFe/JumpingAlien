@@ -49,6 +49,7 @@ public class Facade extends jumpingalien.part2.facade.Facade implements IFacadeP
 		}
 		catch(Exception e){
 			System.out.println("Exception caught!");
+			e.printStackTrace();
 			return createBuzam(pixelLeftX, pixelBottomY, sprites);
 		}
 	}

@@ -1,0 +1,34 @@
+object theMazub;
+object player;
+double mazubX;
+double mazubY;
+direction xDirection;
+
+while (! isdead self) do
+	
+	foreach(mazub,theMazub) do
+		mazubX:= (getx theMazub);
+		mazubY:= (gety theMazub);
+		player:= theMazub;
+		
+	done
+	
+	if(getx self > getx player) then
+		start_run left;
+	fi
+	
+	if(getx self < getx player) then
+		start_run right;
+	fi
+	
+	if((gety self < gety player) && ! isjumping self) then
+		start_jump;
+ 	fi
+ 	
+ 	if((gety self > gety player) && !isdead self && (getx self - getx player) > 150) then
+ 		start_duck;
+ 	else
+ 		stop_duck;
+ 	fi
+ 	
+done
