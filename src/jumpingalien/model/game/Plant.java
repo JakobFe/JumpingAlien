@@ -247,11 +247,13 @@ public class Plant extends GameObject {
 	 * 			|	oldPosition.terminate()
 	 */ 
 	@Override@Model
-	protected void updatePosition(double timeDuration) {
+	protected void updatePosition(double timeDuration) {		
 		double newXPos = getPosition().getXPosition() + getHorDirection().getFactor()*
 				(getHorVelocity()*timeDuration)*100;
-		updatePositionTileCollision(doubleArray(newXPos,getPosition().getYPosition()));
-		updatePositionObjectCollision(getPosition().toDoubleArray());
+		double[] newPos = updatePositionTileCollision(doubleArray(newXPos,getPosition().getYPosition()));
+		newPos = updatePositionObjectCollision(doubleArray(newXPos,this.getPosition().getYPosition()));
+		getPosition().terminate();
+		setPosition(toPosition(newPos, getWorld()));
 	}
 	
 	/**
@@ -266,7 +268,7 @@ public class Plant extends GameObject {
 	 * 			before we hand in the final solution. 
 	 */
 	@Override@Model
-	protected void updatePositionTileCollision(double[] newPos) {
+	protected double[] updatePositionTileCollision(double[] newPos) {
 		double newXPos = newPos[0];
 		for (Tile impassableTile: getWorld().getImpassableTiles()){
 			if (this.isOverlappingWith(impassableTile)){
@@ -284,8 +286,7 @@ public class Plant extends GameObject {
 				}
 			}
 		}
-		getPosition().terminate();
-		setPosition(new Position(newXPos,newPos[1],getWorld()));
+		return doubleArray(newXPos,newPos[1]);
 	}
 	
 	/**
@@ -302,6 +303,7 @@ public class Plant extends GameObject {
 		HashSet<GameObject> collection = new HashSet<GameObject>();
 		collection.addAll(getWorld().getAllPlants());
 		collection.add(getWorld().getMazub());
+		collection.add(getWorld().getBuzam());
 		return collection;
 	}
 	

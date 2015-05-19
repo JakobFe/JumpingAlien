@@ -43,7 +43,7 @@ public class Facade extends jumpingalien.part2.facade.Facade implements IFacadeP
 		ProgramParser<Expression, Statement, Type, Program> theParser = 
 				new ProgramParser<>(theFactory);
 		Optional<Program> parseResult = theParser.parseFile(
-				"resources/programs/Buzam2.txt");
+				"resources/programs/buzam.txt");
 		Program theProgram = parseResult.get();
 		return new Buzam (new Position(pixelLeftX, pixelBottomY), sprites,theProgram);
 		}

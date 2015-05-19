@@ -341,14 +341,17 @@ public class Slime extends Character{
 				0.5*getVertAcceleration()*Math.pow(timeDuration, 2))*100;
 		if (newYPos<0)
 			newYPos = 0;
-		updatePositionTileCollision(doubleArray(newXPos,newYPos));
-		updatePositionObjectCollision(getPosition().toDoubleArray());
+		
+		double[] newPos = updatePositionTileCollision(doubleArray(newXPos,newYPos));
+		newPos = updatePositionObjectCollision(newPos);
 
 		if (canFall() && !isMoving(Direction.UP)){
 			startFall();
 		}
 		else
 			setCanFall(true);
+		getPosition().terminate();
+		setPosition(toPosition(newPos, getWorld()));
 	}
 	
 	/**

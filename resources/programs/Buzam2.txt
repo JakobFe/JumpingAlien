@@ -84,7 +84,6 @@ while true do
       if (nearestSS == null) then
         nearestSS := o;
         distanceToNearestSS := distance;
-        print distance;
       else
         if (distance < distanceToNearestSS) then
           nearestSS := o;

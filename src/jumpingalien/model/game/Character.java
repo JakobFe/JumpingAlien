@@ -6,6 +6,7 @@ import jumpingalien.model.exceptions.*;
 import jumpingalien.model.program.programs.Program;
 import jumpingalien.util.Sprite;
 import be.kuleuven.cs.som.annotate.*;
+import static jumpingalien.tests.util.TestUtils.doubleArray;
 
 /**
  * A class concerning characters as a subclass of game objects.
@@ -549,7 +550,7 @@ public abstract class Character extends GameObject{
 	 * 			We are aware of this problem and we will solve it by defensive programming
 	 * 			before we hand in the final solution. 
 	 */
-	protected void updatePositionTileCollision(double[] newPos){
+	protected double[] updatePositionTileCollision(double[] newPos){
 		assert newPos.length == 2;
 		double newXPos = newPos[0];
 		double newYPos = newPos[1];
@@ -583,8 +584,7 @@ public abstract class Character extends GameObject{
 				}
 			}
 		}
-		getPosition().terminate();
-		setPosition(new Position(newXPos,newYPos,getWorld()));
+		return doubleArray(newXPos,newYPos);
 	}
 	
 	/**
@@ -619,7 +619,7 @@ public abstract class Character extends GameObject{
 	 * 			before we hand in the final solution. 
 	 */
 	@Override
-	protected void setPositionAfterCollision(double[] newPos, HashSet<GameObject> collection){
+	protected double[] getPositionAfterCollision(double[] newPos, HashSet<GameObject> collection){
 		assert newPos.length == 2;
 		double newXPos = newPos[0];
 		double newYPos = newPos[1];
@@ -661,8 +661,7 @@ public abstract class Character extends GameObject{
 				}
 			}
 		}
-		getPosition().terminate();
-		setPosition(new Position(newXPos,newYPos,getWorld()));
+		return doubleArray(newXPos,newYPos);
 	}
 	
 	protected boolean canFall() {
