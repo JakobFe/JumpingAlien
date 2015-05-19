@@ -6,6 +6,9 @@ import jumpingalien.model.game.Mazub;
 import jumpingalien.model.game.Position;
 import jumpingalien.model.game.School;
 import jumpingalien.model.game.Slime;
+import jumpingalien.model.game.Terrain;
+import jumpingalien.model.game.Tile;
+import jumpingalien.model.game.World;
 import jumpingalien.model.program.expressions.*;
 import jumpingalien.model.program.expressions.binaryexpression.*;
 import jumpingalien.model.program.expressions.unaryexpression.*;
@@ -20,21 +23,34 @@ public class ExpressionTest {
 	public void setUp() throws Exception {
 		
 		loc = new SourceLocation(2, 3);
+
+		testWorld = new World(25, 40, 20, 1000, 1000, 0, 0);
 		theSlime = new Slime(new Position(4,5),spriteArrayForSize(5, 5),new School());
 		theMazub = new Mazub(new Position(8,6),spriteArrayForSize(4, 4));
-		theSlimeConstant = new Variable(loc, "slimeConstant",
+		theTile = new Tile(testWorld, 0, 0, false);
+		theTile.setGeoFeature(Terrain.WATER);
+		
+		theSlimeVariable = new Variable(loc, "slimeVariable",
 									new jumpingalien.model.program.types.ObjectOfWorld());
-		theSlimeConstant.setValue(theSlime);
-		theMazubConstant = new Variable(loc, "mazubConstant",
+		theSlimeVariable.setValue(theSlime);
+		
+		theMazubVariable = new Variable(loc, "mazubVariable",
 				new jumpingalien.model.program.types.ObjectOfWorld());
-		theMazubConstant.setValue(theMazub);
+		theMazubVariable.setValue(theMazub);
+		
+		theTileVariable = new Variable(loc, "tileVariable", 
+								new jumpingalien.model.program.types.ObjectOfWorld());
+		theTileVariable.setValue(theTile);
 	}
 	
 	private SourceLocation loc;
+	private World testWorld;
 	private Slime theSlime;
 	private Mazub theMazub;
-	private Variable theSlimeConstant;
-	private Variable theMazubConstant;
+	private Tile theTile;
+	private Variable theSlimeVariable;
+	private Variable theMazubVariable;
+	private Variable theTileVariable;
 	
 	@Test
 	public void createDoubleConstantCorrect(){
@@ -105,8 +121,50 @@ public class ExpressionTest {
 	}
 
 	@Test
-	public void executeIsGameObjectCorrect(){
-		IsGameObject<Slime> isSlime = new IsGameObject<Slime>(loc, theSlimeConstant, Slime.class);
+	public void executeIsGameObjectCorrect1(){
+		IsGameObject<Slime> isSlime = new IsGameObject<Slime>(loc, theSlimeVariable, Slime.class);
 		assertEquals(true, isSlime.outcome());
+	}
+	
+	@Test
+	public void executeIsGameObjectIncorrect1(){
+		IsGameObject<Slime> isNotSlime = new IsGameObject<Slime>(loc, theMazubVariable, Slime.class);
+		assertEquals(false, isNotSlime.outcome());
+	}
+
+	@Test
+	public void executeIsGameObjectCorrect2(){
+		IsGameObject<Mazub> isMazub = new IsGameObject<Mazub>(loc, theMazubVariable, Mazub.class);
+		assertEquals(true, isMazub.outcome());
+	}
+	
+	@Test
+	public void executeIsGameObjectIncorrect2(){
+		IsGameObject<Mazub> isNotMazub = new IsGameObject<Mazub>(loc, theSlimeVariable, Mazub.class);
+		assertEquals(false, isNotMazub.outcome());
+	}
+	
+	@Test
+	public void executeIsTerrainOfTypeCorrect(){
+		IsTerrainOfType isWater = new IsTerrainOfType(loc, theTileVariable, Terrain.WATER);
+		assertEquals(true, isWater.outcome());
+	}
+
+	@Test
+	public void executeIsTerrainOfTypeIncorrect(){
+		IsTerrainOfType isNotWater = new IsTerrainOfType(loc, theTileVariable, Terrain.MAGMA);
+		assertEquals(false, isNotWater.outcome());
+	}
+	
+	@Test
+	public void executeIsTerrainCorrect(){
+		IsTerrain isTerrain = new IsTerrain(loc, theTileVariable);
+		assertEquals(true, isTerrain.outcome());
+	}
+	
+	@Test
+	public void executeIsTerrainIncorrect(){
+		IsTerrain isNotTerrain = new IsTerrain(loc, theMazubVariable);
+		assertEquals(false, isNotTerrain.outcome());
 	}
 }

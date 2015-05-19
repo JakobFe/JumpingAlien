@@ -25,7 +25,7 @@ public class IsTerrainOfType extends UnaryOperator {
 
 	@Override
 	public Boolean outcome() {
-		return getOperand().outcome() == getType();
+		return ((Tile)getOperand().outcome()).getGeoFeature() == getType();
 	}
 
 }

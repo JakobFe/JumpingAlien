@@ -5,6 +5,7 @@ import jumpingalien.model.game.Mazub;
 import jumpingalien.model.game.Position;
 import jumpingalien.model.game.School;
 import jumpingalien.model.game.Slime;
+import jumpingalien.model.game.Terrain;
 import jumpingalien.model.program.expressions.binaryexpression.*;
 import jumpingalien.model.program.expressions.unaryexpression.*;
 import jumpingalien.part3.programs.SourceLocation;
@@ -65,45 +66,45 @@ public class Experiment {
 		
 		///////////////////////////////////////////////////////////////////////
 		
-//		IsGameObject<Slime> isSlime = new IsGameObject<Slime>(loc, theSlime, Slime.class);
-//		System.out.print("Expected: true -> Received: ");
-//		System.out.println(isSlime.outcome());
-//		
-//		IsGameObject<Slime> isSlime2 = new IsGameObject<Slime>(loc, theMazub, Slime.class);
-//		System.out.print("Expected: false -> Received: ");
-//		System.out.println(isSlime2.outcome());
-//		
-//		IsGameObject<Mazub> isMazub = new IsGameObject<Mazub>(loc, theSlime, Mazub.class);
-//		System.out.print("Expected: false -> Received: ");
-//		System.out.println(isMazub.outcome());
-//
-//		IsGameObject<Mazub> isMazub2 = new IsGameObject<Mazub>(loc, theMazub, Mazub.class);
-//		System.out.print("Expected: true -> Received: ");
-//		System.out.println(isMazub2.outcome());
-//		
-//		IsTerrainOfType isWater = new IsTerrainOfType(loc, Terrain.WATER, Terrain.WATER);
-//		System.out.print("Expected: true -> Received: ");
-//		System.out.println(isWater.outcome());
-//		
-//		IsTerrainOfType isWater2 = new IsTerrainOfType(loc, Terrain.WATER, Terrain.MAGMA);
-//		System.out.print("Expected: false -> Received: ");
-//		System.out.println(isWater2.outcome());
-//
-//		IsTerrainOfType isMagma = new IsTerrainOfType(loc, Terrain.MAGMA, Terrain.MAGMA);
-//		System.out.print("Expected: true -> Received: ");
-//		System.out.println(isMagma.outcome());
-//
-//		IsTerrainOfType isAir = new IsTerrainOfType(loc, Terrain.AIR, Terrain.AIR);
-//		System.out.print("Expected: true -> Received: ");
-//		System.out.println(isAir.outcome());
-//
-//		IsTerrain isTerrain = new IsTerrain(loc, Terrain.GROUND);
-//		System.out.print("Expected: true -> Received: ");
-//		System.out.println(isTerrain.outcome());
-//		
-//		IsTerrain isTerrain2 = new IsTerrain(loc, theSlime);
-//		System.out.print("Expected: false -> Received: ");
-//		System.out.println(isTerrain2.outcome());
+		IsGameObject<Slime> isSlime = new IsGameObject<Slime>(loc, theSlime, Slime.class);
+		System.out.print("Expected: true -> Received: ");
+		System.out.println(isSlime.outcome());
+		
+		IsGameObject<Slime> isSlime2 = new IsGameObject<Slime>(loc, theMazub, Slime.class);
+		System.out.print("Expected: false -> Received: ");
+		System.out.println(isSlime2.outcome());
+		
+		IsGameObject<Mazub> isMazub = new IsGameObject<Mazub>(loc, theSlime, Mazub.class);
+		System.out.print("Expected: false -> Received: ");
+		System.out.println(isMazub.outcome());
+
+		IsGameObject<Mazub> isMazub2 = new IsGameObject<Mazub>(loc, theMazub, Mazub.class);
+		System.out.print("Expected: true -> Received: ");
+		System.out.println(isMazub2.outcome());
+		
+		IsTerrainOfType isWater = new IsTerrainOfType(loc, Terrain.WATER, Terrain.WATER);
+		System.out.print("Expected: true -> Received: ");
+		System.out.println(isWater.outcome());
+		
+		IsTerrainOfType isWater2 = new IsTerrainOfType(loc, Terrain.WATER, Terrain.MAGMA);
+		System.out.print("Expected: false -> Received: ");
+		System.out.println(isWater2.outcome());
+
+		IsTerrainOfType isMagma = new IsTerrainOfType(loc, Terrain.MAGMA, Terrain.MAGMA);
+		System.out.print("Expected: true -> Received: ");
+		System.out.println(isMagma.outcome());
+
+		IsTerrainOfType isAir = new IsTerrainOfType(loc, Terrain.AIR, Terrain.AIR);
+		System.out.print("Expected: true -> Received: ");
+		System.out.println(isAir.outcome());
+
+		IsTerrain isTerrain = new IsTerrain(loc, Terrain.GROUND);
+		System.out.print("Expected: true -> Received: ");
+		System.out.println(isTerrain.outcome());
+		
+		IsTerrain isTerrain2 = new IsTerrain(loc, theSlime);
+		System.out.print("Expected: false -> Received: ");
+		System.out.println(isTerrain2.outcome());
 		
 	}
 	
