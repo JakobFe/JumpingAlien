@@ -35,13 +35,20 @@ public class While extends SingleStatement {
 	}
 	
 	public void execute(){
+//		System.out.println("\n\n\n\n\nEXECUTE WHILE");
+//		System.out.println("BEFORE:");
+//		System.out.println(getThisIterator().getIndex());
 		if((Boolean)getCondition().outcome()){
 			getThisIterator().setIndex(1);
 		}
 		else{
 			getThisIterator().setIndex(2);
 		}
+//		System.out.println("AFTER:");
+//		System.out.println(getThisIterator().getIndex());
+//		System.out.println("\n\n\n\n");
 	}
+	
 	
 	@Override
 	public StatementIterator<Statement> iterator() {
@@ -98,7 +105,80 @@ public class While extends SingleStatement {
 			private boolean subIteratorsInitialized = false;
 		};
 	}
+	
+	/**
+	@Override
+	public StatementIterator<Statement> iterator() {
+		
+		class WhileIterator implements StatementIterator<Statement>{
+			
+			public WhileIterator(){
+				subIteratorsInitialized = false;
+			}
+			
+			@Override
+			public boolean hasNext() {
+				return (!subIteratorsInitialized || getIndex() < 2);
+			}
+			
+			@Override
+			public Statement next() throws NoSuchElementException{
+				if(!hasNext())
+					throw new NoSuchElementException();
+				if(!subIteratorsInitialized)
+					initialiseSubIterators();
+				if(getIndex() == 0){
+					System.out.println("GET INDEX in while = 0");
+					System.out.println(this);
+					System.out.println(getIndex());
+					System.out.println(getThisIterator());
+					System.out.println(getThisIterator().getIndex());
+					System.out.println("\n\n");
+					return While.this;
+				}
+				else if(getIndex() == 1){
+					if(bodyIterator.hasNext())
+						return bodyIterator.next();
+					else{
+						restart();
+						return this.next();
+					}
+				}
+				return null;
+			}
+			
+			@Override
+			public void restart() {
+				setIndex(0);
+				bodyIterator.restart();
+			}
+			
+			@Override
+			public void setIndex(int index) {
+				WhileIterator.this.index = index;
+			}
+			
+			@Override
+			public int getIndex() {
+				return WhileIterator.this.index;
+			}
+			
+			private int index = 0;
+			
+			private void initialiseSubIterators(){
+				subIteratorsInitialized = true;
+				bodyIterator = getBody().iterator();
 
+			}
+			
+			private StatementIterator<Statement> bodyIterator;
+			
+			private boolean subIteratorsInitialized = false;
+		}
+		
+		return new WhileIterator();
+	}*/
+	
 	@Override
 	public String toString() {
 		return "Statement: while (" + getCondition().toString() + "do" + "\n\t" +
