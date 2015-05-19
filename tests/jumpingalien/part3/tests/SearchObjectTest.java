@@ -32,28 +32,34 @@ public class SearchObjectTest {
 		}
 		testWorld.getTileAtPos(802,1).setGeoFeature(Terrain.GROUND);
 		
-		// Generate an impassable tile above the Mazub
+		// Generate an impassable tile above the location where the buzam will be
 		testWorld.getTileAtPos(500,980).setGeoFeature(Terrain.GROUND);
 		
 		// Generate a plant above the slime.
 		thePlant = new Plant(new Position(60,400),spriteArrayForSize(10, 10));
 		
+		// Generate a Mazub, which will be unused.
+		theMazub = new Mazub(new Position(0,0),spriteArrayForSize(10, 10));
+		
 		// Add the game objects to the world.
 		testWorld.addAsPlant(thePlant);
 		testWorld.addAsShark(theShark);
 		testWorld.addAsSlime(theSlime);
+		testWorld.setMazub(theMazub);
 	}
 	
 	private World testWorld;
 	private Slime theSlime;
 	private Shark theShark;
 	private Plant thePlant;
+	private Mazub theMazub;
 
 	@Test
 	public void testSearchTheSlimeToTheLeftOfAlien() {
 		// Initialise the program
 		Program theProgram = parseProgram("object o; if true then o:= searchobj left; fi");
-		// Generate an alien on top of a solid tile
+		
+		// Generate a Buzam on top of a solid tile with theProgram as program
 		Buzam alien = new Buzam(new Position(500,250), spriteArrayForSize(10, 10),theProgram);
 		testWorld.setBuzam(alien);
 		
@@ -65,59 +71,93 @@ public class SearchObjectTest {
 	}
 	
 	
-	/**
+	
 	@Test
 	public void testSearchTheSharkToTheRightOfAlien() {
-		SearchObject seeker = new SearchObject(loc, 
-				(new Constant<jumpingalien.part3.programs.IProgramFactory.Direction>
-				(loc,jumpingalien.part3.programs.IProgramFactory.Direction.RIGHT)), 
-				new Constant<GameObject>(loc,alien));
+		// Initialise the program
+		Program theProgram = parseProgram("object o; if true then o:= searchobj right; fi");
+		
+		// Generate a Buzam on top of a solid tile with theProgram as program
+		Buzam alien = new Buzam(new Position(500,250), spriteArrayForSize(10, 10),theProgram);
+		testWorld.setBuzam(alien);
+		
+		Statement temp = ((IfStatement) theProgram.getMainStatement()).getIfBody();
+		Assignment ifBody = (Assignment)temp;
+		SearchObject seeker = (SearchObject) ifBody.getValue();
 		Object result = seeker.outcome();
-//		System.out.println("Test search the shark to the right of alien: ");
-//		System.out.println(alien);
-//		System.out.println(result);
-//		System.out.println();
 		assertTrue(result == theShark);
 	}
 	
-	
+
 	@Test
 	public void testSearchTheGroundBelowShark() {
-		SearchObject seeker = new SearchObject(loc, 
-				(new Constant<jumpingalien.part3.programs.IProgramFactory.Direction>
-				(loc,jumpingalien.part3.programs.IProgramFactory.Direction.DOWN)), 
-				new Constant<GameObject>(loc,theShark));
+		// Initialise the program
+		Program theProgram = parseProgram("object o; if true then o:= searchobj down; fi");
+		
+		// replace theShark by a shark with theProgram
+		Shark newShark = new Shark(theShark.getPosition(), spriteArrayForSize(10, 10),theProgram);
+		testWorld.addAsShark(newShark);
+		
+		Statement temp = ((IfStatement) theProgram.getMainStatement()).getIfBody();
+		Assignment ifBody = (Assignment)temp;
+		SearchObject seeker = (SearchObject) ifBody.getValue();
 		Object result = seeker.outcome();
-//		System.out.println("Test search the ground below Shark: ");
-//		System.out.println(theShark);
-//		System.out.println(result);
-//		System.out.println();
+				
 		assertTrue(result == testWorld.getTileAtPos(802, 2));
 	}
 	
 	@Test
 	public void testSearchThePlantAboveSlime() {
-		SearchObject seeker = new SearchObject(loc, 
-				(new Constant<jumpingalien.part3.programs.IProgramFactory.Direction>
-				(loc,jumpingalien.part3.programs.IProgramFactory.Direction.UP)), 
-				new Constant<GameObject>(loc,theSlime));
+		// Initialise the program
+		Program theProgram = parseProgram("object o; if true then o:= searchobj up; fi");
+		
+		// replace theSlime by a slime with theProgram
+		Slime newSlime = new Slime(theSlime.getPosition(), spriteArrayForSize(10, 10),
+								   theSlime.getSchool(),theProgram);
+		testWorld.addAsSlime(newSlime);
+		
+		Statement temp = ((IfStatement) theProgram.getMainStatement()).getIfBody();
+		Assignment ifBody = (Assignment)temp;
+		SearchObject seeker = (SearchObject) ifBody.getValue();
 		Object result = seeker.outcome();
-//		System.out.println("Test search the plant above Slime: ");
-//		System.out.println(theSlime);
-//		System.out.println(result);
-//		System.out.println();
+
+		
 		assertTrue(result == thePlant);
 	}
 	
 	@Test
-	public void testnothingFound() {
-		SearchObject seeker = new SearchObject(loc, 
-				(new Constant<jumpingalien.part3.programs.IProgramFactory.Direction>
-				(loc,jumpingalien.part3.programs.IProgramFactory.Direction.LEFT)), 
-				new Constant<GameObject>(loc,theSlime));
+	public void testnothingFoundLeftFromSlime() {
+		// Initialise the program
+		Program theProgram = parseProgram("object o; if true then o:= searchobj left; fi");
+		
+		// replace theSlime by a slime with theProgram
+		Slime newSlime = new Slime(theSlime.getPosition(), spriteArrayForSize(10, 10),
+								   theSlime.getSchool(),theProgram);
+		testWorld.addAsSlime(newSlime);
+		
+		Statement temp = ((IfStatement) theProgram.getMainStatement()).getIfBody();
+		Assignment ifBody = (Assignment)temp;
+		SearchObject seeker = (SearchObject) ifBody.getValue();
+		System.out.println(seeker.outcome());
 		assertTrue(seeker.outcome() == null);
-		}
+	}
 	
-	*/
+	@Test
+	public void testNothingFoundAboveShark() {
+		// Initialise the program
+		Program theProgram = parseProgram("object o; if true then o:= searchobj up; fi");
+		
+		// replace theShark by a shark with theProgram
+		Shark newShark = new Shark(theShark.getPosition(), spriteArrayForSize(10, 10),theProgram);
+		testWorld.addAsShark(newShark);
+		
+		Statement temp = ((IfStatement) theProgram.getMainStatement()).getIfBody();
+		Assignment ifBody = (Assignment)temp;
+		SearchObject seeker = (SearchObject) ifBody.getValue();
+		Object result = seeker.outcome();
+				
+		assertTrue(result == null);
+	}
+	
 }
 

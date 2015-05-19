@@ -40,6 +40,53 @@ public class SearchObject extends UnaryOperator {
 			throw new IllegalArgumentException();
 	}
 
+	private Object searchLeftRight(GameObject thisObject,
+			jumpingalien.model.game.Direction thisDirection, World thisWorld,
+			double xPos, double yPos, double smallestDistance) {
+		double currentDistance;
+		int searchPos;
+		Object nearestObject = null;
+		for(GameObject other: thisWorld.getAllGameObjects()){
+			if(occupiesYPosition(other, yPos)){
+				if(thisDirection == jumpingalien.model.game.Direction.LEFT){
+					currentDistance = xPos - (other.getPosition().getXPosition()+other.getWidth());
+				}
+				else{
+					currentDistance = (other.getPosition().getXPosition()) - (xPos+thisObject.getWidth());
+				}
+				if(currentDistance > 0 && currentDistance < smallestDistance){
+					smallestDistance = currentDistance;
+					nearestObject = other;
+				}
+			}
+		}
+		if(thisDirection == jumpingalien.model.game.Direction.LEFT)
+			searchPos = (int) Math.floor(xPos-1);
+		else
+			searchPos = (int) Math.floor(xPos + thisObject.getWidth());
+		
+		while(searchPos > 0 && searchPos < thisWorld.getWorldWidth()){
+			Tile tile = thisWorld.getTileAtPos(searchPos, (int) Math.floor(yPos));
+			if(!tile.getGeoFeature().isPassable()){
+				if(thisDirection == jumpingalien.model.game.Direction.LEFT){
+					currentDistance = xPos - (tile.getXPosition()+thisWorld.getTileSize());
+				}
+				else{
+					currentDistance = (tile.getXPosition()) - (xPos+thisObject.getWidth());
+				}
+				if(currentDistance > 0 && currentDistance < smallestDistance){
+					smallestDistance = currentDistance;
+					nearestObject = tile;
+				}
+				break;
+			}
+			else{
+				searchPos += thisWorld.getTileSize() * thisDirection.getFactor();
+			}
+		}
+		return nearestObject;
+	}
+	
 	private Object searchUpDown(GameObject thisObject,
 			jumpingalien.model.game.Direction thisDirection, World thisWorld,
 			double xPos, double yPos, double smallestDistance) {
@@ -47,7 +94,7 @@ public class SearchObject extends UnaryOperator {
 		int searchPos;
 		Object nearestObject = null;
 		for(GameObject other: thisWorld.getAllGameObjects()){
-			if(occupiesXPosition(thisObject, xPos)){
+			if(occupiesXPosition(other, xPos)){
 				if(thisDirection == jumpingalien.model.game.Direction.DOWN){
 					currentDistance = yPos - (other.getPosition().getYPosition()+other.getHeight());
 				}
@@ -87,52 +134,6 @@ public class SearchObject extends UnaryOperator {
 		return nearestObject;
 	}
 
-	private Object searchLeftRight(GameObject thisObject,
-			jumpingalien.model.game.Direction thisDirection, World thisWorld,
-			double xPos, double yPos, double smallestDistance) {
-		double currentDistance;
-		int searchPos;
-		Object nearestObject = null;
-		for(GameObject other: thisWorld.getAllGameObjects()){
-			if(occupiesYPosition(thisObject, yPos)){
-				if(thisDirection == jumpingalien.model.game.Direction.LEFT){
-					currentDistance = xPos - (other.getPosition().getXPosition()+other.getWidth());
-				}
-				else{
-					currentDistance = (other.getPosition().getXPosition()) - (xPos+thisObject.getWidth());
-				}
-				if(currentDistance > 0 && currentDistance < smallestDistance){
-					smallestDistance = currentDistance;
-					nearestObject = other;
-				}
-			}
-		}
-		if(thisDirection == jumpingalien.model.game.Direction.LEFT)
-			searchPos = (int) Math.floor(xPos-1);
-		else
-			searchPos = (int) Math.floor(xPos + thisObject.getWidth());
-		
-		while(searchPos > 0 && searchPos < thisWorld.getWorldWidth()){
-			Tile tile = thisWorld.getTileAtPos(searchPos, (int) Math.floor(yPos));
-			if(!tile.getGeoFeature().isPassable()){
-				if(thisDirection == jumpingalien.model.game.Direction.LEFT){
-					currentDistance = xPos - (tile.getXPosition()+thisWorld.getTileSize());
-				}
-				else{
-					currentDistance = (tile.getXPosition()) - (xPos+thisObject.getWidth());
-				}
-				if(currentDistance > 0 && currentDistance < smallestDistance){
-					smallestDistance = currentDistance;
-					nearestObject = tile;
-				}
-				break;
-			}
-			else{
-				searchPos += thisWorld.getTileSize() * thisDirection.getFactor();
-			}
-		}
-		return nearestObject;
-	}
 	
 	private boolean occupiesYPosition(GameObject gameObject, double yPos){
 		return (yPos >= gameObject.getPosition().getYPosition() &&
