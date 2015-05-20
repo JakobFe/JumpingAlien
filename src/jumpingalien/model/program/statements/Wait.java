@@ -36,9 +36,7 @@ public class Wait extends SingleStatement {
 	private int nbOfSkips;
 	
 	@Override
-	public void execute() {
-		setNbOfSkips((int) Math.floor(((Double)getDuration().outcome())/0.001));
-	}
+	public void executeSingleStatement() {}
 	
 	@Override
 	public StatementIterator<Statement> iterator() {
@@ -49,6 +47,8 @@ public class Wait extends SingleStatement {
 				if(!hasNext())
 					throw new NoSuchElementException();
 				else{
+					if(getIndex() == 0)
+						setNbOfSkips((int) Math.floor(((Double)getDuration().outcome())/0.001));
 					incrementIndex();
 					return Wait.this;
 				}

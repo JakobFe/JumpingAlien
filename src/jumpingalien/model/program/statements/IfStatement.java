@@ -40,17 +40,6 @@ public class IfStatement extends ComposedStatement {
 	}
 
 	@Override
-	public void execute() {
-		// moet nog rekening houden met de 0.001s van de conditie.
-		if((Boolean)getCondition().outcome()){
-			getThisIterator().setIndex(1);
-		}
-		else{
-			getThisIterator().setIndex(2);
-		}
-	}
-	
-	@Override
 	public StatementIterator<Statement> iterator() {
 		return new StatementIterator<Statement>(){
 			
@@ -61,22 +50,25 @@ public class IfStatement extends ComposedStatement {
 				if(!hasNext())
 					throw new NoSuchElementException();
 				else{
-					if(getThisIterator().getIndex() == 0){
+					if(getIndex() == 0){
+						if((Boolean)getCondition().outcome()){
+							setIndex(1);
+						}
+						else
+							setIndex(2);
 						return IfStatement.this;
 					}
-					else if(getThisIterator().getIndex() == 1){
-						if(ifIter.hasNext()){
+					else if(getIndex() == 1){
+						if(ifIter.hasNext())
 							return ifIter.next();
-						}
-						else{
-							getThisIterator().setIndex(3);
-						}
+						else
+							setIndex(3);
 					}
-					else if((getThisIterator().getIndex() == 2) && (getNbOfSubStatements() == 2)){
+					else if((getIndex() == 2) && (getNbOfSubStatements() == 2)){
 						if(elseIter.hasNext())
 							return elseIter.next();
 						else
-							getThisIterator().setIndex(3);
+							setIndex(3);
 					}
 					return null;
 				}
@@ -84,18 +76,18 @@ public class IfStatement extends ComposedStatement {
 			
 			@Override
 			public boolean hasNext() {
-				if (!subIteratorsInitialized || getThisIterator().getIndex() == 0)
+				if (!subIteratorsInitialized || getIndex() == 0)
 					return true;
-				else if(getThisIterator().getIndex() == 1)
+				else if(getIndex() == 1)
 					return ifIter.hasNext();
-				else if(getThisIterator().getIndex() == 2 && getElseBody() != null)
+				else if(getIndex() == 2 && getElseBody() != null)
 					return elseIter.hasNext();
 				else return false;
 			}
 			
 			@Override
 			public void restart() {
-				getThisIterator().setIndex(0);
+				setIndex(0);
 				if(subIteratorsInitialized){
 					ifIter.restart();
 					if(elseIter != null){

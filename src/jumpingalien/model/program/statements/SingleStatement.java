@@ -10,6 +10,8 @@ public abstract class SingleStatement extends Statement {
 		super(sourceLocation);
 	}
 	
+	public abstract void executeSingleStatement();
+	
 	@Override
 	public StatementIterator<Statement> iterator() {
 		return new StatementIterator<Statement>(){
@@ -23,6 +25,7 @@ public abstract class SingleStatement extends Statement {
 			public SingleStatement next() throws NoSuchElementException{
 				if(hasNext()){
 					incrementIndex();
+					SingleStatement.this.executeSingleStatement();
 					return SingleStatement.this;
 				}
 				else

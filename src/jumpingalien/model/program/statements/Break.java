@@ -10,7 +10,7 @@ public class Break extends SingleStatement {
 	
 	@SuppressWarnings("unused")
 	@Override
-	public void execute() {
+	public void executeSingleStatement() {
 		if(getProgram() != null){
 			Statement currentStatement = getProgram().getMainStatement();
 			Statement statementToBreak;

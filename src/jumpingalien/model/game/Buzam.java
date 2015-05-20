@@ -88,9 +88,10 @@ public class Buzam extends Alien{
 	@Override
 	protected void getHurtBy(GameObject other){
 		if(!isImmune()){
-			if((other instanceof Mazub) || (other instanceof Shark) || (other instanceof Slime))
+			if((other instanceof Mazub) || (other instanceof Shark) || (other instanceof Slime)){
 				if(!this.standsOn(other))
 					subtractHp(50);
+			}
 			else if(!(other instanceof Buzam))
 				other.hurt(this);
 		}

@@ -36,19 +36,5 @@ public abstract class Statement {
 	private Program program = null;
 	
 	public abstract StatementIterator<Statement> iterator();
-	
-	public abstract void execute();
-	
-	public StatementIterator<Statement> getThisIterator() {
-		if(thisIterator == null){
-			thisIterator = iterator();
-			return thisIterator;
-		}
-		else
-			return thisIterator;
-	}
-
-	private StatementIterator<Statement> thisIterator = null;
-
 
 }

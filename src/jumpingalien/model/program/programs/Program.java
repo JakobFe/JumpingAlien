@@ -6,6 +6,7 @@ import java.util.Map;
 import jumpingalien.model.game.GameObject;
 import jumpingalien.model.program.expressions.Variable;
 import jumpingalien.model.program.statements.Statement;
+import jumpingalien.model.program.statements.StatementIterator;
 import jumpingalien.model.program.types.Type;
 import jumpingalien.part3.programs.SourceLocation;
 
@@ -62,21 +63,30 @@ public class Program {
 
 	private GameObject gameObject = null;
 	
+	public StatementIterator<Statement> getProgramIterator() {
+		if(programIterator == null){
+			programIterator = getMainStatement().iterator();
+		}
+		return programIterator;
+	}
+
+	private StatementIterator<Statement> programIterator = null;	
+	
 	public void execute(double timeDuration){
 		double td = timeDuration;
 		while(td > 0){
-			if(getMainStatement().getThisIterator().hasNext()){
-				Statement nextStatement = getMainStatement().getThisIterator().next();
+			if(getProgramIterator().hasNext()){
+				Statement nextStatement = getProgramIterator().next();
 				if(nextStatement != null){
 					td -= 0.001;
 					//System.out.println(nextStatement.getSourceLocation());
-					nextStatement.execute();
+					//nextStatement.execute();
 				}
 			}
 			else{
 				System.out.println("End Of Program");
 				resetVariables();
-				getMainStatement().getThisIterator().restart();
+				getProgramIterator().restart();
 			}
 		}
 	}

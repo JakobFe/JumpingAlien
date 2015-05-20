@@ -28,7 +28,7 @@ public class StartMovement extends SingleStatement {
 	}
 	
 	@Override
-	public void execute() {
+	public void executeSingleStatement() {
 		if(getProgram() != null){
 			GameObject self = getProgram().getGameObject();
 			jumpingalien.model.game.Direction dir =

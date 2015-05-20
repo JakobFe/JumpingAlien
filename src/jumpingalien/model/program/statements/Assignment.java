@@ -43,7 +43,7 @@ public class Assignment extends SingleStatement {
 		getValue().setProgram(program);
 	}
 	
-	public void execute(){
+	public void executeSingleStatement(){
 		if(getProgram() != null){
 			getProgram().getGlobalVariables().get(getName()).setValue(getValue().outcome());
 		}

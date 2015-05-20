@@ -9,7 +9,7 @@ public class Skip extends SingleStatement {
 	}
 
 	@Override
-	public void execute() {}
+	public void executeSingleStatement() {}
 	
 	@Override
 	public String toString() {

@@ -35,14 +35,7 @@ public class While extends SingleStatement {
 	}
 	
 	
-	public void execute(){
-		if((Boolean)getCondition().outcome()){
-			getThisIterator().setIndex(1);
-		}
-		else{
-			getThisIterator().setIndex(2);
-		}
-	}
+	public void executeSingleStatement(){}
 	
 	
 	@Override
@@ -51,29 +44,33 @@ public class While extends SingleStatement {
 			
 			@Override
 			public boolean hasNext() {
-				return (!subIteratorsInitialized || getThisIterator().getIndex() < 2);
+				return (!subIteratorsInitialized || getIndex() < 2);
 			}
 			
 			@Override
 			public Statement next() throws NoSuchElementException{
 				if(!subIteratorsInitialized)
 					initialiseSubIterators();
-				if(getThisIterator().getIndex() == 0)
-					return While.this;
-				else if(getThisIterator().getIndex() == 1){
-					if(bodyIterator.hasNext())
-						return bodyIterator.next();
-					else{
-						restart();
-						return this.next();
+				if(getIndex() == 0){
+					if((Boolean)getCondition().outcome()){
+						setIndex(1);
 					}
+					else{
+						setIndex(2);
+					}
+					return While.this;
 				}
-				return null;
+				else if(getIndex() == 1 && (bodyIterator.hasNext()))
+						return bodyIterator.next();
+				else{
+					restart();
+					return null;
+				}
 			}
 			
 			@Override
 			public void restart() {
-				getThisIterator().setIndex(0);
+				setIndex(0);
 				bodyIterator.restart();
 			}
 			
@@ -102,95 +99,7 @@ public class While extends SingleStatement {
 	}
 	
 	
-	/**
-	public void execute(){
-		System.out.println("\n\n\n\n\nEXECUTE WHILE");
-		System.out.println("BEFORE:");
-		System.out.println(getThisIterator().getIndex());
-		if((Boolean)getCondition().outcome()){
-			getThisIterator().setIndex(1);
-		}
-		else{
-			getThisIterator().setIndex(2);
-		}
-		System.out.println("AFTER:");
-		System.out.println(getThisIterator().getIndex());
-		System.out.println("\n\n\n\n");
-	}
 	
-	
-	@Override
-	public StatementIterator<Statement> iterator() {
-		
-		class WhileIterator implements StatementIterator<Statement>{
-			
-			public WhileIterator(){
-				subIteratorsInitialized = false;
-			}
-			
-			@Override
-			public boolean hasNext() {
-				return (!subIteratorsInitialized || getIndex() < 2);
-			}
-			
-			@Override
-			public Statement next() throws NoSuchElementException{
-				if(!hasNext())
-					throw new NoSuchElementException();
-				if(!subIteratorsInitialized)
-					initialiseSubIterators();
-				if(getIndex() == 0){
-					System.out.println("GET INDEX of the inner class");
-					System.out.println(this);
-					System.out.println(getIndex());
-					System.out.println("GET INDEX of getThisIterator()");
-					System.out.println(getThisIterator());
-					System.out.println(getThisIterator().getIndex());
-					System.out.println("\n\n");
-					return While.this;
-				}
-				else if(getIndex() == 1){
-					if(bodyIterator.hasNext())
-						return bodyIterator.next();
-					else{
-						restart();
-						return this.next();
-					}
-				}
-				return null;
-			}
-			
-			@Override
-			public void restart() {
-				setIndex(0);
-				bodyIterator.restart();
-			}
-			
-			@Override
-			public void setIndex(int index) {
-				WhileIterator.this.index = index;
-			}
-			
-			@Override
-			public int getIndex() {
-				return WhileIterator.this.index;
-			}
-			
-			private int index = 0;
-			
-			private void initialiseSubIterators(){
-				subIteratorsInitialized = true;
-				bodyIterator = getBody().iterator();
-
-			}
-			
-			private StatementIterator<Statement> bodyIterator;
-			
-			private boolean subIteratorsInitialized = false;
-		}
-		
-		return new WhileIterator();
-	}*/
 	
 	@Override
 	public String toString() {

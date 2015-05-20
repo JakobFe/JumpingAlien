@@ -24,7 +24,7 @@ public class Print extends SingleStatement {
 	}
 	
 	@Override
-	public void execute() {
+	public void executeSingleStatement() {
 		System.out.println(getValue().outcome());
 	}
 	

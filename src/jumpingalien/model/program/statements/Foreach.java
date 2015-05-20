@@ -52,7 +52,7 @@ public class Foreach extends SingleStatement {
 								new Constant<ObjectOfWorld>(getSourceLocation(),theObject),
 								getSourceLocation());
 		assignment.setProgram(getProgram());
-		assignment.execute();
+		assignment.executeSingleStatement();
 	}
 
 	public Expression getRestriction() {
@@ -183,12 +183,10 @@ public class Foreach extends SingleStatement {
 	private List<ObjectOfWorld> variables;
 	
 	@Override
-	public void execute() {
+	public void executeSingleStatement() {
 		if(getProgram() != null){
 			setVariables();
-			getThisIterator().setIndex(1);
 		}
-			
 	}
 
 	@Override
@@ -198,7 +196,7 @@ public class Foreach extends SingleStatement {
 			@Override
 			public boolean hasNext() {
 				return (!subIteratorsInitialized || 
-						getThisIterator().getIndex()<2);
+						getIndex()<2);
 			}
 			
 			@Override
@@ -207,9 +205,12 @@ public class Foreach extends SingleStatement {
 					throw new NoSuchElementException();
 				if(!subIteratorsInitialized)
 					initialiseSubIterators();
-				if(getThisIterator().getIndex() == 0)
+				if(getIndex() == 0){
+					setIndex(1);
+					executeSingleStatement();
 					return Foreach.this;
-				else if(getThisIterator().getIndex() == 1){
+				}
+				else if(getIndex() == 1){
 					if(!bodyStarted){
 						assign(getVariableAt(getVariableIndex()));
 						bodyStarted = true;
@@ -223,7 +224,7 @@ public class Foreach extends SingleStatement {
 						return this.next();
 					}
 					else{
-						getThisIterator().setIndex(2);
+						setIndex(2);
 						assign(null);
 					}
 					
@@ -233,7 +234,7 @@ public class Foreach extends SingleStatement {
 			
 			@Override
 			public void restart() {
-				getThisIterator().setIndex(0);
+				setIndex(0);
 				bodyIterator.restart();
 				bodyStarted = false;
 				setVariableIndex(0);

@@ -5,6 +5,7 @@ import java.util.Optional;
 import jumpingalien.model.program.ProgramFactory;
 import jumpingalien.model.program.expressions.Expression;
 import jumpingalien.model.program.statements.Statement;
+import jumpingalien.model.program.statements.StatementIterator;
 import jumpingalien.model.program.types.Type;
 import jumpingalien.part3.programs.IProgramFactory;
 import jumpingalien.part3.programs.ProgramParser;
@@ -29,7 +30,7 @@ public class ProgramExperiment {
 				throw new IllegalArgumentException();
 			}
 			
-		
+			
 			for(int i=0;i<40;i++){
 				theProgram.execute(0.001);
 			}
@@ -38,7 +39,7 @@ public class ProgramExperiment {
 			Statement main = theProgram.getMainStatement();
 			StatementIterator<Statement> iter = main.iterator();
 			Statement theNext;
-			for(int index=0;index<10;index++){
+			for(int index=0;index<25;index++){
 				System.out.print("NEXT STATEMENT: ");
 				System.out.print(" current index: ");
 				System.out.println(index);

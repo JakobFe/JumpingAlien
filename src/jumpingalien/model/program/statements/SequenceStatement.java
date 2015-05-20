@@ -81,9 +81,6 @@ public class SequenceStatement extends ComposedStatement {
 	}
 
 	@Override
-	public void execute() {}
-
-	@Override
 	public String toString() {
 		String subStatements = "";
 		for(Statement subStat: getSubStatements()){
