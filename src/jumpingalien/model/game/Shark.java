@@ -351,6 +351,7 @@ public class Shark extends Character implements JumpInterface{
 		setHorVelocity(getInitHorVelocity());
 		setHorDirection(direction);
 		setHorAcceleration(getMaxHorAcceleration());
+		updateSpriteIndex();
 	}
 	
 	/**
