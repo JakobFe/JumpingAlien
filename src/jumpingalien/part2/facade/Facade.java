@@ -1,128 +1,15 @@
 package jumpingalien.part2.facade;
 
-import static jumpingalien.tests.util.TestUtils.doubleArray;
 import static jumpingalien.tests.util.TestUtils.intArray;
 
 import java.util.Collection;
 
 import jumpingalien.model.exceptions.*;
-import jumpingalien.model.game.Direction;
-import jumpingalien.model.game.Mazub;
-import jumpingalien.model.game.Plant;
-import jumpingalien.model.game.Position;
-import jumpingalien.model.game.School;
-import jumpingalien.model.game.Shark;
-import jumpingalien.model.game.Slime;
-import jumpingalien.model.game.Terrain;
-import jumpingalien.model.game.World;
+import jumpingalien.model.game.*;
 import jumpingalien.util.ModelException;
 import jumpingalien.util.Sprite;
 
-public class Facade implements IFacadePart2 {
-
-	@Override
-	public Mazub createMazub(int pixelLeftX, int pixelBottomY, Sprite[] sprites) {
-		try{return new Mazub(new Position(pixelLeftX,pixelBottomY),sprites);}
-		catch (IllegalXPositionException exc){
-			throw new ModelException("Illegal X Position!");}
-		catch (IllegalYPositionException exc){
-			throw new ModelException("Illegal Y Position!");}
-	}
-
-	@Override
-	public int[] getLocation(Mazub alien) {
-		try {
-			return intArray(alien.getPosition().getDisplayedXPosition(),
-					alien.getPosition().getDisplayedYPosition());
-		} catch (NullPointerException e) {
-			System.out.println("Modelexception!");
-			throw new ModelException("This Mazub is terminated!");
-		}
-	}
-
-	@Override
-	public double[] getVelocity(Mazub alien) {
-		return doubleArray(alien.getHorDirection().getFactor()*alien.getHorVelocity(),
-			   alien.getVertDirection().getFactor()*alien.getVertVelocity());
-	}
-
-	@Override
-	public double[] getAcceleration(Mazub alien) {
-		return doubleArray(alien.getHorDirection().getFactor()*alien.getHorAcceleration(),
-						   alien.getVertAcceleration());
-	}
-
-	@Override
-	public int[] getSize(Mazub alien) {
-		return intArray(alien.getWidth(),alien.getHeight());
-	}
-
-	@Override
-	public Sprite getCurrentSprite(Mazub alien) {
-		alien.updateSpriteIndex();
-		return alien.getCurrentSprite();
-	}
-
-	@Override
-	public void startJump(Mazub alien) {
-		if(!alien.isDead()){
-			try{
-				alien.startJump();}
-			catch (IllegalJumpInvokeException exc){
-				new ModelException("Illegal Jumping Invoke!");
-				System.out.println("Illegal Jumping Invoke!");
-			}
-		}
-	}
-
-	@Override
-	public void endJump(Mazub alien) {
-		try{
-			alien.endJump();
-		}
-		catch(IllegalStateException e){
-			new ModelException("Can not end jumping!");
-		}
-	}
-
-	@Override
-	public void startMoveLeft(Mazub alien) {
-		if(!alien.isDead())
-			alien.startMove(Direction.LEFT);
-	}
-
-	@Override
-	public void endMoveLeft(Mazub alien) {
-		if (alien.isMoving(Direction.LEFT))
-			alien.endMove(Direction.LEFT);
-		if(!alien.isMoving(Direction.RIGHT))
-			alien.endMove(Direction.LEFT);
-	}
-
-	@Override
-	public void startMoveRight(Mazub alien) {
-		if(!alien.isDead())
-			alien.startMove(Direction.RIGHT);
-	}
-
-	@Override
-	public void endMoveRight(Mazub alien) {
-		//if (alien.isMoving(Direction.RIGHT))
-		//alien.endMove(Direction.RIGHT);
-		if(!alien.isMoving(Direction.LEFT))
-			alien.endMove(Direction.RIGHT);
-	}
-
-	@Override
-	public void startDuck(Mazub alien) {
-		if(!alien.isDead())
-			alien.startDuck();
-	}
-
-	@Override
-	public void endDuck(Mazub alien) {
-		alien.endDuck();
-	}
+public class Facade extends jumpingalien.part1.facade.Facade implements IFacadePart2 {
 	
 	@Override
 	public int getNbHitPoints(Mazub alien) {

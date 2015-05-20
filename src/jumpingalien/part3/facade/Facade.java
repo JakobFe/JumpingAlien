@@ -37,42 +37,25 @@ public class Facade extends jumpingalien.part2.facade.Facade implements IFacadeP
 	@Override
 	public Buzam createBuzamWithProgram(int pixelLeftX, int pixelBottomY,
 			Sprite[] sprites, Program program) {
-		try{
-		IProgramFactory<Expression, Statement, Type, Program> theFactory = 
-				new ProgramFactory();
-		ProgramParser<Expression, Statement, Type, Program> theParser = 
-				new ProgramParser<>(theFactory);
-		Optional<Program> parseResult = theParser.parseFile(
-				"resources/programs/buzam.txt");
-		Program theProgram = parseResult.get();
-		return new Buzam (new Position(pixelLeftX, pixelBottomY), sprites,theProgram);
-		}
-		catch(Exception e){
-			System.out.println("Exception caught!");
-			e.printStackTrace();
-			return createBuzam(pixelLeftX, pixelBottomY, sprites);
-		}
+		return new Buzam(new Position(pixelLeftX, pixelBottomY),sprites,program);
 	}
 
 	@Override
 	public Plant createPlantWithProgram(int x, int y, Sprite[] sprites,
 			Program program) {
-		//return new Plant(new Position(x, y), sprites,program);
-		return createPlant(x, y, sprites);
+		return new Plant(new Position(x, y), sprites,program);
 	}
 
 	@Override
 	public Shark createSharkWithProgram(int x, int y, Sprite[] sprites,
 			Program program) {
-		//return new Shark(new Position(x, y), sprites,program);
-		return createShark(x, y, sprites);
+		return new Shark(new Position(x, y), sprites,program);
 	}
 
 	@Override
 	public Slime createSlimeWithProgram(int x, int y, Sprite[] sprites,
 			School school, Program program) {
-		//return new Slime(new Position(x, y), sprites, school,program);
-		return createSlime(x, y, sprites, school);
+		return new Slime(new Position(x, y), sprites, school,program);
 	}
 
 	@Override
