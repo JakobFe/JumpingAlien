@@ -133,9 +133,13 @@ public class Buzam extends Alien{
 	
 	@Override
 	public String toString(){
-		//return "Buzam at position " + getPosition().toString();
-		//return String.valueOf(getProgram() != null);
-		return "Buzam";
+		String programMessage;
+		if(getProgram()!= null)
+			programMessage = "controlled by \na program.";
+		else
+			programMessage = "without a program.";
+		return "Buzam at position\n" + getPosition().toString() +
+				"\nwith " + String.valueOf(getHitPoints()) + " hit points\nand" +  programMessage;
 	}
 
 	@Override

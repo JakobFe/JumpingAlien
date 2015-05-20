@@ -43,7 +43,7 @@ public class Facade extends jumpingalien.part2.facade.Facade implements IFacadeP
 				new ProgramParser<>(theFactory);
 		try{
 			Optional<Program> parseResult = theParser.parseFile(
-					"resources/programs/trackMazub.txt");
+					"resources/programs/buzam.txt");
 			Program theProgram = parseResult.get();
 			return new Buzam(new Position(pixelLeftX,pixelBottomY), sprites,theProgram);
 			}
