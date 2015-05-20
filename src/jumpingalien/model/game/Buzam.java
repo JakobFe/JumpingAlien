@@ -38,7 +38,14 @@ public class Buzam extends Alien{
 			}
 			if(isOverlappingWith(Terrain.MAGMA)){
 				updateHitPointsTerrain(Terrain.MAGMA);
-			}		
+			}
+			if(canConsumePlant()){
+				for(Plant plant: getWorld().getAllUnterminatedPlants()){
+					if(!isDead() && !plant.isDead() && isOverlappingWith(plant) && canConsumePlant()){
+						this.hurt(plant);
+					}
+				}
+			}
 			if (!isDead() && alien != null && !alien.isImmune() && isOverlappingWith(alien)){
 				if (!alien.standsOn(this)){
 					alien.getHurtBy(this);
@@ -82,7 +89,8 @@ public class Buzam extends Alien{
 	protected void getHurtBy(GameObject other){
 		if(!isImmune()){
 			if((other instanceof Mazub) || (other instanceof Shark) || (other instanceof Slime))
-				subtractHp(50);
+				if(!this.standsOn(other))
+					subtractHp(50);
 			else if(!(other instanceof Buzam))
 				other.hurt(this);
 		}
@@ -103,6 +111,11 @@ public class Buzam extends Alien{
 			((Character)other).getImmuneTimer().reset();
 			if (other.isDead())
 				other.getHpTimer().reset();
+		}
+		else if(other instanceof Plant){
+			other.setHitPoints(0);
+			other.getHpTimer().reset();
+			this.consumePlant();
 		}
 		else if(!(other instanceof Buzam))
 			other.getHurtBy(this);
