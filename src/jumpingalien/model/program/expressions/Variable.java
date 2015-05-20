@@ -37,7 +37,7 @@ public class Variable extends Expression {
 		this.value = value;
 	}
 
-	private Object value;
+	private Object value = null;
 		
 	@Override
 	public String toString() {
