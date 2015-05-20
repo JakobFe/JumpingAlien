@@ -60,8 +60,13 @@ public class While extends SingleStatement {
 					}
 					return While.this;
 				}
-				else if(getIndex() == 1 && (bodyIterator.hasNext()))
-						return bodyIterator.next();
+				else if(getIndex() == 1 && (bodyIterator.hasNext())){
+						try {
+							return bodyIterator.next();
+						} catch (BreakExcpetion e) {
+							breakLoop();
+						}
+				}
 				else{
 					restart();
 					return null;
