@@ -138,7 +138,6 @@ public class SearchObjectTest {
 		Statement temp = ((IfStatement) theProgram.getMainStatement()).getIfBody();
 		Assignment ifBody = (Assignment)temp;
 		SearchObject seeker = (SearchObject) ifBody.getValue();
-		System.out.println(seeker.outcome());
 		assertTrue(seeker.outcome() == null);
 	}
 	

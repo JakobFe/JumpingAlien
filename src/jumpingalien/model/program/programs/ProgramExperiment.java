@@ -30,19 +30,24 @@ public class ProgramExperiment {
 				throw new IllegalArgumentException();
 			}
 			
-			//Statement main = theProgram.getMainStatement();
-			//StatementIterator<Statement> iter = main.iterator();
-			//Statement theNext;
+		
 			for(int i=0;i<40;i++){
-				//System.out.print("NEXT STATEMENT: ");
-				//System.out.print(" current index: ");
-				//System.out.println(i);
-				//theNext = iter.next();
-				//System.out.println(theNext);
-				//if(theNext != null)
-				//	theNext.execute();
 				theProgram.execute(0.001);
 			}
+			
+			/**
+			Statement main = theProgram.getMainStatement();
+			StatementIterator<Statement> iter = main.iterator();
+			Statement theNext;
+			for(int index=0;index<10;index++){
+				System.out.print("NEXT STATEMENT: ");
+				System.out.print(" current index: ");
+				System.out.println(index);
+				theNext = iter.next();
+				System.out.println(theNext);
+				if(theNext != null)
+					theNext.execute();
+			}*/
 			
 		}
 		catch(Exception exc){

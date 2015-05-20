@@ -34,19 +34,14 @@ public class While extends SingleStatement {
 		getCondition().setProgram(program);
 	}
 	
+	
 	public void execute(){
-//		System.out.println("\n\n\n\n\nEXECUTE WHILE");
-//		System.out.println("BEFORE:");
-//		System.out.println(getThisIterator().getIndex());
 		if((Boolean)getCondition().outcome()){
 			getThisIterator().setIndex(1);
 		}
 		else{
 			getThisIterator().setIndex(2);
 		}
-//		System.out.println("AFTER:");
-//		System.out.println(getThisIterator().getIndex());
-//		System.out.println("\n\n\n\n");
 	}
 	
 	
@@ -106,7 +101,24 @@ public class While extends SingleStatement {
 		};
 	}
 	
+	
 	/**
+	public void execute(){
+		System.out.println("\n\n\n\n\nEXECUTE WHILE");
+		System.out.println("BEFORE:");
+		System.out.println(getThisIterator().getIndex());
+		if((Boolean)getCondition().outcome()){
+			getThisIterator().setIndex(1);
+		}
+		else{
+			getThisIterator().setIndex(2);
+		}
+		System.out.println("AFTER:");
+		System.out.println(getThisIterator().getIndex());
+		System.out.println("\n\n\n\n");
+	}
+	
+	
 	@Override
 	public StatementIterator<Statement> iterator() {
 		
@@ -128,9 +140,10 @@ public class While extends SingleStatement {
 				if(!subIteratorsInitialized)
 					initialiseSubIterators();
 				if(getIndex() == 0){
-					System.out.println("GET INDEX in while = 0");
+					System.out.println("GET INDEX of the inner class");
 					System.out.println(this);
 					System.out.println(getIndex());
+					System.out.println("GET INDEX of getThisIterator()");
 					System.out.println(getThisIterator());
 					System.out.println(getThisIterator().getIndex());
 					System.out.println("\n\n");
