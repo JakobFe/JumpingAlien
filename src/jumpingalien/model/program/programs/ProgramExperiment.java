@@ -35,6 +35,7 @@ public class ProgramExperiment {
 				theProgram.execute(0.001);
 			}
 			
+			
 			/**
 			Statement main = theProgram.getMainStatement();
 			StatementIterator<Statement> iter = main.iterator();
@@ -45,8 +46,8 @@ public class ProgramExperiment {
 				System.out.println(index);
 				theNext = iter.next();
 				System.out.println(theNext);
-				if(theNext != null)
-					theNext.execute();
+				//if(theNext != null)
+				//	theNext.execute();
 			}*/
 			
 		}

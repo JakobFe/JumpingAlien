@@ -285,8 +285,7 @@ public class ProgramFactory implements IProgramFactory<Expression,Statement,Type
 
 	@Override
 	public Statement createBreak(SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		return new Break(sourceLocation);
 	}
 
 	@Override

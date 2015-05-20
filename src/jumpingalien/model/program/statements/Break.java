@@ -11,7 +11,6 @@ public class Break extends SingleStatement {
 	
 	@Override
 	public void executeSingleStatement() throws BreakException {
-		System.out.println("EXPECTED");
 		throw new BreakException();
 	}
 	
