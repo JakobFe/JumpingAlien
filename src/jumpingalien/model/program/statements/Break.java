@@ -1,5 +1,6 @@
 package jumpingalien.model.program.statements;
 
+import jumpingalien.model.exceptions.BreakException;
 import jumpingalien.part3.programs.SourceLocation;
 
 public class Break extends SingleStatement {
@@ -9,7 +10,9 @@ public class Break extends SingleStatement {
 	}
 	
 	@Override
-	public void executeSingleStatement() {
+	public void executeSingleStatement() throws BreakException {
+		System.out.println("EXPECTED");
+		throw new BreakException();
 	}
 	
 }

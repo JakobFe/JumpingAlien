@@ -303,7 +303,7 @@ public class MazubTest {
 				Util.DEFAULT_EPSILON);
 	}
 	
-	@Test
+	@Test (expected = IllegalStateException.class)
 	public void endJumpNoEffect(){
 		mazubPos_50_0.startJump();
 		for (int i=0 ; i<9; i++){

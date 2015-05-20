@@ -2,6 +2,7 @@ package jumpingalien.model.program.statements;
 
 import java.util.NoSuchElementException;
 
+import jumpingalien.model.exceptions.BreakException;
 import jumpingalien.model.program.expressions.Expression;
 import jumpingalien.model.program.programs.Program;
 import jumpingalien.part3.programs.SourceLocation;
@@ -63,8 +64,10 @@ public class While extends SingleStatement {
 				else if(getIndex() == 1 && (bodyIterator.hasNext())){
 						try {
 							return bodyIterator.next();
-						} catch (BreakExcpetion e) {
+						} catch (BreakException e) {
+							System.out.println("CATCH");
 							breakLoop();
+							return null;
 						}
 				}
 				else{

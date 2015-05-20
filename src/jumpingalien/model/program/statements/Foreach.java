@@ -6,6 +6,7 @@ import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import jumpingalien.model.exceptions.BreakException;
 import jumpingalien.model.game.World;
 import jumpingalien.model.program.expressions.Constant;
 import jumpingalien.model.program.expressions.Expression;
@@ -200,7 +201,7 @@ public class Foreach extends SingleStatement {
 			}
 			
 			@Override
-			public Statement next() throws NoSuchElementException{
+			public Statement next() throws NoSuchElementException, BreakException{
 				if(!hasNext())
 					throw new NoSuchElementException();
 				if(!subIteratorsInitialized)
@@ -211,21 +212,26 @@ public class Foreach extends SingleStatement {
 					return Foreach.this;
 				}
 				else if(getIndex() == 1){
-					if(!bodyStarted){
-						assign(getVariableAt(getVariableIndex()));
-						bodyStarted = true;
-					}
-					if(bodyIterator.hasNext())
-						return bodyIterator.next();
-					else if(getVariableIndex() < (getVariables().size()-1)){
-						bodyIterator.restart();
-						bodyStarted = false;
-						incrementVariableIndex();
-						return this.next();
-					}
-					else{
-						setIndex(2);
-						assign(null);
+					try {
+						if(!bodyStarted){
+							assign(getVariableAt(getVariableIndex()));
+							bodyStarted = true;
+						}
+						if(bodyIterator.hasNext())
+							return bodyIterator.next();
+						else if(getVariableIndex() < (getVariables().size()-1)){
+							bodyIterator.restart();
+							bodyStarted = false;
+							incrementVariableIndex();
+							return this.next();
+						}
+						else{
+							setIndex(2);
+							assign(null);
+						}
+					} catch (BreakException e) {
+						breakLoop();
+						return null;
 					}
 				}
 				return null;
