@@ -191,7 +191,7 @@ public class Foreach extends SingleStatement {
 
 	@Override
 	public StatementIterator<Statement> iterator() {
-		return new StatementIterator<Statement>(){
+		return new LoopStatementIterator<Statement>(){
 			
 			@Override
 			public boolean hasNext() {
@@ -227,7 +227,6 @@ public class Foreach extends SingleStatement {
 						setIndex(2);
 						assign(null);
 					}
-					
 				}
 				return null;
 			}
@@ -238,6 +237,12 @@ public class Foreach extends SingleStatement {
 				bodyIterator.restart();
 				bodyStarted = false;
 				setVariableIndex(0);
+				assign(null);
+			}
+			
+			@Override
+			public void breakLoop() {
+				setIndex(2);
 				assign(null);
 			}
 			
