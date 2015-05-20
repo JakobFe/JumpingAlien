@@ -84,7 +84,7 @@ public class Program {
 				}
 			}
 			else{
-				System.out.println("End Of Program");
+				//System.out.println("End Of Program");
 				resetVariables();
 				getProgramIterator().restart();
 			}
