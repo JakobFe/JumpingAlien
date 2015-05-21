@@ -22,5 +22,6 @@ while (x < 10.0) do
 	x:= x + 1.0;
 	y:= y - 2.0;
 	print x;
+	break;
 	print y;
 done
