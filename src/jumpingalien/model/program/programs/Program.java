@@ -5,8 +5,7 @@ import java.util.Map;
 
 import jumpingalien.model.game.GameObject;
 import jumpingalien.model.program.expressions.Variable;
-import jumpingalien.model.program.statements.Statement;
-import jumpingalien.model.program.statements.StatementIterator;
+import jumpingalien.model.program.statements.*;
 import jumpingalien.model.program.types.Type;
 import jumpingalien.part3.programs.SourceLocation;
 
@@ -26,7 +25,7 @@ public class Program {
 	private final Statement mainStatement;
 	
 	public boolean hasAsStatement(Statement statement){
-		return (mainStatement.hasAsSubStatement(statement));
+		return (getMainStatement().hasAsSubStatement(statement));
 	}
 	
 	private void initialiseGlobalVariables(Map<String,Type> declaredVariables){		
@@ -71,6 +70,32 @@ public class Program {
 	}
 
 	private StatementIterator<Statement> programIterator = null;	
+	
+	/*
+	public boolean isWellFormed(Statement statement){
+		Statement currentStatement = statement;
+		if(currentStatement instanceof Break)
+			return false;
+		while(currentStatement instanceof While)
+			currentStatement = ((While) currentStatement).getBody();
+		if(currentStatement instanceof ComposedStatement){
+			for(Statement subStat: ((ComposedStatement)currentStatement).getSubStatements()){
+				if(subStat instanceof Foreach){
+					if(subStat.hasActionStatAsSubStat()){
+						return false;
+					}
+				}
+				else if(!(subStat instanceof While)&&(!isWellFormed(subStat)))
+					return false;
+			}
+		}
+		return true;
+	}
+	*/
+	
+	public boolean isWellFormed(){
+		return getMainStatement().isWellFormed();
+	}
 	
 	public void execute(double timeDuration){
 		double td = timeDuration;

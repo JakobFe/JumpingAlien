@@ -26,6 +26,13 @@ public abstract class Statement {
 				other instanceof EndMovement);
 	}
 	
+	// LISKOV!!!
+	public boolean isWellFormed(){
+		if(this instanceof Break)
+			return false;
+		return true;
+	}
+	
 	@Basic
 	public SourceLocation getSourceLocation() {
 		return sourceLocation;
