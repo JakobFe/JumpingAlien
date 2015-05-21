@@ -19,7 +19,6 @@ public abstract class Statement {
 		return other == this;
 	}
 	
-	public abstract boolean hasAsSubStatement(Class<? extends Statement> theClass);
 	
 	public static boolean isActionStatement(Statement other){
 		return (other instanceof Wait || other instanceof Skip ||

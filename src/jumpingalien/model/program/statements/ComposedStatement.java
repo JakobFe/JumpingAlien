@@ -43,11 +43,6 @@ public abstract class ComposedStatement extends Statement {
 		}		
 	}
 	
-	@Override
-	public boolean hasAsSubStatement(Class<? extends Statement> theClass) {
-		return false;
-	}
-	
 	public Statement getSubStatementAt(int index) throws IndexOutOfBoundsException{
 		if((index >= getSubStatements().size()) || index<0)
 			throw new IndexOutOfBoundsException();

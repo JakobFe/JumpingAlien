@@ -13,12 +13,6 @@ public abstract class SingleStatement extends Statement {
 	public abstract void executeSingleStatement();
 	
 	@Override
-	public boolean hasAsSubStatement(Class<? extends Statement> theClass) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-	
-	@Override
 	public StatementIterator<Statement> iterator() {
 		return new StatementIterator<Statement>(){
 
