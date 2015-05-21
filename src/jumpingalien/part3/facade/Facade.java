@@ -85,7 +85,7 @@ public class Facade extends jumpingalien.part2.facade.Facade implements IFacadeP
 
 	@Override
 	public boolean isWellFormed(Program program) {
-		return program.isWellFormed2();
+		return program.isWellFormed();
 	}
 
 	@Override

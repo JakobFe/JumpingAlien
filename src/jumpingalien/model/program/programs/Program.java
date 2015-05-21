@@ -92,13 +92,8 @@ public class Program {
 		return true;
 	}
 	
-	public boolean isWellFormed2(){
-		return isWellFormed(getMainStatement(), false);
-	}
-	
-	
 	public boolean isWellFormed(){
-		return getMainStatement().isWellFormed();
+		return isWellFormed(getMainStatement(), false);
 	}
 	
 	public void execute(double timeDuration){

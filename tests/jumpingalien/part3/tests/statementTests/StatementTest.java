@@ -9,6 +9,7 @@ import jumpingalien.model.program.expressions.Constant;
 import jumpingalien.model.program.programs.Program;
 import jumpingalien.model.program.statements.*;
 import jumpingalien.model.program.types.Type;
+import jumpingalien.part3.programs.IProgramFactory.Direction;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -48,8 +49,32 @@ public class StatementTest {
 	}
 	
 	@Test
-	public void isActionStatementCorrect(){
+	public void isActionStatementCorrect1(){
 		assertTrue(Statement.isActionStatement(skip));
+	}
+	
+	@Test
+	public void isActionStatementCorrect2(){
+		Statement startRunLeft = new StartMovement(loc, new Constant<Direction>(loc,Direction.LEFT));
+		assertTrue(Statement.isActionStatement(startRunLeft));
+	}
+	
+	@Test
+	public void isActionStatementCorrect3(){
+		Statement endRunRight = new EndMovement(loc, new Constant<Direction>(loc,Direction.RIGHT));
+		assertTrue(Statement.isActionStatement(endRunRight));
+	}
+	
+	@Test
+	public void isActionStatementCorrect4(){
+		Statement startJump = new StartMovement(loc, new Constant<Direction>(loc,Direction.UP));
+		assertTrue(Statement.isActionStatement(startJump));
+	}
+	
+	@Test
+	public void isActionStatementCorrect5(){
+		Statement endDuck = new EndMovement(loc, new Constant<Direction>(loc,Direction.DOWN));
+		assertTrue(Statement.isActionStatement(endDuck));
 	}
 	
 	@Test

@@ -29,17 +29,6 @@ public class While extends SingleStatement {
 	private final Statement body;
 	
 	@Override
-	public boolean isWellFormed(){
-		if(getBody() instanceof ComposedStatement){
-			for(Statement subStat: ((ComposedStatement) getBody()).getSubStatements()){
-				if((subStat!= null) && !subStat.isWellFormed())
-					return false;
-			}
-		}
-		return true;
-	}
-	
-	@Override
 	public void setProgram(Program program) {
 		super.setProgram(program);
 		getBody().setProgram(program);

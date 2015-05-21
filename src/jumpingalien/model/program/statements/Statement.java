@@ -24,8 +24,6 @@ public abstract class Statement {
 				other instanceof EndMovement);
 	}
 	
-	public abstract boolean isWellFormed();
-	
 	@Basic
 	public SourceLocation getSourceLocation() {
 		return sourceLocation;
