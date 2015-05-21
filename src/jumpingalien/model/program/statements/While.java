@@ -65,7 +65,6 @@ public class While extends SingleStatement {
 						try {
 							return bodyIterator.next();
 						} catch (BreakException e) {
-							System.out.println("CATCH");
 							breakLoop();
 							return null;
 						}

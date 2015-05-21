@@ -1,5 +1,6 @@
 package jumpingalien.model.program.statements;
 
+import be.kuleuven.cs.som.annotate.*;
 import jumpingalien.model.program.programs.Program;
 import jumpingalien.part3.programs.SourceLocation;
 
@@ -18,18 +19,20 @@ public abstract class Statement {
 		return other == this;
 	}
 	
+	@Basic
 	public SourceLocation getSourceLocation() {
 		return sourceLocation;
 	}
 
 	private final SourceLocation sourceLocation;
 	
+	@Basic
 	public Program getProgram() {
 		return program;
 	}
 
 	public void setProgram(Program program) {
-		assert program.hasAsStatement(this);
+		assert (program == null || program.hasAsStatement(this));
 		this.program = program;
 	}
 
