@@ -23,13 +23,6 @@ public abstract class SingleStatement extends Statement {
 	}
 	
 	@Override
-	public boolean isWellFormed() {
-		if(this instanceof Break)
-			return false;
-		return true;
-	}
-	
-	@Override
 	public StatementIterator<Statement> iterator() {
 		return new StatementIterator<Statement>(){
 

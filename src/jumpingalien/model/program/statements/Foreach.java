@@ -105,14 +105,6 @@ public class Foreach extends SingleStatement {
 	public boolean hasActionStatAsSubStat() {
 		return super.hasActionStatAsSubStat() || getBody().hasActionStatAsSubStat();
 	}
-	
-	@Override
-	public boolean isWellFormed() {
-		if(hasActionStatAsSubStat()){
-			return false;
-		}
-		return true;
-	}
 
 	@Override
 	public void setProgram(Program program){
