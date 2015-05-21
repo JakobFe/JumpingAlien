@@ -37,6 +37,7 @@ public class PartialFacadeTest {
 	public void testWellformed() {
 		IFacadePart3 facade = new Facade();
 		ParseOutcome<?> outcome = facade.parse("double d := 1.0; while d < 3 do if random 2 <= 1 then break; fi done");
+		System.out.println(outcome.isSuccess());
 		assumeTrue(outcome.isSuccess());
 		assertTrue(facade.isWellFormed((Program) outcome.getResult()));
 	}

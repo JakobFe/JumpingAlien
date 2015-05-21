@@ -102,6 +102,11 @@ public class Foreach extends SingleStatement {
 	}
 	
 	@Override
+	public boolean hasActionStatAsSubStat() {
+		return super.hasActionStatAsSubStat() || getBody().hasActionStatAsSubStat();
+	}
+	
+	@Override
 	public boolean isWellFormed() {
 		if(hasActionStatAsSubStat()){
 			return false;

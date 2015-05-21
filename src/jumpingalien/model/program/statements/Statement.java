@@ -14,11 +14,9 @@ public abstract class Statement {
 		sourceLocation = null;
 	}
 	
-	// opm: doc: je moet een niet deterministische postconditie gebruiken (LISKOV)
-	public boolean hasAsSubStatement(Statement other){
-		return other == this;
-	}
+	public abstract boolean hasAsSubStatement(Statement other);
 	
+	public abstract boolean hasActionStatAsSubStat();
 	
 	public static boolean isActionStatement(Statement other){
 		return (other instanceof Wait || other instanceof Skip ||
@@ -26,12 +24,7 @@ public abstract class Statement {
 				other instanceof EndMovement);
 	}
 	
-	// LISKOV!!!
-	public boolean isWellFormed(){
-		if(this instanceof Break)
-			return false;
-		return true;
-	}
+	public abstract boolean isWellFormed();
 	
 	@Basic
 	public SourceLocation getSourceLocation() {

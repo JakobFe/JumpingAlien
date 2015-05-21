@@ -71,27 +71,31 @@ public class Program {
 
 	private StatementIterator<Statement> programIterator = null;	
 	
-	/*
-	public boolean isWellFormed(Statement statement){
+	
+	public boolean isWellFormed(Statement statement, boolean inWhile){
 		Statement currentStatement = statement;
-		if(currentStatement instanceof Break)
+		if(currentStatement instanceof Break && !inWhile)
 			return false;
-		while(currentStatement instanceof While)
-			currentStatement = ((While) currentStatement).getBody();
-		if(currentStatement instanceof ComposedStatement){
+		else if(currentStatement instanceof While)
+			return(isWellFormed(((While)currentStatement).getBody(), true));
+		else if(currentStatement instanceof ComposedStatement){
 			for(Statement subStat: ((ComposedStatement)currentStatement).getSubStatements()){
 				if(subStat instanceof Foreach){
 					if(subStat.hasActionStatAsSubStat()){
 						return false;
 					}
 				}
-				else if(!(subStat instanceof While)&&(!isWellFormed(subStat)))
+				else if(!isWellFormed(subStat,inWhile))
 					return false;
 			}
 		}
 		return true;
 	}
-	*/
+	
+	public boolean isWellFormed2(){
+		return isWellFormed(getMainStatement(), false);
+	}
+	
 	
 	public boolean isWellFormed(){
 		return getMainStatement().isWellFormed();

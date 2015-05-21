@@ -17,7 +17,6 @@ object o;
 
 while true do
 
-
   currentxdir := up;
   if (ismoving (self, left)) then currentxdir := left; fi
   if (ismoving (self, right)) then currentxdir := right; fi

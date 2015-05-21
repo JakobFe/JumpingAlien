@@ -43,6 +43,22 @@ public abstract class ComposedStatement extends Statement {
 		}		
 	}
 	
+	@Override
+	public boolean hasActionStatAsSubStat() {
+		for(Statement subStatement: subStatements){
+			if(isActionStatement(subStatement))
+				return true;
+		}
+		return false;
+	
+	}
+	
+	public boolean hasForAsSubStat(){
+		for(Statement subStatement: subStatements){
+		}
+		return false;
+	}
+	
 	public Statement getSubStatementAt(int index) throws IndexOutOfBoundsException{
 		if((index >= getSubStatements().size()) || index<0)
 			throw new IndexOutOfBoundsException();
@@ -56,7 +72,7 @@ public abstract class ComposedStatement extends Statement {
 	public boolean isWellFormed() {
 		boolean result = true;
 		for(Statement subStat: getSubStatements()){
-			if(!subStat.isWellFormed())
+			if((subStat!= null) && !subStat.isWellFormed())
 				result = false;
 		}
 		return result;

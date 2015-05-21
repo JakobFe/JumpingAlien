@@ -13,6 +13,23 @@ public abstract class SingleStatement extends Statement {
 	public abstract void executeSingleStatement();
 	
 	@Override
+	public boolean hasAsSubStatement(Statement other) {
+		return this == other;
+	}
+	
+	@Override
+	public boolean hasActionStatAsSubStat() {
+		return isActionStatement(this);
+	}
+	
+	@Override
+	public boolean isWellFormed() {
+		if(this instanceof Break)
+			return false;
+		return true;
+	}
+	
+	@Override
 	public StatementIterator<Statement> iterator() {
 		return new StatementIterator<Statement>(){
 

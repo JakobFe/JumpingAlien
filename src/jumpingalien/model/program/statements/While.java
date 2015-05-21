@@ -30,7 +30,13 @@ public class While extends SingleStatement {
 	
 	@Override
 	public boolean isWellFormed(){
-		return getBody().isWellFormed();
+		if(getBody() instanceof ComposedStatement){
+			for(Statement subStat: ((ComposedStatement) getBody()).getSubStatements()){
+				if((subStat!= null) && !subStat.isWellFormed())
+					return false;
+			}
+		}
+		return true;
 	}
 	
 	@Override
@@ -48,6 +54,10 @@ public class While extends SingleStatement {
 		return super.hasAsSubStatement(other) || getBody().hasAsSubStatement(other);
 	}
 	
+	@Override
+	public boolean hasActionStatAsSubStat() {
+		return super.hasActionStatAsSubStat() || getBody().hasActionStatAsSubStat();
+	}
 	
 	@Override
 	public StatementIterator<Statement> iterator() {
