@@ -90,7 +90,7 @@ public class Facade extends jumpingalien.part2.facade.Facade implements IFacadeP
 
 	@Override
 	public void addBuzam(World world, Buzam buzam) {
-		world.setBuzam(buzam);
+		world.addAsGameObject(buzam);
 	}
 
 	@Override

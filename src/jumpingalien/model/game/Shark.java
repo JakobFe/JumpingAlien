@@ -181,7 +181,7 @@ public class Shark extends Character implements JumpInterface{
 	 */ 
 	@Override
 	protected boolean canBeAddedTo(World world) {
-		return super.canBeAddedTo(world) && (world.hasAsShark(this));
+		return super.canBeAddedTo(world) && (world.hasAsGameObject(this));
 	}
 	
 	/**
@@ -196,7 +196,7 @@ public class Shark extends Character implements JumpInterface{
 	 */
 	@Override
 	protected boolean hasProperWorld() {
-		return (getWorld() == null) || (getWorld().hasAsShark(this));
+		return (getWorld() == null) || (getWorld().hasAsGameObject(this));
 	}
 	
 	/**
@@ -801,7 +801,7 @@ public class Shark extends Character implements JumpInterface{
 		assert getHitPoints() == 0;
 		assert getHpTimer().getTimeSum() >= 0.6;
 		super.terminate();
-		getWorld().removeAsShark(this);
+		getWorld().removeAsGameObject(this);
 		setWorld(null);
 	}
 

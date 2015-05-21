@@ -145,7 +145,7 @@ public class Plant extends GameObject {
 	 */
 	@Override@Model
 	protected boolean canBeAddedTo(World world) {
-		return super.canBeAddedTo(world) && (world.hasAsPlant(this));
+		return super.canBeAddedTo(world) && (world.hasAsGameObject(this));
 	}
 	
 	/**
@@ -156,7 +156,7 @@ public class Plant extends GameObject {
 	 */
 	@Override@Model
 	protected boolean hasProperWorld() {
-		return (getWorld() == null) || (getWorld().hasAsPlant(this));
+		return (getWorld() == null) || (getWorld().hasAsGameObject(this));
 	}
 	
 	@Override
@@ -302,8 +302,7 @@ public class Plant extends GameObject {
 	protected HashSet<GameObject> getBlockingObjects() {
 		HashSet<GameObject> collection = new HashSet<GameObject>();
 		collection.addAll(getWorld().getAllPlants());
-		collection.add(getWorld().getMazub());
-		collection.add(getWorld().getBuzam());
+		collection.addAll(getWorld().getAllAliens());
 		return collection;
 	}
 	
@@ -411,7 +410,7 @@ public class Plant extends GameObject {
 	@Override@Model
 	protected void terminate(){
 		super.terminate();
-		getWorld().removeAsPlant(this);
+		getWorld().removeAsGameObject(this);
 		setWorld(null);
 	}
 	

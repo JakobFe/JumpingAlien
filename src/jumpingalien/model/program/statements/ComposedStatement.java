@@ -53,6 +53,7 @@ public abstract class ComposedStatement extends Statement {
 	
 	}
 	
+	@SuppressWarnings("unused")
 	public boolean hasForAsSubStat(){
 		for(Statement subStatement: subStatements){
 		}

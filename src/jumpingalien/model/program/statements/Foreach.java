@@ -178,7 +178,7 @@ public class Foreach extends SingleStatement {
 			set.add(world.getMazub());
 		}
 		else if(getVariableKind() == Kind.BUZAM){
-			set.add(world.getBuzam());
+			set.addAll(world.getAllBuzams());
 		}
 		else if(getVariableKind() == Kind.SLIME){
 			set.addAll(world.getAllSlimes());
@@ -210,7 +210,7 @@ public class Foreach extends SingleStatement {
 
 	@Override
 	public StatementIterator<Statement> iterator() {
-		return new LoopStatementIterator<Statement>(){
+		return new StatementIterator<Statement>(){
 			
 			@Override
 			public boolean hasNext() {
@@ -264,7 +264,6 @@ public class Foreach extends SingleStatement {
 				assign(null);
 			}
 			
-			@Override
 			public void breakLoop() {
 				setIndex(2);
 				assign(null);

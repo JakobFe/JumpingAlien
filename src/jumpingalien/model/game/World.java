@@ -3,6 +3,9 @@ package jumpingalien.model.game;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import jumpingalien.model.exceptions.*;
 import be.kuleuven.cs.som.annotate.*;
@@ -578,8 +581,10 @@ public class World {
 			getMazub().setWorld(null);
 			getAllGameObjects().remove(getMazub());
 		}
-		if(canHaveAsMazub(alien))
+		if(canHaveAsMazub(alien)){
 			this.mazub = alien;
+			addAsGameObject(alien);
+		}
 		if (alien != null){
 			getMazub().setWorld(this);
 		}
@@ -590,58 +595,27 @@ public class World {
 	 */
 	private Mazub mazub;
 
-	/**
-	 * Returns the one and only Buzam of this game world.
-	 */
-	public Buzam getBuzam() {
-		return buzam;
-	}
-
-	/**
-	 * Checks whether this world can have the given Buzam is its Buzam.
-	 * 
-	 * @param 	alien
-	 * 			The Buzam to check
-	 * @return	...
-	 * 			| result == ((alien == null) || (!alien.isDead() && canAddGameObjects()))
-	 */
-	private boolean canHaveAsBuzam(Buzam alien){
-		return (alien == null) || (!alien.isDead() && canAddGameObjects());
+	public Set<? extends GameObject> filterAllGameObjects(Predicate<GameObject> predicate){
+		Stream<GameObject> stream = allGameObjects.stream();
+		Stream<GameObject> filteredStream = stream.filter(t -> predicate.test(t));
+		return filteredStream.collect(Collectors.toSet());
 	}
 	
-	/**
-	 * Sets the Buzam of this game world to the given Buzam.
-	 * 
-	 * @param 	alien
-	 * 			The Buzam to set
-	 * @effect	...
-	 * 			| if (getBuzam() != null)
-	 *			|	then getBuzam().setWorld(null), getAllGameObjects().remove(get())
-	 * @post	...
-	 * 			| if(canHaveAsBuzam(alien))
-	 *			|	then new.getBuzam() = alien
-	 * @effect	...
-	 * 			| if (alien != null)
-	 * 			|	then getBuzam().setWorld(this)
-	 */
-	public void setBuzam(Buzam alien){
-		if (getBuzam() != null){
-			getBuzam().setWorld(null);
-			getAllGameObjects().remove(getBuzam());
-			getAllCharacters().remove(getBuzam());
-		}
-		if(canHaveAsBuzam(alien))
-			this.buzam = alien;
-		if (alien != null){
-			getBuzam().setWorld(this);
-		}
+	public HashSet<Alien> getAllAliens() {
+		HashSet<Alien> result = new HashSet<Alien>();
+		result.addAll(getAllBuzams());
+		result.add(getMazub());
+		return result;	
 	}
-	
-	/**
-	 * A variable storing the Buzam of this game world.
-	 */
-	private Buzam buzam;
 
+	public HashSet<Buzam> getAllBuzams() {
+		HashSet<Buzam> result = new HashSet<Buzam>();
+		for(GameObject object: allGameObjects){
+			if((object instanceof Buzam) && !(object.isTerminated()))
+				result.add((Buzam)object);
+		}	
+		return result;	
+	}
 	
 	/**
 	 * Returns a set of all plants in this game world.
@@ -652,95 +626,42 @@ public class World {
 	 * 			| for each plant in Plant:
 	 * 			|	result.contains(plant) == (plant.getWorld() == this)
 	 */
-	public HashSet<Plant> getAllPlants() {
-		return allPlants;
+	@SuppressWarnings("unchecked")
+	public Set<Plant> getAllPlants() {
+/*		HashSet<Plant> result = new HashSet<Plant>();
+		for(GameObject object: allGameObjects){
+			if((object instanceof Plant) && !(object.isTerminated()))
+				result.add((Plant)object);
+		}	
+		return result;	*/
+		return (Set<Plant>)filterAllGameObjects(new Predicate<GameObject>(
+				) {
+
+					@Override
+					public boolean test(GameObject t) {
+						return t instanceof Plant;
+					}
+		});
 	}
 	
 	/**
-	 * Returns a set of all unterminated plants in this game world.
+	 * Returns a set of all sharks in this game world.
 	 * 
 	 * @return	...
 	 * 			| result != null
 	 * @return	...
-	 * 			| for each plant in Plant:
-	 * 			|	result.contains(plant) == (plant.getWorld() == this)
+	 * 			| for each shark in Shark:
+	 * 			|	result.contains(shark) == (shark.getWorld() == this)
 	 */
-	public HashSet<Plant> getAllUnterminatedPlants(){
-		HashSet<Plant> result = new HashSet<Plant>();
-		for(Plant plant: allPlants){
-			if(!plant.isTerminated())
-				result.add(plant);
+	public HashSet<Shark> getAllSharks(){
+		HashSet<Shark> result = new HashSet<Shark>();
+		for(GameObject object: allGameObjects){
+			if((object instanceof Shark) && !(object.isTerminated()))
+				result.add((Shark)object);
 		}	
 		return result;	
 	}
-	
-	/**
-	 * Check whether the given plant is attached to this game world.
-	 * 
-	 * @param 	plant
-	 * 			The plant to check
-	 * @return	...
-	 * 			| result.contains(plant)
-	 */
-	protected boolean hasAsPlant(Plant plant){
-		return getAllPlants().contains(plant);
-	}
-	
-	/**
-	 * Add the given plant to the set of plants.
-	 * 
-	 * @param 	plant
-	 * 			The plant to be added
-	 * @pre		...
-	 * 			| isValidGameObject(plant)
-	 * @post	...
-	 * 			| if(canAddGameObjects())
-	 * 			|	then new.hasAsPlant(plant)
-	 * @post	...
-	 * 			| if(canAddGameObjects())
-	 * 			|	then (new plant).getWorld() == this
-	 */
-	@Raw
-	public void addAsPlant(Plant plant){
-		assert (isValidGameObject(plant));
-		if(canAddGameObjects()){
-			allPlants.add(plant);
-			plant.setWorld(this);
-		}
-	}
-	
-	/**
-	 * Remove the given plant from the set of plants.
-	 * 
-	 * @param 	plant
-	 * 			The plant to be removed
-	 * @pre		...
-	 * 			| hasAsPlant(plant)
-	 * @post	...
-	 * 			| ! new.hasAsPlant(plant)
-	 * @post	...
-	 * 			| (new plant).getWorld() == null
-	 */
-	protected void removeAsPlant(Plant plant){
-		assert hasAsPlant(plant);
-		allPlants.remove(plant);
-		plant.setWorld(null);
-	}
-
-	/**
-	 * Set collecting references to all plants attached to this world.
-	 * 
-	 * @invar	...
-	 * 			| allPlants != null
-	 * @invar	...
-	 * 			| for each plant in allPlants:
-	 * 			|	isValidGameObject(plant)
-	 * @invar	...
-	 * 			| for each plant in allPlants:
-	 * 			|	plant.getWorld() == this
-	 */
-	private final HashSet<Plant> allPlants = new HashSet<Plant>();
-
+		
 	/**
 	 * Returns a set of all slimes in this game world.
 	 * 
@@ -751,97 +672,22 @@ public class World {
 	 * 			|	result.contains(slime) == (slime.getWorld() == this)
 	 */
 	public HashSet<Slime> getAllSlimes() {
-		return allSlimes;
-	}
-	
-	/**
-	 * Returns a set of all unterminated slimes in this game world.
-	 * 
-	 * @return	...
-	 * 			| result != null
-	 * @return	...
-	 * 			| for each slime in Slime:
-	 * 			|	result.contains(slime) == (slime.getWorld() == this)
-	 */
-	public HashSet<Slime> getAllUnterminatedSlimes(){
 		HashSet<Slime> result = new HashSet<Slime>();
-		for(Slime slime: getAllSlimes()){
-			if(!slime.isTerminated())
-				result.add(slime);
+		for(GameObject object: allGameObjects){
+			if((object instanceof Slime) && !(object.isTerminated()))
+				result.add((Slime)object);
 		}	
 		return result;	
 	}
-	
-	/**
-	 * Check whether the given slime is attached to this game world.
-	 * 
-	 * @param 	slime
-	 * 			The slime to check
-	 * @return	...
-	 * 			| result.contains(slime)
-	 */
-	protected boolean hasAsSlime(Slime slime){
-		return getAllSlimes().contains(slime);
-	}
-	
-	/**
-	 * Add the given slime to the set of slimes.
-	 * 
-	 * @param 	slime
-	 * 			The slime to be added
-	 * @pre		...
-	 * 			| isValidGameObject(slime)
-	 * @post	...
-	 * 			| if(canAddGameObjects())
-	 * 			|	then new.hasAsSlime(slime)
-	 * @post	...
-	 * 			| if(canAddGameObjects())
-	 * 			|	then (new slime).getWorld() == this
-	 */
-	@Raw
-	public void addAsSlime(Slime slime){
-		if(canAddGameObjects() && canHaveAsSlime(slime)){
-			getAllSlimes().add(slime);
-			slime.setWorld(this);
-			addAsSchool(slime.getSchool());
-		}
-	}
-	
-	/**
-	 * Remove the given slime from the set of slimes.
-	 * 
-	 * @param 	slime
-	 * 			The slime to be removed
-	 * @pre		...
-	 * 			| hasAsSlime(slime)
-	 * @post	...
-	 * 			| ! new.hasAsSlime(slime)
-	 * @post	...
-	 * 			| (new slime).getWorld() == null
-	 */
-	protected void removeAsSlime(Slime slime){
-		assert hasAsSlime(slime);
-		allSlimes.remove(slime);
-		decrementValueOfSchool(slime.getSchool());
-	}
 
-	protected boolean canHaveAsSlime(Slime slime){
-		return (hasAsSchool(slime.getSchool()) || canAddSchool());
-	}
-	
-	/**
-	 * Set collecting references to all slimes attached to this world.
-	 * 
-	 * @invar	...
-	 * 			| allSlimes != null
-	 * @invar	...
-	 * 			| for each slime in allSlimes:
-	 * 			|	isValidGameObject(slime)
-	 * @invar	...
-	 * 			| for each slime in allSlimes:
-	 * 			|	slime.getWorld() == this
-	 */
-	private final HashSet<Slime> allSlimes = new HashSet<Slime>();
+	public HashSet<Character> getAllCharacters() {
+		HashSet<Character> result = new HashSet<Character>();
+		for(GameObject object: allGameObjects){
+			if((object instanceof Character) && !(object.isTerminated()))
+				result.add((Character)object);
+		}	
+		return result;	
+	}	
 	
 	/**
 	 * Returns a set of all slimes in this game world.
@@ -944,102 +790,6 @@ public class World {
 	private final HashMap<School,Integer> allSchools = new HashMap<School,Integer>();
 
 	/**
-	 * Returns a set of all sharks in this game world.
-	 * 
-	 * @return	...
-	 * 			| result != null
-	 * @return	...
-	 * 			| for each shark in Shark:
-	 * 			|	result.contains(shark) == (shark.getWorld() == this)
-	 */
-	public HashSet<Shark> getAllSharks(){
-		return allSharks;
-	}
-	
-	/**
-	 * Returns a set of all unterminated sharks in this game world.
-	 * 
-	 * @return	...
-	 * 			| result != null
-	 * @return	...
-	 * 			| for each shark in Shark:
-	 * 			|	result.contains(shark) == (shark.getWorld() == this)
-	 */
-	public HashSet<Shark> getAllUnterminatedSharks(){
-		HashSet<Shark> result = new HashSet<Shark>();
-		for(Shark shark: allSharks){
-			if(!shark.isTerminated())
-				result.add(shark);
-		}	
-		return result;	
-	}
-		
-	/**
-	 * Check whether the given shark is attached to this game world.
-	 * 
-	 * @param 	shark
-	 * 			The shark to check
-	 * @return	...
-	 * 			| result.contains(shark)
-	 */
-	protected boolean hasAsShark(Shark shark){
-		return allSharks.contains(shark);
-	}
-	
-	/**
-	 * Add the given shark to the set of sharks.
-	 * 
-	 * @param 	shark
-	 * 			The shark to be added
-	 * @pre		...
-	 * 			| isValidGameObject(shark)
-	 * @post	...
-	 * 			| if(canAddGameObjects())
-	 * 			|	then new.hasAsShark(shark)
-	 * @post	...
-	 * 			| if(canAddGameObjects())
-	 * 			|	then (new shark).getWorld() == this
-	 */
-	@Raw
-	public void addAsShark(Shark shark){
-		if(canAddGameObjects()){
-			getAllSharks().add(shark);
-			shark.setWorld(this);
-		}
-	}
-	
-	/**
-	 * Remove the given shark from the set of sharks.
-	 * 
-	 * @param 	shark
-	 * 			The shark to be removed
-	 * @pre		...
-	 * 			| hasAsShark(shark)
-	 * @post	...
-	 * 			| ! new.hasAsShark(shark)
-	 * @post	...
-	 * 			| (new shark).getWorld() == null
-	 */
-	protected void removeAsShark(Shark shark){
-		assert hasAsShark(shark);
-		getAllSharks().remove(shark);
-	}
-	
-	/**
-	 * Set collecting references to all sharks attached to this world.
-	 * 
-	 * @invar	...
-	 * 			| allSharks != null
-	 * @invar	...
-	 * 			| for each shark in allSharks:
-	 * 			|	isValidGameObject(shark)
-	 * @invar	...
-	 * 			| for each shark in allSharks:
-	 * 			|	shark.getWorld() == this
-	 */
-	private final HashSet<Shark> allSharks = new HashSet<Shark>();
-	
-	/**
 	 * Checks whether game objects can still be added.
 	 * 
 	 * @return	...
@@ -1072,15 +822,50 @@ public class World {
 	 */
 	// zou niet publiek mogen zijn!!!!!!
 	public HashSet<GameObject> getAllGameObjects(){
-		HashSet<GameObject> result = new HashSet<GameObject>();
-		result.addAll(allSharks);
-		result.addAll(allPlants);
-		result.addAll(allSlimes);
-		result.add(getMazub());
-		if(getBuzam() != null)
-			result.add(getBuzam());
-		return result;
+		return allGameObjects;
 	}
+
+	public HashSet<GameObject> getAllUnterminatedGameObjects(){
+		HashSet<GameObject> result = new HashSet<GameObject>();
+		for(GameObject object: allGameObjects){
+			if(!object.isTerminated())
+				result.add(object);
+		}	
+		return result;	
+	}
+	
+	protected boolean canHaveAsGameObject(GameObject object){
+		if(object instanceof Slime)
+			return (hasAsSchool(((Slime)object).getSchool()) || canAddSchool());
+		else if(object instanceof Mazub)
+			return ((Mazub)object == null) || (!((Mazub)object).isDead() && canAddGameObjects());
+		else if(object instanceof Buzam)
+			return ((Buzam)object == null) || (!((Buzam)object).isDead() && canAddGameObjects());
+		return true;
+	}
+	
+	protected boolean hasAsGameObject(GameObject object){
+		return allGameObjects.contains(object);
+	}
+	
+	public void addAsGameObject(GameObject object){
+		if(canAddGameObjects() && canHaveAsGameObject(object)){
+			getAllGameObjects().add(object);
+			object.setWorld(this);
+			if(object instanceof Slime)
+				addAsSchool(((Slime)object).getSchool());
+		}
+	}
+	
+	public void removeAsGameObject(GameObject object){
+		assert hasAsGameObject(object);
+		getAllGameObjects().remove(object);
+		object.setWorld(null);
+		if(object instanceof Slime)
+			decrementValueOfSchool(((Slime)object).getSchool());			
+	}
+	
+	private final HashSet<GameObject> allGameObjects = new HashSet<GameObject>();
 	
 	/**
 	 * Checks whether this game world has proper game objects or not.
@@ -1110,30 +895,9 @@ public class World {
 					return false;
 			}
 		}
-		return true;
-			
+		return true;		
 	}
-	
-	/**
-	 * Returns all characters attached to this game world.
-	 * Those characters can be a Mazub, shark or slime.
-	 * 
-	 * @return	...
-	 * 			| result != null
-	 * @return	...
-	 * 			| for each character in Character:
-	 * 			|	result.contains(character) == (character.getWorld() == this)
-	 */
-	protected HashSet<Character> getAllCharacters(){
-		HashSet<Character> result = new HashSet<Character>();
-		result.addAll(allSharks);
-		result.addAll(allSlimes);
-		result.add(getMazub());
-		if(getBuzam() != null)
-			result.add(getBuzam());
-		return result;
-	}
-	
+		
 	/**
 	 * Returns whether the player won the game or not.
 	 * 
@@ -1203,21 +967,21 @@ public class World {
 			getMazub().advanceTime(timeDuration);
 			updateWindowPos();
 		}
-		if (getBuzam() != null){
-			try{
-			getBuzam().advanceTime(timeDuration);
-			}
-			catch(IllegalJumpInvokeException | IllegalStateException e){}
+		for(Buzam buzam: getAllBuzams()){
+			if(!buzam.isTerminated())
+				try {
+					buzam.advanceTime(timeDuration);
+				} catch (IllegalJumpInvokeException | IllegalStateException e) {}
 		}
-		for(Plant plant: getAllUnterminatedPlants()){
+		for(Plant plant: getAllPlants()){
 			if(!plant.isTerminated())
 				plant.advanceTime(timeDuration);
 		}
-		for(Shark shark: getAllUnterminatedSharks()){
+		for(Shark shark: getAllSharks()){
 			if(!shark.isTerminated())
 				shark.advanceTime(timeDuration);
 		}
-		for(Slime slime: getAllUnterminatedSlimes()){
+		for(Slime slime: getAllSlimes()){
 			if(!slime.isTerminated())
 				slime.advanceTime(timeDuration);
 		}

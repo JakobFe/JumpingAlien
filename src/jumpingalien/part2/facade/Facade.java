@@ -119,12 +119,12 @@ public class Facade extends jumpingalien.part1.facade.Facade implements IFacadeP
 	@Override
 	public void addPlant(World world, Plant plant) {
 		if(enablePlants)
-			world.addAsPlant(plant);
+			world.addAsGameObject(plant);
 	}
 
 	@Override
 	public Collection<Plant> getPlants(World world) {
-		return world.getAllUnterminatedPlants();
+		return world.getAllPlants();
 	}
 
 	@Override
@@ -149,12 +149,12 @@ public class Facade extends jumpingalien.part1.facade.Facade implements IFacadeP
 	@Override
 	public void addShark(World world, Shark shark) {
 		if(enableSharks)
-			world.addAsShark(shark);
+			world.addAsGameObject(shark);
 	}
 
 	@Override
 	public Collection<Shark> getSharks(World world) {
-		return world.getAllUnterminatedSharks();
+		return world.getAllSharks();
 	}
 
 	@Override
@@ -185,7 +185,7 @@ public class Facade extends jumpingalien.part1.facade.Facade implements IFacadeP
 	@Override
 	public void addSlime(World world, Slime slime) {
 		if(enableSlimes)
-			world.addAsSlime(slime);
+			world.addAsGameObject(slime);
 	}
 
 	@Override

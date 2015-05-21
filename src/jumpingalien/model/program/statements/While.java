@@ -61,7 +61,7 @@ public class While extends SingleStatement {
 	
 	@Override
 	public StatementIterator<Statement> iterator() {
-		return new LoopStatementIterator<Statement>(){
+		return new StatementIterator<Statement>(){
 			
 			@Override
 			public boolean hasNext() {
@@ -100,8 +100,7 @@ public class While extends SingleStatement {
 				setIndex(0);
 				bodyIterator.restart();
 			}
-			
-			@Override
+
 			public void breakLoop() {
 				setIndex(2);
 			}

@@ -18,12 +18,12 @@ public class Buzam extends Alien{
 	}
 	
 	public boolean canBeAddedTo(World world){
-		return super.canBeAddedTo(world) && (world == null || world.getBuzam() == this);
+		return super.canBeAddedTo(world) && (world == null || world.hasAsGameObject(this));
 	}
 	
 	@Override
 	protected boolean hasProperWorld() {
-		return getWorld() == null || getWorld().getBuzam() == this;
+		return (getWorld() == null || getWorld().hasAsGameObject(this));
 	}
 	
 	@Override
@@ -40,7 +40,7 @@ public class Buzam extends Alien{
 				updateHitPointsTerrain(Terrain.MAGMA);
 			}
 			if(canConsumePlant()){
-				for(Plant plant: getWorld().getAllUnterminatedPlants()){
+				for(Plant plant: getWorld().getAllPlants()){
 					if(!isDead() && !plant.isDead() && isOverlappingWith(plant) && canConsumePlant()){
 						this.hurt(plant);
 					}
@@ -55,7 +55,7 @@ public class Buzam extends Alien{
 					isHurt = true;
 				}
 			}
-			for (Slime slime: getWorld().getAllUnterminatedSlimes()){
+			for (Slime slime: getWorld().getAllSlimes()){
 				if(!isDead() && isOverlappingWith(slime)){
 					if(!isImmune()){
 						getHurtBy(slime);
@@ -65,7 +65,7 @@ public class Buzam extends Alien{
 						slime.getHurtBy(this);
 				}
 			}
-			for (Shark shark: getWorld().getAllUnterminatedSharks()){
+			for (Shark shark: getWorld().getAllSharks()){
 				if(!isDead() && isOverlappingWith(shark)){
 					if(!isImmune()){
 						getHurtBy(shark);
@@ -127,7 +127,7 @@ public class Buzam extends Alien{
 		assert (getHitPoints()==0);
 		assert getHpTimer().getTimeSum() > 0.6;
 		setIsTerminated();
-		getWorld().setBuzam(null);
+		getWorld().removeAsGameObject(this);
 		setWorld(null);
 	}
 	

@@ -145,7 +145,7 @@ public class Slime extends Character{
 	 */ 
 	@Override
 	protected boolean canBeAddedTo(World world) {
-		return super.canBeAddedTo(world) && (world.hasAsSlime(this));
+		return super.canBeAddedTo(world) && (world.hasAsGameObject(this));
 	}
 	
 	/**
@@ -160,7 +160,7 @@ public class Slime extends Character{
 	 */
 	@Override
 	protected boolean hasProperWorld() {
-		return (getWorld() == null) || (getWorld().hasAsSlime(this));
+		return (getWorld() == null) || (getWorld().hasAsGameObject(this));
 	}
 	
 	/**
@@ -445,7 +445,7 @@ public class Slime extends Character{
 					isHurt = true;
 				}
 			}
-			for (Shark shark: getWorld().getAllUnterminatedSharks()){
+			for (Shark shark: getWorld().getAllSharks()){
 				if(!isDead() && isOverlappingWith(shark)){
 					if(!isImmune()){
 						getHurtBy(shark);
@@ -537,8 +537,8 @@ public class Slime extends Character{
 	 * 			|				then other.changeSchool(this)
 	 */
 	void updateSchool(){
-		if (getWorld() != null && getWorld().getAllUnterminatedSlimes()!= null){
-			for (Slime other: getWorld().getAllUnterminatedSlimes()){
+		if (getWorld() != null && getWorld().getAllSlimes()!= null){
+			for (Slime other: getWorld().getAllSlimes()){
 				if(isOverlappingWith(other)){
 					if(other.getSchool().getNbSlimes() > this.getSchool().getNbSlimes())
 						this.changeSchool(other);
@@ -629,7 +629,7 @@ public class Slime extends Character{
 		assert getHitPoints() == 0;
 		assert getHpTimer().getTimeSum() >= 0.6;
 		super.terminate();
-		getWorld().removeAsSlime(this);
+		getWorld().removeAsGameObject(this);
 		setWorld(null);
 	}
 
