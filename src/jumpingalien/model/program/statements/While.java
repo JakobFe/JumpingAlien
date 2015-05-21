@@ -29,6 +29,11 @@ public class While extends SingleStatement {
 	private final Statement body;
 	
 	@Override
+	public boolean isWellFormed(){
+		return getBody().isWellFormed();
+	}
+	
+	@Override
 	public void setProgram(Program program) {
 		super.setProgram(program);
 		getBody().setProgram(program);

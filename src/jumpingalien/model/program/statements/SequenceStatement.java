@@ -12,7 +12,7 @@ public class SequenceStatement extends ComposedStatement {
 			List<Statement> subStatements) {
 		super(sourceLocation, subStatements);
 	}
-
+	
 	@Override
 	public StatementIterator<Statement> iterator() {
 		return new StatementIterator<Statement>(){

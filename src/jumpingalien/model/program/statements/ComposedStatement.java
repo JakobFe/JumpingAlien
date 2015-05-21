@@ -57,6 +57,16 @@ public abstract class ComposedStatement extends Statement {
 
 	private final List<Statement> subStatements;
 	
+	@Override
+	public boolean isWellFormed() {
+		boolean result = true;
+		for(Statement subStat: getSubStatements()){
+			if(!subStat.isWellFormed())
+				result = false;
+		}
+		return result;
+	}
+	
 	// kan beter
 	@Override
 	public void setProgram(Program program){
