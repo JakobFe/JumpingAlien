@@ -21,7 +21,7 @@ public abstract class Statement {
 	
 	public abstract boolean hasAsSubStatement(Class<? extends Statement> theClass);
 	
-	public boolean isActionStatement(Statement other){
+	public static boolean isActionStatement(Statement other){
 		return (other instanceof Wait || other instanceof Skip ||
 				other instanceof StartMovement ||
 				other instanceof EndMovement);
