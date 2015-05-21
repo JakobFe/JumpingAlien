@@ -38,6 +38,11 @@ public class While extends SingleStatement {
 	
 	public void executeSingleStatement(){}
 	
+	@Override
+	public boolean hasAsSubStatement(Statement other) {
+		return super.hasAsSubStatement(other) || getBody().hasAsSubStatement(other);
+	}
+	
 	
 	@Override
 	public StatementIterator<Statement> iterator() {

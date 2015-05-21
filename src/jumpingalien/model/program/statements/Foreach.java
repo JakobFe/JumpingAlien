@@ -95,6 +95,11 @@ public class Foreach extends SingleStatement {
 	}
 
 	private final Statement body;
+	
+	@Override
+	public boolean hasAsSubStatement(Statement other) {
+		return super.hasAsSubStatement(other) || getBody().hasAsSubStatement(other);
+	}
 
 	@Override
 	public void setProgram(Program program){

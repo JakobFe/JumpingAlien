@@ -19,6 +19,14 @@ public abstract class Statement {
 		return other == this;
 	}
 	
+	public abstract boolean hasAsSubStatement(Class<? extends Statement> theClass);
+	
+	public boolean isActionStatement(Statement other){
+		return (other instanceof Wait || other instanceof Skip ||
+				other instanceof StartMovement ||
+				other instanceof EndMovement);
+	}
+	
 	@Basic
 	public SourceLocation getSourceLocation() {
 		return sourceLocation;
