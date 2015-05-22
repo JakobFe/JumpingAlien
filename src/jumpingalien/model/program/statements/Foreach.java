@@ -109,8 +109,8 @@ public class Foreach extends SingleStatement {
 
 	@Override
 	public void setProgram(Program program){
-		assert (program == null || program.hasAsStatement(this));
-		assert (program == null || program.hasAsStatement(getBody()));
+		assert (program != null && program.hasAsStatement(this));
+		assert (program.hasAsStatement(getBody()));
 		super.setProgram(program);
 		getBody().setProgram(program);
 		if(getRestriction() != null)

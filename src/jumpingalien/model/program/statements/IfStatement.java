@@ -35,6 +35,7 @@ public class IfStatement extends ComposedStatement {
 		
 	@Override
 	public void setProgram(Program program) {
+		assert (program!=null && program.hasAsStatement(this));
 		for(Statement subStatement: getSubStatements()){
 			assert program.hasAsStatement(subStatement) ||
 				   subStatement == null;

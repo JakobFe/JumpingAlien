@@ -1,7 +1,6 @@
 package jumpingalien.part3.tests.statementTests;
 
 import static org.junit.Assert.*;
-import jumpingalien.model.program.programs.Program;
 import jumpingalien.model.program.statements.*;
 import jumpingalien.model.program.expressions.*;
 import jumpingalien.part3.programs.SourceLocation;
@@ -59,19 +58,6 @@ public class IfStatementTest {
 	@Test
 	public void getElseBodyNull() {
 		assertEquals(null, ifStat2.getElseBody());
-	}
-	
-	@Test
-	public void setProgram(){
-		Program theProgram = new Program(ifStat1, null);
-		ifStat1.setProgram(null);
-		assertTrue(ifStat1.getCondition().getProgram() == null);
-		assertTrue(ifStat1.getIfBody().getProgram() == null);
-		assertTrue(ifStat1.getElseBody().getProgram() == null);
-		ifStat1.setProgram(theProgram);
-		assertTrue(ifStat1.getCondition().getProgram() == theProgram);
-		assertTrue(ifStat1.getIfBody().getProgram() == theProgram);
-		assertTrue(ifStat1.getElseBody().getProgram() == theProgram);
 	}
 	
 	@Test

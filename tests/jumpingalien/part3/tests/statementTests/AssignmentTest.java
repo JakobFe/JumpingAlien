@@ -26,6 +26,7 @@ public class AssignmentTest {
 	@Before
 	public void setUp() throws Exception {
 		assign = new Assignment("x",new jumpingalien.model.program.types.Double(),doubleConst, loc);
+		assign2 = new Assignment("x",new jumpingalien.model.program.types.Double(),doubleConst, loc);
 		theProgram = new Program(assign, globals);
 	}
 	
@@ -33,17 +34,8 @@ public class AssignmentTest {
 	private static Constant<java.lang.Double> doubleConst;
 	private static HashMap<String, jumpingalien.model.program.types.Type> globals;
 	private Assignment assign;
+	private Assignment assign2;
 	private Program theProgram;
-
-	@Test
-	public void setProgramCorrect(){
-		assign.setProgram(null);
-		assertTrue(assign.getProgram() == null);
-		assertTrue(assign.getValue().getProgram() == null);
-		assign.setProgram(theProgram);
-		assertTrue(assign.getProgram() == theProgram);
-		assertTrue(assign.getValue().getProgram() == theProgram);
-	}
 	
 	@Test
 	public void executeCorrect(){
@@ -53,8 +45,7 @@ public class AssignmentTest {
 	
 	@Test
 	public void executeNoEffect(){
-		assign.setProgram(null);
-		assign.executeSingleStatement();
+		assign2.executeSingleStatement();
 		assertEquals(0, ((java.lang.Double)theProgram.getGlobalVariables().get("x").outcome()),0.000001);
 	}
 

@@ -63,6 +63,7 @@ public abstract class ComposedStatement extends Statement {
 	
 	@Override
 	public void setProgram(Program program){
+		assert (program!=null && program.hasAsStatement(this));
 		for(Statement subStatement: subStatements){
 			assert program.hasAsStatement(subStatement);
 		}
