@@ -12,7 +12,7 @@ import jumpingalien.part3.programs.SourceLocation;
 public class Program {
 	
 	public Program(Statement mainStatement,
-			Map<String,Type> declaredVariables){
+			Map<String,Type> declaredVariables) throws IllegalStateException{
 		this.mainStatement = mainStatement;
 		initialiseGlobalVariables(declaredVariables);
 		mainStatement.setProgram(this);
@@ -58,6 +58,8 @@ public class Program {
 	}
 
 	public void setGameObject(GameObject gameObject) {
+		assert getGameObject() == null;
+		assert gameObject != null;
 		assert gameObject.getProgram() == this;
 		this.gameObject = gameObject;
 	}
