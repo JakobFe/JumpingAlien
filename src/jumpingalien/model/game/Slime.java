@@ -2,8 +2,8 @@ package jumpingalien.model.game;
 
 import static jumpingalien.tests.util.TestUtils.doubleArray;
 
-import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 
 import jumpingalien.model.exceptions.IllegalTimeIntervalException;
 import jumpingalien.model.exceptions.IllegalXPositionException;
@@ -361,11 +361,10 @@ public class Slime extends Character{
 	 * @return	...
 	 * 			| result.contains(getWorld().getAllCharacters())
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
-	protected HashSet<GameObject> getBlockingObjects() {
-		HashSet<GameObject> collection = new HashSet<GameObject>();
-		collection.addAll(getWorld().getAllCharacters());
-		return collection;
+	protected Set<GameObject> getBlockingObjects() {
+		return (Set<GameObject>)getWorld().filterAllGameObjects(t-> t instanceof Character);	
 	}	
 	
 	/**

@@ -2,6 +2,7 @@ package jumpingalien.model.game;
 
 
 import java.util.HashSet;
+import java.util.Set;
 
 import be.kuleuven.cs.som.annotate.*;
 import jumpingalien.model.exceptions.*;
@@ -1166,7 +1167,7 @@ public abstract class GameObject extends ObjectOfWorld{
 	 * 			The position to check in the form of a double array.
 	 * 			The first entry of this array represents the x position, the
 	 * 			second entry represents the y position.
-	 * @param 	collection
+	 * @param 	set
 	 * 			The collection to check for collisions against.
 	 * @pre		The given position must have 2 entries.
 	 * 			| newPos.length == 2
@@ -1187,11 +1188,11 @@ public abstract class GameObject extends ObjectOfWorld{
 	 * 			We are aware of this problem and we will solve it by defensive programming
 	 * 			before we hand in the final solution. 
 	 */
-	protected double[] getPositionAfterCollision(double[] newPos, HashSet<GameObject> collection){
+	protected double[] getPositionAfterCollision(double[] newPos, Set<GameObject> set){
 		assert newPos.length == 2;
 		double newXPos = newPos[0];
 		double newYPos = newPos[1];
-		for (GameObject other: collection){
+		for (GameObject other: set){
 			if ((other != this) && this.isOverlappingWith(other)){
 				if (isColliding(Direction.DOWN, other)){
 					//System.out.print("Colliding down with object");
@@ -1260,7 +1261,7 @@ public abstract class GameObject extends ObjectOfWorld{
 	 * 
 	 * @return	A hash set of all game objects that can block the movement of this game object.
 	 */
-	protected abstract HashSet<GameObject> getBlockingObjects();
+	protected abstract Set<GameObject> getBlockingObjects();
 	
 	/**
 	 * A method to update the horizontal velocity over a given time interval.

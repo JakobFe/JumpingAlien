@@ -1,7 +1,6 @@
 package jumpingalien.model.game;
 
-import java.util.HashSet;
-
+import java.util.Set;
 import jumpingalien.model.exceptions.*;
 import jumpingalien.model.program.programs.Program;
 import jumpingalien.util.Sprite;
@@ -619,7 +618,7 @@ public abstract class Character extends GameObject{
 	 * 			before we hand in the final solution. 
 	 */
 	@Override
-	protected double[] getPositionAfterCollision(double[] newPos, HashSet<GameObject> collection){
+	protected double[] getPositionAfterCollision(double[] newPos, Set<GameObject> collection){
 		assert newPos.length == 2;
 		double newXPos = newPos[0];
 		double newYPos = newPos[1];

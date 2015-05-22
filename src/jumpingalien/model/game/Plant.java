@@ -4,9 +4,8 @@ import jumpingalien.model.exceptions.*;
 import jumpingalien.model.program.programs.Program;
 import static jumpingalien.tests.util.TestUtils.doubleArray;
 import jumpingalien.util.Sprite;
-
-import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 
 import be.kuleuven.cs.som.annotate.*;
 
@@ -298,12 +297,11 @@ public class Plant extends GameObject {
 	 * 			| result.contains(getWorld().getMazub())
 	 * 			
 	 */
+	@SuppressWarnings("unchecked")
 	@Override@Model
-	protected HashSet<GameObject> getBlockingObjects() {
-		HashSet<GameObject> collection = new HashSet<GameObject>();
-		collection.addAll(getWorld().getAllPlants());
-		collection.addAll(getWorld().getAllAliens());
-		return collection;
+	protected Set<GameObject> getBlockingObjects() {
+		return (Set<GameObject>)getWorld().filterAllGameObjects(t->
+		((t instanceof Plant) || t instanceof Alien));
 	}
 	
 	/**

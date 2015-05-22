@@ -2,6 +2,7 @@ package jumpingalien.model.game;
 
 import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 
 import jumpingalien.model.program.programs.Program;
 import jumpingalien.util.Sprite;
@@ -574,11 +575,10 @@ public class Shark extends Character implements JumpInterface{
 	 * @return	...
 	 * 			| result.contains(getWorld().getAllCharacters())
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
-	protected HashSet<GameObject> getBlockingObjects() {
-		HashSet<GameObject> collection = new HashSet<GameObject>();
-		collection.addAll(getWorld().getAllCharacters());
-		return collection;
+	protected Set<GameObject> getBlockingObjects() {
+		return (Set<GameObject>)getWorld().filterAllGameObjects(t-> t instanceof Character);	
 	}
 	
 	/**
