@@ -6,6 +6,8 @@ Vincent:
 - GameObject
 - Direction
 - JumpInterface
+- Testen schrijven: Foreach
+- Klassediagram: Statement
 
 Jakob:
 - Mazub
@@ -15,3 +17,5 @@ Jakob:
 - Timer
 - Tile
 - Terrain
+- Testen schrijven: While
+- Klassediagram: Expression
