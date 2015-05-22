@@ -99,6 +99,8 @@ public class Program {
 	public void execute(double timeDuration){
 		double td = timeDuration;
 		while(td > 0){
+			if(getGameObject().getWorld().isGameOver())
+				break;
 			if(getProgramIterator().hasNext()){
 				Statement nextStatement = getProgramIterator().next();
 				if(nextStatement != null){

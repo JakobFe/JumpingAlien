@@ -18,8 +18,7 @@ public abstract class ComposedStatement extends Statement {
 	}
 	
 	public ComposedStatement(SourceLocation sourceLocation, Statement...subStatements){
-		super(sourceLocation);
-		this.subStatements = Arrays.asList(subStatements);
+		this(sourceLocation,Arrays.asList(subStatements));
 	}
 	
 	public int getNbOfSubStatements(){
@@ -56,7 +55,7 @@ public abstract class ComposedStatement extends Statement {
 	@Override
 	public boolean hasActionStatAsSubStat() {
 		for(Statement subStatement: subStatements){
-			if(subStatement != null && subStatement.hasActionStatAsSubStat())
+			if(subStatement.hasActionStatAsSubStat())
 				return true;
 		}
 		return false;
@@ -80,8 +79,7 @@ public abstract class ComposedStatement extends Statement {
 		}
 		super.setProgram(program);
 		for(Statement subStatement: subStatements){
-			if(subStatement != null)
-				subStatement.setProgram(program);
+			subStatement.setProgram(program);
 		}
 	}
 }

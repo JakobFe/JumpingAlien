@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import jumpingalien.model.exceptions.BreakException;
+import jumpingalien.model.exceptions.NullVariableException;
 import jumpingalien.model.game.World;
 import jumpingalien.model.program.expressions.Constant;
 import jumpingalien.model.program.expressions.Expression;
@@ -108,6 +109,8 @@ public class Foreach extends SingleStatement {
 
 	@Override
 	public void setProgram(Program program){
+		assert (program == null || program.hasAsStatement(this));
+		assert (program == null || program.hasAsStatement(getBody()));
 		super.setProgram(program);
 		getBody().setProgram(program);
 		if(getRestriction() != null)
@@ -137,27 +140,10 @@ public class Foreach extends SingleStatement {
 		if(getSortDirection() == SortDirection.ASCENDING){
 			sortedStream = filteredStream.sorted((o1,o2) -> 
 							Double.compare(getSortValue(o1), getSortValue(o2)));
-			
-//			c = new Comparator<ObjectOfWorld>() {
-//
-//				@Override
-//				public int compare(ObjectOfWorld o1, ObjectOfWorld o2) {
-//					return Double.compare(getSortValue(o1), getSortValue(o2));
-//				}
-//	
-//			};
 		}
 		else if(getSortDirection() == SortDirection.DESCENDING){
 			sortedStream = filteredStream.sorted((o1,o2) -> 
 							Double.compare(getSortValue(o2), getSortValue(o1)));
-//			c = new Comparator<ObjectOfWorld>() {
-//
-//				@Override
-//				public int compare(ObjectOfWorld o1, ObjectOfWorld o2) {
-//					return Double.compare(getSortValue(o2), getSortValue(o1));
-//				}
-//	
-//			};
 		}
 //		sortedStream = filteredStream.sorted(c);
 		this.variables = sortedStream.collect(Collectors.toList());
@@ -224,11 +210,16 @@ public class Foreach extends SingleStatement {
 				else if(getIndex() == 1){
 					try {
 						if(!bodyStarted){
+							if(getVariableAt(getVariableIndex()) == null)
+								throw new NullVariableException();
 							assign(getVariableAt(getVariableIndex()));
 							bodyStarted = true;
 						}
-						if(bodyIterator.hasNext())
+						if(bodyIterator.hasNext()){
+							if(getVariableAt(getVariableIndex()) == null)
+								throw new NullVariableException();
 							return bodyIterator.next();
+						}
 						else if(getVariableIndex() < (getVariables().size()-1)){
 							bodyIterator.restart();
 							bodyStarted = false;
@@ -239,9 +230,15 @@ public class Foreach extends SingleStatement {
 							setIndex(2);
 							assign(null);
 						}
-					} catch (BreakException e) {
+					} catch (BreakException | IndexOutOfBoundsException e) {
 						breakLoop();
 						return null;
+					}
+					catch(NullVariableException e){
+						bodyIterator.restart();
+						bodyStarted = false;
+						incrementVariableIndex();
+						return this.next();
 					}
 				}
 				return null;

@@ -30,6 +30,8 @@ public class While extends SingleStatement {
 	
 	@Override
 	public void setProgram(Program program) {
+		assert (program == null || program.hasAsStatement(this));
+		assert (program.hasAsStatement(getBody()));
 		super.setProgram(program);
 		getBody().setProgram(program);
 		getCondition().setProgram(program);

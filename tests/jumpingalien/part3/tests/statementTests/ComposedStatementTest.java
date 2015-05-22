@@ -1,6 +1,5 @@
 package jumpingalien.part3.tests.statementTests;
 
-import static jumpingalien.tests.util.TestUtils.parseProgram;
 import static org.junit.Assert.*;
 import jumpingalien.model.program.programs.Program;
 import jumpingalien.model.program.statements.*;

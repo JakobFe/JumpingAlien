@@ -940,6 +940,8 @@ public class World {
 					buzam.advanceTime(timeDuration);
 				} catch (IllegalJumpInvokeException | IllegalStateException e) {
 					System.out.println("Illegal operation by Buzam");
+					System.out.println(buzam.getVertDirection());
+					e.printStackTrace();
 				}
 		}
 		for(Plant plant: getAllPlants()){

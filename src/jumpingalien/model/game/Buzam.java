@@ -17,6 +17,12 @@ public class Buzam extends Alien{
 		setHitPoints(500);
 	}
 	
+	@Override
+	public void endJump(){
+		try{super.endJump();}
+		catch(IllegalStateException e){}
+	}
+	
 	public boolean canBeAddedTo(World world){
 		return super.canBeAddedTo(world) && (world == null || world.hasAsGameObject(this));
 	}
