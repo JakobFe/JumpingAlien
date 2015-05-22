@@ -1,8 +1,12 @@
 package jumpingalien.part3.tests.statementTests;
 
 import static org.junit.Assert.*;
+
+import java.util.HashMap;
+
 import jumpingalien.model.program.programs.Program;
 import jumpingalien.model.program.statements.*;
+import jumpingalien.model.program.types.Type;
 import jumpingalien.model.program.expressions.*;
 import jumpingalien.part3.programs.SourceLocation;
 
@@ -22,19 +26,72 @@ public class ComposedStatementTest {
 	public void setUp() throws Exception {
 		skip = new Skip(loc);
 		wait = new Wait(loc, doubleConst);
-		
+		print = new Print(doubleConst, loc);
+		sequence1 = new SequenceStatement(loc,skip,wait);
+		sequence2 = new SequenceStatement(loc,print,print,print);
+		theProgram = new Program(sequence1, new HashMap<String,Type>());
 	}
 
 	private static SourceLocation loc;
 	private static Constant<Double> doubleConst;
 	private Statement skip;
 	private Statement wait;
-	private ComposedStatement sequence;
+	private Statement print;
+	private ComposedStatement sequence1;
+	private ComposedStatement sequence2;
 	private Program theProgram;
 	
 	@Test
-	public void test() {
-		fail("Not yet implemented");
+	public void getNbSubStatementsSingleCase(){
+		assertEquals(2, sequence1.getNbOfSubStatements());
+	}
+	
+	@Test
+	public void hasAsSubStatementCorrect(){
+		assertTrue(sequence1.hasAsSubStatement(skip));
+		assertTrue(sequence1.hasAsSubStatement(wait));
+	}
+	
+	@Test
+	public void hasAsSubStatementInCorrect(){
+		assertFalse(sequence1.hasAsSubStatement(print));
+	}
+	
+	@Test
+	public void hasActionStatAsSubStatCorrect(){
+		assertTrue(sequence1.hasActionStatAsSubStat());
+	}
+	
+	@Test
+	public void hasActionStatAsSubStatInCorrect(){
+		assertFalse(sequence2.hasActionStatAsSubStat());
+	}
+	
+	@Test
+	public void getSubStatementAtCorrect(){
+		assertEquals(wait, sequence1.getSubStatementAt(1));
+	}
+	
+	@Test(expected = IndexOutOfBoundsException.class)
+	public void getSubStatementAtException1(){
+		sequence1.getSubStatementAt(2);
+	}
+	
+	@Test(expected = IndexOutOfBoundsException.class)
+	public void getSubStatementAtException2(){
+		sequence1.getSubStatementAt(-2);
+	}
+	
+	@Test
+	public void setProgramCorrect(){
+		sequence1.setProgram(null);
+		assertTrue(sequence1.getProgram() == null);
+		assertTrue(skip.getProgram() == null);
+		assertTrue(wait.getProgram() == null);
+		sequence1.setProgram(theProgram);
+		assertTrue(sequence1.getProgram() == theProgram);
+		assertTrue(skip.getProgram() == theProgram);
+		assertTrue(wait.getProgram() == theProgram);
 	}
 
 }

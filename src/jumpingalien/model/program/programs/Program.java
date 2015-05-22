@@ -29,10 +29,12 @@ public class Program {
 	}
 	
 	private void initialiseGlobalVariables(Map<String,Type> declaredVariables){		
-		SourceLocation loc = new SourceLocation(0, 0);
-		for (String name: declaredVariables.keySet()){
-			globalVariables.put(name, new Variable(loc,name,
-											declaredVariables.get(name)));
+		if(declaredVariables != null){	
+			SourceLocation loc = new SourceLocation(0, 0);
+			for (String name: declaredVariables.keySet()){
+				globalVariables.put(name, new Variable(loc,name,
+												declaredVariables.get(name)));
+			}
 		}
 	}
 	

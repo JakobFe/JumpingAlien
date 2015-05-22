@@ -92,6 +92,11 @@ public class ExpressionTest {
 	private Expression falseConst;
 	
 	@Test
+	public void setProgramCorrect(){
+		double8.setProgram(theProgram);
+		assertEquals(theProgram, double8.getProgram());
+	}
+	@Test
 	public void createReadVariableSingleCase(){
 		Expression readVar = new ReadVariable(loc, theSlimeVariable.getName(),theSlimeVariable.getType());
 		readVar.setProgram(theProgram);

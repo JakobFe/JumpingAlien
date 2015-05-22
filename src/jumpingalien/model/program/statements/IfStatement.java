@@ -14,6 +14,12 @@ public class IfStatement extends ComposedStatement {
 		this.condition = condition;
 	}
 	
+	public Expression getCondition() {
+		return condition;
+	}
+
+	private final Expression condition;
+	
 	public Statement getIfBody(){
 		return getSubStatementAt(0);
 	}
@@ -26,15 +32,13 @@ public class IfStatement extends ComposedStatement {
 			return null;
 		}
 	}
-	
-	public Expression getCondition() {
-		return condition;
-	}
-
-	private final Expression condition;
-	
+		
 	@Override
 	public void setProgram(Program program) {
+		for(Statement subStatement: getSubStatements()){
+			assert program.hasAsStatement(subStatement) ||
+				   subStatement == null;
+		}
 		super.setProgram(program);
 		getCondition().setProgram(program);
 	}

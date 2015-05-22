@@ -13,6 +13,10 @@ public class SequenceStatement extends ComposedStatement {
 		super(sourceLocation, subStatements);
 	}
 	
+	public SequenceStatement(SourceLocation sourceLocation, Statement...subStatements) {
+		super(sourceLocation,subStatements);
+	}
+	
 	@Override
 	public StatementIterator<Statement> iterator() {
 		return new StatementIterator<Statement>(){

@@ -26,7 +26,6 @@ public class StatementTest {
 	@Before
 	public void setUp() throws Exception {
 		skip = new Skip(loc);
-		wait = new Wait(loc,constant);
 		assign = new Assignment("x", new jumpingalien.model.program.types.Double(), constant, loc);
 		theProgram = new Program(skip, new HashMap<String,Type>());
 	}
@@ -34,19 +33,8 @@ public class StatementTest {
 	private static SourceLocation loc;
 	private static Constant<Double> constant;
 	private Statement skip;
-	private Statement wait;
 	private Statement assign;
 	private Program theProgram;
-
-	@Test
-	public void hasAsSubStatementCorrect(){
-		assertTrue(skip.hasAsSubStatement(skip));
-	}
-	
-	@Test
-	public void hasAsSubStatementIncorrect(){
-		assertFalse(skip.hasAsSubStatement(wait));
-	}
 	
 	@Test
 	public void isActionStatementCorrect1(){
