@@ -42,9 +42,9 @@ public class SearchObjectTest {
 		theMazub = new Mazub(new Position(0,0),spriteArrayForSize(10, 10));
 		
 		// Add the game objects to the world.
-		testWorld.addAsPlant(thePlant);
-		testWorld.addAsShark(theShark);
-		testWorld.addAsSlime(theSlime);
+		testWorld.addAsGameObject(thePlant);
+		testWorld.addAsGameObject(theShark);
+		testWorld.addAsGameObject(theSlime);
 		testWorld.setMazub(theMazub);
 	}
 	
@@ -61,7 +61,7 @@ public class SearchObjectTest {
 		
 		// Generate a Buzam on top of a solid tile with theProgram as program
 		Buzam alien = new Buzam(new Position(500,250), spriteArrayForSize(10, 10),theProgram);
-		testWorld.setBuzam(alien);
+		testWorld.addAsGameObject(alien);
 		
 		Statement temp = ((IfStatement) theProgram.getMainStatement()).getIfBody();
 		Assignment ifBody = (Assignment)temp;
@@ -79,7 +79,7 @@ public class SearchObjectTest {
 		
 		// Generate a Buzam on top of a solid tile with theProgram as program
 		Buzam alien = new Buzam(new Position(500,250), spriteArrayForSize(10, 10),theProgram);
-		testWorld.setBuzam(alien);
+		testWorld.addAsGameObject(alien);
 		
 		Statement temp = ((IfStatement) theProgram.getMainStatement()).getIfBody();
 		Assignment ifBody = (Assignment)temp;
@@ -96,7 +96,7 @@ public class SearchObjectTest {
 		
 		// replace theShark by a shark with theProgram
 		Shark newShark = new Shark(theShark.getPosition(), spriteArrayForSize(10, 10),theProgram);
-		testWorld.addAsShark(newShark);
+		testWorld.addAsGameObject(newShark);
 		
 		Statement temp = ((IfStatement) theProgram.getMainStatement()).getIfBody();
 		Assignment ifBody = (Assignment)temp;
@@ -114,7 +114,7 @@ public class SearchObjectTest {
 		// replace theSlime by a slime with theProgram
 		Slime newSlime = new Slime(theSlime.getPosition(), spriteArrayForSize(10, 10),
 								   theSlime.getSchool(),theProgram);
-		testWorld.addAsSlime(newSlime);
+		testWorld.addAsGameObject(newSlime);
 		
 		Statement temp = ((IfStatement) theProgram.getMainStatement()).getIfBody();
 		Assignment ifBody = (Assignment)temp;
@@ -133,7 +133,7 @@ public class SearchObjectTest {
 		// replace theSlime by a slime with theProgram
 		Slime newSlime = new Slime(theSlime.getPosition(), spriteArrayForSize(10, 10),
 								   theSlime.getSchool(),theProgram);
-		testWorld.addAsSlime(newSlime);
+		testWorld.addAsGameObject(newSlime);
 		
 		Statement temp = ((IfStatement) theProgram.getMainStatement()).getIfBody();
 		Assignment ifBody = (Assignment)temp;
@@ -148,7 +148,7 @@ public class SearchObjectTest {
 		
 		// replace theShark by a shark with theProgram
 		Shark newShark = new Shark(theShark.getPosition(), spriteArrayForSize(10, 10),theProgram);
-		testWorld.addAsShark(newShark);
+		testWorld.addAsGameObject(newShark);
 		
 		Statement temp = ((IfStatement) theProgram.getMainStatement()).getIfBody();
 		Assignment ifBody = (Assignment)temp;

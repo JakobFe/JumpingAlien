@@ -634,14 +634,7 @@ public class World {
 				result.add((Plant)object);
 		}	
 		return result;	*/
-		return (Set<Plant>)filterAllGameObjects(new Predicate<GameObject>(
-				) {
-
-					@Override
-					public boolean test(GameObject t) {
-						return t instanceof Plant;
-					}
-		});
+		return (Set<Plant>)filterAllGameObjects(t-> t instanceof Plant);	
 	}
 	
 	/**

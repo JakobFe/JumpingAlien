@@ -38,7 +38,7 @@ public class ExpressionTest {
 		theTile = testWorld.getTileAtPos(0, 0);
 		theTile.setGeoFeature(Terrain.WATER);
 		
-		testWorld.addAsSlime(theSlime);
+		testWorld.addAsGameObject(theSlime);
 		testWorld.setMazub(theMazub);
 		
 		allVariables = new HashMap<String,Type>();

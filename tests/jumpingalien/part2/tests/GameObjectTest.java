@@ -91,7 +91,7 @@ public class GameObjectTest {
 	@Test
 	public void collideLeftWithObjectCorrect(){
 		testWorld.setMazub(mazubPos_225_50);
-		testWorld.addAsSlime(slimePos_100_50);
+		testWorld.addAsGameObject(slimePos_100_50);
 		mazubPos_225_50.startMove(Direction.LEFT);
 		
 		for (int i = 0; i < 100; i++) {
@@ -103,7 +103,7 @@ public class GameObjectTest {
 	@Test
 	public void dieEnemyCorrect(){
 		testWorld.setMazub(mazubPos_225_50);
-		testWorld.addAsSlime(slimePos_100_50);
+		testWorld.addAsGameObject(slimePos_100_50);
 		mazubPos_225_50.startMove(Direction.LEFT);
 		
 		for (int i = 0; i < 200; i++) {
@@ -138,8 +138,8 @@ public class GameObjectTest {
 	
 	@Test
 	public void collideDownWithObjectCorrect(){
-		testWorld.addAsSlime(slimePos_100_105);
-		testWorld.addAsShark(sharkPos_100_95);
+		testWorld.addAsGameObject(slimePos_100_105);
+		testWorld.addAsGameObject(sharkPos_100_95);
 		
 		slimePos_100_105.advanceTime(0.19);
 		assertTrue(slimePos_100_105.getPosition().getDisplayedYPosition() == 99);

@@ -588,9 +588,9 @@ public abstract class Alien extends Character implements JumpInterface{
 		//		(Math.abs(newYPos - getPosition().getYPosition()) <= 1));
 		if (newYPos<0)
 			newYPos = 0;
-		
+		double[] newPos = doubleArray(newXPos,newYPos);
 		if(getWorld() != null){
-			double[] newPos = updatePositionTileCollision(doubleArray(newXPos,newYPos));
+			newPos = updatePositionTileCollision(doubleArray(newXPos,newYPos));
 			newPos = updatePositionObjectCollision(newPos);
 			
 			if (canFall() && !isMoving(Direction.UP)){
@@ -598,9 +598,9 @@ public abstract class Alien extends Character implements JumpInterface{
 			}
 			else
 				setCanFall(true);
-			getPosition().terminate();
-			setPosition(toPosition(newPos, getWorld()));
 		}
+		getPosition().terminate();
+		setPosition(toPosition(newPos, getWorld()));
 	}
 
 	/**
