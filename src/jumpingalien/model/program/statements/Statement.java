@@ -34,7 +34,7 @@ public abstract class Statement {
 	}
 
 	public void setProgram(Program program) {
-		assert (program == null || program.hasAsStatement(this));
+		assert (program != null && program.hasAsStatement(this));
 		this.program = program;
 	}
 

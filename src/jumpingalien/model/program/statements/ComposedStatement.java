@@ -42,16 +42,6 @@ public abstract class ComposedStatement extends Statement {
 		}		
 	}
 	
-	/**
-	@Override
-	public boolean hasActionStatAsSubStat() {
-		for(Statement subStatement: subStatements){
-			if(isActionStatement(subStatement))
-				return true;
-		}
-		return false;
-	}*/
-	
 	@Override
 	public boolean hasActionStatAsSubStat() {
 		for(Statement subStatement: subStatements){
@@ -71,9 +61,9 @@ public abstract class ComposedStatement extends Statement {
 
 	private final List<Statement> subStatements;
 	
-	// kan beter
 	@Override
 	public void setProgram(Program program){
+		assert (program!=null && program.hasAsStatement(this));
 		for(Statement subStatement: subStatements){
 			assert program.hasAsStatement(subStatement);
 		}

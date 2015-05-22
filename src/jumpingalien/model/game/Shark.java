@@ -554,11 +554,12 @@ public class Shark extends Character implements JumpInterface{
 		double newYPos = getPosition().getYPosition() + 
 				((getVertDirection().getFactor()*getVertVelocity()*timeDuration)+ 
 				0.5*getVertAcceleration()*Math.pow(timeDuration, 2))*100;
-		if (newYPos<0)
-			newYPos = 0;
+		double[] newPos = doubleArray(newXPos,newYPos);
 		
-		double[] newPos = updatePositionTileCollision(doubleArray(newXPos,newYPos));
-		newPos = updatePositionObjectCollision(newPos);
+		if(getWorld() != null){
+			newPos = updatePositionTileCollision(doubleArray(newXPos,newYPos));
+			newPos = updatePositionObjectCollision(newPos);
+		}
 		
 		if ((canFall() && !isSubmergedIn(Terrain.WATER)) && !isMoving(Direction.UP))
 			startFall();

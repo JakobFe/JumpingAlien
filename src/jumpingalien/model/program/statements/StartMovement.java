@@ -23,6 +23,7 @@ public class StartMovement extends SingleStatement {
 	
 	@Override
 	public void setProgram(Program program) {
+		assert (program!=null && program.hasAsStatement(this));
 		super.setProgram(program);
 		getDirection().setProgram(program);
 	}

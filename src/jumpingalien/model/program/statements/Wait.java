@@ -21,6 +21,7 @@ public class Wait extends SingleStatement {
 	
 	@Override
 	public void setProgram(Program program) {
+		assert (program!=null && program.hasAsStatement(this));
 		super.setProgram(program);
 		getDuration().setProgram(program);
 	}

@@ -183,8 +183,10 @@ public class Mazub extends Alien{
 	public void terminate(){
 		assert (getHitPoints()==0);
 		super.terminate();
-		getWorld().setMazub(null);
-		setWorld(null);
+		if(getWorld() != null){
+			getWorld().setMazub(null);
+			setWorld(null);
+		}
 	}
 	
 	/**

@@ -298,7 +298,8 @@ public abstract class Character extends GameObject{
 		}
 		simulateMovement(timeLeft);
 		updateTimers(timeDuration);
-		updateHitPoints();
+		if(!isTerminated())
+			updateHitPoints();
 	}
 	
 	/**
@@ -333,7 +334,6 @@ public abstract class Character extends GameObject{
 		} catch (NullPointerException e) {
 		}
 		catch(IllegalXPositionException | IllegalYPositionException exc){
-			System.out.println("Illegal position!");
 			setHitPoints(0);
 			getHpTimer().setTimeSum(100);
 			terminate();

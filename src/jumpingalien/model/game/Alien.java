@@ -406,25 +406,27 @@ public abstract class Alien extends Character implements JumpInterface{
 	public void endDuck(){
 		try {
 			setIsDucked(false);
-			updateSpriteIndex();
-			HashSet<Tile> affectedTiles = getWorld().getTilesIn(getPosition().getDisplayedXPosition(),
-					getPosition().getDisplayedYPosition(),getPosition().getDisplayedXPosition()
-					+getWidth()-1, getPosition().getDisplayedYPosition()+getHeight()-1);
-			for(Tile tile: affectedTiles){
-				if(!(tile.getGeoFeature().isPassable()) &&
-				   isColliding(Direction.UP, tile))
-					throw new CollisionException();
+			if(getWorld()!= null){
+				updateSpriteIndex();
+				HashSet<Tile> affectedTiles = getWorld().getTilesIn(getPosition().getDisplayedXPosition(),
+						getPosition().getDisplayedYPosition(),getPosition().getDisplayedXPosition()
+						+getWidth()-1, getPosition().getDisplayedYPosition()+getHeight()-1);
+				for(Tile tile: affectedTiles){
+					if(!(tile.getGeoFeature().isPassable()) &&
+					   isColliding(Direction.UP, tile))
+						throw new CollisionException();
+				}
+				for(GameObject object: getWorld().getAllGameObjects()){
+					if(object != this && isColliding(Direction.UP, object))
+						throw new CollisionException();
+				}
+				setEnableStandUp(false);
+				setMaxHorVelocity(getMaxHorVelocityRunning());
+				if (isMoving(Direction.RIGHT))
+					startMove(Direction.RIGHT);
+				else if (isMoving(Direction.LEFT))
+					startMove(Direction.LEFT);
 			}
-			for(GameObject object: getWorld().getAllGameObjects()){
-				if(object != this && isColliding(Direction.UP, object))
-					throw new CollisionException();
-			}
-			setEnableStandUp(false);
-			setMaxHorVelocity(getMaxHorVelocityRunning());
-			if (isMoving(Direction.RIGHT))
-				startMove(Direction.RIGHT);
-			else if (isMoving(Direction.LEFT))
-				startMove(Direction.LEFT);
 		} catch (CollisionException e) {
 			setIsDucked(true);
 			updateSpriteIndex();
@@ -585,10 +587,7 @@ public abstract class Alien extends Character implements JumpInterface{
 		double newYPos = getPosition().getYPosition() + 
 				((getVertDirection().getFactor()*getVertVelocity()*timeDuration)+ 
 				0.5*getVertAcceleration()*Math.pow(timeDuration, 2))*100;
-		//assert ((Math.abs(newXPos - getPosition().getXPosition()) <= 1) &&
-		//		(Math.abs(newYPos - getPosition().getYPosition()) <= 1));
-		if (newYPos<0)
-			newYPos = 0;
+
 		double[] newPos = doubleArray(newXPos,newYPos);
 		if(getWorld() != null){
 			newPos = updatePositionTileCollision(doubleArray(newXPos,newYPos));
