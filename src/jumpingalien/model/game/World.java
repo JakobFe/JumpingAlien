@@ -601,20 +601,14 @@ public class World {
 		return filteredStream.collect(Collectors.toSet());
 	}
 	
-	public HashSet<Alien> getAllAliens() {
-		HashSet<Alien> result = new HashSet<Alien>();
-		result.addAll(getAllBuzams());
-		result.add(getMazub());
-		return result;	
+	@SuppressWarnings("unchecked")
+	public Set<? extends Alien> getAllAliens() {
+		return (Set<Alien>)filterAllGameObjects(t-> t instanceof Alien);
 	}
 
-	public HashSet<Buzam> getAllBuzams() {
-		HashSet<Buzam> result = new HashSet<Buzam>();
-		for(GameObject object: allGameObjects){
-			if((object instanceof Buzam) && !(object.isTerminated()))
-				result.add((Buzam)object);
-		}	
-		return result;	
+	@SuppressWarnings("unchecked")
+	public Set<Buzam> getAllBuzams() {
+		return (Set<Buzam>)filterAllGameObjects(t-> (t instanceof Buzam));
 	}
 	
 	/**
@@ -628,12 +622,6 @@ public class World {
 	 */
 	@SuppressWarnings("unchecked")
 	public Set<Plant> getAllPlants() {
-/*		HashSet<Plant> result = new HashSet<Plant>();
-		for(GameObject object: allGameObjects){
-			if((object instanceof Plant) && !(object.isTerminated()))
-				result.add((Plant)object);
-		}	
-		return result;	*/
 		return (Set<Plant>)filterAllGameObjects(t-> t instanceof Plant);	
 	}
 	
@@ -646,13 +634,9 @@ public class World {
 	 * 			| for each shark in Shark:
 	 * 			|	result.contains(shark) == (shark.getWorld() == this)
 	 */
-	public HashSet<Shark> getAllSharks(){
-		HashSet<Shark> result = new HashSet<Shark>();
-		for(GameObject object: allGameObjects){
-			if((object instanceof Shark) && !(object.isTerminated()))
-				result.add((Shark)object);
-		}	
-		return result;	
+	@SuppressWarnings("unchecked")
+	public Set<Shark> getAllSharks(){
+		return (Set<Shark>)filterAllGameObjects(t-> (t instanceof Shark));
 	}
 		
 	/**
@@ -664,22 +648,14 @@ public class World {
 	 * 			| for each slime in Slime:
 	 * 			|	result.contains(slime) == (slime.getWorld() == this)
 	 */
-	public HashSet<Slime> getAllSlimes() {
-		HashSet<Slime> result = new HashSet<Slime>();
-		for(GameObject object: allGameObjects){
-			if((object instanceof Slime) && !(object.isTerminated()))
-				result.add((Slime)object);
-		}	
-		return result;	
+	@SuppressWarnings("unchecked")
+	public Set<Slime> getAllSlimes() {
+		return (Set<Slime>)filterAllGameObjects(t-> (t instanceof Slime));
 	}
 
-	public HashSet<Character> getAllCharacters() {
-		HashSet<Character> result = new HashSet<Character>();
-		for(GameObject object: allGameObjects){
-			if((object instanceof Character) && !(object.isTerminated()))
-				result.add((Character)object);
-		}	
-		return result;	
+	@SuppressWarnings("unchecked")
+	public Set<Character> getAllCharacters() {
+		return (Set<Character>)filterAllGameObjects(t-> (t instanceof Character));
 	}	
 	
 	/**
@@ -818,22 +794,20 @@ public class World {
 		return allGameObjects;
 	}
 
-	public HashSet<GameObject> getAllUnterminatedGameObjects(){
-		HashSet<GameObject> result = new HashSet<GameObject>();
-		for(GameObject object: allGameObjects){
-			if(!object.isTerminated())
-				result.add(object);
-		}	
-		return result;	
+	@SuppressWarnings("unchecked")
+	public Set<GameObject> getAllUnterminatedGameObjects(){
+		return (Set<GameObject>)filterAllGameObjects(t-> (!t.isTerminated())); 
 	}
 	
 	protected boolean canHaveAsGameObject(GameObject object){
+		if(!isValidGameObject(object))
+			return false;
 		if(object instanceof Slime)
 			return (hasAsSchool(((Slime)object).getSchool()) || canAddSchool());
 		else if(object instanceof Mazub)
-			return ((Mazub)object == null) || (!((Mazub)object).isDead() && canAddGameObjects());
+			return (!((Mazub)object).isDead() && canAddGameObjects());
 		else if(object instanceof Buzam)
-			return ((Buzam)object == null) || (!((Buzam)object).isDead() && canAddGameObjects());
+			return (!((Buzam)object).isDead() && canAddGameObjects());
 		return true;
 	}
 	
@@ -964,7 +938,9 @@ public class World {
 			if(!buzam.isTerminated())
 				try {
 					buzam.advanceTime(timeDuration);
-				} catch (IllegalJumpInvokeException | IllegalStateException e) {}
+				} catch (IllegalJumpInvokeException | IllegalStateException e) {
+					System.out.println("Illegal operation by Buzam");
+				}
 		}
 		for(Plant plant: getAllPlants()){
 			if(!plant.isTerminated())
