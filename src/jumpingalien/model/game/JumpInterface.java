@@ -4,5 +4,5 @@ public interface JumpInterface {
 	
 	void startJump();
 	void endJump();
-	
+	boolean isJumping();
 }

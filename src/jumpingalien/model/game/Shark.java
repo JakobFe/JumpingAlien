@@ -446,7 +446,13 @@ public class Shark extends Character implements JumpInterface{
 		assert canJump();
 		setPeriodCounter(0);
 		setVertVelocity(INIT_VERT_VELOCITY);
+		setVertDirection(Direction.UP);
 		setVertAcceleration(getMaxVertAcceleration());
+	}
+	
+	@Override
+	public boolean isJumping() {
+		return this.isMoving(Direction.UP) && !isRising;
 	}
 	
 	/**
@@ -781,8 +787,8 @@ public class Shark extends Character implements JumpInterface{
 		//return "Shark at " + getPosition().toString() + " with" +
 		//		String.valueOf(getHitPoints())  + "hit points.";
 		//return getVertVelocity() + "";
-		//return String.valueOf(getProgram() != null);
-		return "Shark";
+		return String.valueOf(getProgram() != null);
+		//return "Shark";
 	}
 	
 	/**
