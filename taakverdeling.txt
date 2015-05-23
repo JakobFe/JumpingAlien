@@ -7,7 +7,7 @@ Vincent:
 - Direction
 - JumpInterface	
 - Testen schrijven: Foreach		OK
-- Klassediagram: Statement		Alleen nog Break en Skip toevoegen.
+- Klassediagram: Statement		OK
 
 Jakob:
 - Mazub
