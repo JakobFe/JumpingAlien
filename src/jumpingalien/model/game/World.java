@@ -1,5 +1,6 @@
 package jumpingalien.model.game;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -849,7 +850,7 @@ public class World {
 	
 	/**
 	 * Return the map of all schools that have or had a slime in this world, combined
-	 * with the amount of slimes that school currently has in this world.
+	 * with the amount of slimes that each school currently has in this world.
 	 */
 	@Model
 	private Map<School,Integer> getAllSchoolsWithValues(){
@@ -877,6 +878,7 @@ public class World {
 	 * @return	...
 	 * 			| result == getAllSchoolsWithValues().containsKey(school)
 	 */
+	@Model
 	protected boolean hasAsSchool(School school){
 		return allSchools.containsKey(school);
 	}
@@ -887,7 +889,7 @@ public class World {
 	 * @param 	school
 	 * 			The school to be added
 	 * @post	...
-	 * 			| if(!hasAsSchool(school))
+	 * 			| if(!hasAsSchool(school) && canAddSchool())
 	 * 			|	then new.getAllSchools().contains(school)
 	 * @effect	...
 	 * 			| if(!hasAsSchool(school))
@@ -896,43 +898,95 @@ public class World {
 	@Raw
 	public void addAsSchool(School school){
 		if(!hasAsSchool(school)){
-			allSchools.put(school,1);
+			if(canAddSchool())
+				allSchools.put(school,1);
 		}
 		else
 			incrementValueOfSchool(school);
 	}
 	
 	/**
-	 * Remove the given slime from the set of slimes.
+	 * Remove the school from the map of schools.
 	 * 
-	 * @param 	slime
-	 * 			The slime to be removed
+	 * @param 	school
+	 * 			The school to remove.
 	 * @pre		...
-	 * 			| hasAsSlime(slime)
+	 * 			| hasAsSchool(school)
+	 * @pre		...
+	 * 			| getAllSchoolsWithValues().get(school) == 0
 	 * @post	...
-	 * 			| ! new.hasAsSlime(slime)
-	 * @post	...
-	 * 			| (new slime).getWorld() == null
+	 * 			| !new.getAllSchools().contains(school)
 	 */
+	@Model
 	protected void removeAsSchool(School school){
 		assert hasAsSchool(school);
 		assert allSchools.get(school) == 0;
 		allSchools.remove(school);
 	}
-
-	protected boolean canAddSchool(){
-		return (numberOfSchools() < 10);
-	}
 	
+	/**
+	 * Check whether this world can add a new school.
+	 * 
+	 * @return	...
+	 * 			| result == numberOfSchools() < MAX_NUMBER_OF_SCHOOLS
+	 */
+	@Model
+	protected boolean canAddSchool(){
+		return (numberOfSchools() < MAX_NUMBER_OF_SCHOOLS);
+	}
+	/**
+	 * Return the amount of distinct schools in this world.
+	 * 
+	 * @return	...
+	 * 			| result == getAllSchools().size()
+	 */
+	@Model
 	protected int numberOfSchools(){
 		return allSchools.size();
 	}
 	
+	/**
+	 * A variable storing the maximum amount of different schools that can be 
+	 * part of this world.
+	 */
+	private static final int MAX_NUMBER_OF_SCHOOLS = 10;
+	
+	/**
+	 * Increment the value of each school in this world with one.
+	 * 
+	 * @param 	school
+	 * 			The school to increment the value of.
+	 * @pre		...
+	 * 			| hasAsSchool(school)
+	 * @post	...
+	 * 			| new.getAllSchoolsWithValues().get(school) ==
+	 * 			|	getAllSchoolsWithValues().get(school)+1 
+	 */
+	@Model
 	protected void incrementValueOfSchool(School school){
+		assert hasAsSchool(school);
 		allSchools.put(school, allSchools.get(school) + 1);
 	}
 	
+	/**
+	 * Decrement the value of each school in this world with one.
+	 * 
+	 * @param 	school
+	 * 			The school to decrement the value of.
+	 * @pre		...
+	 * 			| hasAsSchool(school)
+	 * @post	...
+	 * 			| if(getAllSchoolsWithValues().get(school) > 0)
+	 * 			| 	then new.getAllSchoolsWithValues().get(school) ==
+	 * 			|			 getAllSchoolsWithValues().get(school)-1
+	 * @effect	...
+	 * 			| if(getAllSchoolsWithValues().get(school) == 0 ||
+	 * 			|	 getAllSchoolsWithValues().get(school) == 1)
+	 * 			|	then removeAsSchool(school)
+	 */
+	@Model
 	protected void decrementValueOfSchool(School school){
+		assert hasAsSchool(school);
 		if(allSchools.get(school) > 0)
 			allSchools.put(school, allSchools.get(school) - 1);
 		if(allSchools.get(school) == 0)
@@ -940,6 +994,14 @@ public class World {
 
 	}
 	
+	/**
+	 * Check whether this world has proper schools.
+	 * 
+	 * @return	...
+	 * 			| result == 
+	 * 			|	for some school in getAllSchools()
+	 * 			|		!school.hasProperWorld()
+	 */
 	@Model
 	boolean hasProperSchools(){
 		for(School school: allSchools.keySet()){
@@ -950,22 +1012,26 @@ public class World {
 	}
 
 	/**
-	 * Set collecting references to all slimes attached to this world.
+	 * A variable storing a map with as keys the schools of all slimes that have 
+	 * this world as their world, and as values the amount of slimes in that school that
+	 * have this world as their world.
 	 * 
 	 * @invar	...
-	 * 			| allSlimes != null
+	 * 			| allSchools != null
 	 * @invar	...
-	 * 			| for each slime in allSlimes:
-	 * 			|	isValidGameObject(slime)
+	 * 			| for each school in allSchools.keyset()
+	 * 			|	for each slime in school:
+	 * 			|		slime.getWorld() == this
+	 * 			|	school.size() == allSchools.get(school)
+	 * 			|	school.hasProperWorld()
 	 * @invar	...
-	 * 			| for each slime in allSlimes:
-	 * 			|	slime.getWorld() == this
+	 * 			| allSchools.size() <= MAX_NUMBER_OF_SCHOOLS
 	 */
 	private final HashMap<School,Integer> allSchools = new HashMap<School,Integer>();
 
 		
 	/**
-	 * Returns whether the player won the game or not.
+	 * Returns whether the player has won the game or not.
 	 * 
 	 * @return	...
 	 * 			| if (getMazub() == null)
@@ -1027,8 +1093,11 @@ public class World {
 	 */
 	private boolean gameStarted = false;
 	
+	//No documentation asked for this function
 	public void advanceTime(double timeDuration) throws
 	IllegalXPositionException,IllegalYPositionException{
+		if(isGameStarted() && isGameOver())
+			terminate();
 		if (getMazub() != null){
 			getMazub().advanceTime(timeDuration);
 			updateWindowPos();
@@ -1077,17 +1146,49 @@ public class World {
 	}
 	
 	/**
+	 * Terminate this world.
+	 * 
+	 * @pre		...
+	 * 			| isGameStarted()
+	 * @pre		...
+	 * 			| isGameOver()
+	 * @effect	...
+	 * 			| getAllGameObjects().clear()
+	 * @effect	...
+	 * 			| getAllSchoolsWithValues().clear()
+	 * @effect	...
+	 * 			| if(getMazub() != null)
+	 * 			|	then getMazub().setWorld(null)
+	 * @effect	...
+	 * 			| setMazub(null)
+	 * @effect	...
+	 * 			| Arrays.fill(worldTiles,null)
+	 */
+	@Model
+	private void terminate(){
+		assert isGameStarted();
+		assert isGameOver();
+		allGameObjects.clear();
+		allSchools.clear();
+		if(getMazub() != null)
+			getMazub().setWorld(null);
+		setMazub(null);
+		Arrays.fill(worldTiles,null);
+	}
+	
+	/**
 	 * Return a textual representation of this world.
 	 * 
 	 * @return	...
 	 * 			| result.contains("World with dimensions ")
 	 * @return	...
-	 * 			| result.contains(getWorldWidth() + ",")
+	 * 			| result.contains(String.valueOf(getWorldWidth()) + ", ")
 	 * @return	...
-	 * 			| result.contains(getWorldHeight() + ".") 
+	 * 			| result.contains(String.valueOf(getWorldHeight()) + ".") 
 	 */
 	@Override
 	public String toString(){
-		return "World with dimensions " + getWorldWidth() + "," + getWorldHeight() + ".";
+		return "World with dimensions " + String.valueOf(getWorldWidth()) + ", " + 
+				String.valueOf(getWorldHeight()) + ".";
 	}
 }
