@@ -63,7 +63,8 @@ public class School {
 		for(Slime slime: slimes){
 			if(slimeWorld == null)
 				slimeWorld = slime.getWorld();
-			if(!slimeWorld.getAllSchools().contains(this))
+			if(slime.getWorld() != slimeWorld ||
+			   !slimeWorld.getAllSchools().contains(this))
 				return false;
 		}
 		return true;
