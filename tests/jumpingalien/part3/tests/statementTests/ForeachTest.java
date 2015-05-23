@@ -1,8 +1,18 @@
 package jumpingalien.part3.tests.statementTests;
 
 import static org.junit.Assert.*;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import jumpingalien.model.game.*;
+import jumpingalien.model.program.expressions.*;
+import jumpingalien.model.program.expressions.unaryexpression.*;
 import jumpingalien.model.program.programs.Program;
+import jumpingalien.model.program.statements.*;
+import jumpingalien.model.program.types.ObjectOfWorld;
+import jumpingalien.model.program.types.Type;
+import jumpingalien.part3.programs.SourceLocation;
 import jumpingalien.util.Sprite;
 import static jumpingalien.tests.util.TestUtils.*;
 
@@ -15,6 +25,7 @@ public class ForeachTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		sprites = spriteArrayForSize(5, 5);
+		loc = new SourceLocation(0,0);
 		school1 = new School();
 		mazub = new Mazub(new Position(100,100), sprites);
 		buzam1 = new Buzam(new Position(150,150), sprites);
@@ -48,9 +59,27 @@ public class ForeachTest {
 			testWorld.getTileAtTilePos(0, i).setGeoFeature(Terrain.GROUND);
 			testWorld.getTileAtTilePos(9,i).setGeoFeature(Terrain.GROUND);
 		}
+		
+		readOTestProgram = new ReadVariable(loc, "o", new ObjectOfWorld());
+		readXTestProgram = new ReadVariable(loc, "x", new jumpingalien.model.program.types.Double());
+		getXTestProgram = new GetX(loc, readOTestProgram);
+		assignTestProgram = new Assignment("x", new jumpingalien.model.program.types.Double(), 
+				getXTestProgram, loc);
+		printTestProgram = new Print(readXTestProgram, loc);
+		print2TestProgram = new Print(new GetY(null, readXTestProgram), loc);
+		seqTestProgram = new SequenceStatement(loc, assignTestProgram,printTestProgram);
+		forTestProgram = new Foreach("o", jumpingalien.part3.programs.IProgramFactory.Kind.PLANT,
+				new NotBoolean(loc, new IsDead(loc, readOTestProgram)), 
+				null,null,seqTestProgram,loc);
+		variablesTestProgram = new HashMap<String,Type>();
+		variablesTestProgram.put("o", new ObjectOfWorld());
+		variablesTestProgram.put("x", new jumpingalien.model.program.types.Double());
+		testProgram = new Program(forTestProgram, variablesTestProgram);
+		
 	}
 	
 	private static Sprite[] sprites;
+	private static SourceLocation loc;
 	
 	private World testWorld;
 	private static Mazub mazub;
@@ -65,6 +94,17 @@ public class ForeachTest {
 	private static School school1;
 	private static Slime slime1;
 	private static Slime slime2;
+	
+	private Expression readOTestProgram;
+	private Expression readXTestProgram;
+	private Expression getXTestProgram;
+	private Statement forTestProgram;
+	private Statement assignTestProgram;
+	private Statement printTestProgram;
+	private Statement print2TestProgram;
+	private Statement seqTestProgram;
+	private Map<String,Type> variablesTestProgram;
+	private Program testProgram;
 	
 	
 	@Test
@@ -195,5 +235,40 @@ public class ForeachTest {
 		assertEquals(250, valueOfX,0.001);
 	}
 	
+	@Test
+	public void hasAsSubstatementCorrect(){
+		assertTrue(testProgram.isWellFormed());
+		assertTrue(forTestProgram.hasAsSubStatement(printTestProgram));
+		assertTrue(forTestProgram.hasAsSubStatement(assignTestProgram));
+	}
+	
+	@Test
+	public void hasAsSubstatementInCorrect(){
+		assertTrue(testProgram.isWellFormed());
+		assertFalse(forTestProgram.hasAsSubStatement(print2TestProgram));		
+	}
+	
+	@Test
+	public void hasActionStatAsSubStatInCorrect(){
+		assertTrue(testProgram.isWellFormed());
+		assertFalse(forTestProgram.hasActionStatAsSubStat());
+	}
+	
+	@Test
+	public void iteratorTest(){
+		Buzam theBuzam = new Buzam(new Position(600,40), sprites,testProgram);
+		testWorld.addAsGameObject(theBuzam);
+		StatementIterator<Statement> iter = forTestProgram.iterator();
+		assertTrue(iter.hasNext());
+		assertEquals(forTestProgram, iter.next());
+		for(int i=0;i<theBuzam.getWorld().getAllPlants().size();i++){
+			assertTrue(iter.hasNext());
+			assertEquals(assignTestProgram, iter.next());
+			assertTrue(iter.hasNext());
+			assertEquals(printTestProgram, iter.next());
+		}
+		assertFalse(iter.hasNext());
+		
+	}
 	
 }

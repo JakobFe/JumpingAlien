@@ -9,7 +9,6 @@ import java.util.stream.Stream;
 import jumpingalien.model.exceptions.BreakException;
 import jumpingalien.model.exceptions.NullVariableException;
 import jumpingalien.model.game.World;
-import jumpingalien.model.program.expressions.Constant;
 import jumpingalien.model.program.expressions.Expression;
 import jumpingalien.model.program.programs.Program;
 import jumpingalien.model.program.types.ObjectOfWorld;
@@ -48,13 +47,14 @@ public class Foreach extends SingleStatement {
 	
 	private void assign(ObjectOfWorld theObject) {
 		assert (getProgram() != null);
-		Assignment assignment = 
+		/**Assignment assignment = 
 				new Assignment(getVariableName(), 
 								new ObjectOfWorld(),
 								new Constant<ObjectOfWorld>(getSourceLocation(),theObject),
 								getSourceLocation());
 		assignment.setProgram(getProgram());
-		assignment.executeSingleStatement();
+		assignment.executeSingleStatement();*/
+		getProgram().getGlobalVariables().get(getVariableName()).setValue(theObject);
 	}
 
 	public Expression getRestriction() {
@@ -123,12 +123,11 @@ public class Foreach extends SingleStatement {
 		return variables;
 	}
 	
-	public ObjectOfWorld getVariableAt(int index){
+	private ObjectOfWorld getVariableAt(int index){
 		return variables.get(index);
 	}
 
-	// moet nog uitgebreid getests worden!!!
-	public void setVariables() {
+	private void setVariables() {
 		assert(getProgram() != null);
 		assert(getProgram().getGameObject() != null);
 		assert(getProgram().getGameObject().getWorld() != null);
@@ -136,7 +135,7 @@ public class Foreach extends SingleStatement {
 		HashSet<ObjectOfWorld> set = convertKind();
 		Stream<ObjectOfWorld> filteredStream = set.stream().filter(s -> checkRestriction(s));		
 		Stream<ObjectOfWorld> sortedStream = filteredStream;
-//		Comparator<ObjectOfWorld> c = null;
+
 		if(getSortDirection() == SortDirection.ASCENDING){
 			sortedStream = filteredStream.sorted((o1,o2) -> 
 							Double.compare(getSortValue(o1), getSortValue(o2)));
@@ -145,7 +144,7 @@ public class Foreach extends SingleStatement {
 			sortedStream = filteredStream.sorted((o1,o2) -> 
 							Double.compare(getSortValue(o2), getSortValue(o1)));
 		}
-//		sortedStream = filteredStream.sorted(c);
+
 		this.variables = sortedStream.collect(Collectors.toList());
 	}
 
@@ -193,7 +192,8 @@ public class Foreach extends SingleStatement {
 			@Override
 			public boolean hasNext() {
 				return (!subIteratorsInitialized || 
-						getIndex()<2);
+						getVariableIndex()<(getVariables().size()-1) || 
+						bodyIterator.hasNext());
 			}
 			
 			@Override
