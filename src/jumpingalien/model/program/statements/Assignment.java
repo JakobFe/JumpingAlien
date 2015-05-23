@@ -39,7 +39,7 @@ public class Assignment extends SingleStatement {
 	
 	@Override
 	public void setProgram(Program program) {
-		assert program != null;
+		assert (program != null && program.hasAsStatement(this));
 		super.setProgram(program);
 		getValue().setProgram(program);
 	}
