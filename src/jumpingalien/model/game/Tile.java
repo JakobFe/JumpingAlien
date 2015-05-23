@@ -217,20 +217,9 @@ public class Tile extends ObjectOfWorld{
 	 * 			The geological feature to set.
 	 * @post	...
 	 * 			| new.getGeoFeature() == geoFeature
-	 * @post	...
-	 * 			| if(!getGeoFeature().isPassable() && geoFeature.isPassable())
-	 *			|	then getWorld().removeAsImpassableTile(this)
-	 * 			| else if (!geoFeature.isPassable() && !geoFeature.isPassable()))
-	 * 			|	then getWorld().addAsImpassableTile(this)
 	 */
 	public void setGeoFeature(Terrain geoFeature) {
-		Terrain oldFeature = getGeoFeature();
 		this.geoFeature = geoFeature;
-		if(!oldFeature.isPassable() && 
-		     geoFeature.isPassable())
-			getWorld().removeAsImpassableTile(this);
-		else if (oldFeature.isPassable() && !geoFeature.isPassable())
-			getWorld().addAsImpassableTile(this);
 	}
 	
 	/**

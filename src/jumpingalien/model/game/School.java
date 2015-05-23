@@ -9,6 +9,8 @@ import be.kuleuven.cs.som.annotate.Raw;
  * 
  * @invar	...
  * 			| hasProperSlimes()
+ * @invar	...
+ * 			| hasProperWorld()
  * 
  * @author Jakob Festraets, Vincent Kemps
  * @version 1.0
@@ -38,10 +40,31 @@ public class School {
 	 * 			|	then result == false
 	 * 			| else
 	 * 			| 	result == true
+	 * 
+	 * 
+	 * 
+	 * 
 	 */
 	boolean hasProperSlimes(){
+		World slimeWorld = null;
 		for(Slime slime: slimes){
 			if(slime.getSchool() != this)
+				return false;
+			if(slimeWorld == null)
+				slimeWorld = slime.getWorld();
+			else if(slime.getWorld() != slimeWorld)
+				return false;
+		}
+		return true;
+	}
+	
+	boolean hasProperWorld(){
+		World slimeWorld = null;
+		for(Slime slime: slimes){
+			if(slimeWorld == null)
+				slimeWorld = slime.getWorld();
+			if(slime.getWorld() != slimeWorld ||
+			   !slimeWorld.getAllSchools().contains(this))
 				return false;
 		}
 		return true;

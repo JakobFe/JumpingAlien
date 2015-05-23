@@ -2,6 +2,7 @@ package jumpingalien.model.game;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -15,25 +16,27 @@ import static jumpingalien.tests.util.TestUtils.intArray;
  * A class concerning the world in which the game is played.
  * 
  * @invar	...
+ * 			| hasProperTiles()
+ * @invar	...
  * 			| hasProperGameObjects()
  * @invar	...
- * 			| hasProperTiles()
+ * 			| hasProperSchools()
  * 
  * @author Jakob Festraets, Vincent Kemps
- * @version 1.0
+ * @version 3.0
  */
 public class World {
 	
 	/**
 	 * Create a new world with the given tile size, number of tiles in horizontal and vertical
-	 * direction, window width and height, horizontal and vertical tile position of the target tile.
+	 * direction, window width and height and horizontal and vertical tile position of the target tile.
 	 * 
 	 * @param 	tileSize
 	 * 			The given tile size by which the game world should be initialized.
 	 * @param 	nbTilesX
-	 * 			The number of tiles in x-direction or horizontal direction.
+	 * 			The number of tiles in x-direction (horizontal direction).
 	 * @param 	nbTilesY
-	 * 			The number of tiles in y-direction or vertical direction.
+	 * 			The number of tiles in y-direction (vertical direction).
 	 * @param 	visibleWindowWidth
 	 * 			The width of the displayed window of the game world.
 	 * @param 	visibleWindowHeight
@@ -49,56 +52,48 @@ public class World {
 	 * @post	...
 	 * 			| new.getWorldHeight() = tileSize * nbTilesY
 	 * @post	...
-	 *			| if (isValidVisibleWindowWidth(visibleWindowWidth))
-	 *			|	then new.getVisibleWindowWidth() = visibleWindowWidth
-	 *			| else
-	 * 			|	then new.getVisibleWindowWidth() = getWorldWidth()
+	 *			| new.getVisibleWindowWidth() = visibleWindowWidth
 	 * @post	...
-	 *			| if (isValidVisibleWindowHeight(visibleWindowHeight))
-	 *			|	then new.getVisibleWindowHeight() = visibleWindowHeight
-	 *			| else
-	 * 			|	then new.getVisibleWindowHeight() = getWorldHeight()
+	 *			| new.getVisibleWindowHeight() = visibleWindowHeight
 	 * @post	...
-	 * 			| new.getMaxWindowXPos() = getWorldWidth()-getVisibleWindowWidth()-1
+	 * 			| new.getMaxWindowXPos() = getWorldWidth()-getVisibleWindowWidth()
 	 * @post	...
-	 * 			| new.getMaxWindowYPos() = getWorldHeight()-getVisibleWindowHeight()-1
+	 * 			| new.getMaxWindowYPos() = getWorldHeight()-getVisibleWindowHeight()
 	 * @post	...
 	 * 			| let
-	 * 			|	targetTile = Tile(this,targetTileX*tileSize,targetTileY*tileSize,true) 
-	 * 			| in
-	 * 			|	new.getTargetTile().equals(targetTile)
-	 * @post	...
-	 * 			| let
-	 * 			|	matrixOfTiles = Tile[nbTilesY][nbTilesX]
+	 * 			|	matrixOfTiles = new Tile[nbTilesY][nbTilesX]
 	 * 			| in
 	 *			|	new.getWorldTiles().equals(matrixOfTiles)
 	 * @post	...
 	 * 			| let
+	 * 			|	targetTile = new Tile(this,targetTileX*tileSize,targetTileY*tileSize,true),
 	 * 			|	(for each row in 0..nbTilesY-1:
 	 * 			|		(for each col in 0..nbTilesX-1:
 	 * 			|			if (row == targetTileY && col == targetTileX)
-	 * 			|				then tile = getTargetTile()
-	 * 			|			else tile = Tile(this, col*tileSize, row*tileSize,false) ) )
+	 * 			|				then tile = targetTile
+	 * 			|			else tile = new Tile(this, col*tileSize, row*tileSize,false) ) )
 	 * 			| in
-	 * 			|	new.getTileAtTilePos(col,row).equals(tile)
+	 * 			|	new.getTileAtTilePos(col,row).equals(tile),
+	 * 			|	new.getTargetTile().equals(targetTile)
+	 * @throws	IllegalArgumentException("Illegal window size!")
+	 * 			...
+	 * 			| !isValidVisibleWindowWidth(visibleWindowWidth) ||
+	 * 			| !isValidVisibleWindowHeight(visibleWindowHeight)
 	 */
 	@Raw
 	public World(int tileSize, int nbTilesX, int nbTilesY,
 			int visibleWindowWidth, int visibleWindowHeight,
-			int targetTileX,int targetTileY){
+			int targetTileX,int targetTileY) throws IllegalArgumentException{
+		if (!isValidVisibleWindowWidth(visibleWindowWidth,nbTilesX*tileSize) ||
+			!isValidVisibleWindowHeight(visibleWindowHeight,nbTilesY*tileSize))
+			throw new IllegalArgumentException("Illegal window size!");
+		this.visibleWindowWidth = visibleWindowWidth;
+		this.visibleWindowHeight = visibleWindowHeight;
 		this.tileSize = tileSize;
 		this.worldWidth = tileSize * nbTilesX;
 		this.worldHeight = tileSize * nbTilesY;
-		if (isValidVisibleWindowWidth(visibleWindowWidth))
-			this.visibleWindowWidth = visibleWindowWidth;
-		else
-			this.visibleWindowWidth = getWorldWidth();
-		if (isValidVisibleWindowHeight(visibleWindowHeight))
-			this.visibleWindowHeight = visibleWindowHeight;
-		else
-			this.visibleWindowHeight = getWorldHeight();
-		MAX_WINDOW_X_POS = getWorldWidth()-getVisibleWindowWidth()-1; 
-		MAX_WINDOW_Y_POS = getWorldHeight()-getVisibleWindowHeight()-1;
+		maxWindowXPos = getWorldWidth()-getVisibleWindowWidth(); 
+		maxWindowYPos = getWorldHeight()-getVisibleWindowHeight();
 		this.targetTile = new Tile(this,targetTileX*tileSize,targetTileY*tileSize,true);
 		this.worldTiles = new Tile[nbTilesY][nbTilesX];
 		for (int row = 0; row < nbTilesY; row++){
@@ -129,11 +124,10 @@ public class World {
 	 * 
 	 * @param 	xPosition
 	 * 			The given x position.
-	 * @return	Return the tile position in horizontal direction of the tile in which
-	 * 			the given xPosition is, the tile position is the given x position
-	 * 			divided by the tile size.
+	 * @return	...
 	 * 			| result == xPosition/getTileSize()
 	 */
+	@Model
 	protected int getBelongingTileXPosition(int xPosition){
 		return xPosition/getTileSize();
 	}
@@ -143,13 +137,85 @@ public class World {
 	 * 
 	 * @param 	yPosition
 	 * 			The given y position
-	 * @return	Return the tile position in vertical direction of the tile in which
-	 * 			the given yPosition is, the tile position is the given y position
-	 * 			divided by the tile size.
+	 * @return	...
 	 * 			| result == yPosition/getTileSize()
 	 */
+	@Model
 	protected int getBelongingTileYPosition(int yPosition){
 		return yPosition/getTileSize();
+	}
+	
+	/**
+	 * Returns the target tile of this game world. 
+	 * The Mazub should reach this tile in order to win the game.
+	 * 
+	 * @note	Although this function is public, it is for internal use only.
+	 */
+	public Tile getTargetTile() {
+		return targetTile;
+	}
+
+	/**
+	 * A variable storing the target tile.
+	 */
+	private final Tile targetTile;
+	
+	/**
+	 * Returns a set of all tiles within the given rectangular region. 
+	 * 
+	 * @param 	pixelLeft
+	 *          The x-coordinate of the left side of the rectangular region.
+	 * @param 	pixelBottom
+	 *          The y-coordinate of the bottom side of the rectangular region.
+	 * @param 	pixelRight
+	 *         	The x-coordinate of the right side of the rectangular region.
+	 * @param 	pixelTop
+	 *          The y-coordinate of the top side of the rectangular region.
+	 * @return	...
+	 * 			| result != null
+	 * @return	...
+	 * 			| let
+	 * 			|	tilePositions = getTilePositionsIn(pixelLeft, pixelBottom, pixelRight, pixelTop),
+	 * 			|	for each index in 0...tilePositions.length-1:
+	 * 			|		tile = getTileAtTilePos(tilePositions[index][0], tilePositions[index][1])
+	 *  		| in
+	 * 			|	result.contains(tile)
+	 */
+	@Model
+	protected HashSet<Tile> getTilesIn(int pixelLeft, int pixelBottom,
+			int pixelRight, int pixelTop){
+		int[][] tilePositions = getTilePositionsIn(pixelLeft, pixelBottom, pixelRight, pixelTop);
+		HashSet<Tile> result = new HashSet<Tile>();
+		for(int index=0;index<tilePositions.length;index++){
+			result.add(getTileAtTilePos(tilePositions[index][0], tilePositions[index][1]));
+		}
+		return result;
+	}
+	
+	/**
+	 * Returns a set of all tiles in the game world.
+	 * 
+	 * @return	...
+	 * 			| result == getTilesIn(0, 0, getWorldWidth()-1, getWorldHeight()-1)
+	 * @note	Although this function is public, it is for internal use only.
+	 */
+	public HashSet<Tile> getAllTiles(){
+		return getTilesIn(0, 0, getWorldWidth()-1, getWorldHeight()-1);
+	}
+	
+	/**
+	 * Returns a set of all impassable tiles in the game world.
+	 * 
+	 * @return ...
+	 * 			| for each tile in result:
+	 * 			|	!tile.getGeoFeature().isPassable()
+	 * 
+	 * @note	Although this function is public, it is for internal use only.
+	 */
+	public Set<Tile> getImpassableTiles() {
+		Stream<Tile> stream = getAllTiles().stream();
+		Stream<Tile> filteredStream = stream.filter(t-> !t.getGeoFeature().isPassable());
+		return filteredStream.collect(Collectors.toSet());
 	}
 	
 	/**
@@ -174,7 +240,7 @@ public class World {
 	 * 			|	result[rowNb] =
 	 * 			|		intArray(rowNb%(getBelongingTileXPosition(pixelRight) - getBelongingTileXPosition(pixelLeft) + 1)
 	 * 			|		+ getBelongingTileXPosition(pixelLeft),
-	 * 			|				rowNb/(getBelongingTileXPosition(pixelRight) - getBelongingTileXPosition(pixelLeft)
+	 * 			|				rowNb/(getBelongingTileXPosition(pixelRight) - getBelongingTileXPosition(pixelLeft) + 1)
 	 * 			|		+ getBelongingTileYPosition(pixelBottom))
 	 */
 	public int[][] getTilePositionsIn(int pixelLeft, int pixelBottom,
@@ -192,117 +258,6 @@ public class World {
 		}
 		return result;
 	}
-	
-	/**
-	 * Returns a set of all tiles within the given rectangular region. 
-	 * 
-	 * @param 	pixelLeft
-	 *          The x-coordinate of the left side of the rectangular region.
-	 * @param 	pixelBottom
-	 *          The y-coordinate of the bottom side of the rectangular region.
-	 * @param 	pixelRight
-	 *         	The x-coordinate of the right side of the rectangular region.
-	 * @param 	pixelTop
-	 *          The y-coordinate of the top side of the rectangular region.
-	 * @return	...
-	 * 			| result != null
-	 * @return	...
-	 * 			| let
-	 * 			|	tilePositions = getTilePositionsIn(pixelLeft, pixelBottom, pixelRight, pixelTop)
-	 * 			| in
-	 * 			|	for each index in 0...tilePositions.length-1:
-	 * 			|		tile = getTileAtTilePos(tilePositions[index][0], tilePositions[index][1])
-	 * 			|	result.contains(tile)
-	 */
-	protected HashSet<Tile> getTilesIn(int pixelLeft, int pixelBottom,
-			int pixelRight, int pixelTop){
-		int[][] tilePositions = getTilePositionsIn(pixelLeft, pixelBottom, pixelRight, pixelTop);
-		HashSet<Tile> result = new HashSet<Tile>();
-		for(int index=0;index<tilePositions.length;index++){
-			result.add(getTileAtTilePos(tilePositions[index][0], tilePositions[index][1]));
-		}
-		return result;
-	}
-	
-	/**
-	 * Returns the width of the world.
-	 */
-	public int getWorldWidth() {
-		return worldWidth;
-	}
-
-	/**
-	 * A variable storing the width of the world.
-	 */
-	private final int worldWidth;
-	
-	/**
-	 * Returns the height of the world.
-	 */
-	public int getWorldHeight() {
-		return worldHeight;
-	}
-
-	/**
-	 * A variable storing the height of the world.
-	 */
-	private final int worldHeight;
-	
-	/**
-	 * Returns the width of the visible window.
-	 */
-	public int getVisibleWindowWidth() {
-		return visibleWindowWidth;
-	}
-
-	/**
-	 * Check whether the width of the visible window is valid or not.
-	 * 
-	 * @param 	width
-	 * 			the width to check
-	 * @return	...
-	 * 			| result == (width <= getWorldWidth() && width>2*MIN_BORDER_DISTANCE)
-	 */
-	private boolean isValidVisibleWindowWidth(int width){
-		return (width <= getWorldWidth() && width>
-				2*MIN_BORDER_DISTANCE);
-	}
-
-	/**
-	 * A variable storing the width of the visible window.
-	 */
-	private final int visibleWindowWidth;
-	
-	/**
-	 * Returns the height of the visible window.
-	 */
-	public int getVisibleWindowHeight() {
-		return visibleWindowHeight;
-	}
-	
-	/**
-	 * Check whether the height of the visible window is valid or not.
-	 * 
-	 * @param 	height
-	 * 			the height to check
-	 * @return	...
-	 * 			| result == (height <= getWorldHeight() && height>(2*MIN_BORDER_DISTANCE))
-	 */
-	private boolean isValidVisibleWindowHeight(int height){
-		return (height <= getWorldHeight() && height> 
-			   (2*MIN_BORDER_DISTANCE));
-	}
-	
-	/**
-	 * A variable storing the height of the visible window.
-	 */
-	private final int visibleWindowHeight;
-	
-	/**
-	 * A variable storing the minimum amount of pixels there should be between the Mazub
-	 * and the borders of the visible window, if the Mazub isn't positioned close to the borders of the game world. 
-	 */
-	private final int MIN_BORDER_DISTANCE = 200;
 	
 	/**
 	 * Returns the tile at a given tile position.
@@ -347,112 +302,127 @@ public class World {
 	 * @return	...
 	 * 			| result == (tile != null && worldTiles[tile.getTileXPos()][tile.getTileYPos()] == tile)
 	 */
+	@Model
 	protected boolean hasAsTile(Tile tile){
 		return (tile != null && worldTiles[tile.getTileXPos()][tile.getTileYPos()] == tile);
 	}
 	
 	/**
+	 * Check whether this world has proper tiles.
+	 * 
+	 * @return	...
+	 * 			| result == 
+	 * 			|	for some tile in getAllTiles()
+	 * 			|		tile.getWorld() != this
+	 */
+	boolean hasProperTiles(){
+		for(Tile tile: getAllTiles()){
+			if(tile.getWorld() != this)
+				return false;
+		}
+		return true;
+	}
+	
+	/**
 	 * A matrix storing the tiles of this world. 
+	 * 
+	 * @invar	...
+	 * 			| worldTiles != null
+	 * 			| for each tile in worldTiles:
+	 * 			|	tile.getWorld() == this
 	 */
-	private final Tile[][] worldTiles;
-	
+	private final Tile[][] worldTiles;	
+
 	/**
-	 * Returns a set of all impassable tiles in the game world.
+	 * Returns the width of the world.
 	 */
-	// NORMAAL NIET PUBLIC!!!!!
-	public HashSet<Tile> getImpassableTiles() {
-		return impassableTiles;
-	}
-	
-	// nodig in foreach
-	public HashSet<Tile> getAllTiles(){
-		return getTilesIn(0, 0, getWorldWidth()-1, getWorldHeight()-1);
+	@Basic
+	public int getWorldWidth() {
+		return worldWidth;
 	}
 
 	/**
-	 * Checks whether a tile is passable or not.
+	 * A variable storing the width of the world.
+	 */
+	private final int worldWidth;
+	
+	/**
+	 * Returns the height of the world.
+	 */
+	@Basic
+	public int getWorldHeight() {
+		return worldHeight;
+	}
+
+	/**
+	 * A variable storing the height of the world.
+	 */
+	private final int worldHeight;
+	
+	/**
+	 * Returns the width of the visible window.
+	 */
+	@Basic
+	public int getVisibleWindowWidth() {
+		return visibleWindowWidth;
+	}
+
+	/**
+	 * Check whether the width of the visible window is valid or not.
 	 * 
-	 * @param 	tile
-	 * 			The tile to check
+	 * @param 	width
+	 * 			the width to check
 	 * @return	...
-	 * 			| result == (!tile.getGeoFeature().isPassable())
+	 * 			| result == (width <= worldWith && width>2*MIN_BORDER_DISTANCE)
 	 */
-	private static boolean isValidImpassableTile(Tile tile){
-		return (!tile.getGeoFeature().isPassable());
+	@Model
+	private static boolean isValidVisibleWindowWidth(int width,int worldWith){
+		return (width <= worldWith && width>
+				2*MIN_BORDER_DISTANCE);
+	}
+
+	/**
+	 * A variable storing the width of the visible window.
+	 */
+	private final int visibleWindowWidth;
+	
+	/**
+	 * Returns the height of the visible window.
+	 */
+	@Basic
+	public int getVisibleWindowHeight() {
+		return visibleWindowHeight;
 	}
 	
 	/**
-	 * Add the given tile as an impassable tile for this world.
+	 * Check whether the height of the visible window is valid or not.
 	 * 
-	 * @param 	tile
-	 * 			The tile to add
-	 * @pre		...
-	 * 			| isValidImpassableTile(tile)
-	 * @post	...
-	 * 			| new.getImpassableTiles().contains(tile)
-	 */
-	void addAsImpassableTile(Tile tile){
-		assert(isValidImpassableTile(tile));
-		this.impassableTiles.add(tile);
-	}
-	
-	/**
-	 * Remove the given tile from the list of impassable tiles for this world.
-	 * 
-	 * @param 	tile
-	 * 			The tile to remove.
-	 * @pre		...
-	 * 			| hasAsImpassableTile(tile)
-	 * @post	...
-	 * 			| !new.getImpassableTile().contains(tile)
-	 */
-	void removeAsImpassableTile(Tile tile){
-		assert hasAsImpassableTile(tile);
-		this.impassableTiles.remove(tile);
-	}
-	
-	/**
-	 * Checks whether the given tile is references to this world as an impassable tile.
-	 * 
-	 * @param 	tile
-	 * 			The tile to check.
+	 * @param 	height
+	 * 			the height to check
 	 * @return	...
-	 * 			| getImpassableTiles().contains(tile)
+	 * 			| result == (height <= worldHeight && height>(2*MIN_BORDER_DISTANCE))
 	 */
-	protected boolean hasAsImpassableTile(Tile tile){
-		return getImpassableTiles().contains(tile);
+	@Model
+	private static boolean isValidVisibleWindowHeight(int height,int worldHeight){
+		return (height <= worldHeight && height> 
+			   (2*MIN_BORDER_DISTANCE));
 	}
-
-	/**
-	 * A set collecting references to impassable tiles attached to this world.
-	 * 
-	 * @invar	...
-	 * 			| impassableTiles != null
-	 * @invar	...
-	 * 			| for each tile in impassableTiles:
-	 * 			|	isValidImpassableTile(tile)
-	 * @invar	...
-	 * 			| for each tile in impassableTiles:
-	 * 			|	(tile.getWorld() == this)
-	 */
-	private final HashSet<Tile> impassableTiles = new HashSet<Tile>();
 	
 	/**
-	 * Returns the target tile of this game world. 
-	 * The Mazub should reach this tile in order to win the game.
+	 * A variable storing the height of the visible window.
 	 */
-	public Tile getTargetTile() {
-		return targetTile;
-	}
-
+	private final int visibleWindowHeight;
+	
 	/**
-	 * A variable storing the target tile.
+	 * A variable storing the minimum amount of pixels there should be between the Mazub
+	 * and the borders of the visible window, if the Mazub isn't positioned close to the borders of the game world. 
 	 */
-	private final Tile targetTile;
+	private final static int MIN_BORDER_DISTANCE = 225;
 	
 	/**
 	 * Returns the x-position of the visible window.
 	 */
+	@Basic
 	public int getWindowXPos() {
 		return windowXPos;
 	}
@@ -468,8 +438,10 @@ public class World {
 	 *			|	then new.getWindowXPos() = 0
 	 *			| else if (windowXPos > getMaxWindowXPos())
 	 *			|	then new.getWindowXPos() = getMaxWindowXPos()
-	 *			| else getWindowXPos() = windowXPos
+	 *			| else 
+	 *			|	new.getWindowXPos() = windowXPos
 	 */
+	@Model
 	protected void setWindowXPos(int windowXPos) {
 		if (windowXPos < 0)
 			this.windowXPos = 0;
@@ -487,12 +459,13 @@ public class World {
 	/**
 	 * Returns the y-position of the visible window.
 	 */
+	@Basic
 	public int getWindowYPos() {
 		return windowYPos;
 	}
 
 	/**
-	 * Sets the x-position of the visible window to the given x-position.
+	 * Sets the y-position of the visible window to the given y-position.
 	 * Like all other positions, this position should be within the borders of the game world.
 	 * 
 	 * @param 	windowYPos
@@ -502,8 +475,10 @@ public class World {
 	 *			|	then new.getWindowYPos() = 0
 	 *			| else if (windowYPos > getMaxWindowYPos())
 	 *			|	then new.getWindowYPos() = getMaxWindowYPos()
-	 *			| else getWindowYPos() = windowYPos
+	 *			| else 
+	 *			| 	new.getWindowYPos() = windowYPos
 	 */
+	@Model
 	protected void setWindowYPos(int windowYPos) {
 		if (windowYPos < 0)
 			this.windowYPos = 0;
@@ -521,29 +496,33 @@ public class World {
 	/**
 	 * Returns the maximum x-position of the visible window.
 	 */
+	@Basic@Model
 	protected int getMaxWindowXPos() {
-		return MAX_WINDOW_X_POS;
+		return maxWindowXPos;
 	}
 
 	/**
 	 * A variable storing the maximum x-position of the visible window.
 	 */
-	private final int MAX_WINDOW_X_POS;
+	private final int maxWindowXPos;
 
 	/**
 	 * Returns the maximum y-position of the visible window.
 	 */
+	@Basic@Model
 	protected int getMaxWindowYPos() {
-		return MAX_WINDOW_Y_POS;
+		return maxWindowYPos;
 	}
 
 	/**
 	 * A variable storing the maximum y-position of the visible window.
 	 */
-	private final int MAX_WINDOW_Y_POS;
+	private final int maxWindowYPos;
 	
 	/**
 	 * Returns the one and only Mazub of this game world.
+	 * 
+	 * @note	Although this function is public, it is for internal use only.
 	 */
 	public Mazub getMazub() {
 		return mazub;
@@ -557,6 +536,7 @@ public class World {
 	 * @return	...
 	 * 			| result == ((alien == null) || (!alien.isDead() && canAddGameObjects()))
 	 */
+	@Model
 	private boolean canHaveAsMazub(Mazub alien){
 		return (alien == null) || (!alien.isDead() && canAddGameObjects());
 	}
@@ -594,31 +574,192 @@ public class World {
 	 * A variable storing the Mazub of this game world.
 	 */
 	private Mazub mazub;
-
+	
+	/**
+	 * Returns a set of all game objects attached to this game world.
+	 * 
+	 * @return	...
+	 * 			| result != null
+	 * @return	...
+	 * 			| for each object in GameObject:
+	 * 			|	result.contains(object) == (object.getWorld() == this)
+	 * @note	Although this function is public, it is for internal use only.
+	 */
+	@Basic
+	public HashSet<GameObject> getAllGameObjects(){
+		return allGameObjects;
+	}
+	
+	/**
+	 * Checks whether game objects can still be added.
+	 * 
+	 * @return	...
+	 * 			| result == !isGameStarted()
+	 */
+	@Model
+	boolean canAddGameObjects(){
+		return !isGameStarted();
+	}
+	
+	/**
+	 * Checks whether the given game object is effective.
+	 * 
+	 * @param 	object
+	 * 			The object to check
+	 * @return	...
+	 * 			| result == object != null
+	 */
+	@Model
+	static boolean isValidGameObject(GameObject object){
+		return object != null;
+	}
+	
+	/**
+	 * Check whether this world can have the given object as one of its game objects.
+	 * 
+	 * @param 	object
+	 * 			The game object to check.
+	 * @return	...
+	 * 			| if(!isValidGameObject(object))
+	 * 			|	then result == false
+	 * 			| else if(object instanceof Slime)
+	 * 			|	then result == (!object.isTerminated() && canAddGameObjects()) &&
+	 * 			|		(hasAsSchool(((Slime)object).getSchool()) || canAddSchool())
+	 * 			| else
+	 * 			|	result == (!object.isTerminated() && canAddGameObjects())
+	 */
+	@Model
+	protected boolean canHaveAsGameObject(GameObject object){
+		if(!isValidGameObject(object))
+			return false;
+		else if(object instanceof Slime)
+			return (!object.isTerminated() && canAddGameObjects()) &&
+					((hasAsSchool(((Slime)object).getSchool()) || canAddSchool()));
+		else 
+			return (!object.isTerminated() && canAddGameObjects());
+	}
+	
+	/**
+	 * Check whether the given game object is located in this world.
+	 * 
+	 * @param 	object
+	 * 			The game object to check
+	 * @return	...
+	 * 			| result == allGameObjects.contains(object)
+	 */
+	@Model
+	protected boolean hasAsGameObject(GameObject object){
+		return allGameObjects.contains(object);
+	}
+	
+	/**
+	 * Add the given game object to the collection of game objects in this world.
+	 * 
+	 * @param 	object
+	 * 			The game object to add.
+	 * @post	...
+	 * 			| if(canAddGameObjects() && canHaveAsGameObject(object))
+	 * 			|	then new.getAllGameObjects().contains(object),
+	 * 			|		 (new object).getWorld() == this
+	 * @effect	...
+	 * 			| if(canAddGameObjects() && canHaveAsGameObject(object)) &&
+	 * 			|	(object instanceof Slime)
+	 * 			|	then addAsSchool(((Slime)object).getSchool())
+	 */
+	public void addAsGameObject(GameObject object){
+		if(canAddGameObjects() && canHaveAsGameObject(object)){
+			getAllGameObjects().add(object);
+			object.setWorld(this);
+			if(object instanceof Slime)
+				addAsSchool(((Slime)object).getSchool());
+		}
+	}
+	
+	/**
+	 * Remove the given game object out of the collection of game objects in this world.
+	 * 
+	 * @param 	object
+	 * 			The game object to remove.
+	 * @pre		...
+	 * 			| hasAsGameObject(object)
+	 * @post	...
+	 * 			| !(new.getAllGameObjects().contains(object)),
+	 * 			| (new object).getWorld() == null
+	 * @effect	...
+	 * 			| if(object instanceof Slime)
+	 * 			|	then decrementValueOfSchool(((Slime)object).getSchool())
+	 */
+	public void removeAsGameObject(GameObject object){
+		assert hasAsGameObject(object);
+		getAllGameObjects().remove(object);
+		object.setWorld(null);
+		if(object instanceof Slime)
+			decrementValueOfSchool(((Slime)object).getSchool());			
+	}
+	
+	/**
+	 * Return a set of game object that all satisfy the condition of the given predicate.
+	 * 
+	 * @param 	predicate
+	 * 			The predicate used to filter the set of all game objects in this world.
+	 * @return	...
+	 * 			| for each object in getAllGameObjects():
+	 * 			|	if(predicate.test(object))
+	 * 			|		then result.contains(object)
+	 * @note	Although this function is public, it is for internal use only.
+	 */
 	public Set<? extends GameObject> filterAllGameObjects(Predicate<GameObject> predicate){
 		Stream<GameObject> stream = allGameObjects.stream();
 		Stream<GameObject> filteredStream = stream.filter(t -> predicate.test(t));
 		return filteredStream.collect(Collectors.toSet());
 	}
 	
+	/**
+	 * Return the set of all unterminated game objects in this world.
+	 * 
+	 * @return	...
+	 * 			| result == 
+	 * 			|	(Set<GameObject>)filterAllGameObjects(t-> (!t.isTerminated()))
+	 * @note	Although this function is public, it is for internal use only.
+	 */
+	@SuppressWarnings("unchecked")
+	public Set<GameObject> getAllUnterminatedGameObjects(){
+		return (Set<GameObject>)filterAllGameObjects(t-> (!t.isTerminated())); 
+	}
+	
+	/**
+	 * Return the set of all aliens in this world.
+	 * 
+	 * @return	...
+	 * 			| result == 
+	 * 			|	(Set<Alien>)filterAllGameObjects(t-> t instanceof Alien)
+	 * @note	Although this function is public, it is for internal use only.
+	 */
 	@SuppressWarnings("unchecked")
 	public Set<? extends Alien> getAllAliens() {
 		return (Set<Alien>)filterAllGameObjects(t-> t instanceof Alien);
 	}
-
+	
+	/**
+	 * Return the set of all buzams in this world.
+	 * 
+	 * @return	...
+	 * 			| result == 
+	 * 			|	(Set<Buzam>)filterAllGameObjects(t-> (t instanceof Buzam))
+	 * @note	Although this function is public, it is for internal use only.
+	 */
 	@SuppressWarnings("unchecked")
 	public Set<Buzam> getAllBuzams() {
 		return (Set<Buzam>)filterAllGameObjects(t-> (t instanceof Buzam));
 	}
 	
 	/**
-	 * Returns a set of all plants in this game world.
+	 * Return the set of all plants in this world.
 	 * 
 	 * @return	...
-	 * 			| result != null
-	 * @return	...
-	 * 			| for each plant in Plant:
-	 * 			|	result.contains(plant) == (plant.getWorld() == this)
+	 * 			| result == 
+	 * 			|	(Set<Plant>)filterAllGameObjects(t-> t instanceof Plant)	
+	 * @note	Although this function is public, it is for internal use only.
 	 */
 	@SuppressWarnings("unchecked")
 	public Set<Plant> getAllPlants() {
@@ -626,13 +767,12 @@ public class World {
 	}
 	
 	/**
-	 * Returns a set of all sharks in this game world.
+	 * Return the set of all sharks in this world.
 	 * 
 	 * @return	...
-	 * 			| result != null
-	 * @return	...
-	 * 			| for each shark in Shark:
-	 * 			|	result.contains(shark) == (shark.getWorld() == this)
+	 * 			| result == 
+	 * 			|	(Set<Shark>)filterAllGameObjects(t-> (t instanceof Shark))
+	 * @note	Although this function is public, it is for internal use only.
 	 */
 	@SuppressWarnings("unchecked")
 	public Set<Shark> getAllSharks(){
@@ -640,62 +780,118 @@ public class World {
 	}
 		
 	/**
-	 * Returns a set of all slimes in this game world.
+	 * Return the set of all slimes in this world.
 	 * 
 	 * @return	...
-	 * 			| result != null
-	 * @return	...
-	 * 			| for each slime in Slime:
-	 * 			|	result.contains(slime) == (slime.getWorld() == this)
+	 * 			| result == 
+	 * 			|	(Set<Slime>)filterAllGameObjects(t-> (t instanceof Slime))
+	 * @note	Although this function is public, it is for internal use only.
 	 */
 	@SuppressWarnings("unchecked")
 	public Set<Slime> getAllSlimes() {
 		return (Set<Slime>)filterAllGameObjects(t-> (t instanceof Slime));
 	}
-
+	
+	/**
+	 * Return the set of all characters in this world.
+	 * 
+	 * @return	...
+	 * 			| result == 
+	 * 			|	(Set<Character>)filterAllGameObjects(t-> (t instanceof Character))
+	 * @note	Although this function is public, it is for internal use only.
+	 */
 	@SuppressWarnings("unchecked")
 	public Set<Character> getAllCharacters() {
 		return (Set<Character>)filterAllGameObjects(t-> (t instanceof Character));
-	}	
+	}
 	
 	/**
-	 * Returns a set of all slimes in this game world.
+	 * Checks whether this game world has proper game objects or not.
+	 * 
+	 * @return	...
+	 * 			| if(getMazub() == null && getAllGameObjects.size() > 100)
+	 *			|	then result == false
+	 *			...
+	 *			| else if(getAllGameObjects.size()>101)
+	 *			|	then result == false
+	 *			...
+	 *			| else
+	 *			|	result == 
+	 *			|		(for some object in getAllGameObjects():
+	 *			|			!this.canHaveAsGameObject(object)))
+	 */
+	@Model
+	private boolean hasProperGameObjects(){
+		HashSet<GameObject> allGameObjects = getAllGameObjects();
+		if(getMazub() == null && allGameObjects.size() > 100)
+			return false;
+		else if(allGameObjects.size()>101)
+			return false;
+		else{
+			for(GameObject gameObject: allGameObjects){
+				if(!this.canHaveAsGameObject(gameObject))
+					return false;
+			}
+		}
+		return true;		
+	}
+	
+	/**
+	 * A variable storing the set of all game objects that are located inside this world.
+	 * 
+	 * @invar	...
+	 * 			| allGameObjects != null
+	 * @invar	...
+	 * 			| for each object in allGameObjects:
+	 * 			|	this.canHaveAsGameObject(object)
+	 */
+	private final HashSet<GameObject> allGameObjects = new HashSet<GameObject>();
+	
+	/**
+	 * Return the map of all schools that have or had a slime in this world, combined
+	 * with the amount of slimes that school currently has in this world.
+	 */
+	@Model
+	private Map<School,Integer> getAllSchoolsWithValues(){
+		return allSchools;
+	}
+	/**
+	 * Returns a set of all schools in this game world.
 	 * 
 	 * @return	...
 	 * 			| result != null
 	 * @return	...
 	 * 			| for each slime in Slime:
-	 * 			|	result.contains(slime) == (slime.getWorld() == this)
+	 * 			|	result.contains(slime.getSchool()) == (slime.getWorld() == this)
+	 * @note	Although this function is public, it is for internal use only.
 	 */
 	public Set<School> getAllSchools() {
 		return allSchools.keySet();
 	}
 		
 	/**
-	 * Check whether the given slime is attached to this game world.
+	 * Check whether this world has or had a slime with the given school.
 	 * 
-	 * @param 	slime
-	 * 			The slime to check
+	 * @param 	school
+	 * 			The school to check.
 	 * @return	...
-	 * 			| result.contains(slime)
+	 * 			| result == getAllSchoolsWithValues().containsKey(school)
 	 */
 	protected boolean hasAsSchool(School school){
 		return allSchools.containsKey(school);
 	}
 	
 	/**
-	 * Add the given slime to the set of slimes.
+	 * Add the school to the map of schools.
 	 * 
-	 * @param 	slime
-	 * 			The slime to be added
-	 * @pre		...
-	 * 			| isValidGameObject(slime)
+	 * @param 	school
+	 * 			The school to be added
 	 * @post	...
-	 * 			| if(canAddGameObjects())
-	 * 			|	then new.hasAsSlime(slime)
-	 * @post	...
-	 * 			| if(canAddGameObjects())
-	 * 			|	then (new slime).getWorld() == this
+	 * 			| if(!hasAsSchool(school))
+	 * 			|	then new.getAllSchools().contains(school)
+	 * @effect	...
+	 * 			| if(!hasAsSchool(school))
+	 * 			|	then incrementValueOfSchool(school)			
 	 */
 	@Raw
 	public void addAsSchool(School school){
@@ -743,6 +939,15 @@ public class World {
 			removeAsSchool(school);
 
 	}
+	
+	@Model
+	boolean hasProperSchools(){
+		for(School school: allSchools.keySet()){
+			if(!school.hasProperWorld())
+				return false;
+		}
+		return true;
+	}
 
 	/**
 	 * Set collecting references to all slimes attached to this world.
@@ -758,112 +963,6 @@ public class World {
 	 */
 	private final HashMap<School,Integer> allSchools = new HashMap<School,Integer>();
 
-	/**
-	 * Checks whether game objects can still be added.
-	 * 
-	 * @return	...
-	 * 			| !isGameStarted()
-	 */
-	boolean canAddGameObjects(){
-		return !isGameStarted();
-	}
-	
-	/**
-	 * Checks whether the given game object is effective.
-	 * 
-	 * @param 	object
-	 * 			The object to check
-	 * @return	...
-	 * 			| object != null
-	 */
-	boolean isValidGameObject(GameObject object){
-		return object != null;
-	}
-	
-	/**
-	 * Returns all game objects attached to this game world.
-	 * 
-	 * @return	...
-	 * 			| result != null
-	 * @return	...
-	 * 			| for each object in GameObject:
-	 * 			|	result.contains(object) == (object.getWorld() == this)
-	 */
-	// zou niet publiek mogen zijn!!!!!!
-	public HashSet<GameObject> getAllGameObjects(){
-		return allGameObjects;
-	}
-
-	@SuppressWarnings("unchecked")
-	public Set<GameObject> getAllUnterminatedGameObjects(){
-		return (Set<GameObject>)filterAllGameObjects(t-> (!t.isTerminated())); 
-	}
-	
-	protected boolean canHaveAsGameObject(GameObject object){
-		if(!isValidGameObject(object))
-			return false;
-		if(object instanceof Slime)
-			return (hasAsSchool(((Slime)object).getSchool()) || canAddSchool());
-		else if(object instanceof Mazub)
-			return (!((Mazub)object).isDead() && canAddGameObjects());
-		else if(object instanceof Buzam)
-			return (!((Buzam)object).isDead() && canAddGameObjects());
-		return true;
-	}
-	
-	protected boolean hasAsGameObject(GameObject object){
-		return allGameObjects.contains(object);
-	}
-	
-	public void addAsGameObject(GameObject object){
-		if(canAddGameObjects() && canHaveAsGameObject(object)){
-			getAllGameObjects().add(object);
-			object.setWorld(this);
-			if(object instanceof Slime)
-				addAsSchool(((Slime)object).getSchool());
-		}
-	}
-	
-	public void removeAsGameObject(GameObject object){
-		assert hasAsGameObject(object);
-		getAllGameObjects().remove(object);
-		object.setWorld(null);
-		if(object instanceof Slime)
-			decrementValueOfSchool(((Slime)object).getSchool());			
-	}
-	
-	private final HashSet<GameObject> allGameObjects = new HashSet<GameObject>();
-	
-	/**
-	 * Checks whether this game world has proper game objects or not.
-	 * 
-	 * @return	...
-	 * 			| if(getMazub() == null && getAllGameObjects.size() > 100)
-	 *			|	then result == false
-	 *			...
-	 *			| else if(getAllGameObjects.size()>101)
-	 *			|	then result == false
-	 *			...
-	 *			| else
-	 *			|	result == 
-	 *			|		(for some object in getAllGameObjects():
-	 *			|			gameObject.getWorld() != this))
-	 */
-	@SuppressWarnings("unused")
-	private boolean hasProperGameObjects(){
-		HashSet<GameObject> allGameObjects = getAllGameObjects();
-		if(getMazub() == null && allGameObjects.size() > 100)
-			return false;
-		else if(allGameObjects.size()>101)
-			return false;
-		else{
-			for(GameObject gameObject: allGameObjects){
-				if(gameObject.getWorld() != this)
-					return false;
-			}
-		}
-		return true;		
-	}
 		
 	/**
 	 * Returns whether the player won the game or not.

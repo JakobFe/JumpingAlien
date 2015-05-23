@@ -20,8 +20,12 @@ public class Facade extends jumpingalien.part1.facade.Facade implements IFacadeP
 	public World createWorld(int tileSize, int nbTilesX, int nbTilesY,
 			int visibleWindowWidth, int visibleWindowHeight, int targetTileX,
 			int targetTileY) {
-		return new World(tileSize,nbTilesX,nbTilesY,visibleWindowWidth,
-						 visibleWindowHeight,targetTileX,targetTileY);
+		try {
+			return new World(tileSize,nbTilesX,nbTilesY,visibleWindowWidth,
+							 visibleWindowHeight,targetTileX,targetTileY);
+		} catch (IllegalArgumentException e) {
+			throw new ModelException("Invalid window size!");
+		}
 	}
 
 	@Override
