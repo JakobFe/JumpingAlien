@@ -119,7 +119,7 @@ public class Foreach extends SingleStatement {
 			getSortingExpression().setProgram(program);
 	}
 	
-	public List<ObjectOfWorld> getVariables() {
+	private List<ObjectOfWorld> getVariables() {
 		return variables;
 	}
 	

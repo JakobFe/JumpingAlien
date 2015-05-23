@@ -5,9 +5,9 @@ Vincent:
 - School
 - GameObject
 - Direction
-- JumpInterface
-- Testen schrijven: Foreach
-- Klassediagram: Statement
+- JumpInterface	
+- Testen schrijven: Foreach		OK
+- Klassediagram: Statement		Alleen nog Break en Skip toevoegen.
 
 Jakob:
 - Mazub
@@ -19,3 +19,9 @@ Jakob:
 - Terrain
 - Testen schrijven: While
 - Klassediagram: Expression
+
+Algemeen:
+- Klassediagram maken met Program,Statement en Expression
+- Formulier invullen "OverviewConcepts"
+- Nagaan dat alle tests werken (met -ea)
+- Zien dat het spel nog werkt
