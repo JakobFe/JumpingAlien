@@ -53,9 +53,15 @@ public class World {
 	 * @post	...
 	 * 			| new.getWorldHeight() = tileSize * nbTilesY
 	 * @post	...
-	 *			| new.getVisibleWindowWidth() = visibleWindowWidth
+	 *			| if(canHaveAsVisibleWindowWidth(visibleWindowWidth,tileSize*nbTilesX)
+	 *			|	then new.getVisibleWindowWidth() = visibleWindowWidth
+	 *			| else
+	 *			|	new.getVisibleWindowWidth() = tileSize*nbTilesX
 	 * @post	...
-	 *			| new.getVisibleWindowHeight() = visibleWindowHeight
+	 *			| if(canHaveAsVisibleWindowHeight(visibleWindowHeight,tileSize*nbTilesY)
+	 *			|	then new.getVisibleWindowHeight() = visibleWindowHeight
+	 *			| else
+	 *			|	new.getVisibleWindowHeight() = tileSize*nbTilesY
 	 * @post	...
 	 * 			| new.getMaxWindowXPos() = getWorldWidth()-getVisibleWindowWidth()
 	 * @post	...
@@ -85,11 +91,17 @@ public class World {
 	public World(int tileSize, int nbTilesX, int nbTilesY,
 			int visibleWindowWidth, int visibleWindowHeight,
 			int targetTileX,int targetTileY) throws IllegalArgumentException{
-		if (!isValidVisibleWindowWidth(visibleWindowWidth,nbTilesX*tileSize) ||
-			!isValidVisibleWindowHeight(visibleWindowHeight,nbTilesY*tileSize))
+		if (!isValidVisibleWindowWidth(visibleWindowWidth) ||
+			!isValidVisibleWindowHeight(visibleWindowHeight))
 			throw new IllegalArgumentException("Illegal window size!");
-		this.visibleWindowWidth = visibleWindowWidth;
-		this.visibleWindowHeight = visibleWindowHeight;
+		if(canHaveAsVisibleWindowWidth(visibleWindowWidth, tileSize*nbTilesX))
+			this.visibleWindowWidth = visibleWindowWidth;
+		else
+			this.visibleWindowWidth = tileSize*nbTilesX;
+		if(canHaveAsVisibleWindowHeight(visibleWindowHeight, tileSize*nbTilesY))
+			this.visibleWindowHeight = visibleWindowHeight;
+		else
+			this.visibleWindowHeight = tileSize*nbTilesY;
 		this.tileSize = tileSize;
 		this.worldWidth = tileSize * nbTilesX;
 		this.worldHeight = tileSize * nbTilesY;
@@ -374,12 +386,26 @@ public class World {
 	 * @param 	width
 	 * 			the width to check
 	 * @return	...
-	 * 			| result == (width <= worldWith && width>2*MIN_BORDER_DISTANCE)
+	 * 			| result == (width>2*MIN_BORDER_DISTANCE)
 	 */
 	@Model
-	private static boolean isValidVisibleWindowWidth(int width,int worldWith){
-		return (width <= worldWith && width>
-				2*MIN_BORDER_DISTANCE);
+	private static boolean isValidVisibleWindowWidth(int width){
+		return (width> 2*MIN_BORDER_DISTANCE);
+	}
+	
+	/**
+	 * Check whether a world with the given width can have a window with given width.
+	 * 
+	 * @param 	width
+	 * 			The width of the window to check.
+	 * @param 	worldWith
+	 * 			The width of the world to check against.
+	 * @return	...
+	 * 			| result ==  isValidVisibleWindowWidth(width) && width<=worldWith
+	 */
+	@Model
+	private static boolean canHaveAsVisibleWindowWidth(int width,int worldWith){
+		return isValidVisibleWindowWidth(width) && width<=worldWith;
 	}
 
 	/**
@@ -401,12 +427,26 @@ public class World {
 	 * @param 	height
 	 * 			the height to check
 	 * @return	...
-	 * 			| result == (height <= worldHeight && height>(2*MIN_BORDER_DISTANCE))
+	 * 			| result == (height >2*MIN_BORDER_DISTANCE)
 	 */
 	@Model
-	private static boolean isValidVisibleWindowHeight(int height,int worldHeight){
-		return (height <= worldHeight && height> 
-			   (2*MIN_BORDER_DISTANCE));
+	private static boolean isValidVisibleWindowHeight(int height){
+		return (height> 2*MIN_BORDER_DISTANCE);
+	}
+	
+	/**
+	 * Check whether a world with the given height can have a window with given height.
+	 * 
+	 * @param 	height
+	 * 			The height of the window to check.
+	 * @param 	worldHeight
+	 * 			The height of the world to check against.
+	 * @return	...
+	 * 			| result ==  isValidVisibleWindowHeight(height) && height<=worldHeight
+	 */
+	@Model
+	private static boolean canHaveAsVisibleWindowHeight(int height,int worldHeight){
+		return isValidVisibleWindowWidth(height) && height<=worldHeight;
 	}
 	
 	/**
