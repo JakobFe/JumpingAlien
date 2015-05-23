@@ -17,8 +17,8 @@ Jakob:
 - Timer
 - Tile
 - Terrain
-- Testen schrijven: While
-- Klassediagram: Expression
+- Testen schrijven: While		OK
+- Klassediagram: Expression		OK
 
 Algemeen:
 - Klassediagram maken met Program,Statement en Expression
