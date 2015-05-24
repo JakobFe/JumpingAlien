@@ -1,5 +1,5 @@
 Vincent:
-- World							OK
+- World					OK
 - Shark
 - Slime
 - School
@@ -10,9 +10,9 @@ Vincent:
 - Klassediagram: Statement		OK
 
 Jakob:
-- Mazub
+- Mazub					OK
 - Buzam
-- Alien
+- Alien					OK
 - Character
 - Timer
 - Tile

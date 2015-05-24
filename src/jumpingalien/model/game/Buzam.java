@@ -5,33 +5,104 @@ import jumpingalien.util.Sprite;
 
 public class Buzam extends Alien{
 
+	/**
+	 * Initialize this new Buzam with given position and with the given sprites.
+	 * 
+	 * @param 	position
+	 * 		  	Initial position for this Buzam.
+	 * @param	sprites
+	 * 			An array containing the different sprites for this Buzam.
+	 * @pre		The sprites must be an array with a valid number of sprites.
+	 * 			| isValidArrayOfSprites(sprites)
+	 * @effect	This Buzam is initialized as an Alien with given position, given sprites
+	 * 			and with no program.
+	 * 			| this(position,sprites,null)
+	 * @effect	The hit points of this Buzam are set to 500.
+	 * 			| new.getHitPoint() == 500;
+	 */
 	public Buzam(Position position, Sprite[] sprites) 
 			throws IllegalArgumentException{
 		super(position,sprites,null);
 		setHitPoints(500);
 	}
 
+	/**
+	 * Initialize this new Buzam with given position and with the given sprites.
+	 * 
+	 * @param 	position
+	 * 		  	Initial position for this Buzam.
+	 * @param	sprites
+	 * 			An array containing the different sprites for this Buzam.
+	 * @pre		The sprites must be an array with a valid number of sprites.
+	 * 			| isValidArrayOfSprites(sprites)
+	 * @effect	This Buzam is initialized as an Alien with given position, given sprites
+	 * 			and with the given program.
+	 * 			| this(position,sprites,program)
+	 * @effect	The hit points of this Buzam are set to 500.
+	 * 			| new.getHitPoint() == 500;
+	 */
 	public Buzam(Position position, Sprite[] sprites, Program program) 
 			throws IllegalArgumentException{
 		super(position,sprites,program);
 		setHitPoints(500);
 	}
 	
+	/**
+	 * Method to end the jumping movement of the Buzam.
+	 * 
+	 * @effect	The method for ending the jumping movement of Alien is invoked.
+	 * 			| super.endJump() 
+	 */
 	@Override
 	public void endJump(){
 		try{super.endJump();}
 		catch(IllegalStateException e){}
 	}
 	
+	/**
+	 * Check whether this game object can be added to the given world.
+	 * 
+	 * @return 	True if this function in GameObject returns true and if 
+	 * 			the world is null or this buzam is a Buzam of the world.
+	 * 			| result == (super.canBeAddedTo(world) && (world == null || world.hasAsGameObject(this)))
+	 */
 	public boolean canBeAddedTo(World world){
 		return super.canBeAddedTo(world) && (world == null || world.hasAsGameObject(this));
 	}
-	
+		
+	/**
+	 * Check whether this game object has a proper world.
+	 * 
+	 * @return	True if the world is not effective or if the world has 
+	 * 			this Buzam as its Buzam.
+	 * 			| result == (getWorld() == null || getWorld().getMazub() == this)
+	 */
 	@Override
 	protected boolean hasProperWorld() {
 		return (getWorld() == null || getWorld().hasAsGameObject(this));
 	}
 	
+	/**
+	 * A method to update the hit points of this Buzam.
+	 * A game object can damage other objects and can be damaged by other game objects.
+	 * 
+	 * @effect	...
+	 * 			| if (!isDead() && !isOverlappingWith(Terrain.WATER) && !isOverlappingWith(Terrain.MAGMA))
+	 * 			|	then getHpTimer().reset()
+	 * @effect	...
+	 * 			| if(!isDead() && if(isOverlappingWith(Terrain.WATER)))
+	 * 			|	then updateHitPointsTerrain(Terrain.WATER)
+	 * @effect	...
+	 * 			| if(!isDead() && if(isOverlappingWith(Terrain.MAGMA)))
+	 * 			|	then updateHitPointsTerrain(Terrain.MAGMA)
+	 * @effect 	...
+	 * 			| if(!isDead() && if(canConsumePlant()))
+	 * 			| 	then 
+	 * @effect	If this Mazub is dead and the time sum of the hit points timer
+	 * 			is greater than 0.6 seconds, this Buzam is terminated.
+	 * 			| if(isDead() && getHpTimer().getTimeSum()>0.6)
+	 * 			|	 terminate()
+	 */
 	@Override
 	protected void updateHitPoints(){
 		Mazub alien = getWorld().getMazub();

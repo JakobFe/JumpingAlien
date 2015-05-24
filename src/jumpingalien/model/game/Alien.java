@@ -588,7 +588,7 @@ public abstract class Alien extends Character implements JumpInterface{
 	 * Returns all game objects that can block the movement of this game object.
 	 * 
 	 * @return	The resulting hash set contains all game objects belonging to the 
-	 * 			world of this Mazub.
+	 * 			world of this Alien.
 	 * 			| result.contains(getWorld().getAllGameObjects())
 	 */
 	@Override
@@ -600,7 +600,9 @@ public abstract class Alien extends Character implements JumpInterface{
 	 * Method to update the position and velocity of the character based on the current position,
 	 * velocity and a given time duration in seconds.
 	 * 
-	 * @effect	The last direction of this Mazub is updated.
+	 * @effect	Advance the time of Character with the given time duration.
+	 * 			| super.advanceTime(timeDuration)
+	 * @effect	The last direction of this Alien is updated.
 	 * 			| updateLastDirection()
 	 */
 	@Override
@@ -614,8 +616,10 @@ public abstract class Alien extends Character implements JumpInterface{
 	 * A method to update the movements of this game object.
 	 * As an effect of this method, certain movements may be started
 	 * 
-	 * @post	If this Mazub is ducked and can come out of ducking state,
-	 * 			the Mazub ends ducking.
+	 * @effect	Update the movement of Character.
+	 * 			| super.updateMovement()
+	 * @post	If this Alien is ducked and can come out of ducking state,
+	 * 			the Alien ends ducking.
 	 * 			| if (isEnableStandUp())
 	 * 			|	then endDuck()
 	 */
@@ -631,11 +635,11 @@ public abstract class Alien extends Character implements JumpInterface{
 	 * velocity and a given time duration in seconds.
 	 * 
 	 * @post	Calculate the new position as a function of the current attributes
-	 * 			of Mazub. If there is no world attached to this Mazub, this position
-	 * 			will be the new position for this Mazub.
-	 * 			Else, some checkers inspect whether this Mazub can have the newly 
+	 * 			of Alien. If there is no world attached to this Alien, this position
+	 * 			will be the new position for this Alien.
+	 * 			Else, some checkers inspect whether this Alien can have the newly 
 	 * 			calculated position as its position. They return the corrected position.
-	 * 			This corrected position is than set as the new position for this Mazub.
+	 * 			This corrected position is than set as the new position for this Alien.
 	 * 			| let
 	 * 			|	oldPos = getPosition(),
 	 * 			| 	if(getWorld() != null)
@@ -672,7 +676,7 @@ public abstract class Alien extends Character implements JumpInterface{
 	}
 
 	/**
-	 * Return the last registered horizontal direction of the Mazub.
+	 * Return the last registered horizontal direction of the Alien.
 	 */
 	@Basic @Model
 	private Direction getLastDirection() {
@@ -693,9 +697,9 @@ public abstract class Alien extends Character implements JumpInterface{
 	}
 
 	/**
-	 * A method to update the last registered horizontal direction of the Mazub.
+	 * A method to update the last registered horizontal direction of the Alien.
 	 * 
-	 * @post	If Mazub is moving to the left or the right, the last registered direction 
+	 * @post	If Alien is moving to the left or the right, the last registered direction 
 	 * 			will be updated.
 	 * 			| if (getHorDirection() != Direction.NULL)
 	 *			|	new.getHorDirection() = getHorDirection()
@@ -707,7 +711,7 @@ public abstract class Alien extends Character implements JumpInterface{
 	}
 	
 	/**
-	 * A variable storing the last horizontal direction of movement of this Mazub
+	 * A variable storing the last horizontal direction of movement of this Alien
 	 * within the last second of in-game-time.
 	 */
 	private Direction lastDirection = Direction.NULL;
@@ -727,7 +731,7 @@ public abstract class Alien extends Character implements JumpInterface{
 	}
 	
 	/**
-	 * Check whether the Mazub is moving in the given direction.
+	 * Check whether the Alien is moving in the given direction.
 	 * 
 	 * @param 	direction
 	 * 			The direction to check.
@@ -745,12 +749,13 @@ public abstract class Alien extends Character implements JumpInterface{
 	}
 	
 	/**
-	 * A method to check whether the Mazub has moved left or right 
+	 * A method to check whether the Alien has moved left or right 
 	 * within the last second of in-game-time.
 	 * 
 	 * @return	True if and only if the last registered horizontal direction
-	 * 			of this Mazub is not zero and timeSum has not reached 1 second yet.
-	 * 			| result == ((getLastDirection() != 0) && (getSpritesTimer().getTimeSum() < 1))
+	 * 			of this Alien is not zero and timeSum has not reached 1 second yet.
+	 * 			| result == ((getLastDirection() != Direction.NULL)
+	 * 			|				 && (getSpritesTimer().getTimeSum() < 1.0))
 	 * 
 	 */
 	private boolean wasMoving(){
@@ -759,11 +764,11 @@ public abstract class Alien extends Character implements JumpInterface{
 	}
 	
 	/**
-	 * Checks whether the Mazub has moved to the given direction within the last second of in-game-time.
+	 * Checks whether the Alien has moved to the given direction within the last second of in-game-time.
 	 * 
 	 * @param	direction
 	 * 			The direction to check for.
-	 * @return	True if and only if this Mazub was moving within the last second
+	 * @return	True if and only if this Alien was moving within the last second
 	 * 			of in-game-time and its last direction was equal to the given direction.
 	 * 			| result == (wasMoving() && (getLastDirection() == direction))
 	 */
@@ -772,7 +777,7 @@ public abstract class Alien extends Character implements JumpInterface{
 	}
 	
 	/**
-	 * A method to check whether this Mazub is jumping. 
+	 * A method to check whether this Alien is jumping. 
 	 * 
 	 * @return	True if and only if the current vertical direction
 	 * 			differs from null.
@@ -785,29 +790,29 @@ public abstract class Alien extends Character implements JumpInterface{
 	/**
 	 * A method to update the index in the array of sprites.
 	 * 
-	 * @post	If this Mazub is not moving horizontally, has not moved
+	 * @post	If this Alien is not moving horizontally, has not moved
 	 * 			horizontally within the last second of in-game-time and
 	 * 			is not ducking, the index is set to 0.
-	 * @post	If this Mazub is not moving horizontally, has not moved
+	 * @post	If this Alien is not moving horizontally, has not moved
 	 * 			horizontally within the last second of in-game-time and
 	 * 			is ducking, the index is set to 1.
-	 * @post	If this Mazub is not moving horizontally, has moved
+	 * @post	If this Alien is not moving horizontally, has moved
 	 * 			right within the last second of in-game-time and
 	 * 			is not ducking, the index is set to 2.
-	 * @post	If this Mazub is not moving horizontally, has moved
+	 * @post	If this Alien is not moving horizontally, has moved
 	 * 			left within the last second of in-game-time and
 	 * 			is not ducking, the index is set to 3.
-	 * @post	If this Mazub is moving to the right and is jumping
+	 * @post	If this Alien is moving to the right and is jumping
 	 * 			and is not ducking, the index is set to 4.
-	 * @post	If this Mazub is moving to the left and is jumping
+	 * @post	If this Alien is moving to the left and is jumping
 	 * 			and is not ducking, the index is set to 5.
-	 * @post	If this Mazub is ducking and moving to the right or was moving
+	 * @post	If this Alien is ducking and moving to the right or was moving
 	 * 			to the right within the last second of in-game-time, the index is set to 6.
-	 * @post	If this Mazub is ducking and moving to the left or was moving
+	 * @post	If this Alien is ducking and moving to the left or was moving
 	 * 			to the left within the last second of in-game-time, the index is set to 7.
-	 * @effect	If this Mazub is neither ducking nor jumping and moving to the right,
+	 * @effect	If this Alien is neither ducking nor jumping and moving to the right,
 	 * 			the index is set to the next walking animation to the right. 
-	 * @effect	If this Mazub is neither ducking nor jumping and moving to the left,
+	 * @effect	If this Alien is neither ducking nor jumping and moving to the left,
 	 * 			the index is set to the next walking animation to the left.
 	 */
 	@Override
@@ -900,7 +905,8 @@ public abstract class Alien extends Character implements JumpInterface{
 	
 	
 	/**
-	 * A method to check whether the given array of sprites is valid. 
+	 * A method to check whether the given array of sprites is valid.
+	 * 
 	 * @param	sprites
 	 * 			The sprites to check.
 	 * @return	True if and only if the length of the array is greater than
@@ -914,14 +920,14 @@ public abstract class Alien extends Character implements JumpInterface{
 	
 			
 	/**
-	 * Return the number of sprites used for the animation of walking of this Mazub.
+	 * Return the number of sprites used for the animation of walking of this Alien.
 	 */
 	private int getNumberOfWalkingSprites() {
 		return numberOfWalkingSprites;
 	}
 	
 	/**
-	 * A variable storing the number of sprites used for animation of walking of the Mazub.
+	 * A variable storing the number of sprites used for animation of walking of the Alien.
 	 */
 	private final int numberOfWalkingSprites;
 }
