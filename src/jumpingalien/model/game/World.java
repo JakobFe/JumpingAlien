@@ -82,18 +82,11 @@ public class World {
 	 * 			| in
 	 * 			|	new.getTileAtTilePos(col,row).equals(tile),
 	 * 			|	new.getTargetTile().equals(targetTile)
-	 * @throws	IllegalArgumentException("Illegal window size!")
-	 * 			...
-	 * 			| !isValidVisibleWindowWidth(visibleWindowWidth) ||
-	 * 			| !isValidVisibleWindowHeight(visibleWindowHeight)
 	 */
 	@Raw
 	public World(int tileSize, int nbTilesX, int nbTilesY,
 			int visibleWindowWidth, int visibleWindowHeight,
-			int targetTileX,int targetTileY) throws IllegalArgumentException{
-		if (!isValidVisibleWindowWidth(visibleWindowWidth) ||
-			!isValidVisibleWindowHeight(visibleWindowHeight))
-			throw new IllegalArgumentException("Illegal window size!");
+			int targetTileX,int targetTileY){
 		if(canHaveAsVisibleWindowWidth(visibleWindowWidth, tileSize*nbTilesX))
 			this.visibleWindowWidth = visibleWindowWidth;
 		else

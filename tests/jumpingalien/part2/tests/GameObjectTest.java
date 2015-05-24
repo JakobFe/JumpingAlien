@@ -3,15 +3,7 @@ package jumpingalien.part2.tests;
 import static jumpingalien.tests.util.TestUtils.intArray;
 import static jumpingalien.tests.util.TestUtils.spriteArrayForSize;
 import static org.junit.Assert.*;
-import jumpingalien.model.game.Direction;
-import jumpingalien.model.game.GameObject;
-import jumpingalien.model.game.Mazub;
-import jumpingalien.model.game.Position;
-import jumpingalien.model.game.School;
-import jumpingalien.model.game.Shark;
-import jumpingalien.model.game.Slime;
-import jumpingalien.model.game.Terrain;
-import jumpingalien.model.game.World;
+import jumpingalien.model.game.*;
 import jumpingalien.util.Sprite;
 
 import org.junit.Before;
@@ -34,8 +26,6 @@ public class GameObjectTest {
 		mazubPos_425_201 = new Mazub(new Position(425,201),1,3,sprites);
 		slimeSprites = spriteArrayForSize(10,5,2);
 		slimePos_100_50 = new Slime(new Position(100,50),slimeSprites,new School());
-		slimePos_100_105 = new Slime(new Position(100,105),slimeSprites,new School());
-		sharkPos_100_95 = new Shark(new Position(100,95),slimeSprites);
 		
 		// X........X
 		// X...XX..MX
@@ -73,8 +63,6 @@ public class GameObjectTest {
 	private Mazub mazubPos_400_50;
 	private Mazub mazubPos_425_201;
 	private Slime slimePos_100_50;
-	private Slime slimePos_100_105;
-	private Shark sharkPos_100_95;
 	private World testWorld;
 
 	
@@ -101,20 +89,6 @@ public class GameObjectTest {
 	}
 	
 	@Test
-	public void dieEnemyCorrect(){
-		testWorld.setMazub(mazubPos_225_50);
-		testWorld.addAsGameObject(slimePos_100_50);
-		mazubPos_225_50.startMove(Direction.LEFT);
-		
-		for (int i = 0; i < 200; i++) {
-			mazubPos_225_50.advanceTime(0.2 / 9);
-		}
-		slimePos_100_50.advanceTime(0.1);
-		System.out.println(mazubPos_225_50.getHitPoints());
-		assertTrue(mazubPos_225_50.isDead());
-	}
-	
-	@Test
 	public void dieTerrainCorrect(){
 		testWorld.setMazub(mazubPos_425_201);
 		
@@ -135,14 +109,4 @@ public class GameObjectTest {
 		
 		assertArrayEquals(intArray(441,49),mazubPos_400_50.getPosition().toIntArray());
 	}
-	
-	@Test
-	public void collideDownWithObjectCorrect(){
-		testWorld.addAsGameObject(slimePos_100_105);
-		testWorld.addAsGameObject(sharkPos_100_95);
-		
-		slimePos_100_105.advanceTime(0.19);
-		assertTrue(slimePos_100_105.getPosition().getDisplayedYPosition() == 99);
-	}
-
 }
