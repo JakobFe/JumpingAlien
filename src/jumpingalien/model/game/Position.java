@@ -37,11 +37,12 @@ public class Position {
 	 * 			| setWorld(world)
 	 * @throws 	IllegalXPositionException
 	 * 			...
-	 * 			| isValidXPosition(x,world) 
+	 * 			| !isValidXPosition(x,world) 
 	 * @throws 	IllegalYPositionException
 	 * 			...
-	 * 			| isValidYPosition(y,world)
+	 * 			| !isValidYPosition(y,world)
 	 */
+	@Raw
 	public Position(double x, double y,World world) throws 
 	IllegalXPositionException,IllegalYPositionException{
 		setWorld(world);
@@ -51,6 +52,7 @@ public class Position {
 	
 	/**
 	 * Initialize this position with a given x and y position and a no world.
+	 * 
 	 * @param 	x
 	 * 			The x position for this new position.
 	 * @param 	y
@@ -58,8 +60,8 @@ public class Position {
 	 * @effect	...
 	 * 			| this(x,y,null)
 	 */
-	public Position(double x, double y) throws
-	IllegalXPositionException,IllegalYPositionException{
+	@Raw
+	public Position(double x, double y){
 		this(x,y,null);
 	}
 	
@@ -189,6 +191,7 @@ public class Position {
 	 * 			| result[0] == getXPosition()
 	 * 			| result[1] == getYPosition()
 	 */
+	@Model
 	protected double[] toDoubleArray(){
 		return doubleArray(this.getXPosition(),this.getYPosition());
 	}
@@ -209,6 +212,7 @@ public class Position {
 	/**
 	 * Return the world belonging to this position.
 	 */
+	@Basic @Model
 	World getWorld(){
 		return this.world;
 	}
@@ -221,6 +225,7 @@ public class Position {
 	 * @post	...
 	 * 			| new.getWorld() == world
 	 */
+	@Model
 	private void setWorld(World world){
 		this.world = world;
 	}
@@ -231,6 +236,14 @@ public class Position {
 	private World world;
 	
 	/**
+	 * Check whether this position is terminated.
+	 */
+	@Basic
+	public boolean isTerminated(){
+		return isTerminated;
+	}
+	
+	/**
 	 * A method to terminate this position.
 	 * 
 	 * @post	...
@@ -238,11 +251,18 @@ public class Position {
 	 */
 	public void terminate(){
 		this.world = null;
+		isTerminated = true;
 	}
+	
+	/**
+	 * A variable storing whether this position is terminated.
+	 */
+	private boolean isTerminated = false;
 	
 	/**
 	 * Return a copy of this position.
 	 */
+	@Model
 	protected Position copy(){
 		return new Position(getXPosition(),getYPosition(),getWorld());
 	}
