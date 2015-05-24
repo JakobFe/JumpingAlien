@@ -37,18 +37,9 @@ public class Facade extends jumpingalien.part2.facade.Facade implements IFacadeP
 	@Override
 	public Buzam createBuzamWithProgram(int pixelLeftX, int pixelBottomY,
 			Sprite[] sprites, Program program) {
-		IProgramFactory<Expression, Statement, Type, Program> theFactory = 
-				new ProgramFactory();
-		ProgramParser<Expression, Statement, Type, Program> theParser = 
-				new ProgramParser<>(theFactory);
-		try{
-			Optional<Program> parseResult = theParser.parseFile(
-					"resources/programs/buzam.txt");
-			Program theProgram = parseResult.get();
-			return new Buzam(new Position(pixelLeftX,pixelBottomY), sprites,theProgram);
-			}
-		catch(Exception e){
-			return createBuzam(pixelLeftX, pixelBottomY, sprites);
+		try{return new Buzam(new Position(pixelLeftX,pixelBottomY),sprites,program);}
+		catch(IllegalXPositionException | IllegalYPositionException e){
+			throw new ModelException("Illegal position for Buzam!");
 		}
 	}
 
