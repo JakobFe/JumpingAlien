@@ -5,13 +5,7 @@ import static org.junit.Assert.*;
 
 import java.util.HashMap;
 
-import jumpingalien.model.game.Mazub;
-import jumpingalien.model.game.Position;
-import jumpingalien.model.game.School;
-import jumpingalien.model.game.Slime;
-import jumpingalien.model.game.Terrain;
-import jumpingalien.model.game.Tile;
-import jumpingalien.model.game.World;
+import jumpingalien.model.game.*;
 import jumpingalien.model.program.expressions.*;
 import jumpingalien.model.program.expressions.binaryexpression.*;
 import jumpingalien.model.program.expressions.unaryexpression.*;
@@ -63,7 +57,8 @@ public class ExpressionTest {
 		theProgram.getGlobalVariables().put(theSlimeVariable.getName(), theSlimeVariable);
 		theProgram.getGlobalVariables().put(theMazubVariable.getName(), theMazubVariable);
 		theProgram.getGlobalVariables().put(theTileVariable.getName(), theTileVariable);
-		theProgram.setGameObject(theMazub);
+		theBuzam = new Buzam(new Position(8,6),spriteArrayForSize(4, 4),theProgram);
+		testWorld.addAsGameObject(theBuzam);
 		
 		double8 = new Constant<Double>(loc, 8.0);
 		double3 = new Constant<Double>(loc, 3.0);
@@ -77,6 +72,7 @@ public class ExpressionTest {
 	private World testWorld;
 	private Slime theSlime;
 	private Mazub theMazub;
+	private Buzam theBuzam;
 	private Tile theTile;
 	private Variable theSlimeVariable;
 	private Variable theMazubVariable;
@@ -131,7 +127,7 @@ public class ExpressionTest {
 	public void createSelfSingleCase(){
 		Expression self = new Self(loc);
 		self.setProgram(theProgram);
-		assertEquals(theMazub,self.outcome());
+		assertEquals(theBuzam,self.outcome());
 	}
 	
 	@Test
@@ -325,7 +321,7 @@ public class ExpressionTest {
 	
 	@Test
 	public void getTileSingleCase(){
-		Expression t = new GetTile(loc, new Constant<Double>(loc,0.59), new Constant<Double>(loc,1.0));
+		BinaryOperator t = new GetTile(loc, new Constant<Double>(loc,0.59), new Constant<Double>(loc,1.0));
 		t.setProgram(theProgram);
 		assertEquals(theTile, t.outcome());
 	}
@@ -381,9 +377,10 @@ public class ExpressionTest {
 
 	@Test
 	public void executeIsIsPassableIncorrect(){
-		Tile newTile = new Tile(testWorld, 5, 6, false);
-		newTile.setGeoFeature(Terrain.GROUND);
-		Expression isNotWater = new IsPassable(loc,new Constant<Tile>(loc,newTile));
+		Tile theTile = testWorld.getTileAtPos(5, 6);
+		theTile.setGeoFeature(Terrain.GROUND);
+		Expression isNotWater = new IsPassable(loc,new Constant<Tile>(loc,theTile));
+		isNotWater.setProgram(theProgram);
 		assertFalse((Boolean) isNotWater.outcome());
 	}
 
