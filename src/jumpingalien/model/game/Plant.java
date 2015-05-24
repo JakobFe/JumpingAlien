@@ -4,6 +4,7 @@ import jumpingalien.model.exceptions.*;
 import jumpingalien.model.program.programs.Program;
 import static jumpingalien.tests.util.TestUtils.doubleArray;
 import jumpingalien.util.Sprite;
+
 import java.util.Random;
 import java.util.Set;
 
@@ -13,52 +14,59 @@ import be.kuleuven.cs.som.annotate.*;
  * A class concerning plants as a subclass of game objects.
  * 
  * @author Jakob Festraets, Vincent Kemps
- * @version 1.0
+ * @version 2.0
  */
 public class Plant extends GameObject {
 	
 	/**
-	 * Create a new plant with given x position, given y position and given sprites.
+	 * Create a new plant with given position, given sprites and given program.
 	 * 
 	 * @param	position
 	 * 			The initial position for this plant.
 	 * @param 	sprites
 	 * 			The sprites for this plant.
+	 * @param	program
+	 * 			The program for this plant.
 	 * @effect	...
-	 * 			| super(position,PLANT_VELOCITY,sprites,1)
+	 * 			| super(position,PLANT_VELOCITY,sprites,1,program)
 	 * @effect	...
-	 * 			| setHorVelocity(getInitHorVelocity())
+	 * 			| setHorVelocity(PLANT_VELOCITY)
 	 * @effect	...
 	 * 			| setRandomDirection()
 	 */
 	@Raw
-	public Plant(Position position, Sprite[] sprites, Program program) 
-			throws IllegalXPositionException,IllegalYPositionException{
+	public Plant(Position position, Sprite[] sprites, Program program){
 		super(position,PLANT_VELOCITY,sprites,1,program);
 		setHorVelocity(PLANT_VELOCITY);
 		setRandomDirection();
 	}
 	
 	/**
-	 * Create a new plant with given x position, given y position and given sprites.
+	 * Create a new plant with given position, given sprites adn without a program.
 	 * 
 	 * @param	position
 	 * 			The initial position for this plant.
 	 * @param 	sprites
 	 * 			The sprites for this plant.
 	 * @effect	...
-	 * 			| super(position,PLANT_VELOCITY,sprites,1)
-	 * @effect	...
-	 * 			| setHorVelocity(getInitHorVelocity())
-	 * @effect	...
-	 * 			| setRandomDirection()
+	 * 			| this(position,sprites,null)
 	 */
 	@Raw
 	public Plant(Position position, Sprite[] sprites) 
 			throws IllegalXPositionException,IllegalYPositionException{
-		super(position,PLANT_VELOCITY,sprites,1);
-		setHorVelocity(PLANT_VELOCITY);
-		setRandomDirection();
+		this(position,sprites,null);
+	}
+	
+
+	/**
+	 * Check whether a program can be attached to this game object.
+	 * 
+	 * @return	...
+	 * 			| result == true
+	 */
+	@Override@Model
+	protected boolean canHaveProgram() {
+		return true;
 	}
 	
 	/**
@@ -67,7 +75,7 @@ public class Plant extends GameObject {
 	 * @post	...
 	 * 			| new.getHorDirection() == Direction.LEFT ||
 	 * 			| new.getHorDirection() == Direction.RIGHT
-	 * @effect	...
+	 * @post	...
 	 * 			| new.getLastDirection() == new.getHorDirection()	 
 	 */
 	@Model
@@ -117,7 +125,7 @@ public class Plant extends GameObject {
 	/**
 	 * A variable storing the last horizontal direction of movement of this plant.
 	 */
-	private Direction lastDirection;
+	private Direction lastDirection = Direction.NULL;
 	
 	/**
 	 * Checks whether the given horizontal acceleration is valid.
@@ -128,7 +136,7 @@ public class Plant extends GameObject {
 	 * 			zero and the maximum horizontal acceleration.
 	 * 			| result == (horAcceleration == 0)
 	 */
-	@Model
+	@Override@Model
 	protected boolean canHaveAsHorAcceleration(double horAcceleration){
 		return (horAcceleration == 0);
 	}
@@ -140,7 +148,7 @@ public class Plant extends GameObject {
 	 * 			| if (world == null)
 	 * 			|	then result == false
 	 * 			| else
-	 * 			|	result == (world.canAddGameObjects() && (world.hasAsPlant(this)))
+	 * 			|	result == (world.canAddGameObjects() && (world.hasAsGameObject(this)))
 	 */
 	@Override@Model
 	protected boolean canBeAddedTo(World world) {
@@ -151,21 +159,27 @@ public class Plant extends GameObject {
 	 * Check whether this game object has a proper world.
 	 * 
 	 * @return	...
-	 * 			| result == (getWorld() == null) || (getWorld().hasAsPlant(this))
+	 * 			| result == (getWorld() == null) || (getWorld().hasAsGameObject(this))
 	 */
 	@Override@Model
 	protected boolean hasProperWorld() {
 		return (getWorld() == null) || (getWorld().hasAsGameObject(this));
 	}
 	
-	@Override
-	protected boolean canHaveProgram() {
-		return true;
-	}
-	
 	/**
 	 * Method to update the position and velocity of this game object based on the current position,
 	 * velocity and a given time duration in seconds.
+	 * 
+	 * @effect	...
+	 * 			| if(hasProgram())
+	 * 			|	then getProgram().execute(timeDuration)
+	 * 			| else
+	 * 			|	updateMovement()
+	 * @effect	...
+	 * 			| updateHitPoints(), updateTimers(timeDuration)
+	 * @effect	...
+	 * 			| new.getPosition() = f(getPosition(),getHorVelocity(),timeDuration,
+	 * 			|						getHorDirection())
 	 */
 	@Override
 	public void advanceTime(double timeDuration) throws IllegalXPositionException,
@@ -183,15 +197,6 @@ public class Plant extends GameObject {
 		updateTimers(timeDuration);
 	}
 	
-	@Override
-	public void startMove(Direction direction) {
-		assert ((direction == Direction.LEFT) || (direction == Direction.RIGHT));
-		assert !isDead();
-		setHorVelocity(getInitHorVelocity());
-		setHorDirection(direction);
-		setHorAcceleration(getMaxHorAcceleration());
-	}
-	
 	/**
 	 * A method to update the movements of this game object.
 	 * As an effect of this method, certain movements may be started.
@@ -201,7 +206,7 @@ public class Plant extends GameObject {
 	 * 			|	then  alternateDirection(), setLastDirection(getHorDirection()),
 	 *			|		  setHorVelocity(PLANT_VELOCITY), getSpritesTimer().decrement(0.5)
 	 */
-	@Model
+	@Override@Model
 	protected void updateMovement() {
 		super.updateMovement();
 		if (!isDead() && getSpritesTimer().getTimeSum()>0.5){
@@ -223,7 +228,7 @@ public class Plant extends GameObject {
 	 * 			| else
 	 * 			|	result == 0.01/(Math.abs(getHorVelocity()))
 	 */
-	@Model
+	@Override@Model
 	protected double getTimeToMoveOnePixel(double timeDuration){
 		if(getHorVelocity()!=0)
 			return 0.01/(Math.abs(getHorVelocity()));
@@ -260,11 +265,6 @@ public class Plant extends GameObject {
 	 * and returns the corrected position, after the given position has been checked 
 	 * for whether or not this game object would collide with impassable tiles
 	 * if the given position would be assigned to this game object.
-	 * 
-	 * @note	In the current state, this method violates several rules connected
-	 * 			to good programming. It changes the state of an object and returns a value.
-	 * 			We are aware of this problem and we will solve it by defensive programming
-	 * 			before we hand in the final solution. 
 	 */
 	@Override@Model
 	protected double[] updatePositionTileCollision(double[] newPos) {
@@ -291,10 +291,10 @@ public class Plant extends GameObject {
 	/**
 	 * Returns all game objects that can block the movement of this game object.
 	 * 
-	 * @return	A hash set of all game objects that can block the movement of this game object.
+	 * @return	A set of all game objects that can block the movement of this game object.
 	 * 			...
 	 * 			| result.contains(getWorld().getAllPlants())
-	 * 			| result.contains(getWorld().getMazub())
+	 * 			| result.contains(getWorld().getAllAliens())
 	 * 			
 	 */
 	@SuppressWarnings("unchecked")
@@ -336,7 +336,7 @@ public class Plant extends GameObject {
 	 * 			|	then terminate()
 	 * 			
 	 */
-	@Model
+	@Override@Model
 	protected void updateHitPoints(){
 		if(!isDead() && isOverlappingWith(getWorld().getMazub()) &&
 		   getWorld().getMazub().canConsumePlant()){
@@ -354,14 +354,14 @@ public class Plant extends GameObject {
 	 * 			| if(!(other instanceof Mazub))
 	 * 			|	then other.getHurtBy(this)
 	 */
-	@Model
+	@Override@Model
 	protected void hurt(GameObject other){
 		if(!(other instanceof Mazub))
 			other.getHurtBy(this);
 	}
 	
 	/**
-	 * A method to get damage by another game object.
+	 * A method to take damage from another game object.
 	 * 
 	 * @effect	...
 	 * 			| if(other instanceof Mazub)
@@ -371,7 +371,7 @@ public class Plant extends GameObject {
 	 * 			| else
 	 * 			|	other.hurt(this)
 	 */
-	@Model
+	@Override@Model
 	protected void getHurtBy(GameObject other){
 		if(other instanceof Mazub){
 			setHitPoints(0);
@@ -386,29 +386,41 @@ public class Plant extends GameObject {
 	 * A method to update the sprite index.
 	 * 
 	 * @effect	...
-	 * 			| setIndex((getIndex()+1)%2)
+	 * 			| if(getHorDirection() == Direction.LEFT)
+	 *			|	then setIndex(0)
+	 *			| else
+	 *			|	setIndex(1)
 	 */
 	@Override@Model
-	protected void updateSpriteIndex(){
-		setIndex((getIndex()+1)%2);
+	protected void updateSpriteIndex() {
+		if(getHorDirection() == Direction.LEFT)
+			setIndex(0);
+		else
+			setIndex(1);
 	}
 	
 	/**
-	 * Terminate this game object.
+	 * Terminate this plant.
 	 * 
-	 * @pre		.
+	 * @pre		...
 	 * 			| isDead()
 	 * @pre		...
 	 * 			| getHpTimer().getTimeSum()>0.6
 	 * @effect	...
-	 * 			| getWorld().removeAsPlant(this)
+	 * 			| super.terminate()
 	 * @effect	...
-	 * 			| setWorld(null)
-	 */ 
+	 * 			| if(getWorld() != null)
+	 * 			| 	getWorld().removeAsGameObject(this)
+	 * @effect	...
+	 * 			| setWorld(null);
+	 */
 	@Override@Model
 	protected void terminate(){
+		assert isDead();
+		assert getHpTimer().getTimeSum() >= 0.6;
 		super.terminate();
-		getWorld().removeAsGameObject(this);
+		if(getWorld() != null)
+			getWorld().removeAsGameObject(this);
 		setWorld(null);
 	}
 	
@@ -421,13 +433,23 @@ public class Plant extends GameObject {
 	 * 			| result.contains(getPosition().toString())
 	 * @return	...
 	 * 			| result.contains("with" + String.valueOf(getHitPoints()+
-	 * 			|				  "hit points.") 
+	 * 			|				  "hit points") 
+	 * @return	...
+	 * 			| if(getProgram() != null)
+	 * 			|	then result.contains(" and controlled by a program.")
+	 * 			| else
+	 * 			|	result.contains(".")
 	 */
 	@Override
 	public String toString(){
-		//return "Plant at " + getPosition().toString() +  " with" +
-		//					String.valueOf(getHitPoints()) + "hit points.";
+		String message;
+		if(getProgram() != null)
+			message = " and controlled by a program.";
+		else
+			message = ".";
+		return "Plant at " + getPosition().toString() + " with" +
+				String.valueOf(getHitPoints())  + "hit points" + message;
 		//return String.valueOf(getProgram() != null);
-		return "Plant";
+		//return "Plant";
 	}
 }

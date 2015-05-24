@@ -837,8 +837,8 @@ public class Shark extends Character implements JumpInterface{
 	 *			| else
 	 *			|	setIndex(1)
 	 */
-	@Override
-	public void updateSpriteIndex() {
+	@Override@Model
+	protected void updateSpriteIndex() {
 		if(getHorDirection() == Direction.LEFT)
 			setIndex(0);
 		else
