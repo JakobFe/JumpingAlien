@@ -28,9 +28,9 @@ Algemeen:
 
 - Formulier invullen "OverviewConcepts"
 
-- Nagaan dat alle tests werken (met -ea)
+- Nagaan dat alle tests werken (met -ea)		OK
 
-- Zien dat het spel nog werkt
+- Zien dat het spel nog werkt		OK
 
 - Diagramma's nakijken: alle klasses abstract die abstract moeten zijn?		OK
 
