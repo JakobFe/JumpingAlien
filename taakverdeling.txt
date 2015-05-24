@@ -21,7 +21,8 @@ Jakob:
 - Klassediagram: Expression		OK
 
 Algemeen:
-- Klassediagram maken met Program,Statement en Expression
+- Klassediagram maken met Program,Statement en Expression					OK
 - Formulier invullen "OverviewConcepts"
 - Nagaan dat alle tests werken (met -ea)
 - Zien dat het spel nog werkt
+- Diagramma's nakijken: alle klasses abstract die abstract moeten zijn?
