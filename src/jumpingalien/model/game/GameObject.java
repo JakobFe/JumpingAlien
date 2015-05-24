@@ -1010,7 +1010,7 @@ public abstract class GameObject extends ObjectOfWorld{
 	 * @note	Although this function is public, it is for internal use only.
 	 */
 	public void endMovement(Direction direction){
-		assert (direction != Direction.NULL);
+		assert (direction == Direction.LEFT || direction == Direction.RIGHT);
 		if ((direction == Direction.LEFT || direction == Direction.RIGHT) &&
 			 isMoving(direction)){
 			setHorVelocity(0);
