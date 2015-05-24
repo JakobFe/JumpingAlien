@@ -34,7 +34,7 @@ Algemeen:
 
 - Diagramma's nakijken: alle klasses abstract die abstract moeten zijn?
 
-- @notes contoleren
+- @notes contoleren		OK
 
 Formulier:
 LISKOV:
