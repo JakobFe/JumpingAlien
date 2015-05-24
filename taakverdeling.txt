@@ -13,12 +13,12 @@ Vincent:	KLAAR
 
 Jakob:
 - Mazub					OK
-- Buzam
+- Buzam					OK
 - Alien					OK
-- Character
-- Timer
-- Tile
-- Terrain
+- Character				OK
+- Timer					OK
+- Tile					OK
+- Terrain				OK
 - Testen schrijven: While		OK
 - Klassediagram: Expression		OK
 
