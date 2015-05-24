@@ -41,12 +41,6 @@ public class Mazub extends Alien{
 	 * 			given initial horizontal velocity, given maximum
 	 * 			horizontal velocity, given sprites and 100 hit points.
 	 * 			| super(position,initHorVelocity,maxHorVelocity,sprites)
-	 * @post	The maximum horizontal velocity while running is set
-	 * 			to the given maximum horizontal velocity.
-	 * 			| new.getMaxHorVelocityRunning() == maxHorVelocity
-	 * @post	The number of walking sprites is set to the half of the length of the given
-	 * 			array of sprites, substracted with 10.	
-	 * 			| new.getNumberOfWalkingSprites() == (sprites.length - 10)/2
 	 */
 	@Raw
 	public Mazub(Position position, double initHorVelocity, double maxHorVelocity, Sprite[] sprites) 
@@ -65,8 +59,8 @@ public class Mazub extends Alien{
 	 * 			An array containing the different sprites for this Mazub.
 	 * @pre		The sprites must be an array with a valid number of sprites.
 	 * 			| isValidArrayOfSprites(sprites)
-	 * @effect	This Mazub is initialized with given x position, given 
-	 * 			y position, given sprites, 1 as its initial horizontal 
+	 * @effect	This Mazub is initialized with given position,
+	 * 			given sprites, 1 as its initial horizontal 
 	 * 			velocity and 3 as its maximum horizontal velocity.
 	 * 			| this(x,y,1,3,sprites)
 	 */
@@ -78,8 +72,7 @@ public class Mazub extends Alien{
 	
 	/**
 	 * A method to update the hit points of this Mazub.
-	 * A game object can damage other objects and can be damaged
-	 * by other game objects.
+	 * A game object can damage other objects and can be damaged by other game objects.
 	 * 
 	 * @effect	If this Mazub is not dead and it is not overlapping with "Water"
 	 * 			or "Magma", the hit points timer is reset.
@@ -117,7 +110,7 @@ public class Mazub extends Alien{
 	 * 
 	 * @effect	If this Mazub is not immune and the other game object is not a Mazub
 	 * 			and is effective, than the other game object will hurt this Mazub.
-	 * 			| if(!isImmune() && !(other instanceof Mazub))
+	 * 			| if(!isImmune() && other != null  && !(other instanceof Mazub))
 	 * 			|	then other.hurt(this)
 	 */
 	@Override
@@ -142,14 +135,9 @@ public class Mazub extends Alien{
 	/**
 	 * Check whether this game object can be added to the given world.
 	 * 
-	 * @return	False if the given world is not effective.
-	 * 			| if (world == null)
-	 * 			|	then result == false
-	 * 			Otherwise true if the world can add game objects and the
-	 * 			world has a reference to this Mazub.
-	 * 			| else
-	 * 			|	result == (world != null && world.canAddGameObjects() &&
-	 * 			|			   world.getMazub() == this)
+	 * @return 	True if this function in GameObject returns true and if 
+	 * 			the world is null or this mazub is the Mazub of the world.
+	 * 			| result == (super.canBeAddedTo(world) && (world == null || world.getMazub() == this))
 	 */
 	public boolean canBeAddedTo(World world){
 		return super.canBeAddedTo(world) && (world == null || world.getMazub() == this);
@@ -160,20 +148,21 @@ public class Mazub extends Alien{
 	 * 
 	 * @return	True if the world is not effective or if the world has 
 	 * 			this Mazub as its Mazub.
-	 * 			| result == getWorld() == null || getWorld().getMazub() == this
+	 * 			| result == (getWorld() == null || getWorld().getMazub() == this)
 	 */
 	@Override
 	protected boolean hasProperWorld() {
-		return getWorld() == null || getWorld().getMazub() == this;
+		return (getWorld() == null || getWorld().getMazub() == this);
 	}	
 	
 	/**
 	 * Terminate this Mazub.
 	 * 
-	 * @pre		The game object must be dead.
-	 * 			| isDead()
+	 * @pre		The game object may not have hit points anymore.
+	 * 			| getHitPoints()==0
 	 * @pre		The time sum belonging to the hit point timer of this
 	 * 			game object must be greater than 0.6 seconds.
+	 * 			| getHpTimer().getTimeSum()>0.6
 	 * @effect	The world no longer refers to this Mazub.
 	 * 			| getWorld().setMazub(null)
 	 * @effect	This Mazub no longer refers a world.
@@ -203,6 +192,12 @@ public class Mazub extends Alien{
 		return "Mazub";
 	}
 
+	/**
+	 * Returns whether Mazub can have a program or not.
+	 * 
+	 * @return	Mazub cannot have a program.
+	 * 			| result == false
+	 */
 	@Override
 	protected boolean canHaveProgram() {
 		return false;
