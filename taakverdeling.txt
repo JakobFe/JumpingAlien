@@ -1,4 +1,4 @@
-Vincent:
+Vincent:	KLAAR
 - World					OK
 - Shark					OK
 - Slime					OK
@@ -32,7 +32,7 @@ Algemeen:
 
 - Zien dat het spel nog werkt
 
-- Diagramma's nakijken: alle klasses abstract die abstract moeten zijn?
+- Diagramma's nakijken: alle klasses abstract die abstract moeten zijn?		OK
 
 - @notes contoleren		OK
 
