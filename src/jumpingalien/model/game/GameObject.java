@@ -1516,7 +1516,6 @@ public abstract class GameObject extends ObjectOfWorld{
 	 * @return	The sprite located at the current index in the array
 	 * 			of sprites of this game object.
 	 * 			| result == getAllSprites()[getIndex()]
-	 * @note	Although this function is public, it is for internal use only.
 	 */
 	@Basic
 	public Sprite getCurrentSprite(){

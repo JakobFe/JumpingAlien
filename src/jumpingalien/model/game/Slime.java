@@ -22,7 +22,7 @@ import be.kuleuven.cs.som.annotate.Raw;
  * 			| hasProperSchool()
  * 
  * @author Jakob Festraets, Vincent Kemps
- * @version 1.0
+ * @version 2.0
  */
 public class Slime extends Character{
 	
@@ -30,29 +30,169 @@ public class Slime extends Character{
 	 * Initialize this new slime with given position,
 	 * zero as its initial horizontal velocity, the maximum
 	 * horizontal velocity for slimes as its maximum horizontal velocity,
-	 * given sprites, given school and no world.	
+	 * given sprites, given school, given program and no world.	
 	 * 
 	 * @param 	position
-	 * 			The start position for this character.
+	 * 			The start position for this slime.
 	 * @param	sprites
-	 * 			An array containing the different sprites for this character. 
-	 * @pre		...
-	 * 			| canHaveAsMaxHorVelocity(SLIME_VELOCITY,0)
+	 * 			An array containing the different sprites for this slime.
+	 * @param	school
+	 * 			The school for this new slime.
+	 * @param	program
+	 * 			The program for this new slime.
 	 * @effect	...
-	 * 			| super(position,0,SLIME_VELOCITY,sprites)
+	 * 			| super(position,0,SLIME_VELOCITY,sprites,program)
 	 * @effect	...
 	 * 			| school.addSlime(this)
 	 */
-	public Slime(Position position, Sprite[] sprites, School school){
-		super(position,0,SLIME_VELOCITY,sprites,null);
-		school.addSlime(this);
-	}
-
 	public Slime(Position position, Sprite[] sprites, School school, Program program){
 		super(position,0,SLIME_VELOCITY,sprites,program);
 		school.addSlime(this);
 	}
+	
+	/**
+	 * Initialize this new slime with given position,
+	 * zero as its initial horizontal velocity, the maximum
+	 * horizontal velocity for slimes as its maximum horizontal velocity,
+	 * given sprites, given school, no program and no world.	
+	 * 
+	 * @param 	position
+	 * 			The start position for this slime.
+	 * @param	sprites
+	 * 			An array containing the different sprites for this slime.
+	 * @param	school
+	 * 			The school for this new slime.
+	 * @effect	...
+	 * 			| this(position,sprites,school,null)
+	 */
+	public Slime(Position position, Sprite[] sprites, School school){
+		this(position,sprites,school,null);
+	}
 
+	/**
+	 * Check whether a program can be attached to this game object.
+	 * 
+	 * @return	...
+	 * 			| result == true
+	 */
+	@Override@Model
+	protected boolean canHaveProgram() {
+		return true;
+	}
+	
+	/**
+	 * Return the maximum horizontal velocity of this slime.
+	 */
+	@Override@Model
+	protected final double getMaxHorVelocity(){
+		return SLIME_VELOCITY;
+	}
+	
+	/**
+	 * A variable storing the maximum velocity of all slimes.
+	 */
+	private static final double SLIME_VELOCITY = 2.5;
+
+	/**
+	 * Return the maximum horizontal acceleration of the Slime.
+	 */
+	@Basic@Immutable@Model@Override
+	protected final double getMaxHorAcceleration(){
+		return maxHorAcceleration;
+	}
+	
+	/**
+	 * A variable storing the maximum horizontal acceleration for this Slime.
+	 * This variable must always store a positive number of type double or zero.
+	 */
+	private static final double maxHorAcceleration = 0.7;
+
+	/**
+	 * Check whether this game object can be added to the given world.
+	 * 
+	 * @return	...
+	 * 			| if (world == null)
+	 * 			|	then result == false
+	 * 			...
+	 * 			| else 
+	 * 			|	result == (world.canAddGameObjects()) &&
+	 * 			|			  (world.hasAsGameObject(this))
+	 */ 
+	@Override@Model
+	protected boolean canBeAddedTo(World world) {
+		return super.canBeAddedTo(world) && (world.hasAsGameObject(this));
+	}
+	
+	/**
+	 * Check whether this game object has a proper world.
+	 * 
+	 * @return	...
+	 * 			| if (getWorld() == null)
+	 * 			|	then result == true
+	 * 			...
+	 * 			| else
+	 * 			|	result == getWorld().hasAsGameObject(this)
+	 */
+	@Override
+	protected boolean hasProperWorld() {
+		return (getWorld() == null) || (getWorld().hasAsGameObject(this));
+	}
+	
+	/**
+	 * Return the school belonging to this slime.
+	 * 
+	 * @note	Although this function is public, it is for internal use only.
+	 */
+	@Basic
+	public School getSchool() {
+		return school;
+	}
+	
+	/**
+	 * A method to check whether a given school is valid.
+	 * 
+	 * @param 	school
+	 * 			The school to check.
+	 * @return	...
+	 * 			| school == null || school.hasAsSlime(this)
+	 */
+	@Model
+	protected boolean isValidSchool(School school){
+		return school == null || school.hasAsSlime(this);
+	}
+	
+	/**
+	 * A method to check whether this slime has a proper school.
+	 * 
+	 * @return	...
+	 * 			| result == isValidSchool(getSchool())
+	 */
+	@Model
+	protected boolean hasProperSchool(){
+		return isValidSchool(getSchool());
+	}
+	
+	/**
+	 * A method to set the school of this slime to the given school.
+	 * 
+	 * @param 	school
+	 * 			The school to set.
+	 * @pre		...
+	 * 			| isValidSchool(school)
+	 * @post	...
+	 * 			| new.getSchool() == school
+	 */
+	@Model
+	protected void setSchool(@Raw School school) {
+		assert isValidSchool(school);
+		this.school = school;
+	}
+	
+	/**
+	 * A variable storing the school where this slime is a part of.
+	 */
+	private School school;
+	
 	/**
 	 * A method to set the horizontal direction of this slime randomly
 	 * to the left or to the right.
@@ -61,7 +201,8 @@ public class Slime extends Character{
 	 * 			| new.getHorDirection() == Direction.LEFT ||
 	 * 			| new.getHorDirection() == Direction.RIGHT
 	 */
-	public void setRandomHorDirection() {
+	@Model
+	private void setRandomHorDirection() {
 		Random rn = new Random();
 		int startIndex = rn.nextInt(2);
 		if(startIndex == 0)
@@ -73,7 +214,8 @@ public class Slime extends Character{
 	/**
 	 * A method to get the duration of the current period.
 	 */
-	public double getPeriodDuration() {
+	@Basic@Model
+	double getPeriodDuration() {
 		return periodDuration;
 	}
 	
@@ -85,7 +227,8 @@ public class Slime extends Character{
 	 * @return	...
 	 * 			| result == (period == 0 || (period <=MAX_PERIOD && period >= MIN_PERIOD)) 
 	 */
-	public boolean isValidPeriod(double period){
+	@Model
+	boolean isValidPeriod(double period){
 		return (period == 0 || (period <=MAX_PERIOD && period >= MIN_PERIOD));
 	}
 	
@@ -110,7 +253,8 @@ public class Slime extends Character{
 	 * @post	...
 	 * 			| new.getPeriodDuration() == periodDuration
 	 */
-	public void setPeriodDuration(double periodDuration) {
+	@Model
+	void setPeriodDuration(double periodDuration) {
 		assert isValidPeriod(periodDuration);
 		this.periodDuration = periodDuration;
 	}
@@ -122,7 +266,8 @@ public class Slime extends Character{
 	 * @return	...
 	 * 			| result <= MAX_PERIOD && result >= MIN_PERIOD
 	 */
-	public double randomPeriodDuration(){
+	@Model
+	double randomPeriodDuration(){
 		Random rn = new Random();
 		return MIN_PERIOD + (MAX_PERIOD - MIN_PERIOD) * rn.nextDouble();
 	}
@@ -133,114 +278,6 @@ public class Slime extends Character{
 	private double periodDuration = 0;
 	
 	/**
-	 * Check whether this game object can be added to the given world.
-	 * 
-	 * @return	...
-	 * 			| if (world == null)
-	 * 			|	then result == false
-	 * 			...
-	 * 			| else 
-	 * 			|	result == (world.canAddGameObjects()) &&
-	 * 			|			  (world.hasAsSlime(this))
-	 */ 
-	@Override
-	protected boolean canBeAddedTo(World world) {
-		return super.canBeAddedTo(world) && (world.hasAsGameObject(this));
-	}
-	
-	/**
-	 * Check whether this game object has a proper world.
-	 * 
-	 * @return	...
-	 * 			| if (getWorld() == null)
-	 * 			|	then result == true
-	 * 			...
-	 * 			| else
-	 * 			|	result == getWorld().hasAsSlime(this)
-	 */
-	@Override
-	protected boolean hasProperWorld() {
-		return (getWorld() == null) || (getWorld().hasAsGameObject(this));
-	}
-	
-	/**
-	 * Return the maximum horizontal velocity of this slime.
-	 */
-	@Override
-	public final double getMaxHorVelocity(){
-		return SLIME_VELOCITY;
-	}
-	
-	/**
-	 * A variable storing the velocity of a slime.
-	 */
-	private static final double SLIME_VELOCITY = 2.5;
-
-	/**
-	 * Return the maximum horizontal acceleration of the Slime.
-	 */
-	@Basic @Immutable @Model @Override
-	protected double getMaxHorAcceleration(){
-		return maxHorAcceleration;
-	}
-	
-	/**
-	 * A variable storing the maximum horizontal acceleration for this Slime.
-	 * This variable must always store a positive number of type double or zero.
-	 */
-	private static final double maxHorAcceleration = 0.7;
-
-	/**
-	 * Return the school belonging to this slime.
-	 */
-	@Basic
-	public School getSchool() {
-		return school;
-	}
-	
-	/**
-	 * A method to check whether a given school is valid.
-	 * 
-	 * @param 	school
-	 * 			The school to check.
-	 * @return	...
-	 * 			| school == null || school.hasAsSlime(this)
-	 */
-	protected boolean isValidSchool(School school){
-		return school == null || school.hasAsSlime(this);
-	}
-	
-	/**
-	 * A method to check whether this slime has a proper school.
-	 * 
-	 * @return	...
-	 * 			| result == isValidSchool(getSchool())
-	 */
-	protected boolean hasProperSchool(){
-		return isValidSchool(getSchool());
-	}
-	
-	/**
-	 * A method to set the school of this slime to the given school.
-	 * 
-	 * @param 	school
-	 * 			The school to set.
-	 * @pre		...
-	 * 			| isValidSchool(school)
-	 * @post	...
-	 * 			| new.getSchool() == school
-	 */
-	protected void setSchool(@Raw School school) {
-		assert isValidSchool(school);
-		this.school = school;
-	}
-	
-	/**
-	 * A variable storing the school where this slime is a part of.
-	 */
-	private School school;
-	
-	/**
 	 * A method to start a movement period.
 	 * 
 	 * @effect	...
@@ -248,19 +285,32 @@ public class Slime extends Character{
 	 *			| setHorAcceleration(getMaxHorAcceleration())
 	 *			| setPeriodDuration(randomPeriodDuration());
 	 */
+	@Model
 	private void startMove(){
 		setHorVelocity(getInitHorVelocity());
 		setHorAcceleration(getMaxHorAcceleration());
 		setPeriodDuration(randomPeriodDuration());
 	}
 	
+	/**
+	 * A method to start the movement in the given direction.
+	 * 
+	 * @param 	direction
+	 * 			The direction to start the movement in.
+	 * @pre		...
+	 * 			| ((direction == Direction.LEFT) || (direction == Direction.RIGHT))
+	 * @pre		...
+	 * 			| !isDead()
+	 * @effect	...
+	 * 			| super.startMove(direction)
+	 * @effect	...
+	 * 			| updateSpriteIndex() 
+	 */
 	@Override
 	public void startMove(Direction direction) {
 		assert ((direction == Direction.LEFT) || (direction == Direction.RIGHT));
 		assert !isDead();
-		setHorVelocity(getInitHorVelocity());
-		setHorDirection(direction);
-		setHorAcceleration(getMaxHorAcceleration());
+		super.startMove(direction);
 		updateSpriteIndex();
 	}
 	
@@ -271,6 +321,7 @@ public class Slime extends Character{
 	 * 			| setHorVelocity(0), setHorAcceleration(0),
 	 * 			| setHorDirection(Direction.NULL)
 	 */
+	@Model
 	private void endMove(){
 		setHorVelocity(0);
 		setHorAcceleration(0);
@@ -281,6 +332,8 @@ public class Slime extends Character{
 	 * Method to update the position and velocity of the slime based on the current position,
 	 * velocity and a given time duration in seconds.
 	 * 
+	 * @effect	...
+	 * 			| super.advanceTime(timeDuration)
 	 * @effect	...
 	 * 			| updateSchool()
 	 */
@@ -296,13 +349,15 @@ public class Slime extends Character{
 	 * As an effect of this method, certain movements may be started.
 	 * 
 	 * @effect	...
+	 * 			| super.updateMovement()
+	 * @effect	...
 	 * 			| if(getPeriodDuration() == 0)
 	 * 			|	then getSpritesTimer().setTimeSum(0), setRandomDirection(),
 	 *			|		 updateSpriteIndex(), startMove()
 	 *			| else if(getSpritesTimer().getTimeSum() >= getPeriodDuration())
 	 *			|	then endMove(),setPeriodDuration(0) 
 	 */
-	@Override
+	@Override@Model
 	protected void updateMovement(){
 		super.updateMovement();
 		if(getPeriodDuration() == 0){
@@ -326,14 +381,15 @@ public class Slime extends Character{
 	 * 			|	oldPos = getPosition(),
 	 * 			|	newPos = f(getPosition(),getHorDirection(),getHorVelocity(),
 	 * 			|			   getHorAcceleration(),getVertDirection(),
-	 * 			|			   getVertVelocity(),getVertAcceleration(),timeDuration),
-	 * 			|	newPos = updatePositionTileCollision(newPos.toDoubleArray()),
-	 * 			|	newPos = updatePositionObjectCollision(newPos)
+	 * 			|			   getVertVelocity(),getVertAcceleration(),timeDuration)
+	 * 			|	if(getWorld() != null)
+	 * 			|		then newPos = updatePositionTileCollision(newPos.toDoubleArray()),
+	 * 			|			 newPos = updatePositionObjectCollision(newPos)
 	 * 			| in
 	 * 			|	setPosition(toPosition(newPos,getWorld())),
 	 * 			|	oldPosition.terminate()
 	 */
-	@Override
+	@Override@Model
 	protected void updatePosition(double timeDuration) {
 		double newXPos = getPosition().getXPosition() + getHorDirection().getFactor()*
 				(getHorVelocity()*timeDuration+ 0.5*getHorAcceleration()*Math.pow(timeDuration, 2))*100;
@@ -356,13 +412,13 @@ public class Slime extends Character{
 	}
 	
 	/**
-	 * Returns all game objects that can block the movement of this slime.
+	 * Returns a set of all game objects that can block the movement of this slime.
 	 * 
 	 * @return	...
 	 * 			| result.contains(getWorld().getAllCharacters())
 	 */
 	@SuppressWarnings("unchecked")
-	@Override
+	@Override@Model
 	protected Set<GameObject> getBlockingObjects() {
 		return (Set<GameObject>)getWorld().filterAllGameObjects(t-> t instanceof Character);	
 	}	
@@ -373,7 +429,7 @@ public class Slime extends Character{
 	 * @return	...
 	 * 			| result == (terrain == Terrain.WATER || terrain == Terrain.MAGMA)
 	 */
-	@Override
+	@Override@Model
 	protected boolean canBeHurtBy(Terrain terrain) {
 		return (terrain == Terrain.WATER || terrain == Terrain.MAGMA);
 	}
@@ -418,7 +474,7 @@ public class Slime extends Character{
 	 * 			|		if(!shark.isImmune())
 	 * 			|			shark.getHurtBy(this);
 	 */
-	@Override
+	@Override@Model
 	protected void updateHitPoints(){
 		Mazub alien = getWorld().getMazub();
 		boolean isHurt = false;
@@ -477,7 +533,7 @@ public class Slime extends Character{
 	 * 			| else if(!(other instanceof Slime))
 	 * 			|	then other.hurt(this)
 	 */ 
-	@Override
+	@Override@Model
 	protected void getHurtBy(GameObject other){
 		if(!isImmune()){
 			if(other instanceof Mazub)
@@ -505,6 +561,7 @@ public class Slime extends Character{
 	 *			| else if(!(other instanceof Slime))
 	 *			|	other.getHurtBy(this)
 	 */
+	@Override@Model
 	protected void hurt(GameObject other){
 		if(other instanceof Mazub && !((Mazub) other).isImmune() &&
 				!((Mazub) other).standsOn(this)){
@@ -535,6 +592,7 @@ public class Slime extends Character{
 	 * 			|			else if (other.getSchool().getNbSlimes() < this.getSchool().getNbSlimes())
 	 * 			|				then other.changeSchool(this)
 	 */
+	@Model
 	void updateSchool(){
 		if (getWorld() != null && getWorld().getAllSlimes()!= null){
 			for (Slime other: getWorld().getAllSlimes()){
@@ -556,6 +614,8 @@ public class Slime extends Character{
 	 * 			The new school for this slime.
 	 * @pre		...
 	 * 			| getSchool() != null
+	 * @pre		...
+	 * 			| other.getSchool() != null
 	 * @effect	...
 	 * 			| getSchool().addHpAll(this),
 	 * 			| setHitPoints(getHitPoints()-getSchool().getNbSlimes()+1
@@ -564,16 +624,23 @@ public class Slime extends Character{
 	 * 			| this.getSchool().removeSlime(this),
 	 * 			| other.getSchool().addSlime(this),
 	 * 			| other.getSchool().reduceHpAll(this)
+	 * @effect	...
+	 * 			| if(getWorld() != null)
+	 * 			|	then getWorld().decrementValueOfSchool(this.getSchool()),
+	 * 			|		 getWorld().incrementValueOfSchool(other.getSchool())
 	 */
+	@Model
 	void changeSchool(Slime other){
 		assert getSchool() != null;
 		assert other.getSchool() != null;
 		getSchool().addHpAll(this);
 		setHitPoints(getHitPoints()-getSchool().getNbSlimes()+1+other.getSchool().getNbSlimes());
-		getWorld().decrementValueOfSchool(this.getSchool());
+		if(getWorld() != null)
+			getWorld().decrementValueOfSchool(this.getSchool());
 		this.getSchool().removeSlime(this);
 		other.getSchool().addSlime(this);
-		getWorld().incrementValueOfSchool(other.getSchool());
+		if(getWorld() != null)
+			getWorld().incrementValueOfSchool(other.getSchool());
 		other.getSchool().reduceHpAll(this);
 	}
 	
@@ -586,8 +653,8 @@ public class Slime extends Character{
 	 *			| else
 	 *			|	setIndex(1)
 	 */
-	@Override
-	public void updateSpriteIndex() {
+	@Override@Model
+	protected void updateSpriteIndex() {
 		if(getHorDirection() == Direction.LEFT)
 			setIndex(0);
 		else
@@ -595,19 +662,31 @@ public class Slime extends Character{
 	}
 	
 	/**
-	 * Return a textual representation of this shark.
-	 *
+	 * Return a textual representation of this slime.
+	 * 
 	 * @return	...
-	 * 			| result.contains(String.valueOf(getHitPoints()))
+	 * 			| result.contains("Slime at")
 	 * @return	...
-	 * 			| result.contains(getSchool().toString()) 
+	 * 			| result.contains(getPosition().toString())
+	 * @return	...
+	 * 			| result.contains("with" + String.valueOf(getHitPoints()+
+	 * 			|				  "hit points ") 
+	 * @return	...
+	 * 			| if(getProgram() != null)
+	 * 			|	then result.contains(" and controlled by a program.")
+	 * 			| else
+	 * 			|	result.contains(".")
 	 */
 	@Override
 	public String toString(){
-		//return String.valueOf(getHitPoints()) + " - " + getSchool().toString();
-		//return "Slime at " + getPosition().toString() + " with" +
-		//String.valueOf(getHitPoints())  + "hit points.";
-		return String.valueOf(getProgram() != null);
+		String message;
+		if(getProgram() != null)
+			message = " and controlled by a program.";
+		else
+			message = ".";
+		return "Slime at " + getPosition().toString() + " with" +
+				String.valueOf(getHitPoints())  + "hit points" + message;
+		//return String.valueOf(getProgram() != null);
 		//return "Slime";
 	}
 	
@@ -619,21 +698,20 @@ public class Slime extends Character{
 	 * @pre		...
 	 * 			| getHpTimer().getTimeSum()>0.6
 	 * @effect	...
-	 * 			| getWorld().removeAsSlime(this)
+	 * 			| super.terminate()
+	 * @effect	...
+	 * 			| if(getWorld() != null)
+	 * 			| 	getWorld().removeAsGameObject(this)
 	 * @effect	...
 	 * 			| setWorld(null);
 	 */
-	@Override
+	@Override@Model
 	protected void terminate(){
-		assert getHitPoints() == 0;
+		assert isDead();
 		assert getHpTimer().getTimeSum() >= 0.6;
 		super.terminate();
-		getWorld().removeAsGameObject(this);
+		if(getWorld() != null)
+			getWorld().removeAsGameObject(this);
 		setWorld(null);
-	}
-
-	@Override
-	protected boolean canHaveProgram() {
-		return true;
 	}
 }
