@@ -30,7 +30,7 @@ public abstract class Character extends GameObject{
 	/**
 	 * Initialize this new character with given position, 
 	 * given initial horizontal velocity, given maximum horizontal velocity,
-	 * given sprites, given number of hit points and no world.
+	 * given sprites, given number of hit points and no program.
 	 * 
 	 * @param 	position
 	 * 			The start position for this character.
@@ -48,7 +48,7 @@ public abstract class Character extends GameObject{
 	 * 			| canHaveAsMaxHorVelocity(maxHorVelocity,initHorVelocity)
 	 * @effect	This character is created as a new game object with given x position,
 	 * 			given y position, given initial horizontal velocity,
-	 * 			given sprites and given hit points.
+	 * 			given sprites, given hit points and no program.
 	 * 			| super(x,y,initHorVelocity,maxHorVelocity,sprites,hitPoints)
 	 */
 	@Raw
@@ -61,7 +61,7 @@ public abstract class Character extends GameObject{
 	/**
 	 * Initialize this new character with given position, 
 	 * given initial horizontal velocity, given maximum horizontal velocity,
-	 * given sprites, 100 hit points and no world.
+	 * given sprites, 100 hit points and no program.
 	 * 
 	 * @param 	position
 	 * 			The start position for this character.
@@ -77,7 +77,7 @@ public abstract class Character extends GameObject{
 	 * 			| canHaveAsMaxHorVelocity(maxHorVelocity,initHorVelocity)
 	 * @effect	This character is created with given x position,
 	 * 			given y position, given initial horizontal velocity,
-	 * 			given sprites and 100 hit points.
+	 * 			given sprites, 100 hit points and no program.
 	 * 			| this(x,y,initHorVelocity,maxHorVelocity,sprites,100)
 	 */
 	@Raw
@@ -86,12 +86,58 @@ public abstract class Character extends GameObject{
 		this(position,initHorVelocity,maxHorVelocity,sprites,100,null);
 	}
 	
+	/**
+	 * Initialize this new character with given position, 
+	 * given initial horizontal velocity, given maximum horizontal velocity,
+	 * given sprites, given number of hit points and the given program.
+	 * 
+	 * @param 	position
+	 * 			The start position for this character.
+	 * @param 	initHorVelocity
+	 * 			Initial horizontal velocity for this character.
+	 * @param 	maxHorVelocity
+	 * 			Maximum horizontal velocity for this character.
+	 * @param	sprites
+	 * 			An array containing the different sprites for this character.
+	 * @param	hitPoints
+	 * 			The hit points for this new character. 
+	 * @pre		The initial horizontal velocity must be valid.
+	 * 			| isValidInitHorVelocity(initHorVelocity)
+	 * @pre		The maximum horizontal velocity must be valid.
+	 * 			| canHaveAsMaxHorVelocity(maxHorVelocity,initHorVelocity)
+	 * @effect	This character is created as a new game object with given x position,
+	 * 			given y position, given initial horizontal velocity,
+	 * 			given sprites, given hit points and the given program.
+	 * 			| super(x,y,initHorVelocity,maxHorVelocity,sprites,hitPoints)
+	 */
 	protected Character(Position position, double initHorVelocity, 
 			double maxHorVelocity, Sprite[] sprites, int hitPoints, Program program) 
 			throws IllegalArgumentException{
 		super(position,initHorVelocity,maxHorVelocity,sprites,hitPoints,program);
 	}
 
+	/**
+	 * Initialize this new character with given position, 
+	 * given initial horizontal velocity, given maximum horizontal velocity,
+	 * given sprites, 100 hit points and the given program.
+	 * 
+	 * @param 	position
+	 * 			The start position for this character.
+	 * @param 	initHorVelocity
+	 * 			Initial horizontal velocity for this character.
+	 * @param 	maxHorVelocity
+	 * 			Maximum horizontal velocity for this character.
+	 * @param	sprites
+	 * 			An array containing the different sprites for this character.
+	 * @pre		The initial horizontal velocity must be valid.
+	 * 			| isValidInitHorVelocity(initHorVelocity)
+	 * @pre		The maximum horizontal velocity must be valid.
+	 * 			| canHaveAsMaxHorVelocity(maxHorVelocity,initHorVelocity)
+	 * @effect	This character is created with given x position,
+	 * 			given y position, given initial horizontal velocity,
+	 * 			given sprites, 100 hit points and the given program.
+	 * 			| this(x,y,initHorVelocity,maxHorVelocity,sprites,100)
+	 */
 	protected Character(Position position, double initHorVelocity, 
 			double maxHorVelocity, Sprite[] sprites, Program program) 
 			throws IllegalArgumentException{
@@ -279,8 +325,26 @@ public abstract class Character extends GameObject{
 	 * @param	timeDuration
 	 * 			A variable indicating the length of the time interval
 	 * 			to simulate the movement of this game object. 
-	 * @effect	The vertical velocity is updated with the given timeDuration.
-	 * 			| updateVertVelocity(timeDuration)			
+	 * @effect	If the character has a program, this program is executed, otherwise the
+	 * 			movement is updated.
+	 * 			| if(hasProgram())
+	 *			|	then getProgram().execute(timeDuration);
+	 *			| else updateMovement()
+	 * @effect	The time duration is decremented by the time to move one pixel, till zero.
+	 * 			for each time to move one pixel, the movement is simulated.
+	 * 			| let
+	 * 			|	time = getTimeToMoveOnePixel(timeDuration)
+	 * 			|	timeLeft = timeLeft - time
+	 * 			| in
+	 * 			|	simulateMovement(time)
+	 * @effect	All timers are updated.
+	 * 			| updateTimers(timeDuration)
+	 * @effect	Hit points are updated if and only if this character is not terminated.
+	 * 			| if(!isTerminated())
+	 * 			|	then updateHitPoints()
+	 * @throws	IllegalTimeIntervalException(this)
+	 * 			The given time duration is not a valid one.
+	 * 			| !isValidTimeInterval(timeDuration)
 	 */
 	@Override
 	public void advanceTime(double timeDuration) throws IllegalTimeIntervalException{
@@ -663,14 +727,27 @@ public abstract class Character extends GameObject{
 		return doubleArray(newXPos,newYPos);
 	}
 	
+	/**
+	 * Returns the variable saying whether the character can fall or not.
+	 */
 	protected boolean canFall() {
 		return canFall;
 	}
 
+	/**
+	 * Sets the variable saying whether the character can fall or not
+	 * to the given boolean value.
+	 * 
+	 * @param 	canFall
+	 * 			The boolean to set.
+	 */
 	protected void setCanFall(boolean canFall) {
 		this.canFall = canFall;
 	}
 
+	/**
+	 * A variable saying whether the character can fall or not.
+	 */
 	private boolean canFall = true;
 	
 	

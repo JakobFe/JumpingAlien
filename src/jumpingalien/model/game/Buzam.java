@@ -1,5 +1,7 @@
 package jumpingalien.model.game;
 
+import java.util.Set;
+
 import jumpingalien.model.program.programs.Program;
 import jumpingalien.util.Sprite;
 
@@ -97,12 +99,39 @@ public class Buzam extends Alien{
 	 * 			|	then updateHitPointsTerrain(Terrain.MAGMA)
 	 * @effect 	...
 	 * 			| if(!isDead() && if(canConsumePlant()))
-	 * 			| 	then 
-	 * @effect	If this Mazub is dead and the time sum of the hit points timer
-	 * 			is greater than 0.6 seconds, this Buzam is terminated.
-	 * 			| if(isDead() && getHpTimer().getTimeSum()>0.6)
+	 * 			| 	then for each plant in getWorld().getAllPlants():
+	 * 			|		if(!isDead() && !plant.isDead())
+	 * 			|			 && isOverlappingWith(plant) && canConsumePlant())
+	 *	 		|			then this.hurt(plant)
+	 * @effect	...
+	 * 			| if(!isDead() && alien != null && !alien.isImmune()
+	 * 			|			 && isOverlappingWith(alien) && !alien.standsOn(this))
+	 *			|	then alien.getHurtBy(this)
+	 * @effect	...
+	 * 			| if(!isDead() && alien != null && !alien.isImmune()
+	 * 			|			 && isOverlappingWith(alien) && !isImmune())
+	 *			|	then getHurtBy(alien), isHurt = true
+	 * @effect 	...
+	 * 			| if(!isDead())
+	 * 			| 	then for each object in allSharksAndSlimes:
+	 * 			|		if(!isDead() && && isOverlappingWith(object)) && !isImmune())
+	 *	 		|			then getHurtBy(alien), isHurt = true
+	 * @effect 	...
+	 * 			| if(!isDead())
+	 * 			| 	then for each object in allSharksAndSlimes:
+	 * 			|		if(!isDead() && && isOverlappingWith(object)) && !object.isImmune())
+	 *	 		|			then object.getHurtBy(this)
+	 * @effect	...
+	 * 			| if(isHurt)
+	 * 			|	 getImmuneTimer().reset()
+	 * @effect	...
+	 * 			| if(isHurt && isDead())
+	 * 			|	 getHpTimer().reset()
+	 * @effect	...
+	 * 			| if(isDead() && getHpTimer().getTimeSum()>= 0.6)
 	 * 			|	 terminate()
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	protected void updateHitPoints(){
 		Mazub alien = getWorld().getMazub();
@@ -132,24 +161,15 @@ public class Buzam extends Alien{
 					isHurt = true;
 				}
 			}
-			for (Slime slime: getWorld().getAllSlimes()){
-				if(!isDead() && isOverlappingWith(slime)){
+			for (Character object: (Set<Character>)getWorld().filterAllGameObjects(
+					t->((t instanceof Slime) || t instanceof Shark))){
+				if(!isDead() && isOverlappingWith(object)){
 					if(!isImmune()){
-						getHurtBy(slime);
+						getHurtBy(object);
 						isHurt = true;
 					}
-					if(!slime.isImmune())
-						slime.getHurtBy(this);
-				}
-			}
-			for (Shark shark: getWorld().getAllSharks()){
-				if(!isDead() && isOverlappingWith(shark)){
-					if(!isImmune()){
-						getHurtBy(shark);
-						isHurt = true;
-					}
-					if(!shark.isImmune())
-						shark.getHurtBy(this);
+					if(!object.isImmune())
+						object.getHurtBy(this);
 				}
 			}
 		}
@@ -161,7 +181,18 @@ public class Buzam extends Alien{
 			terminate();
 		}
 	}
-
+	
+	/**
+	 * A method to get damage by another game object.
+	 * 
+	 * @effect	...
+	 * 			| if(!isImmune() && if((other instanceof Mazub) || (other instanceof Shark) || (other instanceof Slime))
+	 * 			|		&& if(!this.standsOn(other)))
+	 * 			|	then subtractHp(50)
+	 * @effect	...
+	 * 			| if(!isImmune() && !(other instanceof Buzam))
+	 * 			|	then other.hurt(this)
+	 */
 	@Override
 	protected void getHurtBy(GameObject other){
 		if(!isImmune()){
@@ -174,6 +205,24 @@ public class Buzam extends Alien{
 		}
 	}
 
+	/**
+	 * A method to get damage by another game object.
+	 * 
+	 * @effect	...
+	 * 			| if(!other.isDead() && other instanceof Mazub && !((Mazub) other).isImmune() &&
+	 *			|    !((Mazub) other).standsOn(this))
+	 *			|	then ((Mazub) other).getImmuneTimer().reset(), other.subtractHp(50)
+	 *			|	if(other.isDead())
+	 *			|		then other.getHpTimer().reset()
+	 *			| else if(other instanceof Shark && !((Shark) other).isImmune())
+	 *			|	then other.subtractHp(50)
+	 *			|	if(other.isDead())
+	 *			|		then other.getHpTimer().reset()
+	 *			| else if(other instanceof Plant)
+	 *			|	then other.setHitPoints(0), other.getHpTimer().reset(), this.consumePlant()
+	 *			| else if(!(other instanceof Buzam))
+	 *			|	other.getHurtBy(this)
+	 */
 	protected void hurt(GameObject other){
 		if(other instanceof Mazub && !((Mazub) other).isImmune() &&
 				!((Mazub) other).standsOn(this)){
@@ -199,6 +248,21 @@ public class Buzam extends Alien{
 			other.getHurtBy(this);
 	}
 
+	/**
+	 * Terminate this Mazub.
+	 * 
+	 * @pre		The game object may not have hit points anymore.
+	 * 			| getHitPoints()==0
+	 * @pre		The time sum belonging to the hit point timer of this
+	 * 			game object must be greater than 0.6 seconds.
+	 * 			| getHpTimer().getTimeSum()>0.6
+	 * @effect	The Buzam is terminated.
+	 * 			| setIsTerminated()
+	 * @effect	The world no longer refers to this Buzam.
+	 * 			| getWorld().removeAsGameObject(this)
+	 * @effect	This Buzam no longer refers a world.
+	 * 			| setWorld(null) 
+	 */ 
 	@Override
 	public void terminate(){
 		assert (getHitPoints()==0);
@@ -207,7 +271,19 @@ public class Buzam extends Alien{
 		getWorld().removeAsGameObject(this);
 		setWorld(null);
 	}
-	
+
+	/**
+	 * Return a textual representation for this Buzam.
+	 * 
+	 * @return	...
+	 * 			| let
+	 * 			|	if(getProgram()!= null)
+	 * 			|		then message = "controlled by \na program."
+	 * 			|	else message = "without a program."
+	 * 			| in
+	 * 			| 	result == "Buzam at position\n" + getPosition().toString() +
+	 *			|			"\nwith " + String.valueOf(getHitPoints()) + " hit points\nand" +  message
+	 */
 	@Override
 	public String toString(){
 		String programMessage;
@@ -219,6 +295,12 @@ public class Buzam extends Alien{
 				"\nwith " + String.valueOf(getHitPoints()) + " hit points\nand" +  programMessage;
 	}
 
+	/**
+	 * Returns whether Buzam can have a program or not.
+	 * 
+	 * @return	...
+	 * 			| result == true
+	 */
 	@Override
 	protected boolean canHaveProgram() {
 		return true;
