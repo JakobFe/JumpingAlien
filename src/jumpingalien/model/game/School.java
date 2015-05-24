@@ -2,10 +2,10 @@ package jumpingalien.model.game;
 
 import java.util.HashSet;
 
-import be.kuleuven.cs.som.annotate.Raw;
+import be.kuleuven.cs.som.annotate.*;
 
 /**
- * A class concerning schools.
+ * A class concerning schools as a collection of slimes.
  * 
  * @invar	...
  * 			| hasProperSlimes()
@@ -13,22 +13,42 @@ import be.kuleuven.cs.som.annotate.Raw;
  * 			| hasProperWorld()
  * 
  * @author Jakob Festraets, Vincent Kemps
- * @version 1.0
+ * @version 2.0
  */
 public class School {
 	
 	/**
 	 * Returns the amount of slimes in this school. 
 	 */
+	@Model
 	int getNbSlimes(){
 		return slimes.size();
 	}
 	
 	/**
-	 * Returns a hash set of all slimes in this school.
+	 * Returns a set of all slimes in this school.
 	 */
+	@Basic@Model
 	HashSet<Slime> getAllSlimes(){
 		return slimes;
+	}
+	
+	/**
+	 * Return a slime of this school.
+	 * 
+	 * @return	...
+	 * 			| result.getSchool() == this &&
+	 * 			| this.hasAsSlime(result)
+	 */
+	@Model
+	Slime getASlime(){
+		if(getNbSlimes() == 0)
+			return null;
+		else{
+			for(Slime slime: slimes)
+				return slime;
+		}
+		return null;
 	}
 	
 	/**
@@ -38,13 +58,18 @@ public class School {
 	 * 			| if(for some slime in getAllSlimes()
 	 * 			|	 slime.getSchool() != this)
 	 * 			|	then result == false
+	 * @return	...
+	 * 			| else if(getNbSlimes() != null)
+	 * 			|	let world = getASlime().getWorld()
+	 * 			|	in
+	 * 			|	if(for some slime in getAllSlimes()
+	 * 			|		slime.getWorld() != world
+	 * 			|		then result == false
+	 * @return	...
 	 * 			| else
-	 * 			| 	result == true
-	 * 
-	 * 
-	 * 
-	 * 
+	 * 			|	result == true
 	 */
+	@Model
 	boolean hasProperSlimes(){
 		World slimeWorld = null;
 		for(Slime slime: slimes){
@@ -58,6 +83,20 @@ public class School {
 		return true;
 	}
 	
+	/**
+	 * Check whether this school has a proper world.
+	 * 
+	 * @return	...
+	 * 			| if(getNbSlimes() != null)
+	 * 			|	let world = getASlime().getWorld()
+	 * 			|	in
+	 * 			|	if(for some slime in getAllSlimes()
+	 * 			|		slime.getWorld() != world
+	 * 			|		then result == false
+	 * 			| else
+	 * 			|	result == true
+	 */
+	@Model
 	boolean hasProperWorld(){
 		World slimeWorld = null;
 		for(Slime slime: slimes){
@@ -81,6 +120,7 @@ public class School {
 	 * 			|	if(slime != other)
 	 * 			|		then slime.subtractHp(1) 
 	 */
+	@Model
 	void reduceHpAll(Slime other){
 		for(Slime slime: slimes){
 			if(slime != other)
@@ -99,6 +139,7 @@ public class School {
 	 * 			|	if(slime != other)
 	 * 			|		slime.setHitPoints(slime.getHitPoints()+1)
 	 */
+	@Model
 	void addHpAll(Slime other){
 		for(Slime slime: slimes){
 			if(slime != other)
@@ -117,7 +158,7 @@ public class School {
 	 * 			| new.getAllSlimes().contains(slime)
 	 * 			| (new slime).getSchool() == this
 	 */
-	@Raw
+	@Raw@Model
 	void addSlime(Slime slime){
 		assert slime.getSchool() == null;
 		slimes.add(slime);
@@ -132,6 +173,7 @@ public class School {
 	 * @return	...
 	 * 			| result == getAllSlimes().contains(slime)
 	 */
+	@Model
 	boolean hasAsSlime(Slime slime){
 		return slimes.contains(slime);
 	}
@@ -147,6 +189,7 @@ public class School {
 	 * 			| !new.getAllSlimes().contains(slime)
 	 * 			| (new slime).getSchool() == null
 	 */
+	@Model
 	void removeSlime(Slime slime){
 		assert hasAsSlime(slime);
 		slimes.remove(slime);
@@ -155,6 +198,12 @@ public class School {
 	
 	/**
 	 * A variable storing all the slimes in this school.
+	 * 
+	 * @invar	...
+	 * 			| slimes != null
+	 * @invar	...
+	 * 			| for each slime in slimes
+	 * 			|	slime.getSchool() == this
 	 */
 	private HashSet<Slime> slimes = new HashSet<Slime>();
 	

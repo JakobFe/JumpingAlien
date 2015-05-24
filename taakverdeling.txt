@@ -1,8 +1,8 @@
 Vincent:
 - World					OK
 - Shark					OK
-- Slime
-- School
+- Slime					OK
+- School				OK
 - Plant					OK
 - GameObject			OK
 - Direction				OK
