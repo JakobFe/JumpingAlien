@@ -1,11 +1,13 @@
 Vincent:
 - World							OK
-- Shark
+- Shark							OK
 - Slime
+- Plant
 - School
-- GameObject
-- Direction
-- JumpInterface	
+- GameObject					OK
+- Direction						OK
+- JumpInterface					OK
+- Position						OK
 - Testen schrijven: Foreach		OK
 - Klassediagram: Statement		OK
 
@@ -26,3 +28,7 @@ Algemeen:
 - Nagaan dat alle tests werken (met -ea)
 - Zien dat het spel nog werkt
 - Diagramma's nakijken: alle klasses abstract die abstract moeten zijn?
+- @notes contoleren
+
+Formulier:
+LISKOV: isValidHitPoints,canHaveAsMaxHorVelocity,isMoving(direction),endMovement(direction),updateMovement() (allen in GameObject en eronder)
